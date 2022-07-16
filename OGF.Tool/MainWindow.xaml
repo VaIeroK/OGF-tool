@@ -17,13 +17,13 @@
                 <MenuItem Header="Load">
                     
                 </MenuItem>
-                <MenuItem Header="Save">
+                <MenuItem Header="Save" x:Name="SaveMenuParam">
 
                 </MenuItem>
-                <MenuItem Header="Save as...">
+                <MenuItem Header="Save as..." x:Name="saveAsToolStripMenuItem">
 
                 </MenuItem>
-                <MenuItem Header="Export">
+                <MenuItem Header="Export" x:Name="exportToolStripMenuItem">
                     <MenuItem Header="Object"></MenuItem>
                     <MenuItem Header="Bomes"></MenuItem>
                     <MenuItem Header="OMF"></MenuItem>
@@ -34,7 +34,7 @@
                 <MenuItem Header="Reload"/>
                 <MenuItem Header="Exit"/>
             </MenuItem>
-            <MenuItem Header="Tools">
+            <MenuItem Header="Tools" Name="toolStripMenuItem1">
                 <MenuItem Header="Open skeleton in Object Editor"/>
                 <MenuItem Header="Motion tools">
                     <MenuItem Header="Delete motion"></MenuItem>
@@ -43,34 +43,34 @@
                 </MenuItem>
                 <MenuItem Header="Import OGF Params"/>
             </MenuItem>
-            <MenuItem Header="OGF Info">
+            <MenuItem Header="OGF Info" x:Name="oGFInfoToolStripMenuItem">
 
             </MenuItem>
-            <MenuItem Header="View">
+            <MenuItem Header="View" x:Name="viewToolStripMenuItem">
 
             </MenuItem>
         </Menu>
-        <TabControl Grid.Row="1">
-            <TabItem Header="Textures">
+        <TabControl Grid.Row="1" Name="TabControl_w">
+            <TabItem Header="Textures" x:Name="TexturesPage">
 
             </TabItem>
-            <TabItem Header="UserData">
-
+            <TabItem Header="UserData" Name="UserDataPage">
+                <Button Content="Create UserData" x:Name="CreateUserdataButton"/>
             </TabItem>
-            <TabItem Header="Motion Refs">
-
+            <TabItem Header="Motion Refs" Name="MotionRefsPage">
+                <Button Content="Create Moition Refs" x:Name="CreateMotionRefsButton"/>
             </TabItem>
-            <TabItem Header="Motions">
-
+            <TabItem Header="Motions" Name="MotionPage">
+                <Button Content="Append OMF" x:Name="AppendOMFButton"/>
             </TabItem>
-            <TabItem Header="Bone Names">
-
+            <TabItem Header="Bone Names" Name="BoneNamesPage">
+                <RichTextBox/>
             </TabItem>
-            <TabItem Header="Bone Params">
-
+            <TabItem Header="Bone Params" Name="BoneParamsPage">
+                
             </TabItem>
-            <TabItem Header="Lod">
-
+            <TabItem Header="Lod" Name="LodPage">
+                <Button Content="Create Log" x:Name="CreateLodButton"/>
             </TabItem>
         </TabControl>
 
