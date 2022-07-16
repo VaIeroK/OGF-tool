@@ -1740,7 +1740,7 @@ namespace OGF_Tool
 			ColumnDefinition Col1 = new ColumnDefinition();
 			ColumnDefinition Col2 = new ColumnDefinition();
 
-			Col1.Width = new GridLength(45);
+			Col1.Width = new GridLength(100);
 			grid.ColumnDefinitions.Add(Col1);
 
 			Col2.Width = GridLength.Auto;
@@ -1772,13 +1772,19 @@ namespace OGF_Tool
 			grid.RowDefinitions.Add(row7);
 			grid.RowDefinitions.Add(row8);
 
+			StackPanel stackPanel1 = new StackPanel();
+			StackPanel stackPanel2 = new StackPanel();
+			StackPanel stackPanel3 = new StackPanel();
+			stackPanel1.Orientation = Orientation.Horizontal;
+			stackPanel2.Orientation = Orientation.Horizontal;
+			stackPanel3.Orientation = Orientation.Horizontal;
 			////
 
 
 			var BoneNameTextBox = new TextBox();
 			BoneNameTextBox.Name = "boneBox_" + idx;
 			//BoneNameTextBox.Size = new System.Drawing.Size(326, 58);
-			//BoneNameTextBox.Width = 326;
+			BoneNameTextBox.Width = 326;
 			//BoneNameTextBox.Height = 58;
 			//BoneNameTextBox.Location = new System.Drawing.Point(86, 18);
 			BoneNameTextBox.Text = bone_name;
@@ -1807,76 +1813,91 @@ namespace OGF_Tool
 			ParentBoneNameTextBox.Tag = "string";
 			ParentBoneNameTextBox.IsReadOnly = true;
 			//ParentBoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			grid.Children.Add(ParentBoneNameTextBox);
+			Grid.SetColumn(ParentBoneNameTextBox, 1);
+			Grid.SetRow(ParentBoneNameTextBox, 1);
+
 
 			var ParentBoneNameLabel = new Label();
 			ParentBoneNameLabel.Name = "ParentboneLabel_" + idx;
-			//ParentBoneNameLabel.Size = new System.Drawing.Size(100, 20);
-			//ParentBoneNameLabel.Location = new System.Drawing.Point(6, 47);
 			ParentBoneNameLabel.Content = "Parent Bone:";
+			grid.Children.Add(ParentBoneNameLabel);
+			Grid.SetRow(ParentBoneNameLabel, 1);
 
 			var MaterialTextBox = new TextBox();
 			MaterialTextBox.Name = "MaterialBox_" + idx;
-			//MaterialTextBox.Size = new System.Drawing.Size(326, 58);
-			//MaterialTextBox.Location = new System.Drawing.Point(86, 72);
+			MaterialTextBox.Width = 326;
 			MaterialTextBox.Text = material;
 			MaterialTextBox.Tag = "string";
 			MaterialTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			MaterialTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			//MaterialTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			grid.Children.Add(MaterialTextBox);
+			Grid.SetColumn(MaterialTextBox, 1);
+			Grid.SetRow(MaterialTextBox, 2);
 
 			var MaterialLabel = new Label();
 			MaterialLabel.Name = "MaterialLabel_" + idx;
-			//MaterialLabel.Size = new System.Drawing.Size(100, 20);
-			//MaterialLabel.Location = new System.Drawing.Point(6, 74);
 			MaterialLabel.Content = "Material:";
+			grid.Children.Add(MaterialLabel);
+			Grid.SetRow(MaterialLabel, 2);
 
 			var MassTextBox = new TextBox();
 			MassTextBox.Name = "MassBox_" + idx;
-			//MassTextBox.Size = new System.Drawing.Size(84, 58);
-			//MassTextBox.Location = new System.Drawing.Point(86, 99);
+			MassTextBox.Width = 84;
 			MassTextBox.Text = CheckNaN(mass.ToString());
 			MassTextBox.Tag = "float";
 			MassTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			MassTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			grid.Children.Add(MassTextBox);
+			Grid.SetColumn(MassTextBox, 1);
+			Grid.SetRow(MassTextBox, 3);
+
 
 			var MassLabel = new Label();
 			MassLabel.Name = "MassLabel_" + idx;
-			//MassLabel.Size = new System.Drawing.Size(100, 20);
-			//MassLabel.Location = new System.Drawing.Point(6, 101);
 			MassLabel.Content = "Mass:";
+			grid.Children.Add(MassLabel);
+			Grid.SetRow(MassLabel, 3);
 
 			var CenterMassTextBoxX = new TextBox();
 			CenterMassTextBoxX.Name = "CenterBoxX_" + idx;
-			//CenterMassTextBoxX.Size = new System.Drawing.Size(84, 58);
-			//CenterMassTextBoxX.Location = new System.Drawing.Point(86, 125);
+			CenterMassTextBoxX.Width = 84;
 			CenterMassTextBoxX.Text = CheckNaN(center.x.ToString());
 			CenterMassTextBoxX.Tag = "float";
 			CenterMassTextBoxX.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			stackPanel1.Children.Add(CenterMassTextBoxX);
+
 
 			var CenterMassTextBoxY = new TextBox();
 			CenterMassTextBoxY.Name = "CenterBoxY_" + idx;
-			//CenterMassTextBoxY.Size = new System.Drawing.Size(84, 58);
-			//CenterMassTextBoxY.Location = new System.Drawing.Point(182, 125);
+			CenterMassTextBoxY.Width = 84;
 			CenterMassTextBoxY.Text = CheckNaN(center.y.ToString());
 			CenterMassTextBoxY.Tag = "float";
 			CenterMassTextBoxY.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			stackPanel1.Children.Add(CenterMassTextBoxY);
 
 			var CenterMassTextBoxZ = new TextBox();
 			CenterMassTextBoxZ.Name = "CenterBoxZ_" + idx;
-			//CenterMassTextBoxZ.Size = new System.Drawing.Size(84, 58);
-			//CenterMassTextBoxZ.Location = new System.Drawing.Point(277, 125);
+			CenterMassTextBoxZ.Width = 84;
 			CenterMassTextBoxZ.Text = CheckNaN(center.z.ToString());
 			CenterMassTextBoxZ.Tag = "float";
 			CenterMassTextBoxZ.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			
+			stackPanel1.Children.Add(CenterMassTextBoxZ);
+			grid.Children.Add(stackPanel1);
+			Grid.SetColumn(stackPanel1, 1);
+			Grid.SetRow(stackPanel1, 4);
 
 			var CenterMassLabel = new Label();
 			CenterMassLabel.Name = "CenterMassLabel_" + idx;
 			//CenterMassLabel.Size = new System.Drawing.Size(100, 20);
 			//CenterMassLabel.Location = new System.Drawing.Point(6, 127);
 			CenterMassLabel.Content = "Center of Mass:";
+			grid.Children.Add(CenterMassLabel);
+			Grid.SetRow(CenterMassLabel, 4);
 
 			var PositionX = new TextBox();
 			PositionX.Name = "PositionX_" + idx;
@@ -1886,6 +1907,7 @@ namespace OGF_Tool
 			PositionX.Tag = "float";
 			PositionX.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			PositionX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			stackPanel2.Children.Add(PositionX);
 
 			var PositionY = new TextBox();
 			PositionY.Name = "PositionY_" + idx;
@@ -1895,6 +1917,8 @@ namespace OGF_Tool
 			PositionY.Tag = "float";
 			PositionY.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			PositionY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			stackPanel2.Children.Add(PositionY);
+
 
 			var PositionZ = new TextBox();
 			PositionZ.Name = "PositionZ_" + idx;
@@ -1904,12 +1928,18 @@ namespace OGF_Tool
 			PositionZ.Tag = "float";
 			PositionZ.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			PositionZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			stackPanel2.Children.Add(PositionZ);
+			grid.Children.Add(stackPanel2);
+			Grid.SetColumn(stackPanel2, 1);
+			Grid.SetRow(stackPanel2, 5);
 
 			var PositionLabel = new Label();
 			PositionLabel.Name = "PositionLabel_" + idx;
 			//PositionLabel.Size = new System.Drawing.Size(100, 20);
 			//PositionLabel.Location = new System.Drawing.Point(6, 153);
 			PositionLabel.Content = "Position:";
+			grid.Children.Add(PositionLabel);
+			Grid.SetRow(PositionLabel, 5);
 
 			var RotationX = new TextBox();
 			RotationX.Name = "RotationX_" + idx;
@@ -1919,6 +1949,10 @@ namespace OGF_Tool
 			RotationX.Tag = "float";
 			RotationX.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			grid.Children.Add(RotationX);
+			Grid.SetColumn(RotationX, 1);
+			Grid.SetRow(RotationX, 6);
+
 
 			var RotationY = new TextBox();
 			RotationY.Name = "RotationY_" + idx;
@@ -1928,6 +1962,9 @@ namespace OGF_Tool
 			RotationY.Tag = "float";
 			RotationY.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			grid.Children.Add(RotationY);
+			Grid.SetColumn(RotationY, 1);
+			Grid.SetRow(RotationY, 6);
 
 			var RotationZ = new TextBox();
 			RotationZ.Name = "RotationZ_" + idx;
@@ -1937,40 +1974,19 @@ namespace OGF_Tool
 			RotationZ.Tag = "float";
 			RotationZ.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			grid.Children.Add(RotationZ);
+			Grid.SetColumn(RotationZ, 1);
+			Grid.SetRow(RotationZ, 6);
 
 			var RotationLabel = new Label();
 			RotationLabel.Name = "RotationLabel_" + idx;
-			//RotationLabel.Size = new System.Drawing.Size(100, 20);
-			//RotationLabel.Location = new System.Drawing.Point(6, 179);
 			RotationLabel.Content = "Rotation:";
-
+			grid.Children.Add(RotationLabel);
+			Grid.SetRow(RotationLabel, 6);
 
 
 
 			box.Content = grid;
-			
-			/*
-			box.Controls.Add(BoneNameTextBox);
-			box.Controls.Add(ParentBoneNameTextBox);
-			box.Controls.Add(MaterialTextBox);
-			box.Controls.Add(MassTextBox);
-			box.Controls.Add(CenterMassTextBoxX);
-			box.Controls.Add(CenterMassTextBoxY);
-			box.Controls.Add(CenterMassTextBoxZ);
-			box.Controls.Add(PositionX);
-			box.Controls.Add(PositionY);
-			box.Controls.Add(PositionZ);
-			box.Controls.Add(RotationX);
-			box.Controls.Add(RotationY);
-			box.Controls.Add(RotationZ);
-
-			box.Controls.Add(BoneNameLabel);
-			box.Controls.Add(ParentBoneNameLabel);
-			box.Controls.Add(MaterialLabel);
-			box.Controls.Add(MassLabel);
-			box.Controls.Add(CenterMassLabel);
-			box.Controls.Add(PositionLabel);
-			box.Controls.Add(RotationLabel);*/
 		}
     }
 }
