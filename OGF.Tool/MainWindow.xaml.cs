@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using OGF_tool;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,23 +17,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OGF.Tool
+namespace OGF_Tool
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-		OpenFileDialog OpenOGFDialog = null;
-		OpenFileDialog OpenOGF_DmDialog = null;
-		OpenFileDialog OpenOMFDialog = null;
-		OpenFileDialog OpenProgramDialog = null;
+		OpenFileDialog OpenOGFDialog =  new OpenFileDialog();
+		OpenFileDialog OpenOGF_DmDialog = new OpenFileDialog();
+		OpenFileDialog OpenOMFDialog = new OpenFileDialog();
+		OpenFileDialog OpenProgramDialog = new OpenFileDialog();
 
-		SaveFileDialog SaveObjectDialog = null;
-		SaveFileDialog SaveAsDialog = null;
-		SaveFileDialog SaveSklsDialog = null;
-		SaveFileDialog SaveOmfDialog = null;
-		SaveFileDialog SaveBonesDialog = null;
+		SaveFileDialog SaveObjectDialog = new SaveFileDialog();
+		SaveFileDialog SaveAsDialog = new SaveFileDialog();
+		SaveFileDialog SaveSklsDialog = new SaveFileDialog();
+		SaveFileDialog SaveOmfDialog = new SaveFileDialog();
+		SaveFileDialog SaveBonesDialog = new SaveFileDialog();
 
 		// File sytem
 		public OGF_Children OGF_V			= null;
@@ -43,10 +42,12 @@ namespace OGF.Tool
         public List<byte>	file_bytes		= new List<byte>();
         public string		FILE_NAME		= "";
         IniFile				Settings		= null;
-        FolderSelectDialog	SaveSklDialog	= null;
+		//FolderSelectDialog	SaveSklDialog	= null;
+		FolderSelectDialog SaveSklDialog = null;
 
-        // Input
-        public	bool		bKeyIsDown		= false;
+
+		// Input
+		public	bool		bKeyIsDown		= false;
         string				number_mask		= "";
 
         [DllImport("converter.dll")]
@@ -64,11 +65,28 @@ namespace OGF.Tool
             }
         }
 
+		private void SetUpDialogs()
+        {
+			OpenOGFDialog.Filter = "OGF file|*.ogf";
+			OpenOGF_DmDialog.Filter = "OGF file|*.ogf|DM file|*.dm";
+			SaveObjectDialog.Filter = "Object file|*object";
+			SaveAsDialog.Filter = "OGF file|*.ogf|Object file|*.object|Bones file|*.bones|Skl file|*.skl|Skls file|*.skls|OMF file|*.omf";
+			OpenOMFDialog.Filter = "OMF file|*.omf";
+			OpenProgramDialog.Filter = "Program|*.exe";
+			SaveSklsDialog.Filter = "Skls file|*.skls";
+			SaveOmfDialog.Filter = "OMF file|*omf";
+			SaveBonesDialog.Filter = "Bones file|*bones";
+
+		}
+
         public MainWindow()
         {
             InitializeComponent();
 
-            number_mask = @"^-[0-9.]*$";
+			SetUpDialogs();
+
+
+			number_mask = @"^-[0-9.]*$";
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
             oGFInfoToolStripMenuItem.IsEnabled = false;
@@ -112,8 +130,8 @@ namespace OGF.Tool
                 OGF_V = null;
                 file_bytes.Clear();
             }
-            TexturesPage.Controls.Clear();
-            BoneParamsPage.Controls.Clear();
+            TexturesPage.Content = null;
+            BoneParamsPage.Content = null;
             TabControl_w.Items.Clear();
             MotionRefsBox.Clear();
             BoneNamesBox.Clear();
@@ -133,7 +151,7 @@ namespace OGF.Tool
 				saveAsToolStripMenuItem.IsEnabled = true;
 				toolStripMenuItem1.IsEnabled = !OGF_V.IsDM;
 				oGFInfoToolStripMenuItem.IsEnabled = !OGF_V.IsDM;
-				openSkeletonInObjectEditorToolStripMenuItem.Enabled = OGF_V.IsSkeleton();
+				openSkeletonInObjectEditorToolStripMenuItem.IsEnabled = OGF_V.IsSkeleton();
 				viewToolStripMenuItem.IsEnabled = OGF_V.IsSkeleton();
 				exportToolStripMenuItem.IsEnabled = true;
 				bonesToolStripMenuItem.IsEnabled = OGF_V.IsSkeleton();
@@ -144,18 +162,18 @@ namespace OGF.Tool
 				OpenOGFDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				OpenOGF_DmDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				SaveAsDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
-				SaveAsDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Content.LastIndexOf('.'));
+				SaveAsDialog.FileName = StatusFile.Content.ToString().Substring(0, StatusFile.Content.ToString().LastIndexOf('.'));
 				OpenOMFDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				OpenProgramDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				SaveSklDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				SaveSklsDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
-				SaveSklsDialog.FileName = StatusFile.Content.Substring(0, StatusFile.Content.LastIndexOf('.')) + ".skls";
+				SaveSklsDialog.FileName = StatusFile.Content.ToString().Substring(0, StatusFile.Content.ToString().LastIndexOf('.')) + ".skls";
 				SaveOmfDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
-				SaveOmfDialog.FileName = StatusFile.Content.Substring(0, StatusFile.Content.LastIndexOf('.')) + ".omf";
+				SaveOmfDialog.FileName = StatusFile.Content.ToString().Substring(0, StatusFile.Content.ToString().LastIndexOf('.')) + ".omf";
 				SaveBonesDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
-				SaveBonesDialog.FileName = StatusFile.Content.Substring(0, StatusFile.Content.LastIndexOf('.')) + ".bones";
+				SaveBonesDialog.FileName = StatusFile.Content.ToString().Substring(0, StatusFile.Content.ToString().LastIndexOf('.')) + ".bones";
 				SaveObjectDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
-				SaveObjectDialog.FileName = StatusFile.Content.Substring(0, StatusFile.Content.LastIndexOf('.')) + ".object";
+				SaveObjectDialog.FileName = StatusFile.Content.ToString().Substring(0, StatusFile.Content.ToString().LastIndexOf('.')) + ".object";
 			}
 
 			// Textures
@@ -165,29 +183,29 @@ namespace OGF.Tool
 			{
 				//Userdata
 				TabControl_w.Items.Add(UserDataPage);
-				UserDataPage.Controls.Clear();
-				UserDataPage.Controls.Add(UserDataBox);
-				UserDataPage.Controls.Add(CreateUserdataButton);
-				CreateUserdataButton.Visible = false;
-				UserDataBox.Visible = false;
+				UserDataPage.Content = null;
+				//UserDataPage.Controls.Add(UserDataBox);
+				//UserDataPage.Controls.Add(CreateUserdataButton);
+				CreateUserdataButton.Visibility = Visibility.Collapsed;
+				UserDataBox.Visibility = Visibility.Collapsed;
 
 				if (OGF_V.userdata != null)
-					UserDataBox.Visible = true;
+					UserDataBox.Visibility = Visibility.Visible;
 				else
-					CreateUserdataButton.Visible = true;
+					CreateUserdataButton.Visibility = Visibility.Visible;
 
 				// Motion Refs
 				TabControl_w.Items.Add(MotionRefsPage);
-				MotionRefsPage.Controls.Clear();
-				MotionRefsPage.Controls.Add(MotionRefsBox);
-				MotionRefsPage.Controls.Add(CreateMotionRefsButton);
-				CreateMotionRefsButton.Visible = false;
-				MotionRefsBox.Visible = false;
+				MotionRefsPage.Content = null;
+				//MotionRefsPage.Controls.Add(MotionRefsBox);
+				//MotionRefsPage.Controls.Add(CreateMotionRefsButton);
+				CreateMotionRefsButton.Visibility = Visibility.Collapsed;
+				MotionRefsBox.Visibility = Visibility.Collapsed;
 
 				if (OGF_V.motion_refs != null)
-					MotionRefsBox.Visible = true;
+					MotionRefsBox.Visibility = Visibility.Visible;
 				else
-					CreateMotionRefsButton.Visible = true;
+					CreateMotionRefsButton.Visibility = Visibility.Visible;
 
 				// Motions
 				TabControl_w.Items.Add(MotionPage);
@@ -195,20 +213,20 @@ namespace OGF.Tool
 
 				if (OGF_V.motions != "")
 				{
-					AppendOMFButton.Visible = false;
-					MotionBox.Visible = true;
+					AppendOMFButton.Visibility = Visibility.Collapsed;
+					MotionBox.Visibility = Visibility.Visible;
 				}
 				else
 				{
-					MotionBox.Visible = false;
-					AppendOMFButton.Visible = true;
+					MotionBox.Visibility = Visibility.Collapsed;
+					AppendOMFButton.Visibility = Visibility.Visible;
 				}
 
 				// Bones
 				if (OGF_V.bones != null)
 				{
-					BoneNamesBox.Clear();
-					TabControl.Controls.Add(BoneNamesPage);
+					BoneNamesBox.Text = "";
+					TabControl_w.Items.Add(BoneNamesPage);
 
 					BoneNamesBox.Text += $"Bones count : {OGF_V.bones.bone_names.Count}\n\n";
 					for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
@@ -239,7 +257,10 @@ namespace OGF.Tool
 			{
 				CreateTextureGroupBox(i);
 
+				/*
+				
 				var box = TexturesPage.Controls["TextureGrpBox_" + i];
+
 
 				if (box != null)
 				{
@@ -247,7 +268,7 @@ namespace OGF.Tool
 					Cntrl.Text = OGF_V.childs[i].m_texture;
 					var Cntrl2 = box.Controls["shaderBox_" + i];
 					Cntrl2.Text = OGF_V.childs[i].m_shader;
-				}
+				}*/
 			}
 
 			if (OGF_V.bones != null)
@@ -262,7 +283,7 @@ namespace OGF.Tool
 			UserDataBox.Clear();
 
 			if (OGF_V.motion_refs != null)
-				MotionRefsBox.Lines = OGF_V.motion_refs.refs.ToArray();
+				MotionRefsBox.Text = OGF_V.motion_refs.refs.ToString();
 
 			if (OGF_V.userdata != null)
 				UserDataBox.Text = OGF_V.userdata.userdata;
@@ -282,10 +303,10 @@ namespace OGF.Tool
 
 				if (IsTextCorrect(MotionRefsBox.Text))
 				{
-					for (int i = 0; i < MotionRefsBox.Lines.Count(); i++)
+					for (int i = 0; i < MotionRefsBox.LineCount; i++)
 					{
-						if (IsTextCorrect(MotionRefsBox.Lines[i]))
-							OGF_V.motion_refs.refs.Add(GetCorrectString(MotionRefsBox.Lines[i]));
+						if (IsTextCorrect(MotionRefsBox.GetLineText(i)))
+							OGF_V.motion_refs.refs.Add(GetCorrectString(MotionRefsBox.GetLineText(i)));
 					}
 
 					if (OGF_V.motion_refs.refs.Count() > 1)
@@ -299,10 +320,10 @@ namespace OGF.Tool
 
 				if (IsTextCorrect(UserDataBox.Text))
 				{
-					for (int i = 0; i < UserDataBox.Lines.Count(); i++)
+					for (int i = 0; i < UserDataBox.LineCount; i++)
 					{
-						string ext = i == UserDataBox.Lines.Count() - 1 ? "" : "\r\n";
-						OGF_V.userdata.userdata += UserDataBox.Lines[i] + ext;
+						string ext = i == UserDataBox.LineCount - 1 ? "" : "\r\n";
+						OGF_V.userdata.userdata += UserDataBox.GetLineText(i) + ext;
 					}
 				}
 			}
@@ -320,7 +341,7 @@ namespace OGF.Tool
 
 		private void WriteFile(string filename)
 		{
-			if (BkpCheckBox.Checked)
+			if (BkpCheckBox.IsChecked == true)
 			{
 				string backup_path = filename + ".bak";
 
@@ -946,7 +967,9 @@ namespace OGF.Tool
 					{
 						string old_name = OGF_V.bones.bone_names[idx];
 						OGF_V.bones.bone_names[idx] = curBox.Text;
-
+						/*
+						 * 
+						 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 						for (int i = 0; i < OGF_V.bones.parent_bone_names.Count; i++)
 						{
 							if (BoneParamsPage.Controls.Count < i) continue;
@@ -960,7 +983,7 @@ namespace OGF.Tool
 								}
 							}
 						}
-
+						*/
 						BoneNamesBox.Clear();
 						BoneNamesBox.Text += $"Bones count : {OGF_V.bones.bone_names.Count}\n\n";
 
@@ -997,12 +1020,11 @@ namespace OGF.Tool
 			AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Saved!" : "Saved!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxImage.Information);
 		}
 
-		private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+		private void loadToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			OpenOGF_DmDialog.FileName = "";
-			DialogResult res = OpenOGF_DmDialog.ShowDialog();
 
-			if (res == DialogResult.OK)
+			if (OpenOGF_DmDialog.ShowDialog() == true)
 			{
 				Clear(false);
 				if (OpenFile(OpenOGF_DmDialog.FileName, ref OGF_V, ref Current_OGF, ref Current_OMF))
@@ -1032,6 +1054,7 @@ namespace OGF.Tool
 
 		private void oGFInfoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			/*
 			System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
 
 			OgfInfo Info = new OgfInfo(OGF_V.description, OGF_V.m_version, OGF_V.m_model_type);
@@ -1050,6 +1073,7 @@ namespace OGF.Tool
 			}
 
 			System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+			*/
 		}
 
 		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1059,7 +1083,7 @@ namespace OGF.Tool
 			else
 				SaveAsDialog.Filter = "OGF file|*.ogf";
 
-			if (SaveAsDialog.ShowDialog() == DialogResult.OK)
+			if (SaveAsDialog.ShowDialog() == true)
 			{
 				SaveTools(SaveAsDialog.FileName, 0);
 				SaveAsDialog.InitialDirectory = "";
@@ -1135,7 +1159,7 @@ namespace OGF.Tool
 
 		private void objectToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (SaveObjectDialog.ShowDialog() == DialogResult.OK)
+			if (SaveObjectDialog.ShowDialog() == true)
 			{
 				SaveTools(SaveObjectDialog.FileName, 1);
 				SaveObjectDialog.InitialDirectory = "";
@@ -1144,7 +1168,7 @@ namespace OGF.Tool
 
 		private void bonesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (SaveBonesDialog.ShowDialog() == DialogResult.OK)
+			if (SaveBonesDialog.ShowDialog() == true)
 			{
 				SaveTools(SaveBonesDialog.FileName, 2);
 				SaveBonesDialog.InitialDirectory = "";
@@ -1153,7 +1177,7 @@ namespace OGF.Tool
 
 		private void omfToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (SaveOmfDialog.ShowDialog() == DialogResult.OK)
+			if (SaveOmfDialog.ShowDialog() == true)
 			{
 				SaveTools(SaveOmfDialog.FileName, 5);
 				SaveOmfDialog.InitialDirectory = "";
@@ -1162,7 +1186,7 @@ namespace OGF.Tool
 
 		private void sklToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (SaveSklDialog.ShowDialog(this.Handle))
+			if (SaveSklDialog.ShowDialog())
 			{
 				SaveTools(SaveSklDialog.FileName, 3);
 				SaveSklDialog.InitialDirectory = "";
@@ -1171,7 +1195,7 @@ namespace OGF.Tool
 
 		private void sklsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (SaveSklsDialog.ShowDialog() == DialogResult.OK)
+			if (SaveSklsDialog.ShowDialog() == true)
 			{
 				SaveTools(SaveSklsDialog.FileName, 4);
 				SaveSklsDialog.InitialDirectory = "";
@@ -1180,7 +1204,7 @@ namespace OGF.Tool
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (MessageBox.Show("Are you sure you want to exit?", "OGF Editor", MessageBoxButton.YesNo, MessageBoxImage.Question) == DialogResult.Yes)
+			if (MessageBox.Show("Are you sure you want to exit?", "OGF Editor", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
 				Close();
 		}
 
@@ -1202,8 +1226,8 @@ namespace OGF.Tool
 
 		private void CreateUserdataButton_Click(object sender, EventArgs e)
 		{
-			CreateUserdataButton.Visible = false;
-			UserDataBox.Visible = true;
+			CreateUserdataButton.Visibility = Visibility.Collapsed;
+			UserDataBox.Visibility = Visibility.Visible;
 			UserDataBox.Clear();
 			if (OGF_V.userdata == null)
 				OGF_V.userdata = new UserData();
@@ -1211,11 +1235,11 @@ namespace OGF.Tool
 
 		private void CreateMotionRefsButton_Click(object sender, EventArgs e)
 		{
-			if (Current_OMF == null || Current_OMF != null && MessageBox.Show("New motion refs chunk will remove built-in motions, continue?", "OGF Editor", MessageBoxButton.YesNo, MessageBoxImage.Question) == DialogResult.Yes)
+			if (Current_OMF == null || Current_OMF != null && MessageBox.Show("New motion refs chunk will remove built-in motions, continue?", "OGF Editor", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
 			{
 				// ×èñòèì âñå ñâÿçàííîå ñî âñòðîåííûìè àíèìàìè
 				MotionBox.Clear();
-				MotionBox.Visible = false;
+				MotionBox.Visibility = Visibility.Collapsed;
 				Current_OMF = null;
 				AppendOMFButton.Visibility = Visibility.Visible;
 				OGF_V.motions = "";
@@ -1225,7 +1249,7 @@ namespace OGF.Tool
 
 				// Îáíîâëÿåì âèçóàë èíòåðôåéñà ìîóøí ðåôîâ
 				CreateMotionRefsButton.Visibility = Visibility.Collapsed;
-				MotionRefsBox.Visible = true;
+				MotionRefsBox.Visibility = Visibility.Visible;
 				MotionRefsBox.Clear();
 
 				if (OGF_V.motion_refs == null)
@@ -1255,16 +1279,18 @@ namespace OGF.Tool
 		private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (TabControl_w.SelectedIndex < 0) return;
-			motionToolsToolStripMenuItem.Enabled = false;
+			motionToolsToolStripMenuItem.IsEnabled = false;
 
-			switch (TabControl.Controls[TabControl.SelectedIndex].Name)
+			var a = (TabItem)TabControl_w.Items[TabControl_w.SelectedIndex];
+			
+			switch (a.Name)
 			{
 				case "UserDataPage":
 					{
 						if (!IsTextCorrect(UserDataBox.Text))
 						{
-							CreateUserdataButton.Visible = true;
-							UserDataBox.Visible = false;
+							CreateUserdataButton.Visibility = Visibility.Visible;
+							UserDataBox.Visibility = Visibility.Collapsed;
 						}
 						break;
 					}
@@ -1272,15 +1298,15 @@ namespace OGF.Tool
 					{
 						if (!IsTextCorrect(MotionRefsBox.Text))
 						{
-							CreateMotionRefsButton.Visible = true;
-							MotionRefsBox.Visible = false;
+							CreateMotionRefsButton.Visibility = Visibility.Visible;
+							MotionRefsBox.Visibility = Visibility.Collapsed;
 						}
 						break;
 					}
 				case "MotionPage":
 					{
 						if (Current_OMF != null)
-							motionToolsToolStripMenuItem.Enabled = true;
+							motionToolsToolStripMenuItem.IsEnabled = true;
 						break;
 					}
 				case "LodPage":
@@ -1309,11 +1335,11 @@ namespace OGF.Tool
 
 		private void AppendOMFButton_Click(object sender, EventArgs e)
 		{
-			if (!IsTextCorrect(MotionRefsBox.Text) && (OGF_V.motion_refs == null || OGF_V.motion_refs.refs.Count() == 0) || (IsTextCorrect(MotionRefsBox.Text) || OGF_V.motion_refs != null && OGF_V.motion_refs.refs.Count() > 0) && MessageBox.Show("Build-in motions will remove motion refs, continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+			if (!IsTextCorrect(MotionRefsBox.Text) && (OGF_V.motion_refs == null || OGF_V.motion_refs.refs.Count() == 0) || (IsTextCorrect(MotionRefsBox.Text) || OGF_V.motion_refs != null && OGF_V.motion_refs.refs.Count() > 0) && MessageBox.Show("Build-in motions will remove motion refs, continue?", "OGF Editor", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
 				OpenOMFDialog.ShowDialog();
 		}
 
-		private void AppendMotion(object sender, CancelEventArgs e)
+		private void AppendMotion(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			if (sender != null)
 				OpenOMFDialog.InitialDirectory = "";
@@ -1330,8 +1356,8 @@ namespace OGF.Tool
 				{
 					// Àïäåéòèì âèçóàë âñòðîåííûõ àíèìàöèé
 					AppendOMFButton.Visibility = Visibility.Collapsed;
-					MotionBox.Visible = true;
-					motionToolsToolStripMenuItem.Enabled = true;
+					MotionBox.Visibility = Visibility.Visible;
+					motionToolsToolStripMenuItem.IsEnabled = true;
 
 					// ×èñòèì âñòðîåííûå ðåôû, èíòåðôåéñ ïî÷èñòèòñÿ ñàì ïðè àêòèâàöèè âêëàäêè
 					MotionRefsBox.Clear();
@@ -1369,9 +1395,9 @@ namespace OGF.Tool
 
 		private void deleteChunkToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			MotionBox.Visible = false;
-			AppendOMFButton.Visible = true;
-			motionToolsToolStripMenuItem.Enabled = false;
+			MotionBox.Visibility = Visibility.Collapsed;
+			AppendOMFButton.Visibility = Visibility.Visible;
+			motionToolsToolStripMenuItem.IsEnabled = false;
 			Current_OMF = null;
 			MotionBox.Clear();
 			OGF_V.motions = "";
@@ -1381,7 +1407,7 @@ namespace OGF.Tool
 		private void importDataFromModelToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenOGFDialog.FileName = "";
-			if (OpenOGFDialog.ShowDialog() == DialogResult.OK)
+			if (OpenOGFDialog.ShowDialog() == true)
 			{
 				bool UpdateUi = false;
 
@@ -1390,7 +1416,7 @@ namespace OGF.Tool
 				byte[] SecondOmfByte = null;
 				OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte, ref SecondOmfByte);
 
-				if (OGF_V.childs.Count == SecondOgf.childs.Count && MessageBox.Show("Import textures and shaders path?\nThey may have different positions", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				if (OGF_V.childs.Count == SecondOgf.childs.Count && MessageBox.Show("Import textures and shaders path?\nThey may have different positions", "OGF Editor", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
 				{
 					for (int i = 0; i < OGF_V.childs.Count; i++)
 					{
@@ -1472,15 +1498,15 @@ namespace OGF.Tool
 
 			if (OGF_V.bones == null)
 				OGF_V.m_model_type = 1;
-			else if (Current_OMF == null && !IsTextCorrect(MotionRefsBox.Text))
+			else if (Current_OMF == null && !IsTextCorrect(MotionRefsBox.Text)) 
 				OGF_V.m_model_type = 10;
 			else
 				OGF_V.m_model_type = 3;
 
 			// Àïäåéòèì ýêñïîðò àíèì òóò, ò.ê. ïðè ëþáîì èçìåíåíèè îìô âûçûâàåòñÿ ýòà ôóíêöèÿ
-			omfToolStripMenuItem.Enabled = Current_OMF != null;
-			sklToolStripMenuItem.Enabled = Current_OMF != null;
-			sklsToolStripMenuItem.Enabled = Current_OMF != null;
+			omfToolStripMenuItem.IsEnabled = Current_OMF != null;
+			sklToolStripMenuItem.IsEnabled = Current_OMF != null;
+			sklsToolStripMenuItem.IsEnabled = Current_OMF != null;
 		}
 
 		private void editImOMFEditorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1556,7 +1582,7 @@ namespace OGF.Tool
 			if (!File.Exists(omf_editor_path))
 			{
 				MessageBox.Show("Please, open OMF Editor path", "", MessageBoxButton.OK, MessageBoxImage.Information);
-				if (OpenProgramDialog.ShowDialog() == DialogResult.OK)
+				if (OpenProgramDialog.ShowDialog() == true)
 				{
 					OpenProgramDialog.InitialDirectory = "";
 					omf_editor_path = OpenProgramDialog.FileName;
@@ -1572,8 +1598,8 @@ namespace OGF.Tool
 			string object_editor_path = Settings.Read("object_editor", "settings");
 			if (!File.Exists(object_editor_path))
 			{
-				MessageBox.Show("Please, open Object Editor path", "", MessageBoxButton.OK, MessageBoxImages.Information);
-				if (OpenProgramDialog.ShowDialog() == DialogResult.OK)
+				MessageBox.Show("Please, open Object Editor path", "", MessageBoxButton.OK, MessageBoxImage.Information);
+				if (OpenProgramDialog.ShowDialog() == true)
 				{
 					OpenProgramDialog.InitialDirectory = "";
 					object_editor_path = OpenProgramDialog.FileName;
@@ -1593,6 +1619,7 @@ namespace OGF.Tool
 
 		private void RichTextBoxImgDefender(object sender, KeyEventArgs e)
 		{
+			/*
 			RichTextBox TextBox = sender as RichTextBox;
 			if (e.Control && e.KeyCode == Keys.V)
 			{
@@ -1600,6 +1627,7 @@ namespace OGF.Tool
 					TextBox.Paste(DataFormats.GetFormat(DataFormats.Text));
 				e.Handled = true;
 			}
+			*/
 		}
 
 		private bool IsTextCorrect(string text)
@@ -1641,87 +1669,108 @@ namespace OGF.Tool
 		private void CreateTextureGroupBox(int idx)
 		{
 			var GroupBox = new GroupBox();
-			GroupBox.Location = new System.Drawing.Point(3, 3 + 126 * idx);
-			GroupBox.Size = new System.Drawing.Size(421, 126);
+			//GroupBox.Location = new System.Drawing.Point(3, 3 + 126 * idx);
+			//GroupBox.Size = new System.Drawing.Size(421, 126);
 			GroupBox.Content = "Set: [" + idx + "]";
 			GroupBox.Name = "TextureGrpBox_" + idx;
 			//GroupBox.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-			CreateTextureBoxes(idx, GroupBox);
-			CreateTextureLabels(idx, GroupBox);
-			TexturesPage.Controls.Add(GroupBox);
+			CreateTextureBoxes(idx, GroupBox);//////////!!!!!!!!!!!!!!!!!!!!!!
+			CreateTextureLabels(idx, GroupBox); //////////!!!!!!!!!!!!!!!!!!!!!!
+			TexturesPage.Content = (GroupBox);
 		}
 
-		private void CreateTextureBoxes(int idx, GroupBox box)
+		private void CreateTextureBoxes(int idx, GroupBox box) //////////!!!!!!!!!!!!!!!!!!!!!!
 		{
 			var newTextBox = new TextBox();
 			newTextBox.Name = "textureBox_" + idx;
-			newTextBox.Size = new System.Drawing.Size(409, 23);
-			newTextBox.Location = new System.Drawing.Point(6, 39);
+			//newTextBox.Size = new System.Drawing.Size(409, 23);
+			//newTextBox.Location = new System.Drawing.Point(6, 39);
 			newTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxFilter);
 			//newTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
 			var newTextBox2 = new TextBox();
 			newTextBox2.Name = "shaderBox_" + idx;
-			newTextBox2.Size = new System.Drawing.Size(409, 23);
-			newTextBox2.Location = new System.Drawing.Point(6, 88);
+			//newTextBox2.Size = new System.Drawing.Size(409, 23);
+			//newTextBox2.Location = new System.Drawing.Point(6, 88);
 			newTextBox2.TextChanged += new TextChangedEventHandler(this.TextBoxFilter);
 			//newTextBox2.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-			box.Controls.Add(newTextBox);
-			box.Controls.Add(newTextBox2);
+
+			StackPanel sp = new StackPanel();
+			sp.Children.Add(newTextBox);
+			sp.Children.Add(newTextBox2);
+
+			box.Content = sp;
 		}
 
-		private void CreateTextureLabels(int idx, GroupBox box)
+		private void CreateTextureLabels(int idx, GroupBox box) //////////!!!!!!!!!!!!!!!!!!!!!!
 		{
 			var newLbl = new Label();
 			newLbl.Name = "textureLbl_" + idx;
 			newLbl.Content = "Texture Path:";
-			newLbl.Location = new System.Drawing.Point(6, 21);
+			//newLbl.Location = new System.Drawing.Point(6, 21);
 
 			var newLbl2 = new Label();
 			newLbl2.Name = "shaderLbl_" + idx;
 			newLbl2.Content = "Shader Name:";
-			newLbl2.Location = new System.Drawing.Point(6, 70);
+			//newLbl2.Location = new System.Drawing.Point(6, 70);
 
-			box.Controls.Add(newLbl);
-			box.Controls.Add(newLbl2);
+			StackPanel sp = new StackPanel();
+			sp.Children.Add(newLbl);
+			sp.Children.Add(newLbl2);
+			box.Content = sp;
 		}
 
 		private void CreateBoneGroupBox(int idx, string bone_name, string parent_bone_name, string material, float mass, Fvector center, Fvector pos, Fvector rot)
 		{
 			var GroupBox = new GroupBox();
-			GroupBox.Location = new System.Drawing.Point(3, 3 + 205 * idx);
-			GroupBox.Size = new System.Drawing.Size(421, 203);
+			//GroupBox.Location = new System.Drawing.Point(3, 3 + 205 * idx);
+			//GroupBox.Size = new System.Drawing.Size(421, 203);
 			GroupBox.Content = "Bone id: [" + idx + "]";
 			GroupBox.Name = "BoneGrpBox_" + idx;
 			//GroupBox.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 
 			CreateBoneTextBox(idx, GroupBox, bone_name, parent_bone_name, material, mass, center, pos, rot);
-			BoneParamsPage.Controls.Add(GroupBox);
+			BoneParamsPage.Content = (GroupBox);
 		}
 
 		private void CreateBoneTextBox(int idx, GroupBox box, string bone_name, string parent_bone_name, string material, float mass, Fvector center, Fvector pos, Fvector rot)
 		{
 
 			Grid grid = new Grid();
-			ColumnDefinition Col = new ColumnDefinition();
+			ColumnDefinition Col1 = new ColumnDefinition();
+			ColumnDefinition Col2 = new ColumnDefinition();
 
-			Col.Width = new GridLength(45);
-			grid.ColumnDefinitions.Add(Col);
+			Col1.Width = new GridLength(45);
+			grid.ColumnDefinitions.Add(Col1);
 
-			Col.Width = GridLength.Auto;
-			grid.ColumnDefinitions.Add(Col);
+			Col2.Width = GridLength.Auto;
+			grid.ColumnDefinitions.Add(Col2);
 
-			RowDefinition row = new RowDefinition();
-			row.Height = GridLength.Auto;
+			RowDefinition row1 = new RowDefinition();
+			RowDefinition row2 = new RowDefinition();
+			RowDefinition row3 = new RowDefinition();
+			RowDefinition row4 = new RowDefinition();
+			RowDefinition row5 = new RowDefinition();
+			RowDefinition row6 = new RowDefinition();
+			RowDefinition row7 = new RowDefinition();
+			RowDefinition row8 = new RowDefinition();
+			row1.Height = GridLength.Auto;
+			row2.Height = GridLength.Auto;
+			row3.Height = GridLength.Auto;
+			row4.Height = GridLength.Auto;
+			row5.Height = GridLength.Auto;
+			row6.Height = GridLength.Auto;
+			row7.Height = GridLength.Auto;
+			row8.Height = GridLength.Auto;
 
-			grid.RowDefinitions.Add(row);
-			grid.RowDefinitions.Add(row);
-			grid.RowDefinitions.Add(row);
-			grid.RowDefinitions.Add(row);
-			grid.RowDefinitions.Add(row);
-			grid.RowDefinitions.Add(row);
-			grid.RowDefinitions.Add(row);
-			grid.RowDefinitions.Add(row);
+			grid.RowDefinitions.Add(row1);
+			grid.RowDefinitions.Add(row2);
+			grid.RowDefinitions.Add(row3);
+			grid.RowDefinitions.Add(row4);
+			grid.RowDefinitions.Add(row5);
+			grid.RowDefinitions.Add(row6);
+			grid.RowDefinitions.Add(row7);
+			grid.RowDefinitions.Add(row8);
 
 			////
 
@@ -1923,5 +1972,5 @@ namespace OGF.Tool
 			box.Controls.Add(PositionLabel);
 			box.Controls.Add(RotationLabel);*/
 		}
-	}
+    }
 }

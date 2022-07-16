@@ -1,76 +1,98 @@
-﻿<Window x:Class="OGF.Tool.MainWindow"
+﻿<Window x:Class="OGF_Tool.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OGF.Tool"
+        xmlns:local="clr-namespace:OGF_Tool"
         mc:Ignorable="d"
-        Title="MainWindow" Height="403" Width="463">
+        Title="OGF Params Editor" Height="403" Width="463">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Menu>
-            <MenuItem Header="File">
-                <MenuItem Header="Load">
-                    
+        <DockPanel>
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Header="Load" Click="loadToolStripMenuItem_Click">
+
+                    </MenuItem>
+                    <MenuItem Header="Save" x:Name="SaveMenuParam">
+
+                    </MenuItem>
+                    <MenuItem Header="Save as..." x:Name="saveAsToolStripMenuItem">
+
+                    </MenuItem>
+                    <MenuItem Header="Export" x:Name="exportToolStripMenuItem">
+                        <MenuItem Header="Object" Name="objectToolStripMenuItem"></MenuItem>
+                        <MenuItem Header="Bomes" Name="bonesToolStripMenuItem"></MenuItem>
+                        <MenuItem Header="OMF" Name="omfToolStripMenuItem"></MenuItem>
+                        <MenuItem Header="Skl" Name="sklToolStripMenuItem"></MenuItem>
+                        <MenuItem Header="Skls" Name="sklsToolStripMenuItem"></MenuItem>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="Reload"/>
+                    <MenuItem Header="Exit"/>
                 </MenuItem>
-                <MenuItem Header="Save" x:Name="SaveMenuParam">
+                <MenuItem Header="Tools" Name="toolStripMenuItem1">
+                    <MenuItem Header="Open skeleton in Object Editor" x:Name="openSkeletonInObjectEditorToolStripMenuItem"/>
+                    <MenuItem Header="Motion tools" Name="motionToolsToolStripMenuItem">
+                        <MenuItem Header="Delete motion"></MenuItem>
+                        <MenuItem Header="Edit in OMF Editor"></MenuItem>
+                        <MenuItem Header="Replace motions"></MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="Import OGF Params"/>
+                </MenuItem>
+                <MenuItem Header="OGF Info" x:Name="oGFInfoToolStripMenuItem">
 
                 </MenuItem>
-                <MenuItem Header="Save as..." x:Name="saveAsToolStripMenuItem">
+                <MenuItem Header="View" x:Name="viewToolStripMenuItem">
 
                 </MenuItem>
-                <MenuItem Header="Export" x:Name="exportToolStripMenuItem">
-                    <MenuItem Header="Object"></MenuItem>
-                    <MenuItem Header="Bomes"></MenuItem>
-                    <MenuItem Header="OMF"></MenuItem>
-                    <MenuItem Header="Skl"></MenuItem>
-                    <MenuItem Header="Skls"></MenuItem>
-                </MenuItem>
-                <Separator/>
-                <MenuItem Header="Reload"/>
-                <MenuItem Header="Exit"/>
-            </MenuItem>
-            <MenuItem Header="Tools" Name="toolStripMenuItem1">
-                <MenuItem Header="Open skeleton in Object Editor"/>
-                <MenuItem Header="Motion tools">
-                    <MenuItem Header="Delete motion"></MenuItem>
-                    <MenuItem Header="Edit in OMF Editor"></MenuItem>
-                    <MenuItem Header="Replace motions"></MenuItem>
-                </MenuItem>
-                <MenuItem Header="Import OGF Params"/>
-            </MenuItem>
-            <MenuItem Header="OGF Info" x:Name="oGFInfoToolStripMenuItem">
 
-            </MenuItem>
-            <MenuItem Header="View" x:Name="viewToolStripMenuItem">
-
-            </MenuItem>
-        </Menu>
+            </Menu>
+            <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right"/>
+        </DockPanel >
+        
         <TabControl Grid.Row="1" Name="TabControl_w">
             <TabItem Header="Textures" x:Name="TexturesPage">
 
             </TabItem>
             <TabItem Header="UserData" Name="UserDataPage">
-                <Button Content="Create UserData" x:Name="CreateUserdataButton"/>
+                <Grid>
+                    <TextBox x:Name="UserDataBox"/>
+                    <Button Content="Create UserData" x:Name="CreateUserdataButton"/>
+                </Grid>
+                
             </TabItem>
             <TabItem Header="Motion Refs" Name="MotionRefsPage">
-                <Button Content="Create Moition Refs" x:Name="CreateMotionRefsButton"/>
+                <Grid>
+                    <TextBox x:Name="MotionRefsBox"/>
+                    <Button Content="Create Moition Refs" x:Name="CreateMotionRefsButton"/>
+                </Grid>
+                
             </TabItem>
             <TabItem Header="Motions" Name="MotionPage">
-                <Button Content="Append OMF" x:Name="AppendOMFButton"/>
+                <Grid>
+                    <TextBox x:Name="MotionBox"  IsReadOnly="True"/>
+                    <Button Content="Append OMF" x:Name="AppendOMFButton"/>
+                </Grid>
             </TabItem>
             <TabItem Header="Bone Names" Name="BoneNamesPage">
-                <RichTextBox/>
+                <TextBox x:Name="BoneNamesBox" IsReadOnly="True"/>
             </TabItem>
             <TabItem Header="Bone Params" Name="BoneParamsPage">
                 
             </TabItem>
             <TabItem Header="Lod" Name="LodPage">
-                <Button Content="Create Log" x:Name="CreateLodButton"/>
+                <Grid>
+                    <StackPanel>
+                        <Label Content="Lod path"/>
+                        <TextBox x:Name="LodPathBox"  IsReadOnly="True"/>
+                    </StackPanel>
+                    <Button Content="Create Lod" x:Name="CreateLodButton"/>
+                </Grid>
             </TabItem>
         </TabControl>
 
@@ -78,7 +100,7 @@
             <StatusBarItem x:Name="FileLabel" Content="File:"/>
             <StatusBarItem x:Name="StatusFile" Content="NoFile"/>
             
-            <StatusBarItem x:Name="LabelBroken" Content="Broken type:"/>
+            <StatusBarItem x:Name="LabelBroken" Content="Broken type:" HorizontalAlignment="Right"/>
         </StatusBar>
     </Grid>
 </Window>

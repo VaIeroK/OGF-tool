@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OGF.Tool
+namespace OGF_Tool
 {
 
     class IniFile   // revision 11

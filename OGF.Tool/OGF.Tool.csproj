@@ -65,6 +65,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AutoClosingMessageBox.cs" />
+    <Compile Include="FolderSelectDialog.cs" />
     <Compile Include="InIFile.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
