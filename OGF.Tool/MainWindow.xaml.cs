@@ -1,4 +1,5 @@
-﻿using OGF_tool;
+﻿using Microsoft.Win32;
+using OGF_tool;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,18 +25,29 @@ namespace OGF.Tool
     /// </summary>
     public partial class MainWindow : Window
     {
-        // File sytem
-        public OGF_Children OGF_V = null;
-        public byte[] Current_OGF = null;
-        public byte[] Current_OMF = null;
-        public List<byte> file_bytes = new List<byte>();
-        public string FILE_NAME = "";
-        IniFile Settings = null;
-        FolderSelectDialog SaveSklDialog = null;
+		OpenFileDialog OpenOGFDialog = null;
+		OpenFileDialog OpenOGF_DmDialog = null;
+		OpenFileDialog OpenOMFDialog = null;
+		OpenFileDialog OpenProgramDialog = null;
+
+		SaveFileDialog SaveObjectDialog = null;
+		SaveFileDialog SaveAsDialog = null;
+		SaveFileDialog SaveSklsDialog = null;
+		SaveFileDialog SaveOmfDialog = null;
+		SaveFileDialog SaveBonesDialog = null;
+
+		// File sytem
+		public OGF_Children OGF_V			= null;
+        public byte[]		Current_OGF		= null;
+        public byte[]		Current_OMF		= null;
+        public List<byte>	file_bytes		= new List<byte>();
+        public string		FILE_NAME		= "";
+        IniFile				Settings		= null;
+        FolderSelectDialog	SaveSklDialog	= null;
 
         // Input
-        public bool bKeyIsDown = false;
-        string number_mask = "";
+        public	bool		bKeyIsDown		= false;
+        string				number_mask		= "";
 
         [DllImport("converter.dll")]
         private static extern int CSharpStartAgent(string path, string out_path, int mode, int convert_to_mode, string motion_list);
@@ -216,11 +228,11 @@ namespace OGF.Tool
 
 				if (OGF_V.lod != null)
 				{
-					CreateLodButton.Visible = false;
+					CreateLodButton.Visibility = Visibility.Collapsed;
 					LodPathBox.Text = OGF_V.lod.lod_path;
 				}
 				else
-					CreateLodButton.Visible = true;
+					CreateLodButton.Visibility = Visibility.Visible;
 			}
 
 			for (int i = 0; i < OGF_V.childs.Count; i++)
@@ -515,7 +527,7 @@ namespace OGF.Tool
 		{
 			var xr_loader = new XRayLoader();
 
-			string format = Path.GetExtension(filename);
+			string format = System.IO.Path.GetExtension(filename);
 
 			OGF_C = new OGF_Children();
 
@@ -539,7 +551,7 @@ namespace OGF.Tool
 
 				if (!xr_loader.find_chunk((int)OGF.OGF4_HEADER, false, true))
 				{
-					MessageBox.Show("Unsupported OGF format! Can't find header chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show("Unsupported OGF format! Can't find header chunk!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 					return false;
 				}
 				else
@@ -552,7 +564,7 @@ namespace OGF.Tool
 				uint DescriptionSize = xr_loader.find_chunkSize((int)OGF.OGF4_S_DESC, false, true);
 				if (DescriptionSize == 0)
 				{
-					MessageBox.Show("Unsupported OGF format! Can't find description chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show("Unsupported OGF format! Can't find description chunk!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 					return false;
 				}
 				else
@@ -602,7 +614,7 @@ namespace OGF.Tool
 
 				if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk((int)OGF.OGF4_CHILDREN, false, true)))
 				{
-					MessageBox.Show("Unsupported OGF format! Can't find children chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show("Unsupported OGF format! Can't find children chunk!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 					return false;
 				}
 
@@ -639,7 +651,7 @@ namespace OGF.Tool
 					// Bones
 					if (!xr_loader.find_chunk((int)OGF.OGF4_S_BONE_NAMES, false, true))
 					{
-						MessageBox.Show("Unsupported OGF format! Can't find bones chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						MessageBox.Show("Unsupported OGF format! Can't find bones chunk!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 						return false;
 					}
 					else
@@ -982,7 +994,7 @@ namespace OGF.Tool
 
 			CopyParams();
 			SaveFile(FILE_NAME);
-			AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Saved!" : "Saved!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxIcon.Information);
+			AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Saved!" : "Saved!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxImage.Information);
 		}
 
 		private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1002,6 +1014,7 @@ namespace OGF.Tool
 			}
 		}
 
+		/*
 		private void Form1_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Control && e.KeyCode == Keys.S)
@@ -1015,6 +1028,7 @@ namespace OGF.Tool
 				case Keys.F6: saveAsToolStripMenuItem_Click(null, null); break;
 			}
 		}
+		*/
 
 		private void oGFInfoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -1072,7 +1086,7 @@ namespace OGF.Tool
 
 				CopyParams();
 				SaveFile(filename);
-				AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Saved!" : "Saved!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxIcon.Information);
+				AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Saved!" : "Saved!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxImage.Information);
 				has_msg = true;
 			}
 			else if (format == 1)
@@ -1116,7 +1130,7 @@ namespace OGF.Tool
 				}
 			}
 			if (!has_msg)
-				AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Exported!" : "Exported!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxIcon.Information);
+				AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Exported!" : "Exported!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxImage.Information);
 		}
 
 		private void objectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1172,7 +1186,7 @@ namespace OGF.Tool
 
 		private void viewToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string exe_path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\OGFViewer.exe";
+			string exe_path = System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\OGFViewer.exe";
 			if (File.Exists(exe_path))
 			{
 				System.Diagnostics.Process p = new System.Diagnostics.Process();
@@ -1182,7 +1196,7 @@ namespace OGF.Tool
 			}
 			else
 			{
-				MessageBox.Show("Can't find OGFViewer.exe in program folder.\nDownload OGF Viewer 1.0.2 or later!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("Can't find OGFViewer.exe in program folder.\nDownload OGF Viewer 1.0.2 or later!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
@@ -1315,7 +1329,7 @@ namespace OGF.Tool
 				if (xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk((int)OGF.OGF4_S_MOTIONS, false, true)))
 				{
 					// Àïäåéòèì âèçóàë âñòðîåííûõ àíèìàöèé
-					AppendOMFButton.Visible = false;
+					AppendOMFButton.Visibility = Visibility.Collapsed;
 					MotionBox.Visible = true;
 					motionToolsToolStripMenuItem.Enabled = true;
 
@@ -1471,10 +1485,10 @@ namespace OGF.Tool
 
 		private void editImOMFEditorToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (!Directory.Exists(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\temp"))
-				Directory.CreateDirectory(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\temp");
+			if (!Directory.Exists(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp"))
+				Directory.CreateDirectory(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp");
 
-			string Filename = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + $"\\temp\\{StatusFile.Text}_temp.omf";
+			string Filename = System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + $"\\temp\\{StatusFile.Content}_temp.omf";
 			string OmfEditor = GetOmfEditorPath();
 
 			if (OmfEditor == null)
@@ -1500,16 +1514,16 @@ namespace OGF.Tool
 
 			File.Delete(Filename);
 
-			if (Directory.Exists(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\temp"))
-				Directory.Delete(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\temp", true);
+			if (Directory.Exists(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp"))
+				Directory.Delete(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp", true);
 		}
 
 		private void openSkeletonInObjectEditorToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (!Directory.Exists(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\temp"))
-				Directory.CreateDirectory(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\temp");
+			if (!Directory.Exists(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp"))
+				Directory.CreateDirectory(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp");
 
-			string Filename = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + $"\\temp\\{StatusFile.Text}_temp.ogf";
+			string Filename = System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + $"\\temp\\{StatusFile.Content}_temp.ogf";
 			string ObjectName = Filename.Substring(0, Filename.LastIndexOf('.'));
 			ObjectName = ObjectName.Substring(0, ObjectName.LastIndexOf('.')) + ".object";
 
@@ -1532,8 +1546,8 @@ namespace OGF.Tool
 			proc.Start();
 			proc.WaitForExit();
 
-			if (Directory.Exists(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\temp"))
-				Directory.Delete(Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\temp", true);
+			if (Directory.Exists(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp"))
+				Directory.Delete(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp", true);
 		}
 
 		private string GetOmfEditorPath()
@@ -1687,27 +1701,58 @@ namespace OGF.Tool
 
 		private void CreateBoneTextBox(int idx, GroupBox box, string bone_name, string parent_bone_name, string material, float mass, Fvector center, Fvector pos, Fvector rot)
 		{
+
+			Grid grid = new Grid();
+			ColumnDefinition Col = new ColumnDefinition();
+
+			Col.Width = new GridLength(45);
+			grid.ColumnDefinitions.Add(Col);
+
+			Col.Width = GridLength.Auto;
+			grid.ColumnDefinitions.Add(Col);
+
+			RowDefinition row = new RowDefinition();
+			row.Height = GridLength.Auto;
+
+			grid.RowDefinitions.Add(row);
+			grid.RowDefinitions.Add(row);
+			grid.RowDefinitions.Add(row);
+			grid.RowDefinitions.Add(row);
+			grid.RowDefinitions.Add(row);
+			grid.RowDefinitions.Add(row);
+			grid.RowDefinitions.Add(row);
+			grid.RowDefinitions.Add(row);
+
+			////
+
+
 			var BoneNameTextBox = new TextBox();
 			BoneNameTextBox.Name = "boneBox_" + idx;
 			//BoneNameTextBox.Size = new System.Drawing.Size(326, 58);
-			BoneNameTextBox.Width = 326;
-			BoneNameTextBox.Height = 58;
+			//BoneNameTextBox.Width = 326;
+			//BoneNameTextBox.Height = 58;
 			//BoneNameTextBox.Location = new System.Drawing.Point(86, 18);
 			BoneNameTextBox.Text = bone_name;
 			BoneNameTextBox.Tag = "string";
 			BoneNameTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			BoneNameTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			//BoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			grid.Children.Add(BoneNameTextBox);
+			Grid.SetColumn(BoneNameTextBox, 1);
+
 
 			var BoneNameLabel = new Label();
 			BoneNameLabel.Name = "boneLabel_" + idx;
-			BoneNameLabel.Size = new System.Drawing.Size(100, 20);
+			//BoneNameLabel.Size = new System.Drawing.Size(100, 20);
 			//BoneNameLabel.Location = new System.Drawing.Point(6, 20);
 			BoneNameLabel.Content = "Bone Name:";
+			grid.Children.Add(BoneNameLabel);
+			Grid.SetColumn(BoneNameLabel, 0);
+
 
 			var ParentBoneNameTextBox = new TextBox();
 			ParentBoneNameTextBox.Name = "ParentboneBox_" + idx;
-			ParentBoneNameTextBox.Size = new System.Drawing.Size(326, 58);
+			//ParentBoneNameTextBox.Size = new System.Drawing.Size(326, 58);
 			//ParentBoneNameTextBox.Location = new System.Drawing.Point(86, 45);
 			ParentBoneNameTextBox.Text = parent_bone_name;
 			ParentBoneNameTextBox.Tag = "string";
@@ -1716,13 +1761,13 @@ namespace OGF.Tool
 
 			var ParentBoneNameLabel = new Label();
 			ParentBoneNameLabel.Name = "ParentboneLabel_" + idx;
-			ParentBoneNameLabel.Size = new System.Drawing.Size(100, 20);
+			//ParentBoneNameLabel.Size = new System.Drawing.Size(100, 20);
 			//ParentBoneNameLabel.Location = new System.Drawing.Point(6, 47);
 			ParentBoneNameLabel.Content = "Parent Bone:";
 
 			var MaterialTextBox = new TextBox();
 			MaterialTextBox.Name = "MaterialBox_" + idx;
-			MaterialTextBox.Size = new System.Drawing.Size(326, 58);
+			//MaterialTextBox.Size = new System.Drawing.Size(326, 58);
 			//MaterialTextBox.Location = new System.Drawing.Point(86, 72);
 			MaterialTextBox.Text = material;
 			MaterialTextBox.Tag = "string";
@@ -1732,13 +1777,13 @@ namespace OGF.Tool
 
 			var MaterialLabel = new Label();
 			MaterialLabel.Name = "MaterialLabel_" + idx;
-			MaterialLabel.Size = new System.Drawing.Size(100, 20);
+			//MaterialLabel.Size = new System.Drawing.Size(100, 20);
 			//MaterialLabel.Location = new System.Drawing.Point(6, 74);
 			MaterialLabel.Content = "Material:";
 
 			var MassTextBox = new TextBox();
 			MassTextBox.Name = "MassBox_" + idx;
-			MassTextBox.Size = new System.Drawing.Size(84, 58);
+			//MassTextBox.Size = new System.Drawing.Size(84, 58);
 			//MassTextBox.Location = new System.Drawing.Point(86, 99);
 			MassTextBox.Text = CheckNaN(mass.ToString());
 			MassTextBox.Tag = "float";
@@ -1747,13 +1792,13 @@ namespace OGF.Tool
 
 			var MassLabel = new Label();
 			MassLabel.Name = "MassLabel_" + idx;
-			MassLabel.Size = new System.Drawing.Size(100, 20);
+			//MassLabel.Size = new System.Drawing.Size(100, 20);
 			//MassLabel.Location = new System.Drawing.Point(6, 101);
 			MassLabel.Content = "Mass:";
 
 			var CenterMassTextBoxX = new TextBox();
 			CenterMassTextBoxX.Name = "CenterBoxX_" + idx;
-			CenterMassTextBoxX.Size = new System.Drawing.Size(84, 58);
+			//CenterMassTextBoxX.Size = new System.Drawing.Size(84, 58);
 			//CenterMassTextBoxX.Location = new System.Drawing.Point(86, 125);
 			CenterMassTextBoxX.Text = CheckNaN(center.x.ToString());
 			CenterMassTextBoxX.Tag = "float";
@@ -1762,7 +1807,7 @@ namespace OGF.Tool
 
 			var CenterMassTextBoxY = new TextBox();
 			CenterMassTextBoxY.Name = "CenterBoxY_" + idx;
-			CenterMassTextBoxY.Size = new System.Drawing.Size(84, 58);
+			//CenterMassTextBoxY.Size = new System.Drawing.Size(84, 58);
 			//CenterMassTextBoxY.Location = new System.Drawing.Point(182, 125);
 			CenterMassTextBoxY.Text = CheckNaN(center.y.ToString());
 			CenterMassTextBoxY.Tag = "float";
@@ -1771,7 +1816,7 @@ namespace OGF.Tool
 
 			var CenterMassTextBoxZ = new TextBox();
 			CenterMassTextBoxZ.Name = "CenterBoxZ_" + idx;
-			CenterMassTextBoxZ.Size = new System.Drawing.Size(84, 58);
+			//CenterMassTextBoxZ.Size = new System.Drawing.Size(84, 58);
 			//CenterMassTextBoxZ.Location = new System.Drawing.Point(277, 125);
 			CenterMassTextBoxZ.Text = CheckNaN(center.z.ToString());
 			CenterMassTextBoxZ.Tag = "float";
@@ -1780,13 +1825,13 @@ namespace OGF.Tool
 
 			var CenterMassLabel = new Label();
 			CenterMassLabel.Name = "CenterMassLabel_" + idx;
-			CenterMassLabel.Size = new System.Drawing.Size(100, 20);
+			//CenterMassLabel.Size = new System.Drawing.Size(100, 20);
 			//CenterMassLabel.Location = new System.Drawing.Point(6, 127);
 			CenterMassLabel.Content = "Center of Mass:";
 
 			var PositionX = new TextBox();
 			PositionX.Name = "PositionX_" + idx;
-			PositionX.Size = new System.Drawing.Size(84, 58);
+			//PositionX.Size = new System.Drawing.Size(84, 58);
 			//PositionX.Location = new System.Drawing.Point(86, 151);
 			PositionX.Text = CheckNaN(pos.x.ToString());
 			PositionX.Tag = "float";
@@ -1795,7 +1840,7 @@ namespace OGF.Tool
 
 			var PositionY = new TextBox();
 			PositionY.Name = "PositionY_" + idx;
-			PositionY.Size = new System.Drawing.Size(84, 58);
+			//PositionY.Size = new System.Drawing.Size(84, 58);
 			//PositionY.Location = new System.Drawing.Point(182, 151);
 			PositionY.Text = CheckNaN(pos.y.ToString());
 			PositionY.Tag = "float";
@@ -1804,7 +1849,7 @@ namespace OGF.Tool
 
 			var PositionZ = new TextBox();
 			PositionZ.Name = "PositionZ_" + idx;
-			PositionZ.Size = new System.Drawing.Size(84, 58);
+			//PositionZ.Size = new System.Drawing.Size(84, 58);
 			//PositionZ.Location = new System.Drawing.Point(277, 151);
 			PositionZ.Text = CheckNaN(pos.z.ToString());
 			PositionZ.Tag = "float";
@@ -1813,13 +1858,13 @@ namespace OGF.Tool
 
 			var PositionLabel = new Label();
 			PositionLabel.Name = "PositionLabel_" + idx;
-			PositionLabel.Size = new System.Drawing.Size(100, 20);
+			//PositionLabel.Size = new System.Drawing.Size(100, 20);
 			//PositionLabel.Location = new System.Drawing.Point(6, 153);
 			PositionLabel.Content = "Position:";
 
 			var RotationX = new TextBox();
 			RotationX.Name = "RotationX_" + idx;
-			RotationX.Size = new System.Drawing.Size(84, 58);
+			//RotationX.Size = new System.Drawing.Size(84, 58);
 			//RotationX.Location = new System.Drawing.Point(86, 177);
 			RotationX.Text = CheckNaN(rot.x.ToString());
 			RotationX.Tag = "float";
@@ -1828,7 +1873,7 @@ namespace OGF.Tool
 
 			var RotationY = new TextBox();
 			RotationY.Name = "RotationY_" + idx;
-			RotationY.Size = new System.Drawing.Size(84, 58);
+			//RotationY.Size = new System.Drawing.Size(84, 58);
 			//RotationY.Location = new System.Drawing.Point(182, 177);
 			RotationY.Text = CheckNaN(rot.y.ToString());
 			RotationY.Tag = "float";
@@ -1837,7 +1882,7 @@ namespace OGF.Tool
 
 			var RotationZ = new TextBox();
 			RotationZ.Name = "RotationZ_" + idx;
-			RotationZ.Size = new System.Drawing.Size(84, 58);
+			//RotationZ.Size = new System.Drawing.Size(84, 58);
 			//RotationZ.Location = new System.Drawing.Point(277, 177);
 			RotationZ.Text = CheckNaN(rot.z.ToString());
 			RotationZ.Tag = "float";
@@ -1846,10 +1891,16 @@ namespace OGF.Tool
 
 			var RotationLabel = new Label();
 			RotationLabel.Name = "RotationLabel_" + idx;
-			RotationLabel.Size = new System.Drawing.Size(100, 20);
+			//RotationLabel.Size = new System.Drawing.Size(100, 20);
 			//RotationLabel.Location = new System.Drawing.Point(6, 179);
 			RotationLabel.Content = "Rotation:";
 
+
+
+
+			box.Content = grid;
+			
+			/*
 			box.Controls.Add(BoneNameTextBox);
 			box.Controls.Add(ParentBoneNameTextBox);
 			box.Controls.Add(MaterialTextBox);
@@ -1870,7 +1921,7 @@ namespace OGF.Tool
 			box.Controls.Add(MassLabel);
 			box.Controls.Add(CenterMassLabel);
 			box.Controls.Add(PositionLabel);
-			box.Controls.Add(RotationLabel);
+			box.Controls.Add(RotationLabel);*/
 		}
 	}
 }
