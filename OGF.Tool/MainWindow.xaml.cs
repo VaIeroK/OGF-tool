@@ -1085,10 +1085,10 @@ namespace OGF_Tool
 
 		private void oGFInfoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			/*
+			
 			System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
 
-			OgfInfo Info = new OgfInfo(OGF_V.description, OGF_V.m_version, OGF_V.m_model_type);
+			InfoWindow Info = new InfoWindow(OGF_V.description, OGF_V.m_version, OGF_V.m_model_type);
 			Info.ShowDialog();
 
 			if (Info.res)
@@ -1104,7 +1104,7 @@ namespace OGF_Tool
 			}
 
 			System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-			*/
+			
 		}
 
 		private void saveAsToolStripMenuItem_Click(object sender, RoutedEventArgs e)

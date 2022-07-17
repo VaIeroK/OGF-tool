@@ -1,0 +1,57 @@
+﻿<Window x:Class="OGF_Tool.InfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OGF_Tool"
+        mc:Ignorable="d"
+        Title="OGF Info" Height="273" Width="374" Closing="Window_Closing">
+    <Grid>
+
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Label Content="OGF Version:" Grid.Row="0"/>
+        <Label Content="Model type:"  Grid.Row="1"/>
+        <Label Content="Source File:"  Grid.Row="2"/>
+        <Label Content="Converter:"  Grid.Row="3"/>
+        <Label Content="Creator:"  Grid.Row="4"/>
+        <Label Content="Editor:"  Grid.Row="5"/>
+        <Label Content="Export time:"  Grid.Row="6"/>
+        <Label Content="Creation time:"  Grid.Row="7"/>
+        <Label Content="Modifed time:"  Grid.Row="8"/>
+
+
+
+        <Label Content="-" Grid.Column="1" Grid.Row="0" x:Name="OgfVersLabel"/>
+        <Label Content="-" Grid.Column="1" Grid.Row="1"  x:Name="ModelTypeLabel"/>
+        <TextBox  HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="2" x:Name="SourceTextBox"/>
+        <TextBox  HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="3" x:Name="ConverterTextBox"/>
+        <TextBox  HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="4" x:Name="CreatorTextBox"/>
+        <TextBox  Grid.Column="1" Grid.Row="5" HorizontalAlignment="Stretch" x:Name="EditorTextBox"/>
+        <DatePicker  Grid.Column="1" Grid.Row="6" Width="150" HorizontalAlignment="Left" x:Name="ExportTimeDate"/>
+        <DatePicker  Grid.Column="1" Grid.Row="7" Width="150" HorizontalAlignment="Left" x:Name="CreationTimeDate"/>
+        <DatePicker  Grid.Column="1" Grid.Row="8" Width="150" HorizontalAlignment="Left" x:Name="ModifedTimeDate"/>
+
+        <StackPanel  Grid.Column="1" Grid.Row="7" HorizontalAlignment="Right" Margin="0,8,0,0" Grid.RowSpan="2">
+            <TextBlock Text="Data"  x:Name="ByteLabel"/>
+            <Button Content="Repair timers"  x:Name="RepairTimersButton"/>
+        </StackPanel>
+    </Grid>
+</Window>
