@@ -55,26 +55,26 @@
             </TabItem>
             <TabItem Header="UserData" Name="UserDataPage">
                 <Grid>
-                    <TextBox x:Name="UserDataBox"/>
-                    <Button Content="Create UserData" x:Name="CreateUserdataButton"/>
+                    <TextBox x:Name="UserDataBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create UserData" x:Name="CreateUserdataButton"/>
                 </Grid>
                 
             </TabItem>
             <TabItem Header="Motion Refs" Name="MotionRefsPage">
                 <Grid>
-                    <TextBox x:Name="MotionRefsBox"/>
-                    <Button Content="Create Moition Refs" x:Name="CreateMotionRefsButton"/>
+                    <TextBox x:Name="MotionRefsBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Moition Refs" x:Name="CreateMotionRefsButton"/>
                 </Grid>
                 
             </TabItem>
             <TabItem Header="Motions" Name="MotionPage">
                 <Grid>
-                    <TextBox x:Name="MotionBox"  IsReadOnly="True"/>
-                    <Button Content="Append OMF" x:Name="AppendOMFButton"/>
+                    <TextBox x:Name="MotionBox"  IsReadOnly="True"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Append OMF" x:Name="AppendOMFButton"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Bone Names" Name="BoneNamesPage">
-                <TextBox x:Name="BoneNamesBox" IsReadOnly="True"/>
+                <TextBox x:Name="BoneNamesBox" IsReadOnly="True" Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
             </TabItem>
             <TabItem Header="Bone Params" Name="BoneParamsPage">
                 
@@ -83,9 +83,9 @@
                 <Grid>
                     <StackPanel>
                         <Label Content="Lod path"/>
-                        <TextBox x:Name="LodPathBox"  IsReadOnly="True"/>
+                        <TextBox x:Name="LodPathBox"  IsReadOnly="True"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     </StackPanel>
-                    <Button Content="Create Lod" x:Name="CreateLodButton"/>
+                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Lod" x:Name="CreateLodButton"/>
                 </Grid>
             </TabItem>
         </TabControl>

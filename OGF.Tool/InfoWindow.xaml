@@ -49,9 +49,9 @@
         <DatePicker  Grid.Column="1" Grid.Row="7" Width="150" HorizontalAlignment="Left" x:Name="CreationTimeDate"/>
         <DatePicker  Grid.Column="1" Grid.Row="8" Width="150" HorizontalAlignment="Left" x:Name="ModifedTimeDate"/>
 
-        <StackPanel  Grid.Column="1" Grid.Row="7" HorizontalAlignment="Right" Margin="0,8,0,0" Grid.RowSpan="2">
+        <StackPanel  Grid.Column="1" Grid.Row="6" HorizontalAlignment="Right" Margin="0,21,0,3" Grid.RowSpan="3">
             <TextBlock Text="Data"  x:Name="ByteLabel"/>
-            <Button Content="Repair timers"  x:Name="RepairTimersButton"/>
+            <Button  Style="{DynamicResource ButtonStyle_normal1}" Content="Repair timers"  x:Name="RepairTimersButton" Margin="5,5,5,5" Padding="5,1,5,1"/>
         </StackPanel>
     </Grid>
 </Window>
