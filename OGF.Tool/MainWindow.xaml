@@ -32,9 +32,10 @@
                         <MenuItem Header="Skls" Name="sklsToolStripMenuItem"></MenuItem>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Reload"/>
+                    <MenuItem Header="Reload" InputGestureText="чё" />
                     <MenuItem Header="Exit"/>
                 </MenuItem>
+                
                 <MenuItem Header="Tools" Name="toolStripMenuItem1">
                     <MenuItem Header="Open skeleton in Object Editor" x:Name="openSkeletonInObjectEditorToolStripMenuItem"/>
                     <MenuItem Header="Motion tools" Name="motionToolsToolStripMenuItem">

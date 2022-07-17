@@ -252,31 +252,37 @@ namespace OGF_Tool
 				else
 					CreateLodButton.Visibility = Visibility.Visible;
 			}
-
+			StackPanel TextureGroupPanel = new StackPanel();
 			for (int i = 0; i < OGF_V.childs.Count; i++)
 			{
-				CreateTextureGroupBox(i);
+				CreateTextureGroupBox(i, TextureGroupPanel);
 
-				/*
-				
-				var box = TexturesPage.Controls["TextureGrpBox_" + i];
+				var box_ch = (GroupBox)TextureGroupPanel.Children[TextureGroupPanel.Children.Count - 1];
 
-
-				if (box != null)
+				if (box_ch != null)
 				{
-					var Cntrl = box.Controls["textureBox_" + i];
+					var Cntrl = (TextBox)((StackPanel)box_ch.Content).Children[1];
 					Cntrl.Text = OGF_V.childs[i].m_texture;
-					var Cntrl2 = box.Controls["shaderBox_" + i];
+					var Cntrl2 = (TextBox)((StackPanel)box_ch.Content).Children[3];
 					Cntrl2.Text = OGF_V.childs[i].m_shader;
-				}*/
+				}
 			}
+			TexturesPage.Content = TextureGroupPanel;
+
 
 			if (OGF_V.bones != null)
 			{
+				ScrollViewer a = new ScrollViewer();
+				StackPanel b = new StackPanel();
+
 				for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
 				{
-					CreateBoneGroupBox(i, OGF_V.bones.bone_names[i], OGF_V.bones.parent_bone_names[i], OGF_V.ikdata.materials[i], OGF_V.ikdata.mass[i], OGF_V.ikdata.center_mass[i], OGF_V.ikdata.position[i], OGF_V.ikdata.rotation[i]);
+					
+					CreateBoneGroupBox(b, i, OGF_V.bones.bone_names[i], OGF_V.bones.parent_bone_names[i], OGF_V.ikdata.materials[i], OGF_V.ikdata.mass[i], OGF_V.ikdata.center_mass[i], OGF_V.ikdata.position[i], OGF_V.ikdata.rotation[i]);
+					
 				}
+				a.Content = b;
+				BoneParamsPage.Content = (a);
 			}
 
 			MotionRefsBox.Clear();
@@ -1666,71 +1672,53 @@ namespace OGF_Tool
 		}
 
 		// Interface
-		private void CreateTextureGroupBox(int idx)
+		private void CreateTextureGroupBox(int idx, StackPanel TextureGroupPanel)
 		{
+
+			
 			var GroupBox = new GroupBox();
-			//GroupBox.Location = new System.Drawing.Point(3, 3 + 126 * idx);
-			//GroupBox.Size = new System.Drawing.Size(421, 126);
-			GroupBox.Content = "Set: [" + idx + "]";
+			GroupBox.Header = "Set: [" + idx + "]";
 			GroupBox.Name = "TextureGrpBox_" + idx;
-			//GroupBox.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-			CreateTextureBoxes(idx, GroupBox);//////////!!!!!!!!!!!!!!!!!!!!!!
-			CreateTextureLabels(idx, GroupBox); //////////!!!!!!!!!!!!!!!!!!!!!!
-			TexturesPage.Content = (GroupBox);
-		}
 
-		private void CreateTextureBoxes(int idx, GroupBox box) //////////!!!!!!!!!!!!!!!!!!!!!!
-		{
-			var newTextBox = new TextBox();
-			newTextBox.Name = "textureBox_" + idx;
-			//newTextBox.Size = new System.Drawing.Size(409, 23);
-			//newTextBox.Location = new System.Drawing.Point(6, 39);
-			newTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxFilter);
-			//newTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			StackPanel a = new StackPanel();
+			GroupBox.Content = a;
 
-			var newTextBox2 = new TextBox();
-			newTextBox2.Name = "shaderBox_" + idx;
-			//newTextBox2.Size = new System.Drawing.Size(409, 23);
-			//newTextBox2.Location = new System.Drawing.Point(6, 88);
-			newTextBox2.TextChanged += new TextChangedEventHandler(this.TextBoxFilter);
-			//newTextBox2.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
-			StackPanel sp = new StackPanel();
-			sp.Children.Add(newTextBox);
-			sp.Children.Add(newTextBox2);
-
-			box.Content = sp;
-		}
-
-		private void CreateTextureLabels(int idx, GroupBox box) //////////!!!!!!!!!!!!!!!!!!!!!!
-		{
 			var newLbl = new Label();
 			newLbl.Name = "textureLbl_" + idx;
 			newLbl.Content = "Texture Path:";
-			//newLbl.Location = new System.Drawing.Point(6, 21);
+			a.Children.Add(newLbl);
+
+			var newTextBox = new TextBox();
+			newTextBox.Name = "textureBox_" + idx;
+			newTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxFilter);
+			a.Children.Add(newTextBox);
 
 			var newLbl2 = new Label();
 			newLbl2.Name = "shaderLbl_" + idx;
 			newLbl2.Content = "Shader Name:";
-			//newLbl2.Location = new System.Drawing.Point(6, 70);
+			a.Children.Add(newLbl2);
 
-			StackPanel sp = new StackPanel();
-			sp.Children.Add(newLbl);
-			sp.Children.Add(newLbl2);
-			box.Content = sp;
+			var newTextBox2 = new TextBox();
+			newTextBox2.Name = "shaderBox_" + idx;
+			newTextBox2.TextChanged += new TextChangedEventHandler(this.TextBoxFilter);
+			a.Children.Add(newTextBox2);
+
+
+			TextureGroupPanel.Children.Add(GroupBox);
 		}
 
-		private void CreateBoneGroupBox(int idx, string bone_name, string parent_bone_name, string material, float mass, Fvector center, Fvector pos, Fvector rot)
+		private void CreateBoneGroupBox(StackPanel b, int idx, string bone_name, string parent_bone_name, string material, float mass, Fvector center, Fvector pos, Fvector rot)
 		{
 			var GroupBox = new GroupBox();
 			//GroupBox.Location = new System.Drawing.Point(3, 3 + 205 * idx);
 			//GroupBox.Size = new System.Drawing.Size(421, 203);
-			GroupBox.Content = "Bone id: [" + idx + "]";
+			GroupBox.Header = "Bone id: [" + idx + "]";
 			GroupBox.Name = "BoneGrpBox_" + idx;
 			//GroupBox.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 
 			CreateBoneTextBox(idx, GroupBox, bone_name, parent_bone_name, material, mass, center, pos, rot);
-			BoneParamsPage.Content = (GroupBox);
+			b.Children.Add(GroupBox);
 		}
 
 		private void CreateBoneTextBox(int idx, GroupBox box, string bone_name, string parent_bone_name, string material, float mass, Fvector center, Fvector pos, Fvector rot)
@@ -1776,15 +1764,18 @@ namespace OGF_Tool
 			StackPanel stackPanel2 = new StackPanel();
 			StackPanel stackPanel3 = new StackPanel();
 			stackPanel1.Orientation = Orientation.Horizontal;
+			stackPanel1.HorizontalAlignment = HorizontalAlignment.Stretch;
 			stackPanel2.Orientation = Orientation.Horizontal;
+			stackPanel2.HorizontalAlignment = HorizontalAlignment.Stretch;
 			stackPanel3.Orientation = Orientation.Horizontal;
+			stackPanel3.HorizontalAlignment = HorizontalAlignment.Stretch;
 			////
 
 
 			var BoneNameTextBox = new TextBox();
 			BoneNameTextBox.Name = "boneBox_" + idx;
 			//BoneNameTextBox.Size = new System.Drawing.Size(326, 58);
-			BoneNameTextBox.Width = 326;
+			//BoneNameTextBox.Width = 326;
 			//BoneNameTextBox.Height = 58;
 			//BoneNameTextBox.Location = new System.Drawing.Point(86, 18);
 			BoneNameTextBox.Text = bone_name;
@@ -1792,6 +1783,7 @@ namespace OGF_Tool
 			BoneNameTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			BoneNameTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			//BoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			BoneNameTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 			grid.Children.Add(BoneNameTextBox);
 			Grid.SetColumn(BoneNameTextBox, 1);
 
@@ -1810,8 +1802,10 @@ namespace OGF_Tool
 			//ParentBoneNameTextBox.Size = new System.Drawing.Size(326, 58);
 			//ParentBoneNameTextBox.Location = new System.Drawing.Point(86, 45);
 			ParentBoneNameTextBox.Text = parent_bone_name;
+			//ParentBoneNameTextBox.Width = 326;
 			ParentBoneNameTextBox.Tag = "string";
 			ParentBoneNameTextBox.IsReadOnly = true;
+			ParentBoneNameTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 			//ParentBoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 			grid.Children.Add(ParentBoneNameTextBox);
 			Grid.SetColumn(ParentBoneNameTextBox, 1);
@@ -1826,11 +1820,12 @@ namespace OGF_Tool
 
 			var MaterialTextBox = new TextBox();
 			MaterialTextBox.Name = "MaterialBox_" + idx;
-			MaterialTextBox.Width = 326;
+			//MaterialTextBox.Width = 326;
 			MaterialTextBox.Text = material;
 			MaterialTextBox.Tag = "string";
 			MaterialTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			MaterialTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			MaterialTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 			grid.Children.Add(MaterialTextBox);
 			Grid.SetColumn(MaterialTextBox, 1);
 			Grid.SetRow(MaterialTextBox, 2);
@@ -1848,6 +1843,7 @@ namespace OGF_Tool
 			MassTextBox.Tag = "float";
 			MassTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			MassTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			MassTextBox.HorizontalAlignment = HorizontalAlignment.Left;
 			grid.Children.Add(MassTextBox);
 			Grid.SetColumn(MassTextBox, 1);
 			Grid.SetRow(MassTextBox, 3);
@@ -1901,7 +1897,9 @@ namespace OGF_Tool
 
 			var PositionX = new TextBox();
 			PositionX.Name = "PositionX_" + idx;
+			PositionX.Width = 84;
 			//PositionX.Size = new System.Drawing.Size(84, 58);
+
 			//PositionX.Location = new System.Drawing.Point(86, 151);
 			PositionX.Text = CheckNaN(pos.x.ToString());
 			PositionX.Tag = "float";
@@ -1911,6 +1909,7 @@ namespace OGF_Tool
 
 			var PositionY = new TextBox();
 			PositionY.Name = "PositionY_" + idx;
+			PositionY.Width = 84;
 			//PositionY.Size = new System.Drawing.Size(84, 58);
 			//PositionY.Location = new System.Drawing.Point(182, 151);
 			PositionY.Text = CheckNaN(pos.y.ToString());
@@ -1922,6 +1921,7 @@ namespace OGF_Tool
 
 			var PositionZ = new TextBox();
 			PositionZ.Name = "PositionZ_" + idx;
+			PositionZ.Width = 84;
 			//PositionZ.Size = new System.Drawing.Size(84, 58);
 			//PositionZ.Location = new System.Drawing.Point(277, 151);
 			PositionZ.Text = CheckNaN(pos.z.ToString());
@@ -1943,40 +1943,40 @@ namespace OGF_Tool
 
 			var RotationX = new TextBox();
 			RotationX.Name = "RotationX_" + idx;
+			RotationX.Width = 84;
 			//RotationX.Size = new System.Drawing.Size(84, 58);
 			//RotationX.Location = new System.Drawing.Point(86, 177);
 			RotationX.Text = CheckNaN(rot.x.ToString());
 			RotationX.Tag = "float";
 			RotationX.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			grid.Children.Add(RotationX);
-			Grid.SetColumn(RotationX, 1);
-			Grid.SetRow(RotationX, 6);
+			stackPanel3.Children.Add(RotationX);
 
 
 			var RotationY = new TextBox();
 			RotationY.Name = "RotationY_" + idx;
+			RotationY.Width = 84;
 			//RotationY.Size = new System.Drawing.Size(84, 58);
 			//RotationY.Location = new System.Drawing.Point(182, 177);
 			RotationY.Text = CheckNaN(rot.y.ToString());
 			RotationY.Tag = "float";
 			RotationY.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			grid.Children.Add(RotationY);
-			Grid.SetColumn(RotationY, 1);
-			Grid.SetRow(RotationY, 6);
+			stackPanel3.Children.Add(RotationY);
 
 			var RotationZ = new TextBox();
 			RotationZ.Name = "RotationZ_" + idx;
+			RotationZ.Width = 84;
 			//RotationZ.Size = new System.Drawing.Size(84, 58);
 			//RotationZ.Location = new System.Drawing.Point(277, 177);
 			RotationZ.Text = CheckNaN(rot.z.ToString());
 			RotationZ.Tag = "float";
 			RotationZ.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			grid.Children.Add(RotationZ);
-			Grid.SetColumn(RotationZ, 1);
-			Grid.SetRow(RotationZ, 6);
+			stackPanel3.Children.Add(RotationZ);
+			grid.Children.Add(stackPanel3);
+			Grid.SetColumn(stackPanel3, 1);
+			Grid.SetRow(stackPanel3, 6);
 
 			var RotationLabel = new Label();
 			RotationLabel.Name = "RotationLabel_" + idx;
