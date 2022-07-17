@@ -15,43 +15,36 @@
         <DockPanel>
             <Menu>
                 <MenuItem Header="File">
-                    <MenuItem Header="Load" Click="loadToolStripMenuItem_Click">
+                    <MenuItem Header="Load" Click="loadToolStripMenuItem_Click"/>
+                    <MenuItem Header="Save" x:Name="SaveMenuParam" Click="saveToolStripMenuItem_Click"/>
+                    <MenuItem Header="Save as..." x:Name="saveAsToolStripMenuItem" Click="saveAsToolStripMenuItem_Click"/>
 
-                    </MenuItem>
-                    <MenuItem Header="Save" x:Name="SaveMenuParam">
 
-                    </MenuItem>
-                    <MenuItem Header="Save as..." x:Name="saveAsToolStripMenuItem">
-
-                    </MenuItem>
                     <MenuItem Header="Export" x:Name="exportToolStripMenuItem">
-                        <MenuItem Header="Object" Name="objectToolStripMenuItem"></MenuItem>
-                        <MenuItem Header="Bomes" Name="bonesToolStripMenuItem"></MenuItem>
-                        <MenuItem Header="OMF" Name="omfToolStripMenuItem"></MenuItem>
-                        <MenuItem Header="Skl" Name="sklToolStripMenuItem"></MenuItem>
-                        <MenuItem Header="Skls" Name="sklsToolStripMenuItem"></MenuItem>
+                        <MenuItem Header="Object" Name="objectToolStripMenuItem" Click="objectToolStripMenuItem_Click"/>
+                        <MenuItem Header="Bomes" Name="bonesToolStripMenuItem" Click="bonesToolStripMenuItem_Click"/>
+                        <MenuItem Header="OMF" Name="omfToolStripMenuItem" Click="omfToolStripMenuItem_Click"/>
+                        <MenuItem Header="Skl" Name="sklToolStripMenuItem" Click="sklToolStripMenuItem_Click"/>
+                        <MenuItem Header="Skls" Name="sklsToolStripMenuItem" Click="sklsToolStripMenuItem_Click"/>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Reload" InputGestureText="чё" />
-                    <MenuItem Header="Exit"/>
+                    <MenuItem Header="Reload" InputGestureText="чё"  Click="reloadToolStripMenuItem_Click"/>
+                    <MenuItem Header="Exit" Click="exitToolStripMenuItem_Click"/>
                 </MenuItem>
                 
                 <MenuItem Header="Tools" Name="toolStripMenuItem1">
-                    <MenuItem Header="Open skeleton in Object Editor" x:Name="openSkeletonInObjectEditorToolStripMenuItem"/>
+                    <MenuItem Header="Open skeleton in Object Editor" x:Name="openSkeletonInObjectEditorToolStripMenuItem"  Click="openSkeletonInObjectEditorToolStripMenuItem_Click"/>
                     <MenuItem Header="Motion tools" Name="motionToolsToolStripMenuItem">
-                        <MenuItem Header="Delete motion"></MenuItem>
-                        <MenuItem Header="Edit in OMF Editor"></MenuItem>
-                        <MenuItem Header="Replace motions"></MenuItem>
+                        <MenuItem Header="Delete motion" Click="deleteChunkToolStripMenuItem_Click"/>
+                        <MenuItem Header="Edit in OMF Editor" Click="editImOMFEditorToolStripMenuItem_Click"/>
+                        <MenuItem Header="Replace motions" Click="AppendOMFButton_Click"/>
                     </MenuItem>
-                    <MenuItem Header="Import OGF Params"/>
+                    <MenuItem Header="Import OGF Params" Click="importDataFromModelToolStripMenuItem_Click"/>
                 </MenuItem>
-                <MenuItem Header="OGF Info" x:Name="oGFInfoToolStripMenuItem">
+                <MenuItem Header="OGF Info" x:Name="oGFInfoToolStripMenuItem" Click="oGFInfoToolStripMenuItem_Click"/>
 
-                </MenuItem>
-                <MenuItem Header="View" x:Name="viewToolStripMenuItem">
 
-                </MenuItem>
-
+                <MenuItem Header="View" x:Name="viewToolStripMenuItem"  Click="viewToolStripMenuItem_Click"/>
             </Menu>
             <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right"/>
         </DockPanel >

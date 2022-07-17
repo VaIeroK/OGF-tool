@@ -19,10 +19,27 @@ using System.Windows.Shapes;
 
 namespace OGF_Tool
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+	/// <summary>
+	/// Interaction logic for MainWindow.xaml
+	/// </summary>
+	/// 
+	public static class FrameworkElementHelper
+	{
+		public static void RemoveFromParent(this FrameworkElement item)
+		{
+			if (item != null)
+			{
+				//var parentItemsControl = (ItemsControl)item.Parent;
+				var parentItemsControl = (Grid)item.Parent;
+				if (parentItemsControl != null)
+				{
+					//parentItemsControl.Items.Remove(item as UIElement);
+					parentItemsControl.Children.Remove(item as UIElement);
+				}
+			}
+		}
+	}
+	public partial class MainWindow : Window
     {
 		OpenFileDialog OpenOGFDialog =  new OpenFileDialog();
 		OpenFileDialog OpenOGF_DmDialog = new OpenFileDialog();
@@ -139,7 +156,7 @@ namespace OGF_Tool
             MotionBox.Clear();
             LodPathBox.Clear();
         }
-
+		
 		private void AfterLoad(bool main_file)
 		{
 			if (main_file)
@@ -181,11 +198,17 @@ namespace OGF_Tool
 
 			if (OGF_V.IsSkeleton())
 			{
+				FrameworkElementHelper.RemoveFromParent(UserDataBox);
+				FrameworkElementHelper.RemoveFromParent(CreateUserdataButton);
+				FrameworkElementHelper.RemoveFromParent(MotionRefsBox);
+				FrameworkElementHelper.RemoveFromParent(CreateMotionRefsButton);
+
 				//Userdata
 				TabControl_w.Items.Add(UserDataPage);
-				UserDataPage.Content = null;
-				//UserDataPage.Controls.Add(UserDataBox);
-				//UserDataPage.Controls.Add(CreateUserdataButton);
+				Grid grid = new Grid();
+				grid.Children.Add(UserDataBox);
+				grid.Children.Add(CreateUserdataButton);
+				UserDataPage.Content = grid;
 				CreateUserdataButton.Visibility = Visibility.Collapsed;
 				UserDataBox.Visibility = Visibility.Collapsed;
 
@@ -196,9 +219,11 @@ namespace OGF_Tool
 
 				// Motion Refs
 				TabControl_w.Items.Add(MotionRefsPage);
-				MotionRefsPage.Content = null;
-				//MotionRefsPage.Controls.Add(MotionRefsBox);
-				//MotionRefsPage.Controls.Add(CreateMotionRefsButton);
+				
+				Grid grid1 = new Grid();
+				grid1.Children.Add(MotionRefsBox);
+				grid1.Children.Add(CreateMotionRefsButton);
+				MotionRefsPage.Content = grid1;
 				CreateMotionRefsButton.Visibility = Visibility.Collapsed;
 				MotionRefsBox.Visibility = Visibility.Collapsed;
 
@@ -1017,7 +1042,7 @@ namespace OGF_Tool
 			bKeyIsDown = false;
 		}
 
-		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		private void saveToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (FILE_NAME == "") return;
 
@@ -1082,7 +1107,7 @@ namespace OGF_Tool
 			*/
 		}
 
-		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+		private void saveAsToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (OGF_V.IsDM)
 				SaveAsDialog.Filter = "DM file|*.dm";
@@ -1163,7 +1188,7 @@ namespace OGF_Tool
 				AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Exported!" : "Exported!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxImage.Information);
 		}
 
-		private void objectToolStripMenuItem_Click(object sender, EventArgs e)
+		private void objectToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (SaveObjectDialog.ShowDialog() == true)
 			{
@@ -1172,7 +1197,7 @@ namespace OGF_Tool
 			}
 		}
 
-		private void bonesToolStripMenuItem_Click(object sender, EventArgs e)
+		private void bonesToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (SaveBonesDialog.ShowDialog() == true)
 			{
@@ -1181,7 +1206,7 @@ namespace OGF_Tool
 			}
 		}
 
-		private void omfToolStripMenuItem_Click(object sender, EventArgs e)
+		private void omfToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (SaveOmfDialog.ShowDialog() == true)
 			{
@@ -1190,7 +1215,7 @@ namespace OGF_Tool
 			}
 		}
 
-		private void sklToolStripMenuItem_Click(object sender, EventArgs e)
+		private void sklToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (SaveSklDialog.ShowDialog())
 			{
@@ -1199,7 +1224,7 @@ namespace OGF_Tool
 			}
 		}
 
-		private void sklsToolStripMenuItem_Click(object sender, EventArgs e)
+		private void sklsToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (SaveSklsDialog.ShowDialog() == true)
 			{
@@ -1208,13 +1233,13 @@ namespace OGF_Tool
 			}
 		}
 
-		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		private void exitToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (MessageBox.Show("Are you sure you want to exit?", "OGF Editor", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
 				Close();
 		}
 
-		private void viewToolStripMenuItem_Click(object sender, EventArgs e)
+		private void viewToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			string exe_path = System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\OGFViewer.exe";
 			if (File.Exists(exe_path))
@@ -1230,7 +1255,7 @@ namespace OGF_Tool
 			}
 		}
 
-		private void CreateUserdataButton_Click(object sender, EventArgs e)
+		private void CreateUserdataButton_Click(object sender, RoutedEventArgs e)
 		{
 			CreateUserdataButton.Visibility = Visibility.Collapsed;
 			UserDataBox.Visibility = Visibility.Visible;
@@ -1239,7 +1264,7 @@ namespace OGF_Tool
 				OGF_V.userdata = new UserData();
 		}
 
-		private void CreateMotionRefsButton_Click(object sender, EventArgs e)
+		private void CreateMotionRefsButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (Current_OMF == null || Current_OMF != null && MessageBox.Show("New motion refs chunk will remove built-in motions, continue?", "OGF Editor", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
 			{
@@ -1263,7 +1288,7 @@ namespace OGF_Tool
 			}
 		}
 
-		private void CreateLodButton_Click(object sender, EventArgs e)
+		private void CreateLodButton_Click(object sender, RoutedEventArgs e)
 		{
 			CreateLodButton.Visibility = Visibility.Collapsed;
 			LodPathBox.Clear();
@@ -1271,7 +1296,7 @@ namespace OGF_Tool
 				OGF_V.lod = new Lod();
 		}
 
-		private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
+		private void reloadToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			string cur_fname = FILE_NAME;
 			Clear(false);
@@ -1282,7 +1307,7 @@ namespace OGF_Tool
 			}
 		}
 
-		private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
+		private void TabControl_SelectedIndexChanged(object sender, RoutedEventArgs e)
 		{
 			if (TabControl_w.SelectedIndex < 0) return;
 			motionToolsToolStripMenuItem.IsEnabled = false;
@@ -1326,7 +1351,7 @@ namespace OGF_Tool
 			}
 		}
 
-		private void RichTextBoxTextChanged(object sender, EventArgs e)
+		private void RichTextBoxTextChanged(object sender, RoutedEventArgs e)
 		{
 			RichTextBox curBox = sender as RichTextBox;
 			switch (curBox.Name)
@@ -1339,7 +1364,7 @@ namespace OGF_Tool
 			}
 		}
 
-		private void AppendOMFButton_Click(object sender, EventArgs e)
+		private void AppendOMFButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (!IsTextCorrect(MotionRefsBox.Text) && (OGF_V.motion_refs == null || OGF_V.motion_refs.refs.Count() == 0) || (IsTextCorrect(MotionRefsBox.Text) || OGF_V.motion_refs != null && OGF_V.motion_refs.refs.Count() > 0) && MessageBox.Show("Build-in motions will remove motion refs, continue?", "OGF Editor", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
 				OpenOMFDialog.ShowDialog();
@@ -1399,7 +1424,7 @@ namespace OGF_Tool
 			UpdateModelType();
 		}
 
-		private void deleteChunkToolStripMenuItem_Click(object sender, EventArgs e)
+		private void deleteChunkToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			MotionBox.Visibility = Visibility.Collapsed;
 			AppendOMFButton.Visibility = Visibility.Visible;
@@ -1410,7 +1435,7 @@ namespace OGF_Tool
 			UpdateModelType();
 		}
 
-		private void importDataFromModelToolStripMenuItem_Click(object sender, EventArgs e)
+		private void importDataFromModelToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			OpenOGFDialog.FileName = "";
 			if (OpenOGFDialog.ShowDialog() == true)
@@ -1515,7 +1540,7 @@ namespace OGF_Tool
 			sklsToolStripMenuItem.IsEnabled = Current_OMF != null;
 		}
 
-		private void editImOMFEditorToolStripMenuItem_Click(object sender, EventArgs e)
+		private void editImOMFEditorToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (!Directory.Exists(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp"))
 				Directory.CreateDirectory(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp");
@@ -1550,7 +1575,7 @@ namespace OGF_Tool
 				Directory.Delete(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp", true);
 		}
 
-		private void openSkeletonInObjectEditorToolStripMenuItem_Click(object sender, EventArgs e)
+		private void openSkeletonInObjectEditorToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (!Directory.Exists(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp"))
 				Directory.CreateDirectory(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp");
@@ -1627,7 +1652,7 @@ namespace OGF_Tool
 		{
 			/*
 			RichTextBox TextBox = sender as RichTextBox;
-			if (e.Control && e.KeyCode == Keys.V)
+			if (e.Control && e.KeyCode == System.Windows.Forms.Keys.V)
 			{
 				if (Clipboard.ContainsText())
 					TextBox.Paste(DataFormats.GetFormat(DataFormats.Text));
