@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OGF_Tool"
         mc:Ignorable="d"
-        Title="OGF Params Editor" Height="403" Width="463">
+        Title="OGF Params Editor" Height="403" Width="463" Background="#FF141414">
     <Grid>
         <Grid>
         <Grid.RowDefinitions>
@@ -47,10 +47,10 @@
 
                 <MenuItem Header="View" x:Name="viewToolStripMenuItem"  Click="viewToolStripMenuItem_Click"/>
             </Menu>
-            <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right"/>
+            <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right" Foreground="White"/>
         </DockPanel >
         
-        <TabControl Grid.Row="1" Name="TabControl_w">
+        <TabControl Grid.Row="1" Name="TabControl_w" Background="#FF222222" BorderBrush="#FF333333">
             <TabItem Header="Textures" x:Name="TexturesPage">
 
             </TabItem>

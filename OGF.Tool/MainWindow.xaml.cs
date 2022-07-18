@@ -1713,6 +1713,7 @@ namespace OGF_Tool
 			var newLbl = new Label();
 			newLbl.Name = "textureLbl_" + idx;
 			newLbl.Content = "Texture Path:";
+			newLbl.Foreground = Brushes.White;
 			a.Children.Add(newLbl);
 
 			var newTextBox = new TextBox();
@@ -1723,6 +1724,7 @@ namespace OGF_Tool
 			var newLbl2 = new Label();
 			newLbl2.Name = "shaderLbl_" + idx;
 			newLbl2.Content = "Shader Name:";
+			newLbl2.Foreground = Brushes.White;
 			a.Children.Add(newLbl2);
 
 			var newTextBox2 = new TextBox();
@@ -1741,6 +1743,7 @@ namespace OGF_Tool
 			//GroupBox.Size = new System.Drawing.Size(421, 203);
 			GroupBox.Header = "Bone id: [" + idx + "]";
 			GroupBox.Name = "BoneGrpBox_" + idx;
+			GroupBox.Foreground = Brushes.White;
 			//GroupBox.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 
 			CreateBoneTextBox(idx, GroupBox, bone_name, parent_bone_name, material, mass, center, pos, rot);
@@ -2010,7 +2013,13 @@ namespace OGF_Tool
 			grid.Children.Add(RotationLabel);
 			Grid.SetRow(RotationLabel, 6);
 
-
+			RotationLabel.Foreground = Brushes.White;
+			PositionLabel.Foreground = Brushes.White;
+			CenterMassLabel.Foreground = Brushes.White;
+			MassLabel.Foreground = Brushes.White;
+			MaterialLabel.Foreground = Brushes.White;
+			BoneNameLabel.Foreground = Brushes.White;
+			ParentBoneNameLabel.Foreground = Brushes.White;
 
 			box.Content = grid;
 		}
