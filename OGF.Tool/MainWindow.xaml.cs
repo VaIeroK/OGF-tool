@@ -102,7 +102,6 @@ namespace OGF_Tool
 
 			SetUpDialogs();
 
-
 			number_mask = @"^-[0-9.]*$";
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
@@ -1088,19 +1087,21 @@ namespace OGF_Tool
 			
 			System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
 
-			InfoWindow Info = new InfoWindow(OGF_V.description, OGF_V.m_version, OGF_V.m_model_type);
-			Info.ShowDialog();
+			//InfoWindow Info = new InfoWindow(OGF_V.description, OGF_V.m_version, OGF_V.m_model_type);
+			//Info.ShowDialog();
+			Description descr = new Description();
+			bool res = InfoMessage.ShowHandlerDialog(OGF_V.description, OGF_V.m_version, OGF_V.m_model_type, ref descr);
 
-			if (Info.res)
+			if (res)
 			{
-				OGF_V.description.m_source = Info.descr.m_source;
-				OGF_V.description.m_export_tool = Info.descr.m_export_tool;
-				OGF_V.description.m_owner_name = Info.descr.m_owner_name;
-				OGF_V.description.m_export_modif_name_tool = Info.descr.m_export_modif_name_tool;
-				OGF_V.description.m_creation_time = Info.descr.m_creation_time;
-				OGF_V.description.m_export_time = Info.descr.m_export_time;
-				OGF_V.description.m_modified_time = Info.descr.m_modified_time;
-				OGF_V.description.four_byte = Info.descr.four_byte;
+				OGF_V.description.m_source = descr.m_source;
+				OGF_V.description.m_export_tool = descr.m_export_tool;
+				OGF_V.description.m_owner_name = descr.m_owner_name;
+				OGF_V.description.m_export_modif_name_tool = descr.m_export_modif_name_tool;
+				OGF_V.description.m_creation_time = descr.m_creation_time;
+				OGF_V.description.m_export_time = descr.m_export_time;
+				OGF_V.description.m_modified_time = descr.m_modified_time;
+				OGF_V.description.four_byte = descr.four_byte;
 			}
 
 			System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");

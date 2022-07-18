@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="OGF Params Editor" Height="403" Width="463">
     <Grid>
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
@@ -32,7 +33,7 @@
                     <MenuItem Header="Exit" Click="exitToolStripMenuItem_Click"/>
                 </MenuItem>
                 
-                <MenuItem Header="Tools" Name="toolStripMenuItem1">
+                <MenuItem  Header="Tools" Name="toolStripMenuItem1">
                     <MenuItem Header="Open skeleton in Object Editor" x:Name="openSkeletonInObjectEditorToolStripMenuItem"  Click="openSkeletonInObjectEditorToolStripMenuItem_Click"/>
                     <MenuItem Header="Motion tools" Name="motionToolsToolStripMenuItem">
                         <MenuItem Header="Delete motion" Click="deleteChunkToolStripMenuItem_Click"/>
@@ -53,7 +54,7 @@
             <TabItem Header="Textures" x:Name="TexturesPage">
 
             </TabItem>
-            <TabItem Header="UserData" Name="UserDataPage">
+            <TabItem  Header="UserData" Name="UserDataPage">
                 <Grid>
                     <TextBox x:Name="UserDataBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create UserData" x:Name="CreateUserdataButton"/>
@@ -96,5 +97,7 @@
             
             <StatusBarItem x:Name="LabelBroken" Content="Broken type:" HorizontalAlignment="Right"/>
         </StatusBar>
+        </Grid>
+        <local:InfoWindow x:Name="InfoMessage"/>
     </Grid>
 </Window>
