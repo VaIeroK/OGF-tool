@@ -1047,6 +1047,7 @@ namespace OGF_Tool
 
 		private void saveToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
+			if (!SaveMenuParam.IsEnabled) return;
 			if (FILE_NAME == "") return;
 
 			CopyParams();
@@ -1070,6 +1071,22 @@ namespace OGF_Tool
 			}
 		}
 
+		private void OpenCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			loadToolStripMenuItem_Click(null, null);
+		}
+		private void SaveAsCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			saveAsToolStripMenuItem_Click(null, null);
+		}
+		private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			saveToolStripMenuItem_Click(null, null);
+		}
+		private void ReloadCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			reloadToolStripMenuItem_Click(null, null);
+		}
 		/*
 		private void Form1_KeyDown(object sender, KeyEventArgs e)
 		{
@@ -1114,6 +1131,8 @@ namespace OGF_Tool
 
 		private void saveAsToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
+			if (!saveAsToolStripMenuItem.IsEnabled) return;
+
 			if (OGF_V.IsDM)
 				SaveAsDialog.Filter = "DM file|*.dm";
 			else
@@ -1303,6 +1322,8 @@ namespace OGF_Tool
 
 		private void reloadToolStripMenuItem_Click(object sender, RoutedEventArgs e)
 		{
+			if (!reloadToolStripMenuItem.IsEnabled) return;
+
 			string cur_fname = FILE_NAME;
 			Clear(false);
 			if (OpenFile(cur_fname, ref OGF_V, ref Current_OGF, ref Current_OMF))

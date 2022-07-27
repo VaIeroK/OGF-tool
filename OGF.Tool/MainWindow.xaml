@@ -5,7 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OGF_Tool"
         mc:Ignorable="d"
-        Title="OGF Params Editor" Height="403" Width="449" Background="#FF141414">
+        Title="OGF Params Editor" Height="403" Width="449" Background="#FF141414"
+        MinWidth="449" MinHeight="403" WindowStartupLocation="CenterScreen"
+        >
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="OpenCommandBinding_Executed"/>
+        <CommandBinding Command="SaveAs" Executed="SaveAsCommandBinding_Executed"/>
+        <CommandBinding Command="Save" Executed="SaveCommandBinding_Executed"/>
+        <CommandBinding Command="New" Executed="ReloadCommandBinding_Executed"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="F4" Command="Open"/>
+        <KeyBinding Key="F6" Command="SaveAs"/>
+        <KeyBinding Key="F5" Command="Save"/>
+        <KeyBinding Key="S" Modifiers="Control" Command="Save"/>
+        <KeyBinding Key="F3" Command="New"/> 
+    </Window.InputBindings>
     <Grid>
         <Grid>
         <Grid.RowDefinitions>
@@ -20,20 +35,20 @@
 
                     </Menu.Resources>
                     <MenuItem  Background="#FF222222" BorderBrush="#FF222222" Style="{DynamicResource MenuItemStyle1}" Header="File">
-                    <MenuItem Header="Load" Click="loadToolStripMenuItem_Click"/>
-                    <MenuItem Header="Save" x:Name="SaveMenuParam" Click="saveToolStripMenuItem_Click"/>
-                    <MenuItem Header="Save as..." x:Name="saveAsToolStripMenuItem" Click="saveAsToolStripMenuItem_Click"/>
+                        <MenuItem InputGestureText="F4" Header="Load" Click="loadToolStripMenuItem_Click"/>
+                        <MenuItem InputGestureText="Ctrl+S    F5" Header="Save" x:Name="SaveMenuParam" Click="saveToolStripMenuItem_Click"/>
+                        <MenuItem InputGestureText="F6" Header="Save as..." x:Name="saveAsToolStripMenuItem" Click="saveAsToolStripMenuItem_Click"/>
 
 
                     <MenuItem Header="Export" x:Name="exportToolStripMenuItem">
                         <MenuItem Header="Object" Name="objectToolStripMenuItem" Click="objectToolStripMenuItem_Click"/>
-                        <MenuItem Header="Bomes" Name="bonesToolStripMenuItem" Click="bonesToolStripMenuItem_Click"/>
+                        <MenuItem Header="Bones" Name="bonesToolStripMenuItem" Click="bonesToolStripMenuItem_Click"/>
                         <MenuItem Header="OMF" Name="omfToolStripMenuItem" Click="omfToolStripMenuItem_Click"/>
                         <MenuItem Header="Skl" Name="sklToolStripMenuItem" Click="sklToolStripMenuItem_Click"/>
                         <MenuItem Header="Skls" Name="sklsToolStripMenuItem" Click="sklsToolStripMenuItem_Click"/>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Reload" InputGestureText="чё"  Click="reloadToolStripMenuItem_Click"/>
+                        <MenuItem InputGestureText="F3" Header="Reload" Click="reloadToolStripMenuItem_Click" x:Name="reloadToolStripMenuItem"/>
                     <MenuItem Header="Exit" Click="exitToolStripMenuItem_Click"/>
                 </MenuItem>
 
@@ -51,7 +66,7 @@
 
                 <MenuItem Header="View" x:Name="viewToolStripMenuItem"  Click="viewToolStripMenuItem_Click"/>
             </Menu>
-            <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right" Foreground="#FFE1E3E6"/>
+            <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right" Foreground="#FFE1E3E6" Margin="0,0,5,0"/>
         </DockPanel >
         
         <TabControl  Grid.Row="1" Name="TabControl_w" Background="#FF222222" BorderBrush="#FF333333" SelectionChanged="TabControl_w_SelectionChanged" >

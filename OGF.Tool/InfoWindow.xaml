@@ -48,20 +48,25 @@
 
                 <Label Content="-" Grid.Column="1" Grid.Row="0" x:Name="OgfVersLabel" Foreground="White"/>
                 <Label Content="-" Grid.Column="1" Grid.Row="1"  x:Name="ModelTypeLabel" Foreground="White"/>
-        <TextBox  HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="2" x:Name="SourceTextBox"/>
-        <TextBox  HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="3" x:Name="ConverterTextBox"/>
-        <TextBox  HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="4" x:Name="CreatorTextBox"/>
-        <TextBox  Grid.Column="1" Grid.Row="5" HorizontalAlignment="Stretch" x:Name="EditorTextBox"/>
-                <DockPanel Grid.Column="1" Grid.Row="6">
-                    <DatePicker   Width="150" HorizontalAlignment="Left" x:Name="ExportTimeDate"/>
-                    <TextBlock Text="Data"  x:Name="ByteLabel" Grid.Row="9" Foreground="White" VerticalAlignment="Bottom" Margin="5,0,0,0"/>
-                </DockPanel>
+                <TextBox Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555" Style="{DynamicResource TextBox_normal}" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="2" x:Name="SourceTextBox" Margin="5,3,5,3"/>
+                <TextBox Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555" Style="{DynamicResource TextBox_normal}"  HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="3" x:Name="ConverterTextBox" Margin="5,3,5,3"/>
+                <TextBox Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555" Style="{DynamicResource TextBox_normal}"  HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="4" x:Name="CreatorTextBox" Margin="5,3,5,3"/>
+                <TextBox Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555" Style="{DynamicResource TextBox_normal}"  Grid.Column="1" Grid.Row="5" HorizontalAlignment="Stretch" x:Name="EditorTextBox" Margin="5,3,5,3"/>
 
-                <DockPanel Grid.Column="1" Grid.Row="7">
-                    <DatePicker  Width="150" HorizontalAlignment="Left" x:Name="CreationTimeDate"/>
-                    <Button  Style="{DynamicResource ButtonStyle_normal1}" Grid.Column="1" Grid.Row="9"  Content="Repair timers"  x:Name="RepairTimersButton" Margin="5,5,5,0" Padding="5,1,5,1" HorizontalAlignment="Left"/>
-                </DockPanel>
-                <DatePicker  Grid.Column="1" Grid.Row="8" Width="150" HorizontalAlignment="Left" x:Name="ModifedTimeDate"/>
+                <DatePicker  Style="{DynamicResource DatePickerStyle1}" Grid.Column="1" Grid.Row="6" Width="150" HorizontalAlignment="Left" x:Name="ExportTimeDate">
+
+
+                </DatePicker>
+
+                <TextBlock Text="Data"  x:Name="ByteLabel" Grid.Row="9" Foreground="White" VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Right"/>
+                <DatePicker  Style="{DynamicResource DatePickerStyle1}" Grid.Column="1" Grid.Row="7" Width="150" HorizontalAlignment="Left" x:Name="CreationTimeDate">
+                </DatePicker>
+
+                <DatePicker Style="{DynamicResource DatePickerStyle1}"  Grid.Column="1" Grid.Row="8" Width="150" HorizontalAlignment="Left" x:Name="ModifedTimeDate" >
+       
+
+                </DatePicker>
+                <Button  Style="{DynamicResource ButtonStyle_normal1}" Grid.Column="1" Grid.Row="9"  Content="Repair timers"  x:Name="RepairTimersButton" Margin="5,5,5,5" Padding="5,1,5,1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
                 <DockPanel Grid.Column="1" Grid.Row="10" HorizontalAlignment="Right" >
                     <Button Style="{DynamicResource ButtonStyle_normal1}" Margin="0,0,3,0"  Foreground="#FFE1E3E6" Width="90" x:Name="CancelButton" Click="CancelButton_Click" Content="Close" Height="30" />

@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="./ladcega_style/TextBox_normal.xaml" />
                 <ResourceDictionary Source="./ladcega_style/TabControl_normal.xaml" />
                 <ResourceDictionary Source="./ladcega_style/MenuItem_normal.xaml" />
+                <ResourceDictionary Source="./ladcega_style/DatePicker_normal.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
