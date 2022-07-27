@@ -1917,7 +1917,7 @@ namespace OGF_Tool
 			MassTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			MassTextBox.Name = "MassBox_" + idx;
 			MassTextBox.Width = 84;
-			MassTextBox.Text = CheckNaN(mass.ToString());
+			MassTextBox.Text = CheckNaN(((decimal)mass).ToString());
 			MassTextBox.Tag = "float";
 			MassTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			MassTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -1939,7 +1939,7 @@ namespace OGF_Tool
 			CenterMassTextBoxX.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			CenterMassTextBoxX.Name = "CenterBoxX_" + idx;
 			CenterMassTextBoxX.Width = 84;
-			CenterMassTextBoxX.Text = CheckNaN(center.x.ToString());
+			CenterMassTextBoxX.Text = CheckNaN(((decimal)center.x).ToString());
 			CenterMassTextBoxX.Tag = "float";
 			CenterMassTextBoxX.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -1952,7 +1952,7 @@ namespace OGF_Tool
 			CenterMassTextBoxY.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			CenterMassTextBoxY.Name = "CenterBoxY_" + idx;
 			CenterMassTextBoxY.Width = 84;
-			CenterMassTextBoxY.Text = CheckNaN(center.y.ToString());
+			CenterMassTextBoxY.Text = CheckNaN(((decimal)center.y).ToString());
 			CenterMassTextBoxY.Tag = "float";
 			CenterMassTextBoxY.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -1964,7 +1964,7 @@ namespace OGF_Tool
 			CenterMassTextBoxZ.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			CenterMassTextBoxZ.Name = "CenterBoxZ_" + idx;
 			CenterMassTextBoxZ.Width = 84;
-			CenterMassTextBoxZ.Text = CheckNaN(center.z.ToString());
+			CenterMassTextBoxZ.Text = CheckNaN(((decimal)center.z).ToString());
 			CenterMassTextBoxZ.Tag = "float";
 			CenterMassTextBoxZ.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -1991,7 +1991,7 @@ namespace OGF_Tool
 			//PositionX.Size = new System.Drawing.Size(84, 58);
 
 			//PositionX.Location = new System.Drawing.Point(86, 151);
-			PositionX.Text = CheckNaN(pos.x.ToString());
+			PositionX.Text = CheckNaN(((decimal)pos.x).ToString());
 			PositionX.Tag = "float";
 			PositionX.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			PositionX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -2005,7 +2005,7 @@ namespace OGF_Tool
 			PositionY.Width = 84;
 			//PositionY.Size = new System.Drawing.Size(84, 58);
 			//PositionY.Location = new System.Drawing.Point(182, 151);
-			PositionY.Text = CheckNaN(pos.y.ToString());
+			PositionY.Text = CheckNaN(((decimal)pos.y).ToString());
 			PositionY.Tag = "float";
 			PositionY.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			PositionY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -2020,7 +2020,7 @@ namespace OGF_Tool
 			PositionZ.Width = 84;
 			//PositionZ.Size = new System.Drawing.Size(84, 58);
 			//PositionZ.Location = new System.Drawing.Point(277, 151);
-			PositionZ.Text = CheckNaN(pos.z.ToString());
+			PositionZ.Text = CheckNaN(((decimal)pos.z).ToString());
 			PositionZ.Tag = "float";
 			PositionZ.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			PositionZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -2045,7 +2045,7 @@ namespace OGF_Tool
 			RotationX.Width = 84;
 			//RotationX.Size = new System.Drawing.Size(84, 58);
 			//RotationX.Location = new System.Drawing.Point(86, 177);
-			RotationX.Text = CheckNaN(rot.x.ToString());
+			RotationX.Text = CheckNaN(((decimal)rot.x).ToString());
 			RotationX.Tag = "float";
 			RotationX.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -2060,7 +2060,7 @@ namespace OGF_Tool
 			RotationY.Width = 84;
 			//RotationY.Size = new System.Drawing.Size(84, 58);
 			//RotationY.Location = new System.Drawing.Point(182, 177);
-			RotationY.Text = CheckNaN(rot.y.ToString());
+			RotationY.Text = CheckNaN(((decimal)rot.y).ToString());
 			RotationY.Tag = "float";
 			RotationY.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -2074,7 +2074,7 @@ namespace OGF_Tool
 			RotationZ.Width = 84;
 			//RotationZ.Size = new System.Drawing.Size(84, 58);
 			//RotationZ.Location = new System.Drawing.Point(277, 177);
-			RotationZ.Text = CheckNaN(rot.z.ToString());
+			RotationZ.Text = CheckNaN(((decimal)rot.z).ToString());
 			RotationZ.Tag = "float";
 			RotationZ.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
