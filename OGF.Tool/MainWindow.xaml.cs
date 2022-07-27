@@ -1703,6 +1703,8 @@ namespace OGF_Tool
 
 			
 			var GroupBox = new GroupBox();
+			GroupBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF939393");
+			GroupBox.Style = this.FindResource("GroupBox_normal") as Style;
 			GroupBox.Header = "Set: [" + idx + "]";
 			GroupBox.Name = "TextureGrpBox_" + idx;
 
@@ -1717,6 +1719,11 @@ namespace OGF_Tool
 			a.Children.Add(newLbl);
 
 			var newTextBox = new TextBox();
+			newTextBox.Style = this.FindResource("TextBox_normal") as Style;
+			newTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			newTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
+
+
 			newTextBox.Name = "textureBox_" + idx;
 			newTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxFilter);
 			a.Children.Add(newTextBox);
@@ -1730,8 +1737,11 @@ namespace OGF_Tool
 			var newTextBox2 = new TextBox();
 			newTextBox2.Name = "shaderBox_" + idx;
 			newTextBox2.TextChanged += new TextChangedEventHandler(this.TextBoxFilter);
+			newTextBox2.Style = this.FindResource("TextBox_normal") as Style;
+			newTextBox2.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			newTextBox2.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			a.Children.Add(newTextBox2);
-
+			
 
 			TextureGroupPanel.Children.Add(GroupBox);
 		}
@@ -1739,6 +1749,8 @@ namespace OGF_Tool
 		private void CreateBoneGroupBox(StackPanel b, int idx, string bone_name, string parent_bone_name, string material, float mass, Fvector center, Fvector pos, Fvector rot)
 		{
 			var GroupBox = new GroupBox();
+			GroupBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF939393");
+			GroupBox.Style = this.FindResource("GroupBox_normal") as Style;
 			//GroupBox.Location = new System.Drawing.Point(3, 3 + 205 * idx);
 			//GroupBox.Size = new System.Drawing.Size(421, 203);
 			GroupBox.Header = "Bone id: [" + idx + "]";
@@ -1803,6 +1815,9 @@ namespace OGF_Tool
 
 			var BoneNameTextBox = new TextBox();
 			BoneNameTextBox.Name = "boneBox_" + idx;
+			BoneNameTextBox.Style = this.FindResource("TextBox_normal") as Style;
+			BoneNameTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			BoneNameTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			//BoneNameTextBox.Size = new System.Drawing.Size(326, 58);
 			//BoneNameTextBox.Width = 326;
 			//BoneNameTextBox.Height = 58;
@@ -1827,6 +1842,9 @@ namespace OGF_Tool
 
 
 			var ParentBoneNameTextBox = new TextBox();
+			ParentBoneNameTextBox.Style = this.FindResource("TextBox_normal") as Style;
+			ParentBoneNameTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			ParentBoneNameTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			ParentBoneNameTextBox.Name = "ParentboneBox_" + idx;
 			//ParentBoneNameTextBox.Size = new System.Drawing.Size(326, 58);
 			//ParentBoneNameTextBox.Location = new System.Drawing.Point(86, 45);
@@ -1848,6 +1866,9 @@ namespace OGF_Tool
 			Grid.SetRow(ParentBoneNameLabel, 1);
 
 			var MaterialTextBox = new TextBox();
+			MaterialTextBox.Style = this.FindResource("TextBox_normal") as Style;
+			MaterialTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			MaterialTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			MaterialTextBox.Name = "MaterialBox_" + idx;
 			//MaterialTextBox.Width = 326;
 			MaterialTextBox.Text = material;
@@ -1866,6 +1887,9 @@ namespace OGF_Tool
 			Grid.SetRow(MaterialLabel, 2);
 
 			var MassTextBox = new TextBox();
+			MassTextBox.Style = this.FindResource("TextBox_normal") as Style;
+			MassTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			MassTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			MassTextBox.Name = "MassBox_" + idx;
 			MassTextBox.Width = 84;
 			MassTextBox.Text = CheckNaN(mass.ToString());
@@ -1885,6 +1909,9 @@ namespace OGF_Tool
 			Grid.SetRow(MassLabel, 3);
 
 			var CenterMassTextBoxX = new TextBox();
+			CenterMassTextBoxX.Style = this.FindResource("TextBox_normal") as Style;
+			CenterMassTextBoxX.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			CenterMassTextBoxX.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			CenterMassTextBoxX.Name = "CenterBoxX_" + idx;
 			CenterMassTextBoxX.Width = 84;
 			CenterMassTextBoxX.Text = CheckNaN(center.x.ToString());
@@ -1895,6 +1922,9 @@ namespace OGF_Tool
 
 
 			var CenterMassTextBoxY = new TextBox();
+			CenterMassTextBoxY.Style = this.FindResource("TextBox_normal") as Style;
+			CenterMassTextBoxY.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			CenterMassTextBoxY.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			CenterMassTextBoxY.Name = "CenterBoxY_" + idx;
 			CenterMassTextBoxY.Width = 84;
 			CenterMassTextBoxY.Text = CheckNaN(center.y.ToString());
@@ -1904,6 +1934,9 @@ namespace OGF_Tool
 			stackPanel1.Children.Add(CenterMassTextBoxY);
 
 			var CenterMassTextBoxZ = new TextBox();
+			CenterMassTextBoxZ.Style = this.FindResource("TextBox_normal") as Style;
+			CenterMassTextBoxZ.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			CenterMassTextBoxZ.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			CenterMassTextBoxZ.Name = "CenterBoxZ_" + idx;
 			CenterMassTextBoxZ.Width = 84;
 			CenterMassTextBoxZ.Text = CheckNaN(center.z.ToString());
@@ -1925,6 +1958,9 @@ namespace OGF_Tool
 			Grid.SetRow(CenterMassLabel, 4);
 
 			var PositionX = new TextBox();
+			PositionX.Style = this.FindResource("TextBox_normal") as Style;
+			PositionX.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			PositionX.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			PositionX.Name = "PositionX_" + idx;
 			PositionX.Width = 84;
 			//PositionX.Size = new System.Drawing.Size(84, 58);
@@ -1937,6 +1973,9 @@ namespace OGF_Tool
 			stackPanel2.Children.Add(PositionX);
 
 			var PositionY = new TextBox();
+			PositionY.Style = this.FindResource("TextBox_normal") as Style;
+			PositionY.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			PositionY.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			PositionY.Name = "PositionY_" + idx;
 			PositionY.Width = 84;
 			//PositionY.Size = new System.Drawing.Size(84, 58);
@@ -1949,6 +1988,9 @@ namespace OGF_Tool
 
 
 			var PositionZ = new TextBox();
+			PositionZ.Style = this.FindResource("TextBox_normal") as Style;
+			PositionZ.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			PositionZ.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			PositionZ.Name = "PositionZ_" + idx;
 			PositionZ.Width = 84;
 			//PositionZ.Size = new System.Drawing.Size(84, 58);
@@ -1971,6 +2013,9 @@ namespace OGF_Tool
 			Grid.SetRow(PositionLabel, 5);
 
 			var RotationX = new TextBox();
+			RotationX.Style = this.FindResource("TextBox_normal") as Style;
+			RotationX.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			RotationX.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			RotationX.Name = "RotationX_" + idx;
 			RotationX.Width = 84;
 			//RotationX.Size = new System.Drawing.Size(84, 58);
@@ -1983,6 +2028,9 @@ namespace OGF_Tool
 
 
 			var RotationY = new TextBox();
+			RotationY.Style = this.FindResource("TextBox_normal") as Style;
+			RotationY.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			RotationY.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			RotationY.Name = "RotationY_" + idx;
 			RotationY.Width = 84;
 			//RotationY.Size = new System.Drawing.Size(84, 58);
@@ -1994,6 +2042,9 @@ namespace OGF_Tool
 			stackPanel3.Children.Add(RotationY);
 
 			var RotationZ = new TextBox();
+			RotationZ.Style = this.FindResource("TextBox_normal") as Style;
+			RotationZ.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			RotationZ.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			RotationZ.Name = "RotationZ_" + idx;
 			RotationZ.Width = 84;
 			//RotationZ.Size = new System.Drawing.Size(84, 58);

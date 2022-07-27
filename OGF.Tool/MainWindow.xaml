@@ -47,35 +47,35 @@
 
                 <MenuItem Header="View" x:Name="viewToolStripMenuItem"  Click="viewToolStripMenuItem_Click"/>
             </Menu>
-            <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right" Foreground="White"/>
+            <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right" Foreground="#FFE1E3E6"/>
         </DockPanel >
         
         <TabControl Grid.Row="1" Name="TabControl_w" Background="#FF222222" BorderBrush="#FF333333">
             <TabItem Header="Textures" x:Name="TexturesPage">
-
+                    
             </TabItem>
             <TabItem  Header="UserData" Name="UserDataPage">
                 <Grid>
-                    <TextBox x:Name="UserDataBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
-                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create UserData" x:Name="CreateUserdataButton"/>
+                        <TextBox Style="{DynamicResource TextBox_normal}" x:Name="UserDataBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create UserData" x:Name="CreateUserdataButton" Click="CreateUserdataButton_Click"/>
                 </Grid>
                 
             </TabItem>
             <TabItem Header="Motion Refs" Name="MotionRefsPage">
                 <Grid>
-                    <TextBox x:Name="MotionRefsBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
-                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Moition Refs" x:Name="CreateMotionRefsButton"/>
+                        <TextBox Style="{DynamicResource TextBox_normal}" x:Name="MotionRefsBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Moition Refs" x:Name="CreateMotionRefsButton" Click="CreateMotionRefsButton_Click"/>
                 </Grid>
                 
             </TabItem>
             <TabItem Header="Motions" Name="MotionPage">
                 <Grid>
-                    <TextBox x:Name="MotionBox"  IsReadOnly="True"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
-                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Append OMF" x:Name="AppendOMFButton"/>
+                        <TextBox Style="{DynamicResource TextBox_normal}" x:Name="MotionBox"  IsReadOnly="True"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Append OMF" x:Name="AppendOMFButton" Click="AppendOMFButton_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Bone Names" Name="BoneNamesPage">
-                <TextBox x:Name="BoneNamesBox" IsReadOnly="True" Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                <TextBox Style="{DynamicResource TextBox_normal}" x:Name="BoneNamesBox" IsReadOnly="True" Background="#FF292929" Foreground="#FFE1E3E6" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
             </TabItem>
             <TabItem Header="Bone Params" Name="BoneParamsPage">
                 
@@ -84,18 +84,18 @@
                 <Grid>
                     <StackPanel>
                         <Label Content="Lod path"/>
-                        <TextBox x:Name="LodPathBox"  IsReadOnly="True"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                            <TextBox Style="{DynamicResource TextBox_normal}" x:Name="LodPathBox"  IsReadOnly="True"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     </StackPanel>
-                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Lod" x:Name="CreateLodButton"/>
+                    <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Lod" x:Name="CreateLodButton" Click="CreateLodButton_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
 
-        <StatusBar Grid.Row="2">
-            <StatusBarItem x:Name="FileLabel" Content="File:"/>
-            <StatusBarItem x:Name="StatusFile" Content="NoFile"/>
+        <StatusBar Grid.Row="2" Background="#FF313131">
+            <StatusBarItem x:Name="FileLabel" Content="File:" Foreground="#FFE1E3E6"/>
+            <StatusBarItem x:Name="StatusFile" Content="NoFile" Foreground="#FFE1E3E6"/>
             
-            <StatusBarItem x:Name="LabelBroken" Content="Broken type:" HorizontalAlignment="Right"/>
+            <StatusBarItem x:Name="LabelBroken" Content="Broken type:" HorizontalAlignment="Right" Foreground="#FFE1E3E6"/>
         </StatusBar>
         </Grid>
         <local:InfoWindow x:Name="InfoMessage"/>
