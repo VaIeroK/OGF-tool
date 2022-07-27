@@ -276,6 +276,7 @@ namespace OGF_Tool
 				else
 					CreateLodButton.Visibility = Visibility.Visible;
 			}
+			ScrollViewer TextureGroupScrollViewer = new ScrollViewer();
 			StackPanel TextureGroupPanel = new StackPanel();
 			for (int i = 0; i < OGF_V.childs.Count; i++)
 			{
@@ -291,7 +292,8 @@ namespace OGF_Tool
 					Cntrl2.Text = OGF_V.childs[i].m_shader;
 				}
 			}
-			TexturesPage.Content = TextureGroupPanel;
+			TextureGroupScrollViewer.Content = TextureGroupPanel;
+			TexturesPage.Content = TextureGroupScrollViewer;
 
 
 			if (OGF_V.bones != null)
@@ -312,8 +314,8 @@ namespace OGF_Tool
 			MotionRefsBox.Clear();
 			UserDataBox.Clear();
 
-			if (OGF_V.motion_refs != null)
-				MotionRefsBox.Text = OGF_V.motion_refs.refs.ToString();
+			if (OGF_V.motion_refs != null) 
+				MotionRefsBox.Text = String.Join("\n", OGF_V.motion_refs.refs.ToArray());
 
 			if (OGF_V.userdata != null)
 				UserDataBox.Text = OGF_V.userdata.userdata;
@@ -1844,7 +1846,7 @@ namespace OGF_Tool
 			var ParentBoneNameTextBox = new TextBox();
 			ParentBoneNameTextBox.Style = this.FindResource("TextBox_normal") as Style;
 			ParentBoneNameTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
-			ParentBoneNameTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
+			ParentBoneNameTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#828282");
 			ParentBoneNameTextBox.Name = "ParentboneBox_" + idx;
 			//ParentBoneNameTextBox.Size = new System.Drawing.Size(326, 58);
 			//ParentBoneNameTextBox.Location = new System.Drawing.Point(86, 45);

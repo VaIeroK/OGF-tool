@@ -15,7 +15,11 @@
         </Grid.RowDefinitions>
         <DockPanel>
             <Menu>
-                <MenuItem Header="File">
+                    <Menu.Resources>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource MenuItemStyle1}"/>
+
+                    </Menu.Resources>
+                    <MenuItem  Background="#FF222222" BorderBrush="#FF222222" Style="{DynamicResource MenuItemStyle1}" Header="File">
                     <MenuItem Header="Load" Click="loadToolStripMenuItem_Click"/>
                     <MenuItem Header="Save" x:Name="SaveMenuParam" Click="saveToolStripMenuItem_Click"/>
                     <MenuItem Header="Save as..." x:Name="saveAsToolStripMenuItem" Click="saveAsToolStripMenuItem_Click"/>
@@ -32,8 +36,8 @@
                     <MenuItem Header="Reload" InputGestureText="чё"  Click="reloadToolStripMenuItem_Click"/>
                     <MenuItem Header="Exit" Click="exitToolStripMenuItem_Click"/>
                 </MenuItem>
-                
-                <MenuItem  Header="Tools" Name="toolStripMenuItem1">
+
+                    <MenuItem  Header="Tools" Name="toolStripMenuItem1" Background="#FF222222" BorderBrush="#FF222222">
                     <MenuItem Header="Open skeleton in Object Editor" x:Name="openSkeletonInObjectEditorToolStripMenuItem"  Click="openSkeletonInObjectEditorToolStripMenuItem_Click"/>
                     <MenuItem Header="Motion tools" Name="motionToolsToolStripMenuItem">
                         <MenuItem Header="Delete motion" Click="deleteChunkToolStripMenuItem_Click"/>
@@ -50,37 +54,41 @@
             <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right" Foreground="#FFE1E3E6"/>
         </DockPanel >
         
-        <TabControl Grid.Row="1" Name="TabControl_w" Background="#FF222222" BorderBrush="#FF333333">
-            <TabItem Header="Textures" x:Name="TexturesPage">
+        <TabControl  Grid.Row="1" Name="TabControl_w" Background="#FF222222" BorderBrush="#FF333333" >
+                <TabControl.Resources>
+                    <Style TargetType="TabItem" BasedOn="{StaticResource CustomTabItem}"/>
+                    
+                </TabControl.Resources>
+                <TabItem  Header="Textures" x:Name="TexturesPage" Foreground="White">
                     
             </TabItem>
-            <TabItem  Header="UserData" Name="UserDataPage">
+                <TabItem  Foreground="#FFE4E4E4" Header="UserData" Name="UserDataPage">
                 <Grid>
                         <TextBox Style="{DynamicResource TextBox_normal}" x:Name="UserDataBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create UserData" x:Name="CreateUserdataButton" Click="CreateUserdataButton_Click"/>
                 </Grid>
                 
             </TabItem>
-            <TabItem Header="Motion Refs" Name="MotionRefsPage">
+                <TabItem  Foreground="#FFE4E4E4" Header="Motion Refs" Name="MotionRefsPage">
                 <Grid>
                         <TextBox Style="{DynamicResource TextBox_normal}" x:Name="MotionRefsBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Moition Refs" x:Name="CreateMotionRefsButton" Click="CreateMotionRefsButton_Click"/>
                 </Grid>
                 
             </TabItem>
-            <TabItem Header="Motions" Name="MotionPage">
+                <TabItem  Foreground="#FFE4E4E4" Header="Motions" Name="MotionPage">
                 <Grid>
                         <TextBox Style="{DynamicResource TextBox_normal}" x:Name="MotionBox"  IsReadOnly="True"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Append OMF" x:Name="AppendOMFButton" Click="AppendOMFButton_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Bone Names" Name="BoneNamesPage">
-                <TextBox Style="{DynamicResource TextBox_normal}" x:Name="BoneNamesBox" IsReadOnly="True" Background="#FF292929" Foreground="#FFE1E3E6" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                <TabItem  Foreground="#FFE4E4E4" Header="Bone Names" Name="BoneNamesPage">
+                <TextBox Style="{DynamicResource TextBox_normal}" x:Name="BoneNamesBox" IsReadOnly="True" Background="#FF292929" Foreground="#FFE1E3E6" SelectionBrush="#FF555555" BorderBrush="#FF555555" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
             </TabItem>
-            <TabItem Header="Bone Params" Name="BoneParamsPage">
+                <TabItem  Foreground="#FFE4E4E4" Header="Bone Params" Name="BoneParamsPage">
                 
             </TabItem>
-            <TabItem Header="Lod" Name="LodPage">
+                <TabItem  Foreground="#FFE4E4E4" Header="Lod" Name="LodPage">
                 <Grid>
                     <StackPanel>
                         <Label Content="Lod path"/>
