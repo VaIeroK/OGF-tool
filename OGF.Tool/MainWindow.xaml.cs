@@ -136,7 +136,9 @@ namespace OGF_Tool
 
             if (Directory.Exists(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp"))
                 Directory.Delete(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp", true);
-        }
+
+			OpenOMFDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.AppendMotion);
+		}
 
         private void Clear(bool ui_only)
         {
@@ -2075,6 +2077,14 @@ namespace OGF_Tool
 			ParentBoneNameLabel.Foreground = Brushes.White;
 
 			box.Content = grid;
+		}
+
+        private void TabControl_w_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+			if (e.Source is TabControl)
+			{
+				TabControl_SelectedIndexChanged(sender, e);
+			}
 		}
     }
 }

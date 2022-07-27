@@ -54,7 +54,7 @@
             <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right" Foreground="#FFE1E3E6"/>
         </DockPanel >
         
-        <TabControl  Grid.Row="1" Name="TabControl_w" Background="#FF222222" BorderBrush="#FF333333" >
+        <TabControl  Grid.Row="1" Name="TabControl_w" Background="#FF222222" BorderBrush="#FF333333" SelectionChanged="TabControl_w_SelectionChanged" >
                 <TabControl.Resources>
                     <Style TargetType="TabItem" BasedOn="{StaticResource CustomTabItem}"/>
                     
@@ -91,8 +91,8 @@
                 <TabItem  Foreground="#FFE4E4E4" Header="Lod" Name="LodPage">
                 <Grid>
                     <StackPanel>
-                        <Label Content="Lod path"/>
-                            <TextBox Style="{DynamicResource TextBox_normal}" x:Name="LodPathBox"  IsReadOnly="True"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                        <Label Content="Lod path" Foreground="White"/>
+                            <TextBox Style="{DynamicResource TextBox_normal}" x:Name="LodPathBox" Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     </StackPanel>
                     <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Lod" x:Name="CreateLodButton" Click="CreateLodButton_Click"/>
                 </Grid>
