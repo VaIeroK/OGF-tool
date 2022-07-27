@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OGF_Tool"
         mc:Ignorable="d"
-        Title="OGF Params Editor" Height="403" Width="463" Background="#FF141414">
+        Title="OGF Params Editor" Height="403" Width="449" Background="#FF141414">
     <Grid>
         <Grid>
         <Grid.RowDefinitions>
@@ -64,26 +64,26 @@
             </TabItem>
                 <TabItem  Foreground="#FFE4E4E4" Header="UserData" Name="UserDataPage">
                 <Grid>
-                        <TextBox Style="{DynamicResource TextBox_normal}" x:Name="UserDataBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                        <TextBox  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"   Style="{DynamicResource TextBox_normal}" x:Name="UserDataBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create UserData" x:Name="CreateUserdataButton" Click="CreateUserdataButton_Click"/>
                 </Grid>
                 
             </TabItem>
                 <TabItem  Foreground="#FFE4E4E4" Header="Motion Refs" Name="MotionRefsPage">
                 <Grid>
-                        <TextBox Style="{DynamicResource TextBox_normal}" x:Name="MotionRefsBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                        <TextBox  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  AcceptsReturn="True"   Style="{DynamicResource TextBox_normal}" x:Name="MotionRefsBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Moition Refs" x:Name="CreateMotionRefsButton" Click="CreateMotionRefsButton_Click"/>
                 </Grid>
                 
             </TabItem>
                 <TabItem  Foreground="#FFE4E4E4" Header="Motions" Name="MotionPage">
                 <Grid>
-                        <TextBox Style="{DynamicResource TextBox_normal}" x:Name="MotionBox"  IsReadOnly="True"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                        <TextBox  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"   Style="{DynamicResource TextBox_normal}" x:Name="MotionBox"  IsReadOnly="True"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Append OMF" x:Name="AppendOMFButton" Click="AppendOMFButton_Click"/>
                 </Grid>
             </TabItem>
                 <TabItem  Foreground="#FFE4E4E4" Header="Bone Names" Name="BoneNamesPage">
-                <TextBox Style="{DynamicResource TextBox_normal}" x:Name="BoneNamesBox" IsReadOnly="True" Background="#FF292929" Foreground="#FFE1E3E6" SelectionBrush="#FF555555" BorderBrush="#FF555555" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                    <TextBox  AcceptsReturn="True"   Style="{DynamicResource TextBox_normal}" x:Name="BoneNamesBox" IsReadOnly="True" Background="#FF292929" Foreground="#FFE1E3E6" SelectionBrush="#FF555555" BorderBrush="#FF555555" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
             </TabItem>
                 <TabItem  Foreground="#FFE4E4E4" Header="Bone Params" Name="BoneParamsPage">
                 
@@ -92,7 +92,7 @@
                 <Grid>
                     <StackPanel>
                         <Label Content="Lod path" Foreground="White"/>
-                            <TextBox Style="{DynamicResource TextBox_normal}" x:Name="LodPathBox" Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                            <TextBox  Style="{DynamicResource TextBox_normal}" x:Name="LodPathBox" Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
                     </StackPanel>
                     <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Lod" x:Name="CreateLodButton" Click="CreateLodButton_Click"/>
                 </Grid>
