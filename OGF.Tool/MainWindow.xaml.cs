@@ -354,10 +354,15 @@ namespace OGF_Tool
 
 				if (IsTextCorrect(UserDataBox.Text))
 				{
-					for (int i = 0; i < UserDataBox.LineCount; i++)
+					List<string> kostil = new List<string>();
+					kostil = UserDataBox.Text.Split('\n').ToList();
+					if (kostil.Count > 1)
+                    for (int i = 0; i < kostil.Count-1; i++) { kostil[i]= kostil[i].Remove(kostil[i].Length - 1);}
+
+					for (int i = 0; i < kostil.Count; i++)
 					{
-						string ext = i == UserDataBox.LineCount - 1 ? "" : "\r\n";
-						OGF_V.userdata.userdata += UserDataBox.GetLineText(i) + ext;
+						string ext = i == kostil.Count - 1 ? "" : "\r\n";
+						OGF_V.userdata.userdata += kostil[i] + ext;
 					}
 				}
 			}
