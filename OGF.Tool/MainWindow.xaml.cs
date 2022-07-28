@@ -2167,5 +2167,35 @@ namespace OGF_Tool
 				TabControl_SelectedIndexChanged(sender, e);
 			}
 		}
+
+        private void a_Click(object sender, MouseButtonEventArgs e)
+        {
+			exitToolStripMenuItem_Click(null,null);
+        }
+
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+			if (WindowState != WindowState.Maximized)
+			{
+				MainGridBlin.Margin = new Thickness(5, 5, 5, 5);
+				this.WindowState = WindowState.Maximized;
+			}
+			else
+			{
+				this.WindowState = WindowState.Normal;
+				MainGridBlin.Margin = new Thickness(0, 0, 0, 0);
+			}
+		}
+
+        private void Image_MouseDown_1(object sender, MouseButtonEventArgs e)
+        {
+			this.WindowState = WindowState.Minimized;
+
+		}
+
+        private void Rectangle_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+			if (e.ChangedButton == MouseButton.Left) { this.DragMove(); }
+		}
     }
 }

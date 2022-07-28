@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OGF_Tool"
-        mc:Ignorable="d"
+        mc:Ignorable="d" WindowStyle="None" AllowsTransparency="True"
         Title="OGF Params Editor" Height="403" Width="449" Background="#FF141414"
         MinWidth="449" MinHeight="403" WindowStartupLocation="CenterScreen"
-        ResizeMode="CanResizeWithGrip" Icon="/ico.ico"
+        ResizeMode="CanResizeWithGrip" Icon="/ico.ico" 
         >
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="OpenCommandBinding_Executed"/>
@@ -22,14 +22,67 @@
         <KeyBinding Key="S" Modifiers="Control" Command="Save"/>
         <KeyBinding Key="F3" Command="New"/> 
     </Window.InputBindings>
-    <Grid>
-        <Grid>
+    <Grid x:Name="MainGridBlin">
+        <Grid >
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <DockPanel>
+            <TextBlock Text="OGF EDITOR" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+            <Rectangle Fill="#00000000" MouseDown="Rectangle_MouseDown"/>
+            <DockPanel HorizontalAlignment="Right">
+
+
+                <Image x:Name="MinButton" Height="12" Width="12" Margin="8,0,0,0" StretchDirection="Both" Stretch="Fill" MouseDown="Image_MouseDown_1" >
+                    <Image.Style>
+
+                        <Style TargetType="{x:Type Image}">
+                        <Setter Property="Source" Value="ladcega_res/MacMin.png"/>
+                        <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsMouseOver, ElementName=MinButton}" Value="True">
+                                <Setter Property="Source" Value="ladcega_res/MacMinHover.png">
+
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    </Image.Style>
+                </Image>
+                <Image x:Name="MaxButton" Height="12" Width="12" Margin="8,0,0,0" StretchDirection="Both" Stretch="Fill" MouseDown="Image_MouseDown" >
+                    <Image.Style>
+
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="ladcega_res/MacMax.png"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsMouseOver, ElementName=MaxButton}" Value="True">
+                                    <Setter Property="Source" Value="ladcega_res/MacMaxHover.png">
+
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+                <Image x:Name="CloseButton" Height="12" Width="12" Margin="8,0,8,0"  StretchDirection="Both" Stretch="Fill" MouseDown="a_Click">
+                    <Image.Style>
+
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="ladcega_res/MacClose.png"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsMouseOver, ElementName=CloseButton}" Value="True">
+                                    <Setter Property="Source" Value="ladcega_res/MacCloseHover.png">
+
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </DockPanel>
+            
+        <DockPanel Grid.Row="1">
             <Menu>
                     <Menu.Resources>
                         <Style TargetType="MenuItem" BasedOn="{StaticResource MenuItemStyle1}"/>
@@ -70,7 +123,7 @@
             <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right" Foreground="#FFE1E3E6" Margin="0,2,5,0" VerticalAlignment="Center"/>
         </DockPanel >
         
-        <TabControl  Grid.Row="1" Name="TabControl_w" Background="#FF222222" BorderBrush="#FF333333" SelectionChanged="TabControl_w_SelectionChanged" >
+        <TabControl  Grid.Row="2" Name="TabControl_w" Background="#FF222222" BorderBrush="#FF333333" SelectionChanged="TabControl_w_SelectionChanged" >
                 <TabControl.Resources>
                     <Style TargetType="TabItem" BasedOn="{StaticResource CustomTabItem}"/>
                     
@@ -115,7 +168,7 @@
             </TabItem>
         </TabControl>
 
-        <StatusBar Grid.Row="2" Background="#FF313131">
+        <StatusBar Grid.Row="3" Background="#FF313131">
             <StatusBarItem x:Name="FileLabel" Content="File:" Foreground="#FFE1E3E6"/>
             <StatusBarItem x:Name="StatusFile" Content="NoFile" Foreground="#FFE1E3E6"/>
             

@@ -136,5 +136,13 @@
   <ItemGroup>
     <Resource Include="ico.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ladcega_res\MacClose.png" />
+    <Resource Include="ladcega_res\MacCloseHover.png" />
+    <Resource Include="ladcega_res\MacMax.png" />
+    <Resource Include="ladcega_res\MacMaxHover.png" />
+    <Resource Include="ladcega_res\MacMin.png" />
+    <Resource Include="ladcega_res\MacMinHover.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
