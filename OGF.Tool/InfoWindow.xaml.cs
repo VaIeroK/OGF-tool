@@ -93,7 +93,7 @@ namespace OGF_Tool
             return _result;
         }
 
-        private void RepairTimersButton_Click(object sender, EventArgs e)
+        private void RepairTimersButton_Click(object sender, RoutedEventArgs e)
         {
             descr.four_byte = false;
             RepairTimersButton.IsEnabled = false;
