@@ -53,16 +53,16 @@
                 <TextBox Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555" Style="{DynamicResource TextBox_normal}"  HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="4" x:Name="CreatorTextBox" Margin="5,3,5,3"/>
                 <TextBox Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555" Style="{DynamicResource TextBox_normal}"  Grid.Column="1" Grid.Row="5" HorizontalAlignment="Stretch" x:Name="EditorTextBox" Margin="5,3,5,3"/>
 
-                <DatePicker  Style="{DynamicResource DatePickerStyle1}" Grid.Column="1" Grid.Row="6" Width="150" HorizontalAlignment="Left" x:Name="ExportTimeDate">
+                <DatePicker  Style="{DynamicResource DatePickerStyle1}" Grid.Column="1" Grid.Row="6" Width="150" HorizontalAlignment="Left" x:Name="ExportTimeDate" Margin="2,0,0,0">
 
 
                 </DatePicker>
 
                 <Label Content="Data"  x:Name="ByteLabel" Grid.Row="9" Foreground="#FF939393" HorizontalAlignment="Right"/>
-                <DatePicker  Style="{DynamicResource DatePickerStyle1}" Grid.Column="1" Grid.Row="7" Width="150" HorizontalAlignment="Left" x:Name="CreationTimeDate">
+                <DatePicker  Style="{DynamicResource DatePickerStyle1}" Grid.Column="1" Grid.Row="7" Width="150" HorizontalAlignment="Left" x:Name="CreationTimeDate" Margin="2,0,0,0">
                 </DatePicker>
 
-                <DatePicker Style="{DynamicResource DatePickerStyle1}"  Grid.Column="1" Grid.Row="8" Width="150" HorizontalAlignment="Left" x:Name="ModifedTimeDate" >
+                <DatePicker Style="{DynamicResource DatePickerStyle1}"  Grid.Column="1" Grid.Row="8" Width="150" HorizontalAlignment="Left" x:Name="ModifedTimeDate" Margin="2,0,0,0" >
        
 
                 </DatePicker>

@@ -1804,7 +1804,7 @@ namespace OGF_Tool
 			Col1.Width = new GridLength(100);
 			grid.ColumnDefinitions.Add(Col1);
 
-			Col2.Width = GridLength.Auto;
+			Col2.Width = new GridLength(1, GridUnitType.Star);
 			grid.ColumnDefinitions.Add(Col2);
 
 			RowDefinition row1 = new RowDefinition();
@@ -1833,15 +1833,54 @@ namespace OGF_Tool
 			grid.RowDefinitions.Add(row7);
 			grid.RowDefinitions.Add(row8);
 
-			StackPanel stackPanel1 = new StackPanel();
-			StackPanel stackPanel2 = new StackPanel();
-			StackPanel stackPanel3 = new StackPanel();
-			stackPanel1.Orientation = Orientation.Horizontal;
+			Grid stackPanel1 = new Grid();
+			Grid stackPanel2 = new Grid();
+			Grid stackPanel3 = new Grid();
+			//stackPanel1.Orientation = Orientation.Horizontal;
 			stackPanel1.HorizontalAlignment = HorizontalAlignment.Stretch;
-			stackPanel2.Orientation = Orientation.Horizontal;
+			//stackPanel2.Orientation = Orientation.Horizontal;
 			stackPanel2.HorizontalAlignment = HorizontalAlignment.Stretch;
-			stackPanel3.Orientation = Orientation.Horizontal;
+			//stackPanel3.Orientation = Orientation.Horizontal;
 			stackPanel3.HorizontalAlignment = HorizontalAlignment.Stretch;
+
+			ColumnDefinition Col1_g1 = new ColumnDefinition();
+			ColumnDefinition Col2_g1 = new ColumnDefinition();
+			ColumnDefinition Col3_g1 = new ColumnDefinition();
+
+			Col1_g1.Width = new GridLength(1, GridUnitType.Star);
+			stackPanel1.ColumnDefinitions.Add(Col1_g1);
+
+			Col2_g1.Width = new GridLength(1, GridUnitType.Star);
+			stackPanel1.ColumnDefinitions.Add(Col2_g1);
+
+			Col3_g1.Width = new GridLength(1, GridUnitType.Star);
+			stackPanel1.ColumnDefinitions.Add(Col3_g1);
+
+			ColumnDefinition Col1_g2 = new ColumnDefinition();
+			ColumnDefinition Col2_g2 = new ColumnDefinition();
+			ColumnDefinition Col3_g2 = new ColumnDefinition();
+			
+			Col1_g2.Width = new GridLength(1, GridUnitType.Star);
+			stackPanel2.ColumnDefinitions.Add(Col1_g2);
+
+			Col2_g2.Width = new GridLength(1,GridUnitType.Star);
+			stackPanel2.ColumnDefinitions.Add(Col2_g2);
+
+			Col3_g2.Width = new GridLength(1, GridUnitType.Star);
+			stackPanel2.ColumnDefinitions.Add(Col3_g2);
+
+			ColumnDefinition Col1_g3 = new ColumnDefinition();
+			ColumnDefinition Col2_g3 = new ColumnDefinition();
+			ColumnDefinition Col3_g3 = new ColumnDefinition();
+
+			Col1_g3.Width = new GridLength(1, GridUnitType.Star);
+			stackPanel3.ColumnDefinitions.Add(Col1_g3);
+
+			Col2_g3.Width = new GridLength(1, GridUnitType.Star);
+			stackPanel3.ColumnDefinitions.Add(Col2_g3);
+
+			Col3_g3.Width = new GridLength(1, GridUnitType.Star);
+			stackPanel3.ColumnDefinitions.Add(Col3_g3);
 			////
 
 
@@ -1850,11 +1889,9 @@ namespace OGF_Tool
 			BoneNameTextBox.Style = this.FindResource("TextBox_normal") as Style;
 			BoneNameTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			BoneNameTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
-			//BoneNameTextBox.Size = new System.Drawing.Size(326, 58);
-			//BoneNameTextBox.Width = 326;
-			//BoneNameTextBox.Height = 58;
-			//BoneNameTextBox.Location = new System.Drawing.Point(86, 18);
+
 			BoneNameTextBox.Text = bone_name;
+			BoneNameTextBox.Margin = new Thickness(1, 2, 1, 2);
 			BoneNameTextBox.Tag = "string";
 			BoneNameTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			BoneNameTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -1869,6 +1906,7 @@ namespace OGF_Tool
 			//BoneNameLabel.Size = new System.Drawing.Size(100, 20);
 			//BoneNameLabel.Location = new System.Drawing.Point(6, 20);
 			BoneNameLabel.Content = "Bone Name:";
+			BoneNameLabel.Margin = new Thickness(0, 2, 0, 2);
 			grid.Children.Add(BoneNameLabel);
 			Grid.SetColumn(BoneNameLabel, 0);
 
@@ -1883,6 +1921,7 @@ namespace OGF_Tool
 			ParentBoneNameTextBox.Text = parent_bone_name;
 			//ParentBoneNameTextBox.Width = 326;
 			ParentBoneNameTextBox.Tag = "string";
+			ParentBoneNameTextBox.Margin = new Thickness(1, 2, 1, 2);
 			ParentBoneNameTextBox.IsReadOnly = true;
 			ParentBoneNameTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 			//ParentBoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
@@ -1894,6 +1933,7 @@ namespace OGF_Tool
 			var ParentBoneNameLabel = new Label();
 			ParentBoneNameLabel.Name = "ParentboneLabel_" + idx;
 			ParentBoneNameLabel.Content = "Parent Bone:";
+			ParentBoneNameLabel.Margin = new Thickness(0, 2, 0, 2);
 			grid.Children.Add(ParentBoneNameLabel);
 			Grid.SetRow(ParentBoneNameLabel, 1);
 
@@ -1904,6 +1944,7 @@ namespace OGF_Tool
 			MaterialTextBox.Name = "MaterialBox_" + idx;
 			//MaterialTextBox.Width = 326;
 			MaterialTextBox.Text = material;
+			MaterialTextBox.Margin = new Thickness(1, 2, 1, 2);
 			MaterialTextBox.Tag = "string";
 			MaterialTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			MaterialTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
@@ -1915,6 +1956,7 @@ namespace OGF_Tool
 			var MaterialLabel = new Label();
 			MaterialLabel.Name = "MaterialLabel_" + idx;
 			MaterialLabel.Content = "Material:";
+			MaterialLabel.Margin = new Thickness(0, 2, 0, 2);
 			grid.Children.Add(MaterialLabel);
 			Grid.SetRow(MaterialLabel, 2);
 
@@ -1923,7 +1965,8 @@ namespace OGF_Tool
 			MassTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			MassTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			MassTextBox.Name = "MassBox_" + idx;
-			MassTextBox.Width = 84;
+			MassTextBox.Width = 150;
+			MassTextBox.Margin = new Thickness(1, 2, 1, 2);
 			MassTextBox.Text = CheckNaN(((decimal)mass).ToString());
 			MassTextBox.Tag = "float";
 			MassTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
@@ -1937,6 +1980,7 @@ namespace OGF_Tool
 			var MassLabel = new Label();
 			MassLabel.Name = "MassLabel_" + idx;
 			MassLabel.Content = "Mass:";
+			MassLabel.Margin = new Thickness(0, 2,0, 2);
 			grid.Children.Add(MassLabel);
 			Grid.SetRow(MassLabel, 3);
 
@@ -1945,32 +1989,36 @@ namespace OGF_Tool
 			CenterMassTextBoxX.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			CenterMassTextBoxX.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			CenterMassTextBoxX.Name = "CenterBoxX_" + idx;
-			CenterMassTextBoxX.Width = 84;
+			CenterMassTextBoxX.Margin = new Thickness(1, 2, 1, 2);
+			CenterMassTextBoxX.HorizontalAlignment = HorizontalAlignment.Stretch;
 			CenterMassTextBoxX.Text = CheckNaN(((decimal)center.x).ToString());
 			CenterMassTextBoxX.Tag = "float";
 			CenterMassTextBoxX.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			stackPanel1.Children.Add(CenterMassTextBoxX);
-
+			Grid.SetColumn(CenterMassTextBoxX, 0);
 
 			var CenterMassTextBoxY = new TextBox();
 			CenterMassTextBoxY.Style = this.FindResource("TextBox_normal") as Style;
 			CenterMassTextBoxY.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			CenterMassTextBoxY.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			CenterMassTextBoxY.Name = "CenterBoxY_" + idx;
-			CenterMassTextBoxY.Width = 84;
+			CenterMassTextBoxY.Margin = new Thickness(1, 2, 1, 2);
+			CenterMassTextBoxY.HorizontalAlignment = HorizontalAlignment.Stretch;
 			CenterMassTextBoxY.Text = CheckNaN(((decimal)center.y).ToString());
 			CenterMassTextBoxY.Tag = "float";
 			CenterMassTextBoxY.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			stackPanel1.Children.Add(CenterMassTextBoxY);
+			Grid.SetColumn(CenterMassTextBoxY, 1);
 
 			var CenterMassTextBoxZ = new TextBox();
 			CenterMassTextBoxZ.Style = this.FindResource("TextBox_normal") as Style;
 			CenterMassTextBoxZ.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			CenterMassTextBoxZ.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			CenterMassTextBoxZ.Name = "CenterBoxZ_" + idx;
-			CenterMassTextBoxZ.Width = 84;
+			CenterMassTextBoxZ.Margin = new Thickness(1, 2, 1, 2);
+			CenterMassTextBoxZ.HorizontalAlignment = HorizontalAlignment.Stretch;
 			CenterMassTextBoxZ.Text = CheckNaN(((decimal)center.z).ToString());
 			CenterMassTextBoxZ.Tag = "float";
 			CenterMassTextBoxZ.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
@@ -1980,13 +2028,16 @@ namespace OGF_Tool
 			grid.Children.Add(stackPanel1);
 			Grid.SetColumn(stackPanel1, 1);
 			Grid.SetRow(stackPanel1, 4);
+			Grid.SetColumn(CenterMassTextBoxZ, 2);
 
 			var CenterMassLabel = new Label();
 			CenterMassLabel.Name = "CenterMassLabel_" + idx;
 			//CenterMassLabel.Size = new System.Drawing.Size(100, 20);
 			//CenterMassLabel.Location = new System.Drawing.Point(6, 127);
 			CenterMassLabel.Content = "Center of Mass:";
+			CenterMassLabel.Margin = new Thickness(0, 2,0, 2);
 			grid.Children.Add(CenterMassLabel);
+
 			Grid.SetRow(CenterMassLabel, 4);
 
 			var PositionX = new TextBox();
@@ -1994,53 +2045,56 @@ namespace OGF_Tool
 			PositionX.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			PositionX.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			PositionX.Name = "PositionX_" + idx;
-			PositionX.Width = 84;
+			PositionX.HorizontalAlignment = HorizontalAlignment.Stretch;
 			//PositionX.Size = new System.Drawing.Size(84, 58);
 
 			//PositionX.Location = new System.Drawing.Point(86, 151);
 			PositionX.Text = CheckNaN(((decimal)pos.x).ToString());
 			PositionX.Tag = "float";
+			PositionX.Margin = new Thickness(1, 2, 1, 2);
 			PositionX.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			PositionX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			stackPanel2.Children.Add(PositionX);
+			Grid.SetColumn(PositionX, 0);
+
 
 			var PositionY = new TextBox();
 			PositionY.Style = this.FindResource("TextBox_normal") as Style;
 			PositionY.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			PositionY.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			PositionY.Name = "PositionY_" + idx;
-			PositionY.Width = 84;
-			//PositionY.Size = new System.Drawing.Size(84, 58);
-			//PositionY.Location = new System.Drawing.Point(182, 151);
+
 			PositionY.Text = CheckNaN(((decimal)pos.y).ToString());
 			PositionY.Tag = "float";
+			PositionY.Margin = new Thickness(1, 2, 1, 2);
 			PositionY.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			PositionY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			stackPanel2.Children.Add(PositionY);
-
+			Grid.SetColumn(PositionY, 1);
 
 			var PositionZ = new TextBox();
 			PositionZ.Style = this.FindResource("TextBox_normal") as Style;
 			PositionZ.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			PositionZ.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			PositionZ.Name = "PositionZ_" + idx;
-			PositionZ.Width = 84;
-			//PositionZ.Size = new System.Drawing.Size(84, 58);
-			//PositionZ.Location = new System.Drawing.Point(277, 151);
+
 			PositionZ.Text = CheckNaN(((decimal)pos.z).ToString());
 			PositionZ.Tag = "float";
 			PositionZ.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			PositionZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			PositionZ.Margin = new Thickness(1, 2, 1, 2);
 			stackPanel2.Children.Add(PositionZ);
 			grid.Children.Add(stackPanel2);
 			Grid.SetColumn(stackPanel2, 1);
 			Grid.SetRow(stackPanel2, 5);
+			Grid.SetColumn(PositionZ, 2);
 
 			var PositionLabel = new Label();
 			PositionLabel.Name = "PositionLabel_" + idx;
 			//PositionLabel.Size = new System.Drawing.Size(100, 20);
 			//PositionLabel.Location = new System.Drawing.Point(6, 153);
 			PositionLabel.Content = "Position:";
+			PositionLabel.Margin = new Thickness(0, 2, 0, 2);
 			grid.Children.Add(PositionLabel);
 			Grid.SetRow(PositionLabel, 5);
 
@@ -2049,50 +2103,49 @@ namespace OGF_Tool
 			RotationX.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			RotationX.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			RotationX.Name = "RotationX_" + idx;
-			RotationX.Width = 84;
-			//RotationX.Size = new System.Drawing.Size(84, 58);
-			//RotationX.Location = new System.Drawing.Point(86, 177);
+			RotationX.Width = double.NaN;
+
 			RotationX.Text = CheckNaN(((decimal)rot.x).ToString());
 			RotationX.Tag = "float";
 			RotationX.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			RotationX.Margin = new Thickness(1, 2, 1, 2);
 			stackPanel3.Children.Add(RotationX);
-
+			Grid.SetColumn(stackPanel3, 0);
 
 			var RotationY = new TextBox();
 			RotationY.Style = this.FindResource("TextBox_normal") as Style;
 			RotationY.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			RotationY.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			RotationY.Name = "RotationY_" + idx;
-			RotationY.Width = 84;
-			//RotationY.Size = new System.Drawing.Size(84, 58);
-			//RotationY.Location = new System.Drawing.Point(182, 177);
 			RotationY.Text = CheckNaN(((decimal)rot.y).ToString());
 			RotationY.Tag = "float";
 			RotationY.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
+			RotationY.Margin = new Thickness(1, 2, 1, 2);
 			stackPanel3.Children.Add(RotationY);
+			Grid.SetColumn(RotationY, 1);
 
 			var RotationZ = new TextBox();
 			RotationZ.Style = this.FindResource("TextBox_normal") as Style;
 			RotationZ.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			RotationZ.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			RotationZ.Name = "RotationZ_" + idx;
-			RotationZ.Width = 84;
-			//RotationZ.Size = new System.Drawing.Size(84, 58);
-			//RotationZ.Location = new System.Drawing.Point(277, 177);
 			RotationZ.Text = CheckNaN(((decimal)rot.z).ToString());
 			RotationZ.Tag = "float";
 			RotationZ.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			RotationZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			stackPanel3.Children.Add(RotationZ);
+			RotationZ.Margin = new Thickness(1, 2, 1, 2);
 			grid.Children.Add(stackPanel3);
 			Grid.SetColumn(stackPanel3, 1);
 			Grid.SetRow(stackPanel3, 6);
+			Grid.SetColumn(RotationZ, 2);
 
 			var RotationLabel = new Label();
 			RotationLabel.Name = "RotationLabel_" + idx;
 			RotationLabel.Content = "Rotation:";
+			RotationLabel.Margin = new Thickness(0, 2, 0, 2);
 			grid.Children.Add(RotationLabel);
 			Grid.SetRow(RotationLabel, 6);
 
