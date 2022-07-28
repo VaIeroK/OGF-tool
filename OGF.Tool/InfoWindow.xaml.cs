@@ -53,7 +53,7 @@ namespace OGF_Tool
         {
             OgfVersLabel.Content = vers.ToString();
             ModelTypeLabel.Content = (type == 1 ? "Object" : type == 3 ? "Animated" : "Rigid");
-            ByteLabel.Text = "Timers: " + (init_descr.four_byte ? "4 byte" : "8 byte");
+            ByteLabel.Content = "Timers: " + (init_descr.four_byte ? "4 byte" : "8 byte");
             RepairTimersButton.IsEnabled = init_descr.four_byte;
 
             SourceTextBox.Text = init_descr.m_source;
@@ -97,7 +97,7 @@ namespace OGF_Tool
         {
             descr.four_byte = false;
             RepairTimersButton.IsEnabled = false;
-            ByteLabel.Text = "Timers: 8 byte";
+            ByteLabel.Content = "Timers: 8 byte";
         }
 
         private void HideHandlerDialog()

@@ -58,7 +58,7 @@
 
                 </DatePicker>
 
-                <TextBlock Text="Data"  x:Name="ByteLabel" Grid.Row="9" Foreground="White" VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Right"/>
+                <Label Content="Data"  x:Name="ByteLabel" Grid.Row="9" Foreground="#FF939393" HorizontalAlignment="Right"/>
                 <DatePicker  Style="{DynamicResource DatePickerStyle1}" Grid.Column="1" Grid.Row="7" Width="150" HorizontalAlignment="Left" x:Name="CreationTimeDate">
                 </DatePicker>
 

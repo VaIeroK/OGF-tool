@@ -138,6 +138,8 @@ namespace OGF_Tool
                 Directory.Delete(System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\temp", true);
 
 			OpenOMFDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.AppendMotion);
+
+			reloadToolStripMenuItem.IsEnabled = false;
 		}
 
         private void Clear(bool ui_only)
@@ -164,6 +166,7 @@ namespace OGF_Tool
 			{
 				StatusFile.Content = FILE_NAME.Substring(FILE_NAME.LastIndexOf('\\') + 1);
 
+				reloadToolStripMenuItem.IsEnabled = true;
 				oGFInfoToolStripMenuItem.IsEnabled = true;
 				SaveMenuParam.IsEnabled = true;
 				saveAsToolStripMenuItem.IsEnabled = true;
