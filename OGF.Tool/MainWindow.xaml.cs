@@ -1001,23 +1001,22 @@ namespace OGF_Tool
 					{
 						string old_name = OGF_V.bones.bone_names[idx];
 						OGF_V.bones.bone_names[idx] = curBox.Text;
-						/*
-						 * 
-						 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 						for (int i = 0; i < OGF_V.bones.parent_bone_names.Count; i++)
 						{
-							if (BoneParamsPage.Controls.Count < i) continue;
+							var BoneParamsPage_count = ((BoneParamsPage.Content as ScrollViewer).Content as StackPanel).Children.Count;
+							if (BoneParamsPage_count < i) continue;
 							for (int j = 0; j < OGF_V.bones.bone_childs[idx].Count; j++)
 							{
 								if (OGF_V.bones.bone_childs[idx][j] == i)
 								{
-									var MainGroup = BoneParamsPage.Controls[i];
+									var MainGroup = (((BoneParamsPage.Content) as ScrollViewer).Content as StackPanel).Children[i] as GroupBox;
 									OGF_V.bones.parent_bone_names[i] = curBox.Text;
-									MainGroup.Controls[1].Text = OGF_V.bones.parent_bone_names[i];
+									((MainGroup.Content as Grid).Children[2] as TextBox).Text = OGF_V.bones.parent_bone_names[i];
 								}
 							}
 						}
-						*/
+						
 						BoneNamesBox.Clear();
 						BoneNamesBox.Text += $"Bones count : {OGF_V.bones.bone_names.Count}\n\n";
 
@@ -1087,7 +1086,7 @@ namespace OGF_Tool
 		{
 			reloadToolStripMenuItem_Click(null, null);
 		}
-		/*
+		/* !DONE!
 		private void Form1_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Control && e.KeyCode == Keys.S)
