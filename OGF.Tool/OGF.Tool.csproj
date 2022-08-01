@@ -71,6 +71,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ladcega_style\ComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ladcega_style\DatePicker_normal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -955,7 +955,63 @@ namespace OGF_Tool
 				case "shaderBox": OGF_V.childs[idx].m_shader = curBox.Text; break;
 			}
 		}
+		private void CTextBoxBonesFilter(object sender, EventArgs e)
+		{
+			ComboBox curBox = sender as ComboBox;
 
+			string currentField = curBox.Name.ToString().Split('_')[0];
+			int idx = Convert.ToInt32(curBox.Name.ToString().Split('_')[1]);
+
+
+			Fvector vec = new Fvector();
+			switch (currentField)
+			{
+				case "boneBox":
+					{
+						string old_name = OGF_V.bones.bone_names[idx];
+						OGF_V.bones.bone_names[idx] = curBox.Text;
+
+						for (int i = 0; i < OGF_V.bones.parent_bone_names.Count; i++)
+						{
+							var BoneParamsPage_count = ((BoneParamsPage.Content as ScrollViewer).Content as StackPanel).Children.Count;
+							if (BoneParamsPage_count < i) continue;
+							for (int j = 0; j < OGF_V.bones.bone_childs[idx].Count; j++)
+							{
+								if (OGF_V.bones.bone_childs[idx][j] == i)
+								{
+									var MainGroup = (((BoneParamsPage.Content) as ScrollViewer).Content as StackPanel).Children[i] as GroupBox;
+									OGF_V.bones.parent_bone_names[i] = curBox.Text;
+									((MainGroup.Content as Grid).Children[2] as TextBox).Text = OGF_V.bones.parent_bone_names[i];
+								}
+							}
+						}
+
+						BoneNamesBox.Clear();
+						BoneNamesBox.Text += $"Bones count : {OGF_V.bones.bone_names.Count}\n\n";
+
+						for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
+						{
+							BoneNamesBox.Text += $"{i + 1}. {OGF_V.bones.bone_names[i]}";
+							if (i != OGF_V.bones.bone_names.Count - 1)
+								BoneNamesBox.Text += "\n";
+						}
+					}
+					break;
+				case "MaterialBox": OGF_V.ikdata.materials[idx] = curBox.Text; break;
+				case "MassBox": OGF_V.ikdata.mass[idx] = Convert.ToSingle(curBox.Text); break;
+				case "CenterBoxX": vec.x = Convert.ToSingle(curBox.Text); vec.y = OGF_V.ikdata.center_mass[idx].y; vec.z = OGF_V.ikdata.center_mass[idx].z; OGF_V.ikdata.center_mass[idx] = vec; break;
+				case "CenterBoxY": vec.x = OGF_V.ikdata.center_mass[idx].x; vec.y = Convert.ToSingle(curBox.Text); vec.z = OGF_V.ikdata.center_mass[idx].z; OGF_V.ikdata.center_mass[idx] = vec; break;
+				case "CenterBoxZ": vec.x = OGF_V.ikdata.center_mass[idx].x; vec.y = OGF_V.ikdata.center_mass[idx].y; vec.z = Convert.ToSingle(curBox.Text); OGF_V.ikdata.center_mass[idx] = vec; break;
+				case "PositionX": vec.x = Convert.ToSingle(curBox.Text); vec.y = OGF_V.ikdata.position[idx].y; vec.z = OGF_V.ikdata.position[idx].z; OGF_V.ikdata.position[idx] = vec; break;
+				case "PositionY": vec.x = OGF_V.ikdata.position[idx].x; vec.y = Convert.ToSingle(curBox.Text); vec.z = OGF_V.ikdata.position[idx].z; OGF_V.ikdata.position[idx] = vec; break;
+				case "PositionZ": vec.x = OGF_V.ikdata.position[idx].x; vec.y = OGF_V.ikdata.position[idx].y; vec.z = Convert.ToSingle(curBox.Text); OGF_V.ikdata.position[idx] = vec; break;
+				case "RotationX": vec.x = Convert.ToSingle(curBox.Text); vec.y = OGF_V.ikdata.rotation[idx].y; vec.z = OGF_V.ikdata.rotation[idx].z; OGF_V.ikdata.rotation[idx] = vec; break;
+				case "RotationY": vec.x = OGF_V.ikdata.rotation[idx].x; vec.y = Convert.ToSingle(curBox.Text); vec.z = OGF_V.ikdata.rotation[idx].z; OGF_V.ikdata.rotation[idx] = vec; break;
+				case "RotationZ": vec.x = OGF_V.ikdata.rotation[idx].x; vec.y = OGF_V.ikdata.rotation[idx].y; vec.z = Convert.ToSingle(curBox.Text); OGF_V.ikdata.rotation[idx] = vec; break;
+			}
+
+			bKeyIsDown = false;
+		}
 		private void TextBoxBonesFilter(object sender, EventArgs e)
 		{
 			TextBox curBox = sender as TextBox;
@@ -1941,16 +1997,21 @@ namespace OGF_Tool
 			grid.Children.Add(ParentBoneNameLabel);
 			Grid.SetRow(ParentBoneNameLabel, 1);
 
-			var MaterialTextBox = new TextBox();
-			MaterialTextBox.Style = this.FindResource("TextBox_normal") as Style;
-			MaterialTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
-			MaterialTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
+			var MaterialTextBox = new ComboBox();
+			MaterialTextBox.IsEditable = true;
+			MaterialTextBox.Style = this.FindResource("ComboBoxFlatStyle2") as Style;
+			//MaterialTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
+			//MaterialTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			MaterialTextBox.Name = "MaterialBox_" + idx;
 			//MaterialTextBox.Width = 326;
 			MaterialTextBox.Text = material;
 			MaterialTextBox.Margin = new Thickness(1, 2, 1, 2);
 			MaterialTextBox.Tag = "string";
-			MaterialTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
+			MaterialTextBox.IsTextSearchEnabled = false;
+			MaterialTextBox.AddHandler(System.Windows.Controls.Primitives.TextBoxBase.TextChangedEvent,
+					  new System.Windows.Controls.TextChangedEventHandler(CTextBoxBonesFilter));
+
+			//MaterialTextBox.TextChanged += this.TextBoxBonesFilter;
 			MaterialTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			MaterialTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 			grid.Children.Add(MaterialTextBox);

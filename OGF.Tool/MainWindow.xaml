@@ -129,7 +129,7 @@
                     
                 </TabControl.Resources>
                 <TabItem  Header="Textures" x:Name="TexturesPage" Foreground="White">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto"></ScrollViewer>
+                    
                 </TabItem>
                 <TabItem  Foreground="#FFE4E4E4" Header="UserData" Name="UserDataPage">
                 <Grid>
