@@ -199,7 +199,7 @@ namespace OGF_Tool
 
 			// Textures
 			TabControl_w.Items.Add(TexturesPage);
-
+			TabControl_w.SelectedItem = TexturesPage;
 			if (OGF_V.IsSkeleton())
 			{
 				FrameworkElementHelper.RemoveFromParent(UserDataBox);
@@ -282,6 +282,8 @@ namespace OGF_Tool
 					CreateLodButton.Visibility = Visibility.Visible;
 			}
 			ScrollViewer TextureGroupScrollViewer = new ScrollViewer();
+			TextureGroupScrollViewer.Template = Application.Current.FindResource("ScrollViewerControlTemplate") as ControlTemplate;
+			TextureGroupScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
 			StackPanel TextureGroupPanel = new StackPanel();
 			for (int i = 0; i < OGF_V.childs.Count; i++)
 			{
@@ -304,6 +306,8 @@ namespace OGF_Tool
 			if (OGF_V.bones != null)
 			{
 				ScrollViewer a = new ScrollViewer();
+				a.Template = this.FindResource("ScrollViewerControlTemplate") as ControlTemplate;
+				a.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
 				StackPanel b = new StackPanel();
 
 				for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
@@ -2170,7 +2174,8 @@ namespace OGF_Tool
 
         private void a_Click(object sender, MouseButtonEventArgs e)
         {
-			exitToolStripMenuItem_Click(null,null);
+			//exitToolStripMenuItem_Click(null,null);
+			App.Current.Shutdown();
         }
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)

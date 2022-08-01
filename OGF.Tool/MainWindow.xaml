@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OGF_Tool"
         mc:Ignorable="d" WindowStyle="None" AllowsTransparency="True"
-        Title="OGF Params Editor" Height="403" Width="449" Background="#FF141414"
-        MinWidth="449" MinHeight="403" WindowStartupLocation="CenterScreen"
+        Title="OGF Params Editor" Height="403" Width="429" Background="#FF141414"
+        MinWidth="429" MinHeight="403" WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip" Icon="/ico.ico" 
         >
     <Window.CommandBindings>
@@ -120,7 +120,7 @@
 
                 <MenuItem Header="View" x:Name="viewToolStripMenuItem"  Click="viewToolStripMenuItem_Click"/>
             </Menu>
-            <CheckBox Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right" Foreground="#FFE1E3E6" Margin="0,2,5,0" VerticalAlignment="Center"/>
+                <CheckBox Style="{StaticResource CheckBoxMod}" Content="Create Backup" x:Name="BkpCheckBox" HorizontalAlignment="Right" Foreground="#FFE1E3E6" Margin="0,2,5,0" VerticalAlignment="Center"/>
         </DockPanel >
         
         <TabControl  Grid.Row="2" Name="TabControl_w" Background="#FF222222" BorderBrush="#FF333333" SelectionChanged="TabControl_w_SelectionChanged" >
@@ -129,8 +129,8 @@
                     
                 </TabControl.Resources>
                 <TabItem  Header="Textures" x:Name="TexturesPage" Foreground="White">
-                    
-            </TabItem>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"></ScrollViewer>
+                </TabItem>
                 <TabItem  Foreground="#FFE4E4E4" Header="UserData" Name="UserDataPage">
                 <Grid>
                         <TextBox  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"   Style="{DynamicResource TextBox_normal}" x:Name="UserDataBox"  Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
@@ -161,7 +161,7 @@
                 <Grid>
                     <StackPanel>
                         <Label Content="Lod path" Foreground="White"/>
-                            <TextBox  Style="{DynamicResource TextBox_normal}" x:Name="LodPathBox" Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555"/>
+                            <TextBox  Style="{DynamicResource TextBox_normal}" x:Name="LodPathBox" Background="#FF292929" Foreground="White" SelectionBrush="#FF555555" BorderBrush="#FF555555" Margin="2,0,2,0"/>
                     </StackPanel>
                     <Button  Style="{DynamicResource ButtonStyle_normal1}"  Content="Create Lod" x:Name="CreateLodButton" Click="CreateLodButton_Click"/>
                 </Grid>
