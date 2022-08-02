@@ -104,6 +104,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AutoClosingMessageBox.cs" />
+    <Compile Include="XRayLoader.cs" />
     <Compile Include="FolderSelectDialog.cs" />
     <Compile Include="InfoWindow.xaml.cs">
       <DependentUpon>InfoWindow.xaml</DependentUpon>

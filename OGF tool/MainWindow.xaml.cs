@@ -29,11 +29,9 @@ namespace OGF_Tool
 		{
 			if (item != null)
 			{
-				//var parentItemsControl = (ItemsControl)item.Parent;
 				var parentItemsControl = (Grid)item.Parent;
 				if (parentItemsControl != null)
 				{
-					//parentItemsControl.Items.Remove(item as UIElement);
 					parentItemsControl.Children.Remove(item as UIElement);
 				}
 			}
@@ -41,16 +39,17 @@ namespace OGF_Tool
 	}
 	public partial class MainWindow : Window
     {
-		OpenFileDialog OpenOGFDialog =  new OpenFileDialog();
-		OpenFileDialog OpenOGF_DmDialog = new OpenFileDialog();
-		OpenFileDialog OpenOMFDialog = new OpenFileDialog();
+		OpenFileDialog OpenOGFDialog	 = new OpenFileDialog();
+		OpenFileDialog OpenOGF_DmDialog  = new OpenFileDialog();
+		OpenFileDialog OpenOMFDialog	 = new OpenFileDialog();
 		OpenFileDialog OpenProgramDialog = new OpenFileDialog();
+		OpenFileDialog OpenXrDialog		 = new OpenFileDialog();
 
-		SaveFileDialog SaveObjectDialog = new SaveFileDialog();
-		SaveFileDialog SaveAsDialog = new SaveFileDialog();
-		SaveFileDialog SaveSklsDialog = new SaveFileDialog();
-		SaveFileDialog SaveOmfDialog = new SaveFileDialog();
-		SaveFileDialog SaveBonesDialog = new SaveFileDialog();
+		SaveFileDialog SaveObjectDialog  = new SaveFileDialog();
+		SaveFileDialog SaveAsDialog		 = new SaveFileDialog();
+		SaveFileDialog SaveSklsDialog	 = new SaveFileDialog();
+		SaveFileDialog SaveOmfDialog	 = new SaveFileDialog();
+		SaveFileDialog SaveBonesDialog	 = new SaveFileDialog();
 
 		// File sytem
 		public OGF_Children OGF_V			= null;
@@ -59,9 +58,8 @@ namespace OGF_Tool
         public List<byte>	file_bytes		= new List<byte>();
         public string		FILE_NAME		= "";
         IniFile				Settings		= null;
-		//FolderSelectDialog	SaveSklDialog	= null;
-		FolderSelectDialog SaveSklDialog = null;
-
+		FolderSelectDialog  SaveSklDialog	= null;
+		public string[]		GameMaterials   = {};
 
 		// Input
 		public	bool		bKeyIsDown		= false;
@@ -86,14 +84,14 @@ namespace OGF_Tool
         {
 			OpenOGFDialog.Filter = "OGF file|*.ogf";
 			OpenOGF_DmDialog.Filter = "OGF file|*.ogf|DM file|*.dm";
-			SaveObjectDialog.Filter = "Object file|*object";
+			SaveObjectDialog.Filter = "Object file|*.object";
 			SaveAsDialog.Filter = "OGF file|*.ogf|Object file|*.object|Bones file|*.bones|Skl file|*.skl|Skls file|*.skls|OMF file|*.omf";
 			OpenOMFDialog.Filter = "OMF file|*.omf";
 			OpenProgramDialog.Filter = "Program|*.exe";
 			SaveSklsDialog.Filter = "Skls file|*.skls";
-			SaveOmfDialog.Filter = "OMF file|*omf";
-			SaveBonesDialog.Filter = "Bones file|*bones";
-
+			SaveOmfDialog.Filter = "OMF file|*.omf";
+			SaveBonesDialog.Filter = "Bones file|*.bones";
+			OpenXrDialog.Filter = "Xr file|*.xr";
 		}
 
         public MainWindow()
@@ -109,8 +107,6 @@ namespace OGF_Tool
             viewToolStripMenuItem.IsEnabled = false;
             SaveMenuParam.IsEnabled = false;
             saveAsToolStripMenuItem.IsEnabled = false;
-			//motionToolsToolStripMenuItem.Enabled = false; //!G
-			//openSkeletonInObjectEditorToolStripMenuItem.Enabled = false; //!G
 			toolStripMenuItem1.IsEnabled = false;
             exportToolStripMenuItem.IsEnabled = false;
             LabelBroken.Visibility = Visibility.Collapsed;
@@ -120,7 +116,9 @@ namespace OGF_Tool
             string file_path = System.Reflection.Assembly.GetExecutingAssembly().Location.Substring(0, System.Reflection.Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\Settings.ini";
             Settings = new IniFile(file_path);
 
-            if (Environment.GetCommandLineArgs().Length > 1)
+			GameMaterials = GameMtlParser(GetGameMtlPath());
+
+			if (Environment.GetCommandLineArgs().Length > 1)
             {
                 Clear(false);
                 if (OpenFile(Environment.GetCommandLineArgs()[1], ref OGF_V, ref Current_OGF, ref Current_OMF))
@@ -826,22 +824,10 @@ namespace OGF_Tool
 								}
 							}
 
-							Fvector rotation = new Fvector();
-							rotation.x = xr_loader.ReadFloat();
-							rotation.y = xr_loader.ReadFloat();
-							rotation.z = xr_loader.ReadFloat();
-
-							Fvector position = new Fvector();
-							position.x = xr_loader.ReadFloat();
-							position.y = xr_loader.ReadFloat();
-							position.z = xr_loader.ReadFloat();
-
+							Fvector rotation = xr_loader.ReadVector();
+							Fvector position = xr_loader.ReadVector();
 							float mass = xr_loader.ReadFloat();
-
-							Fvector center = new Fvector();
-							center.x = xr_loader.ReadFloat();
-							center.y = xr_loader.ReadFloat();
-							center.z = xr_loader.ReadFloat();
+							Fvector center = xr_loader.ReadVector();
 
 							OGF_C.ikdata.old_size += 12 + 12 + 4 + 12;
 
@@ -1032,7 +1018,6 @@ namespace OGF_Tool
 					break;
 			}
 
-			Fvector vec = new Fvector();
 			switch (currentField)
 			{
 				case "boneBox":
@@ -1067,15 +1052,15 @@ namespace OGF_Tool
 					}
 					break;
 				case "MassBox": OGF_V.ikdata.mass[idx] = Convert.ToSingle(curBox.Text); break;
-				case "CenterBoxX": vec.x = Convert.ToSingle(curBox.Text); vec.y = OGF_V.ikdata.center_mass[idx].y; vec.z = OGF_V.ikdata.center_mass[idx].z; OGF_V.ikdata.center_mass[idx] = vec; break;
-				case "CenterBoxY": vec.x = OGF_V.ikdata.center_mass[idx].x; vec.y = Convert.ToSingle(curBox.Text); vec.z = OGF_V.ikdata.center_mass[idx].z; OGF_V.ikdata.center_mass[idx] = vec; break;
-				case "CenterBoxZ": vec.x = OGF_V.ikdata.center_mass[idx].x; vec.y = OGF_V.ikdata.center_mass[idx].y; vec.z = Convert.ToSingle(curBox.Text); OGF_V.ikdata.center_mass[idx] = vec; break;
-				case "PositionX": vec.x = Convert.ToSingle(curBox.Text); vec.y = OGF_V.ikdata.position[idx].y; vec.z = OGF_V.ikdata.position[idx].z; OGF_V.ikdata.position[idx] = vec; break;
-				case "PositionY": vec.x = OGF_V.ikdata.position[idx].x; vec.y = Convert.ToSingle(curBox.Text); vec.z = OGF_V.ikdata.position[idx].z; OGF_V.ikdata.position[idx] = vec; break;
-				case "PositionZ": vec.x = OGF_V.ikdata.position[idx].x; vec.y = OGF_V.ikdata.position[idx].y; vec.z = Convert.ToSingle(curBox.Text); OGF_V.ikdata.position[idx] = vec; break;
-				case "RotationX": vec.x = Convert.ToSingle(curBox.Text); vec.y = OGF_V.ikdata.rotation[idx].y; vec.z = OGF_V.ikdata.rotation[idx].z; OGF_V.ikdata.rotation[idx] = vec; break;
-				case "RotationY": vec.x = OGF_V.ikdata.rotation[idx].x; vec.y = Convert.ToSingle(curBox.Text); vec.z = OGF_V.ikdata.rotation[idx].z; OGF_V.ikdata.rotation[idx] = vec; break;
-				case "RotationZ": vec.x = OGF_V.ikdata.rotation[idx].x; vec.y = OGF_V.ikdata.rotation[idx].y; vec.z = Convert.ToSingle(curBox.Text); OGF_V.ikdata.rotation[idx] = vec; break;
+				case "CenterBoxX": OGF_V.ikdata.center_mass[idx].setX(Convert.ToSingle(curBox.Text)); break;
+				case "CenterBoxY": OGF_V.ikdata.center_mass[idx].setY(Convert.ToSingle(curBox.Text)); break;
+				case "CenterBoxZ": OGF_V.ikdata.center_mass[idx].setZ(Convert.ToSingle(curBox.Text)); break;
+				case "PositionX": OGF_V.ikdata.position[idx].setX(Convert.ToSingle(curBox.Text)); break;
+				case "PositionY": OGF_V.ikdata.position[idx].setY(Convert.ToSingle(curBox.Text)); break;
+				case "PositionZ": OGF_V.ikdata.position[idx].setZ(Convert.ToSingle(curBox.Text)); break;
+				case "RotationX": OGF_V.ikdata.rotation[idx].setX(Convert.ToSingle(curBox.Text)); break;
+				case "RotationY": OGF_V.ikdata.rotation[idx].setY(Convert.ToSingle(curBox.Text)); break;
+				case "RotationZ": OGF_V.ikdata.rotation[idx].setZ(Convert.ToSingle(curBox.Text)); break;
 			}
 
 			bKeyIsDown = false;
@@ -1684,6 +1669,23 @@ namespace OGF_Tool
 			return object_editor_path;
 		}
 
+		private string GetGameMtlPath()
+		{
+			string gamemtl_path = Settings.Read("game_mtl", "settings");
+			if (!File.Exists(gamemtl_path))
+			{
+				MessageBox.Show("Please, open Game Mtl path", "", MessageBoxButton.OK, MessageBoxImage.Information);
+				if (OpenXrDialog.ShowDialog() == true)
+				{
+					OpenXrDialog.InitialDirectory = "";
+					gamemtl_path = OpenXrDialog.FileName;
+					Settings.Write("game_mtl", gamemtl_path, "settings");
+				}
+			}
+
+			return gamemtl_path;
+		}
+
 		string CheckNaN(string str)
 		{
 			if (str == "NaN")
@@ -1724,6 +1726,42 @@ namespace OGF_Tool
 				}
 			}
 			return ret_text;
+		}
+
+		private string[] GameMtlParser(string filename)
+		{
+			List<string> materials = new List<string>();
+
+			var xr_loader = new XRayLoader();
+
+			using (var r = new BinaryReader(new FileStream(filename, FileMode.Open)))
+			{
+				xr_loader.SetStream(r.BaseStream);
+				xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk((int)MTL.GAMEMTLS_CHUNK_MTLS, false, true));
+
+				int id = 0;
+				uint size;
+
+				while (true)
+				{
+					if (!xr_loader.find_chunk(id)) break;
+
+					Stream temp = xr_loader.reader.BaseStream;
+
+					if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(id, false, true))) break;
+
+					size = xr_loader.find_chunkSize((int)MTL.GAMEMTL_CHUNK_MAIN);
+					if (size == 0) break;
+					xr_loader.ReadBytes(4);
+					materials.Add(xr_loader.read_stringZ());
+
+					id++;
+					xr_loader.SetStream(temp);
+				}
+			}
+			string[] ret = materials.ToArray();
+			Array.Sort(ret);
+			return ret;
 		}
 
 		// Interface
@@ -1919,7 +1957,10 @@ namespace OGF_Tool
 			MaterialTextBox.Margin = new Thickness(1, 2, 1, 2);
 			MaterialTextBox.Tag = "string";
 			MaterialTextBox.IsTextSearchEnabled = false;
+			foreach (string mtl in GameMaterials)
+				MaterialTextBox.Items.Add(mtl);
 			MaterialTextBox.AddHandler(System.Windows.Controls.Primitives.TextBoxBase.TextChangedEvent, new System.Windows.Controls.TextChangedEventHandler(ComboBoxMaterialFilter));
+			MaterialTextBox.SelectionChanged += new System.Windows.Controls.SelectionChangedEventHandler(ComboBoxMaterialFilter);
 
 			MaterialTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			MaterialTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
