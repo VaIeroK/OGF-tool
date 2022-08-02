@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace OGF_tool
+namespace OGF_Tool
 {
     public enum OGF
     {
