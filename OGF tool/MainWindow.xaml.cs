@@ -200,6 +200,8 @@ namespace OGF_Tool
 			// Textures
 			TabControl_w.Items.Add(TexturesPage);
 			TabControl_w.SelectedItem = TexturesPage;
+
+			oGFInfoToolStripMenuItem.IsEnabled = OGF_V.description != null;
 			if (OGF_V.IsSkeleton())
 			{
 				FrameworkElementHelper.RemoveFromParent(UserDataBox);
@@ -451,45 +453,52 @@ namespace OGF_Tool
 					file_bytes.AddRange(temp);
 				}
 
-				bool old_byte = OGF_V.description.four_byte;
-				if (OGF_V.BrokenType > 0) // Åñëè ìîäåëü ñëîìàíà, òî âîññòàíàâëèâàåì ÷àíê ñ 8 áàéòíûìè òàéìåðàìè
-					OGF_V.description.four_byte = false;
-
-				file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_DESC));
-				file_bytes.AddRange(BitConverter.GetBytes(OGF_V.description.chunk_size()));
-				file_bytes.AddRange(OGF_V.description.data());
-
-				OGF_V.description.four_byte = old_byte; // Âîññòàíàâëèâàåì îòîáðàæåíèå êîëëè÷åñòâà áàéòîâ ó òàéìåðà
-
-				fileStream.ReadBytes((int)(OGF_V.pos - fileStream.BaseStream.Position));
-
-				fileStream.ReadBytes(4);
-				uint new_size = fileStream.ReadUInt32();
-
-				foreach (var ch in OGF_V.childs)
-					new_size += ch.NewSize();
-
-				file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_CHILDREN));
-				file_bytes.AddRange(BitConverter.GetBytes(new_size));
-
 				uint last_child_size = 0;
-				foreach (var ch in OGF_V.childs)
+				if (OGF_V.description != null)
 				{
-					temp = fileStream.ReadBytes((int)(ch.parent_pos - fileStream.BaseStream.Position));
-					file_bytes.AddRange(temp);
-					fileStream.ReadUInt32();
-					new_size = fileStream.ReadUInt32();
-					new_size += ch.NewSize();
-					last_child_size = new_size;
-					file_bytes.AddRange(BitConverter.GetBytes(ch.parent_id));
+					bool old_byte = OGF_V.description.four_byte;
+					if (OGF_V.BrokenType > 0) // Åñëè ìîäåëü ñëîìàíà, òî âîññòàíàâëèâàåì ÷àíê ñ 8 áàéòíûìè òàéìåðàìè
+						OGF_V.description.four_byte = false;
+
+					file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_DESC));
+					file_bytes.AddRange(BitConverter.GetBytes(OGF_V.description.chunk_size()));
+					file_bytes.AddRange(OGF_V.description.data());
+
+					OGF_V.description.four_byte = old_byte; // Âîññòàíàâëèâàåì îòîáðàæåíèå êîëëè÷åñòâà áàéòîâ ó òàéìåðà
+
+					fileStream.ReadBytes((int)(OGF_V.pos - fileStream.BaseStream.Position));
+					fileStream.ReadBytes(4);
+					uint new_size = fileStream.ReadUInt32();
+
+					foreach (var ch in OGF_V.childs)
+						new_size += ch.NewSize();
+
+					file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_CHILDREN));
 					file_bytes.AddRange(BitConverter.GetBytes(new_size));
 
-					last_child_size -= (uint)(ch.pos - fileStream.BaseStream.Position);
-					temp = fileStream.ReadBytes((int)(ch.pos - fileStream.BaseStream.Position));
-					file_bytes.AddRange(temp);
-					file_bytes.AddRange(ch.data());
-					last_child_size -= (uint)(ch.old_size + 8);
-					fileStream.BaseStream.Position += ch.old_size + 8;
+					foreach (var ch in OGF_V.childs)
+					{
+						temp = fileStream.ReadBytes((int)(ch.parent_pos - fileStream.BaseStream.Position));
+						file_bytes.AddRange(temp);
+						fileStream.ReadUInt32();
+						new_size = fileStream.ReadUInt32();
+						new_size += ch.NewSize();
+						last_child_size = new_size;
+						file_bytes.AddRange(BitConverter.GetBytes(ch.parent_id));
+						file_bytes.AddRange(BitConverter.GetBytes(new_size));
+
+						last_child_size -= (uint)(ch.pos - fileStream.BaseStream.Position);
+						temp = fileStream.ReadBytes((int)(ch.pos - fileStream.BaseStream.Position));
+						file_bytes.AddRange(temp);
+						file_bytes.AddRange(ch.data());
+						last_child_size -= (uint)(ch.old_size + 8);
+						fileStream.BaseStream.Position += ch.old_size + 8;
+					}
+				}
+				else
+                {
+                    file_bytes.AddRange(OGF_V.childs[0].data());
+					fileStream.ReadBytes(OGF_V.childs[0].old_size + 8);
 				}
 
 				if (OGF_V.IsSkeleton())
@@ -629,12 +638,7 @@ namespace OGF_Tool
 				}
 
 				uint DescriptionSize = xr_loader.find_chunkSize((int)OGF.OGF4_S_DESC, false, true);
-				if (DescriptionSize == 0)
-				{
-					MessageBox.Show("Unsupported OGF format! Can't find description chunk!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-					return false;
-				}
-				else
+				if (DescriptionSize > 0)
 				{
 					OGF_C.description = new Description();
 					OGF_C.description.pos = xr_loader.chunk_pos;
@@ -679,11 +683,7 @@ namespace OGF_Tool
 					}
 				}
 
-				if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk((int)OGF.OGF4_CHILDREN, false, true)))
-				{
-					MessageBox.Show("Unsupported OGF format! Can't find children chunk!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-					return false;
-				}
+				bool bFindChunk = xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk((int)OGF.OGF4_CHILDREN, false, true));
 
 				OGF_C.pos = xr_loader.chunk_pos;
 
@@ -691,24 +691,43 @@ namespace OGF_Tool
 				uint size;
 
 				// Texture && shader
-				while (true)
+				if (bFindChunk)
 				{
-					if (!xr_loader.find_chunk(id)) break;
+					while (true)
+					{
+						if (!xr_loader.find_chunk(id)) break;
 
-					Stream temp = xr_loader.reader.BaseStream;
+						Stream temp = xr_loader.reader.BaseStream;
 
-					if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(id, false, true))) break;
+						if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(id, false, true))) break;
 
-					long pos = xr_loader.chunk_pos + OGF_C.pos + 16;
-					size = xr_loader.find_chunkSize((int)OGF.OGF4_TEXTURE);
+						long pos = xr_loader.chunk_pos + OGF_C.pos + 16;
+						size = xr_loader.find_chunkSize((int)OGF.OGF4_TEXTURE);
 
-					if (size == 0) break;
+						if (size == 0) break;
 
-					OGF_Child chld = new OGF_Child(xr_loader.chunk_pos + pos, id, pos - 8, (int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
-					OGF_C.childs.Add(chld);
+						OGF_Child chld = new OGF_Child(xr_loader.chunk_pos + pos, id, pos - 8, (int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
+						OGF_C.childs.Add(chld);
 
-					id++;
-					xr_loader.SetStream(temp);
+						id++;
+						xr_loader.SetStream(temp);
+					}
+				}
+				else
+                {
+					size = xr_loader.find_chunkSize((int)OGF.OGF4_TEXTURE, false, true);
+
+					if (size != 0)
+					{
+						OGF_Child chld = new OGF_Child(0, 0, 0, (int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
+						OGF_C.childs.Add(chld);
+					}
+				}
+
+				if (OGF_C.childs.Count == 0)
+				{
+					MessageBox.Show("Unsupported OGF format! Can't find children chunk!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					return false;
 				}
 
 				xr_loader.SetStream(r.BaseStream);
@@ -955,63 +974,14 @@ namespace OGF_Tool
 				case "shaderBox": OGF_V.childs[idx].m_shader = curBox.Text; break;
 			}
 		}
-		private void CTextBoxBonesFilter(object sender, EventArgs e)
+		private void ComboBoxMaterialFilter(object sender, EventArgs e)
 		{
 			ComboBox curBox = sender as ComboBox;
-
-			string currentField = curBox.Name.ToString().Split('_')[0];
 			int idx = Convert.ToInt32(curBox.Name.ToString().Split('_')[1]);
-
-
-			Fvector vec = new Fvector();
-			switch (currentField)
-			{
-				case "boneBox":
-					{
-						string old_name = OGF_V.bones.bone_names[idx];
-						OGF_V.bones.bone_names[idx] = curBox.Text;
-
-						for (int i = 0; i < OGF_V.bones.parent_bone_names.Count; i++)
-						{
-							var BoneParamsPage_count = ((BoneParamsPage.Content as ScrollViewer).Content as StackPanel).Children.Count;
-							if (BoneParamsPage_count < i) continue;
-							for (int j = 0; j < OGF_V.bones.bone_childs[idx].Count; j++)
-							{
-								if (OGF_V.bones.bone_childs[idx][j] == i)
-								{
-									var MainGroup = (((BoneParamsPage.Content) as ScrollViewer).Content as StackPanel).Children[i] as GroupBox;
-									OGF_V.bones.parent_bone_names[i] = curBox.Text;
-									((MainGroup.Content as Grid).Children[2] as TextBox).Text = OGF_V.bones.parent_bone_names[i];
-								}
-							}
-						}
-
-						BoneNamesBox.Clear();
-						BoneNamesBox.Text += $"Bones count : {OGF_V.bones.bone_names.Count}\n\n";
-
-						for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
-						{
-							BoneNamesBox.Text += $"{i + 1}. {OGF_V.bones.bone_names[i]}";
-							if (i != OGF_V.bones.bone_names.Count - 1)
-								BoneNamesBox.Text += "\n";
-						}
-					}
-					break;
-				case "MaterialBox": OGF_V.ikdata.materials[idx] = curBox.Text; break;
-				case "MassBox": OGF_V.ikdata.mass[idx] = Convert.ToSingle(curBox.Text); break;
-				case "CenterBoxX": vec.x = Convert.ToSingle(curBox.Text); vec.y = OGF_V.ikdata.center_mass[idx].y; vec.z = OGF_V.ikdata.center_mass[idx].z; OGF_V.ikdata.center_mass[idx] = vec; break;
-				case "CenterBoxY": vec.x = OGF_V.ikdata.center_mass[idx].x; vec.y = Convert.ToSingle(curBox.Text); vec.z = OGF_V.ikdata.center_mass[idx].z; OGF_V.ikdata.center_mass[idx] = vec; break;
-				case "CenterBoxZ": vec.x = OGF_V.ikdata.center_mass[idx].x; vec.y = OGF_V.ikdata.center_mass[idx].y; vec.z = Convert.ToSingle(curBox.Text); OGF_V.ikdata.center_mass[idx] = vec; break;
-				case "PositionX": vec.x = Convert.ToSingle(curBox.Text); vec.y = OGF_V.ikdata.position[idx].y; vec.z = OGF_V.ikdata.position[idx].z; OGF_V.ikdata.position[idx] = vec; break;
-				case "PositionY": vec.x = OGF_V.ikdata.position[idx].x; vec.y = Convert.ToSingle(curBox.Text); vec.z = OGF_V.ikdata.position[idx].z; OGF_V.ikdata.position[idx] = vec; break;
-				case "PositionZ": vec.x = OGF_V.ikdata.position[idx].x; vec.y = OGF_V.ikdata.position[idx].y; vec.z = Convert.ToSingle(curBox.Text); OGF_V.ikdata.position[idx] = vec; break;
-				case "RotationX": vec.x = Convert.ToSingle(curBox.Text); vec.y = OGF_V.ikdata.rotation[idx].y; vec.z = OGF_V.ikdata.rotation[idx].z; OGF_V.ikdata.rotation[idx] = vec; break;
-				case "RotationY": vec.x = OGF_V.ikdata.rotation[idx].x; vec.y = Convert.ToSingle(curBox.Text); vec.z = OGF_V.ikdata.rotation[idx].z; OGF_V.ikdata.rotation[idx] = vec; break;
-				case "RotationZ": vec.x = OGF_V.ikdata.rotation[idx].x; vec.y = OGF_V.ikdata.rotation[idx].y; vec.z = Convert.ToSingle(curBox.Text); OGF_V.ikdata.rotation[idx] = vec; break;
-			}
-
+			OGF_V.ikdata.materials[idx] = curBox.Text;
 			bKeyIsDown = false;
 		}
+
 		private void TextBoxBonesFilter(object sender, EventArgs e)
 		{
 			TextBox curBox = sender as TextBox;
@@ -1096,7 +1066,6 @@ namespace OGF_Tool
 						}
 					}
 					break;
-				case "MaterialBox": OGF_V.ikdata.materials[idx] = curBox.Text; break;
 				case "MassBox": OGF_V.ikdata.mass[idx] = Convert.ToSingle(curBox.Text); break;
 				case "CenterBoxX": vec.x = Convert.ToSingle(curBox.Text); vec.y = OGF_V.ikdata.center_mass[idx].y; vec.z = OGF_V.ikdata.center_mass[idx].z; OGF_V.ikdata.center_mass[idx] = vec; break;
 				case "CenterBoxY": vec.x = OGF_V.ikdata.center_mass[idx].x; vec.y = Convert.ToSingle(curBox.Text); vec.z = OGF_V.ikdata.center_mass[idx].z; OGF_V.ikdata.center_mass[idx] = vec; break;
@@ -1154,29 +1123,11 @@ namespace OGF_Tool
 		{
 			reloadToolStripMenuItem_Click(null, null);
 		}
-		/* !DONE!
-		private void Form1_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.Control && e.KeyCode == Keys.S)
-				saveToolStripMenuItem_Click(null, null);
-
-			switch (e.KeyData)
-			{
-				case Keys.F3: reloadToolStripMenuItem_Click(null, null); break;
-				case Keys.F4: loadToolStripMenuItem_Click(null, null); break;
-				case Keys.F5: saveToolStripMenuItem_Click(null, null); break;
-				case Keys.F6: saveAsToolStripMenuItem_Click(null, null); break;
-			}
-		}
-		*/
 
 		private void oGFInfoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			
 			System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
 
-			//InfoWindow Info = new InfoWindow(OGF_V.description, OGF_V.m_version, OGF_V.m_model_type);
-			//Info.ShowDialog();
 			Description descr = new Description();
 			bool res = InfoMessage.ShowHandlerDialog(OGF_V.description, OGF_V.m_version, OGF_V.m_model_type, ref descr);
 
@@ -1193,7 +1144,6 @@ namespace OGF_Tool
 			}
 
 			System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-			
 		}
 
 		private void saveAsToolStripMenuItem_Click(object sender, RoutedEventArgs e)
@@ -1618,7 +1568,7 @@ namespace OGF_Tool
 
 		private void UpdateModelType()
 		{
-			if (OGF_V == null) return;
+			if (OGF_V == null || OGF_V.description == null) return;
 
 			if (OGF_V.bones == null)
 				OGF_V.m_model_type = 1;
@@ -1741,19 +1691,6 @@ namespace OGF_Tool
 			return str;
 		}
 
-		private void RichTextBoxImgDefender(object sender, KeyEventArgs e)
-		{
-			/*
-			RichTextBox TextBox = sender as RichTextBox;
-			if (e.Control && e.KeyCode == System.Windows.Forms.Keys.V)
-			{
-				if (Clipboard.ContainsText())
-					TextBox.Paste(DataFormats.GetFormat(DataFormats.Text));
-				e.Handled = true;
-			}
-			*/
-		}
-
 		private bool IsTextCorrect(string text)
 		{
 			foreach (char ch in text)
@@ -1792,8 +1729,6 @@ namespace OGF_Tool
 		// Interface
 		private void CreateTextureGroupBox(int idx, StackPanel TextureGroupPanel)
 		{
-
-			
 			var GroupBox = new GroupBox();
 			GroupBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF939393");
 			GroupBox.Style = this.FindResource("GroupBox_normal") as Style;
@@ -1802,7 +1737,6 @@ namespace OGF_Tool
 
 			StackPanel a = new StackPanel();
 			GroupBox.Content = a;
-
 
 			var newLbl = new Label();
 			newLbl.Name = "textureLbl_" + idx;
@@ -1814,7 +1748,6 @@ namespace OGF_Tool
 			newTextBox.Style = this.FindResource("TextBox_normal") as Style;
 			newTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			newTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
-
 
 			newTextBox.Name = "textureBox_" + idx;
 			newTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxFilter);
@@ -1834,7 +1767,6 @@ namespace OGF_Tool
 			newTextBox2.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			a.Children.Add(newTextBox2);
 			
-
 			TextureGroupPanel.Children.Add(GroupBox);
 		}
 
@@ -1843,12 +1775,9 @@ namespace OGF_Tool
 			var GroupBox = new GroupBox();
 			GroupBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF939393");
 			GroupBox.Style = this.FindResource("GroupBox_normal") as Style;
-			//GroupBox.Location = new System.Drawing.Point(3, 3 + 205 * idx);
-			//GroupBox.Size = new System.Drawing.Size(421, 203);
 			GroupBox.Header = "Bone id: [" + idx + "]";
 			GroupBox.Name = "BoneGrpBox_" + idx;
 			GroupBox.Foreground = Brushes.White;
-			//GroupBox.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 
 			CreateBoneTextBox(idx, GroupBox, bone_name, parent_bone_name, material, mass, center, pos, rot);
 			b.Children.Add(GroupBox);
@@ -1896,11 +1825,8 @@ namespace OGF_Tool
 			Grid stackPanel1 = new Grid();
 			Grid stackPanel2 = new Grid();
 			Grid stackPanel3 = new Grid();
-			//stackPanel1.Orientation = Orientation.Horizontal;
 			stackPanel1.HorizontalAlignment = HorizontalAlignment.Stretch;
-			//stackPanel2.Orientation = Orientation.Horizontal;
 			stackPanel2.HorizontalAlignment = HorizontalAlignment.Stretch;
-			//stackPanel3.Orientation = Orientation.Horizontal;
 			stackPanel3.HorizontalAlignment = HorizontalAlignment.Stretch;
 
 			ColumnDefinition Col1_g1 = new ColumnDefinition();
@@ -1941,8 +1867,6 @@ namespace OGF_Tool
 
 			Col3_g3.Width = new GridLength(1, GridUnitType.Star);
 			stackPanel3.ColumnDefinitions.Add(Col3_g3);
-			////
-
 
 			var BoneNameTextBox = new TextBox();
 			BoneNameTextBox.Name = "boneBox_" + idx;
@@ -1955,40 +1879,30 @@ namespace OGF_Tool
 			BoneNameTextBox.Tag = "string";
 			BoneNameTextBox.TextChanged += new TextChangedEventHandler(this.TextBoxBonesFilter);
 			BoneNameTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			//BoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 			BoneNameTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 			grid.Children.Add(BoneNameTextBox);
 			Grid.SetColumn(BoneNameTextBox, 1);
 
-
 			var BoneNameLabel = new Label();
 			BoneNameLabel.Name = "boneLabel_" + idx;
-			//BoneNameLabel.Size = new System.Drawing.Size(100, 20);
-			//BoneNameLabel.Location = new System.Drawing.Point(6, 20);
 			BoneNameLabel.Content = "Bone Name:";
 			BoneNameLabel.Margin = new Thickness(0, 2, 0, 2);
 			grid.Children.Add(BoneNameLabel);
 			Grid.SetColumn(BoneNameLabel, 0);
-
 
 			var ParentBoneNameTextBox = new TextBox();
 			ParentBoneNameTextBox.Style = this.FindResource("TextBox_normal") as Style;
 			ParentBoneNameTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
 			ParentBoneNameTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#828282");
 			ParentBoneNameTextBox.Name = "ParentboneBox_" + idx;
-			//ParentBoneNameTextBox.Size = new System.Drawing.Size(326, 58);
-			//ParentBoneNameTextBox.Location = new System.Drawing.Point(86, 45);
 			ParentBoneNameTextBox.Text = parent_bone_name;
-			//ParentBoneNameTextBox.Width = 326;
 			ParentBoneNameTextBox.Tag = "string";
 			ParentBoneNameTextBox.Margin = new Thickness(1, 2, 1, 2);
 			ParentBoneNameTextBox.IsReadOnly = true;
 			ParentBoneNameTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
-			//ParentBoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 			grid.Children.Add(ParentBoneNameTextBox);
 			Grid.SetColumn(ParentBoneNameTextBox, 1);
 			Grid.SetRow(ParentBoneNameTextBox, 1);
-
 
 			var ParentBoneNameLabel = new Label();
 			ParentBoneNameLabel.Name = "ParentboneLabel_" + idx;
@@ -2000,18 +1914,13 @@ namespace OGF_Tool
 			var MaterialTextBox = new ComboBox();
 			MaterialTextBox.IsEditable = true;
 			MaterialTextBox.Style = this.FindResource("ComboBoxFlatStyle2") as Style;
-			//MaterialTextBox.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF292929");
-			//MaterialTextBox.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			MaterialTextBox.Name = "MaterialBox_" + idx;
-			//MaterialTextBox.Width = 326;
 			MaterialTextBox.Text = material;
 			MaterialTextBox.Margin = new Thickness(1, 2, 1, 2);
 			MaterialTextBox.Tag = "string";
 			MaterialTextBox.IsTextSearchEnabled = false;
-			MaterialTextBox.AddHandler(System.Windows.Controls.Primitives.TextBoxBase.TextChangedEvent,
-					  new System.Windows.Controls.TextChangedEventHandler(CTextBoxBonesFilter));
+			MaterialTextBox.AddHandler(System.Windows.Controls.Primitives.TextBoxBase.TextChangedEvent, new System.Windows.Controls.TextChangedEventHandler(ComboBoxMaterialFilter));
 
-			//MaterialTextBox.TextChanged += this.TextBoxBonesFilter;
 			MaterialTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			MaterialTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 			grid.Children.Add(MaterialTextBox);
@@ -2040,7 +1949,6 @@ namespace OGF_Tool
 			grid.Children.Add(MassTextBox);
 			Grid.SetColumn(MassTextBox, 1);
 			Grid.SetRow(MassTextBox, 3);
-
 
 			var MassLabel = new Label();
 			MassLabel.Name = "MassLabel_" + idx;
@@ -2097,8 +2005,6 @@ namespace OGF_Tool
 
 			var CenterMassLabel = new Label();
 			CenterMassLabel.Name = "CenterMassLabel_" + idx;
-			//CenterMassLabel.Size = new System.Drawing.Size(100, 20);
-			//CenterMassLabel.Location = new System.Drawing.Point(6, 127);
 			CenterMassLabel.Content = "Center of Mass:";
 			CenterMassLabel.Margin = new Thickness(0, 2,0, 2);
 			grid.Children.Add(CenterMassLabel);
@@ -2111,9 +2017,6 @@ namespace OGF_Tool
 			PositionX.Foreground = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#e1e3e6");
 			PositionX.Name = "PositionX_" + idx;
 			PositionX.HorizontalAlignment = HorizontalAlignment.Stretch;
-			//PositionX.Size = new System.Drawing.Size(84, 58);
-
-			//PositionX.Location = new System.Drawing.Point(86, 151);
 			PositionX.Text = CheckNaN(((decimal)pos.x).ToString());
 			PositionX.Tag = "float";
 			PositionX.Margin = new Thickness(1, 2, 1, 2);
@@ -2121,7 +2024,6 @@ namespace OGF_Tool
 			PositionX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			stackPanel2.Children.Add(PositionX);
 			Grid.SetColumn(PositionX, 0);
-
 
 			var PositionY = new TextBox();
 			PositionY.Style = this.FindResource("TextBox_normal") as Style;
@@ -2156,8 +2058,6 @@ namespace OGF_Tool
 
 			var PositionLabel = new Label();
 			PositionLabel.Name = "PositionLabel_" + idx;
-			//PositionLabel.Size = new System.Drawing.Size(100, 20);
-			//PositionLabel.Location = new System.Drawing.Point(6, 153);
 			PositionLabel.Content = "Position:";
 			PositionLabel.Margin = new Thickness(0, 2, 0, 2);
 			grid.Children.Add(PositionLabel);
@@ -2235,7 +2135,6 @@ namespace OGF_Tool
 
         private void a_Click(object sender, MouseButtonEventArgs e)
         {
-			//exitToolStripMenuItem_Click(null,null);
 			App.Current.Shutdown();
         }
 
