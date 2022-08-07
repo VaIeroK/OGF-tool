@@ -340,10 +340,9 @@ namespace OGF_Tool
 		{
 			if (OGF_V.motion_refs != null)
 			{
-				OGF_V.motion_refs.refs.Clear();
-
-				if (IsTextCorrect(MotionRefsBox.Text))
+				if (IsTextCorrect(MotionRefsBox.Text) && MotionRefsBox.LineCount != -1)
 				{
+					OGF_V.motion_refs.refs.Clear();
 					for (int i = 0; i < MotionRefsBox.LineCount; i++)
 					{
 						if (IsTextCorrect(MotionRefsBox.GetLineText(i)))
