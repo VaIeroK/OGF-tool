@@ -265,10 +265,10 @@ namespace OGF_Tool
 						if (i != OGF_V.bones.bone_names.Count - 1)
 							BoneNamesBox.Text += "\n";
 					}
-				}
 
-				// Ik Data
-				TabControl_w.Items.Add(BoneParamsPage);
+					// Ik Data
+					TabControl_w.Items.Add(BoneParamsPage);
+				}
 
 				// Lod
 				TabControl_w.Items.Add(LodPage);
@@ -455,14 +455,14 @@ namespace OGF_Tool
 				if (OGF_V.description != null)
 				{
 					bool old_byte = OGF_V.description.four_byte;
-					if (OGF_V.BrokenType > 0) // Åñëè ìîäåëü ñëîìàíà, òî âîññòàíàâëèâàåì ÷àíê ñ 8 áàéòíûìè òàéìåðàìè
+					if (OGF_V.BrokenType > 0) // Если модель сломана, то восстанавливаем чанк с 8 байтными таймерами
 						OGF_V.description.four_byte = false;
 
 					file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_DESC));
 					file_bytes.AddRange(BitConverter.GetBytes(OGF_V.description.chunk_size()));
 					file_bytes.AddRange(OGF_V.description.data());
 
-					OGF_V.description.four_byte = old_byte; // Âîññòàíàâëèâàåì îòîáðàæåíèå êîëëè÷åñòâà áàéòîâ ó òàéìåðà
+					OGF_V.description.four_byte = old_byte; // Восстанавливаем отображение колличества байтов у таймера
 
 					fileStream.ReadBytes((int)(OGF_V.pos - fileStream.BaseStream.Position));
 					fileStream.ReadBytes(4);
@@ -518,52 +518,52 @@ namespace OGF_Tool
 
 					if (OGF_V.userdata != null)
 					{
-						if (OGF_V.userdata.pos > 0 && (OGF_V.userdata.pos - fileStream.BaseStream.Position) > 0) // Äâèãàåìñÿ äî òåêóùåãî ÷àíêà
+						if (OGF_V.userdata.pos > 0 && (OGF_V.userdata.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
 						{
 							temp = fileStream.ReadBytes((int)(OGF_V.userdata.pos - fileStream.BaseStream.Position));
 							file_bytes.AddRange(temp);
 						}
 
-						if (OGF_V.userdata.userdata != "") // Ïèøåì åñëè åñòü ÷òî ïèñàòü
+						if (OGF_V.userdata.userdata != "") // Пишем если есть что писать
 						{
 							file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_USERDATA));
 							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.userdata.chunk_size()));
 							file_bytes.AddRange(OGF_V.userdata.data());
 						}
 
-						if (OGF_V.userdata.old_size > 0) // Ñäâèãàåì ïîçèöèþ ðèàäåðà åñëè â ìîäåëè áûë ÷àíê
+						if (OGF_V.userdata.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
 							fileStream.ReadBytes(OGF_V.userdata.old_size + 8);
 					}
 
 					if (OGF_V.lod != null)
 					{
-						if (OGF_V.lod.pos > 0 && (OGF_V.lod.pos - fileStream.BaseStream.Position) > 0) // Äâèãàåìñÿ äî òåêóùåãî ÷àíêà
+						if (OGF_V.lod.pos > 0 && (OGF_V.lod.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
 						{
 							temp = fileStream.ReadBytes((int)(OGF_V.lod.pos - fileStream.BaseStream.Position));
 							file_bytes.AddRange(temp);
 						}
 
-						if (OGF_V.lod.lod_path != "") // Ïèøåì åñëè åñòü ÷òî ïèñàòü
+						if (OGF_V.lod.lod_path != "") // Пишем если есть что писать
 						{
 							file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_LODS));
 							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.lod.chunk_size()));
 							file_bytes.AddRange(OGF_V.lod.data());
 						}
 
-						if (OGF_V.lod.old_size > 0) // Ñäâèãàåì ïîçèöèþ ðèàäåðà åñëè â ìîäåëè áûë ÷àíê
+						if (OGF_V.lod.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
 							fileStream.ReadBytes(OGF_V.lod.old_size + 8);
 					}
 
 					bool refs_created = false;
 					if (OGF_V.motion_refs != null)
 					{
-						if (OGF_V.motion_refs.pos > 0 && (OGF_V.motion_refs.pos - fileStream.BaseStream.Position) > 0) // Äâèãàåìñÿ äî òåêóùåãî ÷àíêà
+						if (OGF_V.motion_refs.pos > 0 && (OGF_V.motion_refs.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
 						{
 							temp = fileStream.ReadBytes((int)(OGF_V.motion_refs.pos - fileStream.BaseStream.Position));
 							file_bytes.AddRange(temp);
 						}
 
-						if (OGF_V.motion_refs.refs.Count > 0) // Ïèøåì åñëè åñòü ÷òî ïèñàòü
+						if (OGF_V.motion_refs.refs.Count > 0) // Пишем если есть что писать
 						{
 							refs_created = true;
 
@@ -580,7 +580,7 @@ namespace OGF_Tool
 							file_bytes.AddRange(OGF_V.motion_refs.data(OGF_V.motion_refs.v3));
 						}
 
-						if (OGF_V.motion_refs.old_size > 0) // Ñäâèãàåì ïîçèöèþ ðèàäåðà åñëè â ìîäåëè áûë ÷àíê
+						if (OGF_V.motion_refs.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
 							fileStream.ReadBytes(OGF_V.motion_refs.old_size + 8);
 					}
 
@@ -641,7 +641,7 @@ namespace OGF_Tool
 					OGF_C.description = new Description();
 					OGF_C.description.pos = xr_loader.chunk_pos;
 
-					// ×èòàåì òàéìåðû â 8 áàéò
+					// Читаем таймеры в 8 байт
 					long reader_start_pos = xr_loader.reader.BaseStream.Position;
 					OGF_C.description.m_source = xr_loader.read_stringZ();
 					OGF_C.description.m_export_tool = xr_loader.read_stringZ();
@@ -654,7 +654,7 @@ namespace OGF_Tool
 
 					OGF_C.description.old_size = OGF_C.description.m_source.Length + 1 + OGF_C.description.m_export_tool.Length + 1 + 8 + OGF_C.description.m_owner_name.Length + 1 + 8 + OGF_C.description.m_export_modif_name_tool.Length + 1 + 8;
 
-					if ((description_end_pos - reader_start_pos) != DescriptionSize) // Ðàçìåð íå ñîñòûêîâûâàåòñÿ, ïðîáóåì ÷èòàòü 4 áàéòà
+					if ((description_end_pos - reader_start_pos) != DescriptionSize) // Размер не состыковывается, пробуем читать 4 байта
 					{
 						xr_loader.reader.BaseStream.Position = reader_start_pos;
 						OGF_C.description.m_source = xr_loader.read_stringZ();
@@ -667,13 +667,13 @@ namespace OGF_Tool
 						description_end_pos = xr_loader.reader.BaseStream.Position;
 
 						OGF_C.description.old_size = OGF_C.description.m_source.Length + 1 + OGF_C.description.m_export_tool.Length + 1 + 4 + OGF_C.description.m_owner_name.Length + 1 + 4 + OGF_C.description.m_export_modif_name_tool.Length + 1 + 4;
-						OGF_C.description.four_byte = true; // Ñòàâèì ôëàã íà òî ÷òî ìû ïðî÷èòàëè ÷àíê ñ 4õ áàéòíûìè òàéìåðàìè, åñëè ìîäåëü áóäåò ñëîìàíà òî ÷èíèòü ÷àíê áóäåì â 8 áàéò
+						OGF_C.description.four_byte = true; // Ставим флаг на то что мы прочитали чанк с 4х байтными таймерами, если модель будет сломана то чинить чанк будем в 8 байт
 
-						if ((description_end_pos - reader_start_pos) != DescriptionSize) // Âñå ðàâíî ðàçíûé ðàçìåð? Ïîõîäó ìîäåëü ñëîìàíà
+						if ((description_end_pos - reader_start_pos) != DescriptionSize) // Все равно разный размер? Походу модель сломана
 						{
 							OGF_C.BrokenType = 1;
 
-							// ×èñòèì òàéìåðû, òàê êàê ïðî÷èòàíû áèòûå áàéòû
+							// Чистим таймеры, так как прочитаны битые байты
 							OGF_C.description.m_export_time = 0;
 							OGF_C.description.m_creation_time = 0;
 							OGF_C.description.m_modified_time = 0;
@@ -1294,17 +1294,17 @@ namespace OGF_Tool
 		{
 			if (Current_OMF == null || Current_OMF != null && MessageBox.Show("New motion refs chunk will remove built-in motions, continue?", "OGF Editor", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
 			{
-				// ×èñòèì âñå ñâÿçàííîå ñî âñòðîåííûìè àíèìàìè
+				// Чистим все связанное со встроенными анимами
 				MotionBox.Clear();
 				MotionBox.Visibility = Visibility.Collapsed;
 				Current_OMF = null;
 				AppendOMFButton.Visibility = Visibility.Visible;
 				OGF_V.motions = "";
 
-				// Îáíîâëÿåì òèï ìîäåëè
+				// Обновляем тип модели
 				UpdateModelType();
 
-				// Îáíîâëÿåì âèçóàë èíòåðôåéñà ìîóøí ðåôîâ
+				// Обновляем визуал интерфейса моушн рефов
 				CreateMotionRefsButton.Visibility = Visibility.Collapsed;
 				MotionRefsBox.Visibility = Visibility.Visible;
 				MotionRefsBox.Clear();
@@ -1413,12 +1413,12 @@ namespace OGF_Tool
 
 				if (xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk((int)OGF.OGF4_S_MOTIONS, false, true)))
 				{
-					// Àïäåéòèì âèçóàë âñòðîåííûõ àíèìàöèé
+					// Апдейтим визуал встроенных анимаций
 					AppendOMFButton.Visibility = Visibility.Collapsed;
 					MotionBox.Visibility = Visibility.Visible;
 					motionToolsToolStripMenuItem.IsEnabled = true;
 
-					// ×èñòèì âñòðîåííûå ðåôû, èíòåðôåéñ ïî÷èñòèòñÿ ñàì ïðè àêòèâàöèè âêëàäêè
+					// Чистим встроенные рефы, интерфейс почистится сам при активации вкладки
 					MotionRefsBox.Clear();
 					if (OGF_V.motion_refs != null)
 						OGF_V.motion_refs.refs.Clear();
@@ -1562,7 +1562,7 @@ namespace OGF_Tool
 			else
 				OGF_V.m_model_type = 3;
 
-			// Àïäåéòèì ýêñïîðò àíèì òóò, ò.ê. ïðè ëþáîì èçìåíåíèè îìô âûçûâàåòñÿ ýòà ôóíêöèÿ
+			// Апдейтим экспорт аним тут, т.к. при любом изменении омф вызывается эта функция
 			omfToolStripMenuItem.IsEnabled = Current_OMF != null;
 			sklToolStripMenuItem.IsEnabled = Current_OMF != null;
 			sklsToolStripMenuItem.IsEnabled = Current_OMF != null;
