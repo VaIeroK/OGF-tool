@@ -500,8 +500,16 @@ namespace OGF_Tool
 
 				if (OGF_V.IsSkeleton())
 				{
-					temp = fileStream.ReadBytes((int)(last_child_size));
-					file_bytes.AddRange(temp);
+					if (OGF_V.BrokenType != 0 || OGF_V.bones.pos == 0)
+					{
+						temp = fileStream.ReadBytes((int)(last_child_size));
+						file_bytes.AddRange(temp);
+					}
+					else
+                    {
+						temp = fileStream.ReadBytes((int)(OGF_V.bones.pos - fileStream.BaseStream.Position));
+						file_bytes.AddRange(temp);
+					}
 
 					file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_BONE_NAMES));
 					file_bytes.AddRange(BitConverter.GetBytes(OGF_V.bones.chunk_size()));
@@ -740,6 +748,7 @@ namespace OGF_Tool
 					else
 					{
 						OGF_C.bones = new BoneData();
+						OGF_C.bones.pos = xr_loader.chunk_pos;
 
 						if (xr_loader.chunk_pos < OGF_C.pos)
 							OGF_C.BrokenType = 2;
