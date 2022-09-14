@@ -126,7 +126,7 @@ namespace OGF_tool
                 uint dwType = reader.ReadUInt32();
                 uint dwSize = reader.ReadUInt32();
 
-                if (dwType == chunkId || (dwType ^ CHUNK_COMPRESSED) == chunkId)
+                if ((dwType == chunkId || (dwType ^ CHUNK_COMPRESSED) == chunkId) && ( reader.BaseStream.Position - 8 + dwSize <= reader.BaseStream.Length ) )
                 {
                     chunk_pos = reader.BaseStream.Position - 8;
                     return dwSize;
