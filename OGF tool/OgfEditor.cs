@@ -2319,6 +2319,43 @@ skip_ik_data:
 			ClosingForm(sender, null);
 		}
 
+		private void DragEnterCallback(object sender, DragEventArgs e)
+		{
+			if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
+
+			string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+
+			foreach (string file in fileList)
+			{
+				if (Path.GetExtension(file) == ".ogf" || Path.GetExtension(file) == ".dm")
+				{
+					e.Effect = DragDropEffects.Copy;
+					break;
+				}
+			}
+		}
+
+		private void DragDropCallback(object sender, DragEventArgs e)
+		{
+			if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
+
+			string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+
+			foreach (string file in fileList)
+			{
+				if (Path.GetExtension(file) == ".ogf" || Path.GetExtension(file) == ".dm")
+				{
+					Clear(false);
+					if (OpenFile(file, ref OGF_V, ref Current_OGF, ref Current_OMF))
+					{
+						FILE_NAME = file;
+						AfterLoad(true);
+					}
+					break;
+				}
+			}
+		}
+
 		void Msg(string text)
         {
 			MessageBox.Show(text);

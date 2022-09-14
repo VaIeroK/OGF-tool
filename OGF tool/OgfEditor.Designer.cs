@@ -1030,6 +1030,7 @@ namespace OGF_tool
             // 
             // OGF_Editor
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(520, 362);
@@ -1046,6 +1047,8 @@ namespace OGF_tool
             this.Text = "OGF Params Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ClosingForm);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ClosedForm);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragDropCallback);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnterCallback);
             this.TabControl.ResumeLayout(false);
             this.TexturesPage.ResumeLayout(false);
             this.TexturesGropuBox.ResumeLayout(false);
