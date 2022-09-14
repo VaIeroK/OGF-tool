@@ -110,6 +110,7 @@ namespace OGF_tool
             this.CurrentFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.viewPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.disableAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusFile = new System.Windows.Forms.ToolStripStatusLabel();
@@ -125,7 +126,6 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.disableAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TexturesGropuBox.SuspendLayout();
@@ -182,8 +182,6 @@ namespace OGF_tool
             // 
             // TexturesGropuBox
             // 
-            this.TexturesGropuBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.TexturesGropuBox.Controls.Add(this.LodLabel);
             this.TexturesGropuBox.Controls.Add(this.LinksLabel);
             this.TexturesGropuBox.Controls.Add(this.DeleteMesh);
@@ -193,9 +191,10 @@ namespace OGF_tool
             this.TexturesGropuBox.Controls.Add(this.TexturesPathLabelEx);
             this.TexturesGropuBox.Controls.Add(this.ShaderTextBoxEx);
             this.TexturesGropuBox.Controls.Add(this.TexturesTextBoxEx);
-            this.TexturesGropuBox.Location = new System.Drawing.Point(3, 3);
+            this.TexturesGropuBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.TexturesGropuBox.Location = new System.Drawing.Point(0, 0);
             this.TexturesGropuBox.Name = "TexturesGropuBox";
-            this.TexturesGropuBox.Size = new System.Drawing.Size(482, 127);
+            this.TexturesGropuBox.Size = new System.Drawing.Size(488, 127);
             this.TexturesGropuBox.TabIndex = 0;
             this.TexturesGropuBox.TabStop = false;
             this.TexturesGropuBox.Text = "Mesh: [-]";
@@ -434,9 +433,10 @@ namespace OGF_tool
             this.BoneParamsGroupBox.Controls.Add(this.BoneNameTextBoxEx);
             this.BoneParamsGroupBox.Controls.Add(this.ParentBoneLabelEx);
             this.BoneParamsGroupBox.Controls.Add(this.BoneNameLabelEx);
-            this.BoneParamsGroupBox.Location = new System.Drawing.Point(3, 3);
+            this.BoneParamsGroupBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BoneParamsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.BoneParamsGroupBox.Name = "BoneParamsGroupBox";
-            this.BoneParamsGroupBox.Size = new System.Drawing.Size(470, 213);
+            this.BoneParamsGroupBox.Size = new System.Drawing.Size(488, 213);
             this.BoneParamsGroupBox.TabIndex = 0;
             this.BoneParamsGroupBox.TabStop = false;
             this.BoneParamsGroupBox.Text = "Bone id: [-]";
@@ -502,25 +502,25 @@ namespace OGF_tool
             this.BonesParamsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.BonesParamsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.BonesParamsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.BonesParamsPanel.Size = new System.Drawing.Size(374, 111);
+            this.BonesParamsPanel.Size = new System.Drawing.Size(392, 111);
             this.BonesParamsPanel.TabIndex = 6;
             // 
             // RotationZTextBox
             // 
             this.RotationZTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.RotationZTextBox.Location = new System.Drawing.Point(251, 84);
+            this.RotationZTextBox.Location = new System.Drawing.Point(263, 84);
             this.RotationZTextBox.Name = "RotationZTextBox";
-            this.RotationZTextBox.Size = new System.Drawing.Size(120, 20);
+            this.RotationZTextBox.Size = new System.Drawing.Size(126, 20);
             this.RotationZTextBox.TabIndex = 11;
             // 
             // RotationYTextBox
             // 
             this.RotationYTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.RotationYTextBox.Location = new System.Drawing.Point(127, 84);
+            this.RotationYTextBox.Location = new System.Drawing.Point(133, 84);
             this.RotationYTextBox.Name = "RotationYTextBox";
-            this.RotationYTextBox.Size = new System.Drawing.Size(118, 20);
+            this.RotationYTextBox.Size = new System.Drawing.Size(124, 20);
             this.RotationYTextBox.TabIndex = 10;
             // 
             // RotationXTextBox
@@ -529,25 +529,25 @@ namespace OGF_tool
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RotationXTextBox.Location = new System.Drawing.Point(3, 84);
             this.RotationXTextBox.Name = "RotationXTextBox";
-            this.RotationXTextBox.Size = new System.Drawing.Size(118, 20);
+            this.RotationXTextBox.Size = new System.Drawing.Size(124, 20);
             this.RotationXTextBox.TabIndex = 9;
             // 
             // PositionZTextBox
             // 
             this.PositionZTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.PositionZTextBox.Location = new System.Drawing.Point(251, 57);
+            this.PositionZTextBox.Location = new System.Drawing.Point(263, 57);
             this.PositionZTextBox.Name = "PositionZTextBox";
-            this.PositionZTextBox.Size = new System.Drawing.Size(120, 20);
+            this.PositionZTextBox.Size = new System.Drawing.Size(126, 20);
             this.PositionZTextBox.TabIndex = 8;
             // 
             // PositionYTextBox
             // 
             this.PositionYTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.PositionYTextBox.Location = new System.Drawing.Point(127, 57);
+            this.PositionYTextBox.Location = new System.Drawing.Point(133, 57);
             this.PositionYTextBox.Name = "PositionYTextBox";
-            this.PositionYTextBox.Size = new System.Drawing.Size(118, 20);
+            this.PositionYTextBox.Size = new System.Drawing.Size(124, 20);
             this.PositionYTextBox.TabIndex = 7;
             // 
             // PositionXTextBox
@@ -556,25 +556,25 @@ namespace OGF_tool
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PositionXTextBox.Location = new System.Drawing.Point(3, 57);
             this.PositionXTextBox.Name = "PositionXTextBox";
-            this.PositionXTextBox.Size = new System.Drawing.Size(118, 20);
+            this.PositionXTextBox.Size = new System.Drawing.Size(124, 20);
             this.PositionXTextBox.TabIndex = 6;
             // 
             // CenterOfMassZTextBox
             // 
             this.CenterOfMassZTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CenterOfMassZTextBox.Location = new System.Drawing.Point(251, 30);
+            this.CenterOfMassZTextBox.Location = new System.Drawing.Point(263, 30);
             this.CenterOfMassZTextBox.Name = "CenterOfMassZTextBox";
-            this.CenterOfMassZTextBox.Size = new System.Drawing.Size(120, 20);
+            this.CenterOfMassZTextBox.Size = new System.Drawing.Size(126, 20);
             this.CenterOfMassZTextBox.TabIndex = 5;
             // 
             // CenterOfMassYTextBox
             // 
             this.CenterOfMassYTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CenterOfMassYTextBox.Location = new System.Drawing.Point(127, 30);
+            this.CenterOfMassYTextBox.Location = new System.Drawing.Point(133, 30);
             this.CenterOfMassYTextBox.Name = "CenterOfMassYTextBox";
-            this.CenterOfMassYTextBox.Size = new System.Drawing.Size(118, 20);
+            this.CenterOfMassYTextBox.Size = new System.Drawing.Size(124, 20);
             this.CenterOfMassYTextBox.TabIndex = 4;
             // 
             // CenterOfMassXTextBox
@@ -583,7 +583,7 @@ namespace OGF_tool
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CenterOfMassXTextBox.Location = new System.Drawing.Point(3, 30);
             this.CenterOfMassXTextBox.Name = "CenterOfMassXTextBox";
-            this.CenterOfMassXTextBox.Size = new System.Drawing.Size(118, 20);
+            this.CenterOfMassXTextBox.Size = new System.Drawing.Size(124, 20);
             this.CenterOfMassXTextBox.TabIndex = 3;
             // 
             // MassTextBoxEx
@@ -592,7 +592,7 @@ namespace OGF_tool
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MassTextBoxEx.Location = new System.Drawing.Point(3, 3);
             this.MassTextBoxEx.Name = "MassTextBoxEx";
-            this.MassTextBoxEx.Size = new System.Drawing.Size(118, 20);
+            this.MassTextBoxEx.Size = new System.Drawing.Size(124, 20);
             this.MassTextBoxEx.TabIndex = 0;
             // 
             // MaterialLabelEx
@@ -610,7 +610,7 @@ namespace OGF_tool
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MaterialTextBoxEx.Location = new System.Drawing.Point(96, 73);
             this.MaterialTextBoxEx.Name = "MaterialTextBoxEx";
-            this.MaterialTextBoxEx.Size = new System.Drawing.Size(368, 20);
+            this.MaterialTextBoxEx.Size = new System.Drawing.Size(386, 20);
             this.MaterialTextBoxEx.TabIndex = 4;
             // 
             // ParentBoneTextBoxEx
@@ -620,7 +620,7 @@ namespace OGF_tool
             this.ParentBoneTextBoxEx.Location = new System.Drawing.Point(96, 46);
             this.ParentBoneTextBoxEx.Name = "ParentBoneTextBoxEx";
             this.ParentBoneTextBoxEx.ReadOnly = true;
-            this.ParentBoneTextBoxEx.Size = new System.Drawing.Size(368, 20);
+            this.ParentBoneTextBoxEx.Size = new System.Drawing.Size(386, 20);
             this.ParentBoneTextBoxEx.TabIndex = 3;
             // 
             // BoneNameTextBoxEx
@@ -629,7 +629,7 @@ namespace OGF_tool
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BoneNameTextBoxEx.Location = new System.Drawing.Point(96, 19);
             this.BoneNameTextBoxEx.Name = "BoneNameTextBoxEx";
-            this.BoneNameTextBoxEx.Size = new System.Drawing.Size(368, 20);
+            this.BoneNameTextBoxEx.Size = new System.Drawing.Size(386, 20);
             this.BoneNameTextBoxEx.TabIndex = 2;
             // 
             // ParentBoneLabelEx
@@ -714,7 +714,7 @@ namespace OGF_tool
             this.viewPortToolStripMenuItem});
             this.MenuPanel.Location = new System.Drawing.Point(0, 2);
             this.MenuPanel.Name = "MenuPanel";
-            this.MenuPanel.Size = new System.Drawing.Size(501, 24);
+            this.MenuPanel.Size = new System.Drawing.Size(381, 24);
             this.MenuPanel.TabIndex = 8;
             // 
             // FileMenuItem
@@ -928,14 +928,21 @@ namespace OGF_tool
             // reloadToolStripMenuItem1
             // 
             this.reloadToolStripMenuItem1.Name = "reloadToolStripMenuItem1";
-            this.reloadToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.reloadToolStripMenuItem1.Size = new System.Drawing.Size(173, 22);
             this.reloadToolStripMenuItem1.Text = "Reload";
             this.reloadToolStripMenuItem1.Click += new System.EventHandler(this.reloadToolStripMenuItem1_Click);
+            // 
+            // disableAlphaToolStripMenuItem
+            // 
+            this.disableAlphaToolStripMenuItem.Name = "disableAlphaToolStripMenuItem";
+            this.disableAlphaToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.disableAlphaToolStripMenuItem.Text = "Disable Alpha";
+            this.disableAlphaToolStripMenuItem.Click += new System.EventHandler(this.disableAlphaToolStripMenuItem_Click);
             // 
             // openImageFolderToolStripMenuItem
             // 
             this.openImageFolderToolStripMenuItem.Name = "openImageFolderToolStripMenuItem";
-            this.openImageFolderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openImageFolderToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.openImageFolderToolStripMenuItem.Text = "Open image folder";
             this.openImageFolderToolStripMenuItem.Click += new System.EventHandler(this.openImageFolderToolStripMenuItem_Click);
             // 
@@ -1020,13 +1027,6 @@ namespace OGF_tool
             // SaveObjDialog
             // 
             this.SaveObjDialog.Filter = "Obj file|*.obj";
-            // 
-            // disableAlphaToolStripMenuItem
-            // 
-            this.disableAlphaToolStripMenuItem.Name = "disableAlphaToolStripMenuItem";
-            this.disableAlphaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.disableAlphaToolStripMenuItem.Text = "Disable Alpha";
-            this.disableAlphaToolStripMenuItem.Click += new System.EventHandler(this.disableAlphaToolStripMenuItem_Click);
             // 
             // OGF_Editor
             // 

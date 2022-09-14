@@ -31,7 +31,6 @@ namespace OGF_tool
 		// Input
 		public bool bKeyIsDown = false;
 		string number_mask = "";
-		private Size DefSize = new Size();
 		StreamWriter ObjWriter = null; // for closing
 		float CurrentLod = 0.0f;
 
@@ -103,8 +102,6 @@ namespace OGF_tool
 				game_materials = GameMtlParser(gamemtl);
 
 			// End init settings
-
-			DefSize = Size;
 
 			number_mask = @"^-[0-9.]*$";
 			Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
@@ -178,9 +175,6 @@ namespace OGF_tool
 
 		private void AfterLoad(bool main_file)
 		{
-			Size OldSize = Size;
-			Size = DefSize;
-
 			if (main_file)
 			{
 				StatusFile.Text = FILE_NAME.Substring(FILE_NAME.LastIndexOf('\\') + 1);
@@ -283,7 +277,7 @@ namespace OGF_tool
 					{
 						TabControl.Controls.Add(BoneParamsPage);
 
-						for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
+						for (int i = OGF_V.bones.bone_names.Count - 1; i >= 0; i--)
 						{
 							CreateBoneGroupBox(i, OGF_V.bones.bone_names[i], OGF_V.bones.parent_bone_names[i], OGF_V.ikdata.materials[i], OGF_V.ikdata.mass[i], OGF_V.ikdata.center_mass[i], OGF_V.ikdata.position[i], OGF_V.ikdata.rotation[i]);
 						}
@@ -303,17 +297,17 @@ namespace OGF_tool
 					CreateLodButton.Visible = true;
 			}
 
-			for (int i = 0; i < OGF_V.childs.Count; i++)
+			for (int i = OGF_V.childs.Count - 1; i >= 0; i--)
 			{
 				CreateTextureGroupBox(i);
 
-				var box = TexturesPage.Controls["TextureGrpBox_" + i];
+				var box = TexturesPage.Controls["TextureGrpBox_" + i.ToString()];
 
 				if (box != null)
 				{
-					var Cntrl = box.Controls["textureBox_" + i];
+					var Cntrl = box.Controls["textureBox_" + i.ToString()];
 					Cntrl.Text = OGF_V.childs[i].m_texture;
-					var Cntrl2 = box.Controls["shaderBox_" + i];
+					var Cntrl2 = box.Controls["shaderBox_" + i.ToString()];
 					Cntrl2.Text = OGF_V.childs[i].m_shader;
 				}
 			}
@@ -337,8 +331,6 @@ namespace OGF_tool
 
 			// View
 			TabControl.Controls.Add(ViewPage);
-
-			Size = OldSize;
 		}
 
 		private void CopyParams()
@@ -1391,19 +1383,13 @@ skip_ik_data:
 					{
 						OGF_V.bones.bone_names[idx] = curControl.Text;
 
-						for (int i = 0; i < OGF_V.bones.parent_bone_names.Count; i++)
+						for (int j = 0; j < OGF_V.bones.bone_childs[idx].Count; j++)
                         {
-							if (BoneParamsPage.Controls.Count < i) continue;
-							for (int j = 0; j < OGF_V.bones.bone_childs[idx].Count; j++)
-                            {
-								if (OGF_V.bones.bone_childs[idx][j] == i)
-								{
-									var MainGroup = BoneParamsPage.Controls[i];
-									OGF_V.bones.parent_bone_names[i] = curControl.Text;
-									MainGroup.Controls[2].Text = OGF_V.bones.parent_bone_names[i];
-								}
-							}
-                        }
+							int child_id = OGF_V.bones.bone_childs[idx][j];
+							var MainGroup = BoneParamsPage.Controls["BoneGrpBox_" + child_id.ToString()];
+							OGF_V.bones.parent_bone_names[child_id] = curControl.Text;
+                            MainGroup.Controls["ParentboneBox_" + child_id.ToString()].Text = OGF_V.bones.parent_bone_names[child_id];
+						}
 
 						BoneNamesBox.Clear();
 						BoneNamesBox.Text += $"Bones count : {OGF_V.bones.bone_names.Count}\n\n";
@@ -2162,10 +2148,9 @@ skip_ik_data:
 			if (ViewerWorking)
 				InitViewPort(true, false, true);
 
-			for (int idx = 0; idx < TexturesPage.Controls.Count; idx++)
+			for (int idx = 0; idx < OGF_V.childs.Count; idx++)
             {
-				Control Mesh = TexturesPage.Controls[idx];
-
+				Control Mesh = TexturesPage.Controls["TextureGrpBox_" + idx.ToString()];
 				Label FaceLbl = (Label)Mesh.Controls["FacesLbl_" + idx.ToString()];
 				FaceLbl.Text = FaceLabel.Text + OGF_V.childs[idx].Faces_SWI(CurrentLod).Count.ToString();
 			}
