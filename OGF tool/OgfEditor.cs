@@ -1301,7 +1301,17 @@ skip_ik_data:
 					if (chld_cnt > 1 || OGF_V.childs[idx].to_delete)
 					{
 						OGF_V.childs[idx].to_delete = !OGF_V.childs[idx].to_delete;
-						curBox.Text = (OGF_V.childs[idx].to_delete ? "Return Mesh" : "Delete Mesh");
+
+						if (OGF_V.childs[idx].to_delete)
+                        {
+							curBox.Text = "Return Mesh";
+							curBox.BackColor = Color.FromArgb(255, 255, 128, 128);
+						}
+						else
+                        {
+							curBox.Text = "Delete Mesh";
+							curBox.BackColor = SystemColors.Control;
+						}
 					}
 					else
                     {
