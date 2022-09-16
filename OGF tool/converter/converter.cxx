@@ -63,7 +63,9 @@ void usage()
 	printf(" -flt <MASK> 	extract only files, filtered by mask\n");
 }
 
-int main(int argc, char* argv[], std::vector<std::string> motions)
+std::vector<std::string> vmotions;
+
+int main(int argc, char* argv[])
 {
 	static const cl_parser::option_desc options[] = {
 		{"-ogf",	cl_parser::OT_BOOL},
@@ -138,15 +140,15 @@ int main(int argc, char* argv[], std::vector<std::string> motions)
 	switch (format) {
 	case tools_base::TOOLS_OGF:
 		tools = new ogf_tools;
-		tools->motions_vec = motions;
+		tools->motions_vec = vmotions;
 		break;
 	case tools_base::TOOLS_OMF:
 		tools = new omf_tools;
-		tools->motions_vec = motions;
+		tools->motions_vec = vmotions;
 		break;
 	case tools_base::TOOLS_DM:
 		tools = new dm_tools;
-		tools->motions_vec = motions;
+		tools->motions_vec = vmotions;
 		break;
 	}
 	if (tools == 0) {
@@ -235,7 +237,6 @@ extern "C"
 
 		std::string motions_list = motions;
 		std::string temp_motion = "";
-		std::vector<std::string> mot_vector;
 
 		for (size_t i = 0; i < motions_list.size(); i++)
 		{
@@ -243,14 +244,14 @@ extern "C"
 				temp_motion += motions_list[i];
 			else
 			{
-				mot_vector.push_back(temp_motion);
+				vmotions.push_back(temp_motion);
 				temp_motion = "";
 			}
 		}
 
 		if (temp_motion != "")
-			mot_vector.push_back(temp_motion);
+			vmotions.push_back(temp_motion);
 
-		return main(ret_size, args, mot_vector);
+		return main(ret_size, args);
 	}
 }

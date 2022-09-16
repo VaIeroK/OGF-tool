@@ -147,33 +147,11 @@ void xr_mesh_builder::__push(const xr_vbuf& vb, const xr_ibuf& ib, const fmatrix
 			if (pflags & PF_REMOVE_ZERO_UV_FACE)
 				continue;
 		}
-#if 0
-		if (vb.has_lightmaps()) {
-			const fvector2& lm0 = vb.lm(v0);
-			const fvector2& lm1 = vb.lm(v1);
-			const fvector2& lm2 = vb.lm(v2);
-#if 1
-			fvector3 uv0, uv1, uv2;
-			uv0.set(lm0.x, 0, lm0.y);
-			uv1.set(lm1.x, 0, lm1.y);
-			uv2.set(lm2.x, 0, lm2.y);
-			float k = calc_area_xz(uv0, uv1, uv2)*1024.f*1024.f/calc_area(p0, p1, p2);
-			printf("lm_density: %f\n", k);
-#else
-			float k01 = lm0.distance(lm1)*1024.f/p0.distance(p1);
-			float k12 = lm1.distance(lm2)*1024.f/p1.distance(p2);
-			float k20 = lm2.distance(lm0)*1024.f/p2.distance(p0);
-//			if (equivalent(k01, 0.f)) {
-			if (equivalent(k01, 5.f)) {
-//			if (k01 < 2.f) {
-				printf("  face: [%f,%f,%f][%f,%f,%f][%f,%f,%f],\n  lm: [%f,%f][%f,%f][%f,%f]\n",
-						p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z,
-						lm0.x, lm0.y, lm1.x, lm1.y, lm2.x, lm2.y);
-			}
-			printf("lm_density: %.2f/%.2f/%.2f\n", k01, k12, k20);
-#endif
-		}
-#endif
+
+		m_source_normals.push_back(vb.n(v0));
+		m_source_normals.push_back(vb.n(v1));
+		m_source_normals.push_back(vb.n(v2));
+
 		m_faces.push_back(face.set(signature, vb_offset + v0, vb_offset + v1, vb_offset + v2));
 		++num_new_faces;
 	}

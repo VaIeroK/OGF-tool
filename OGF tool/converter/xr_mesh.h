@@ -197,6 +197,7 @@ protected:
 	lw_vmref_vec		m_vmrefs;	// EMESH_CHUNK_VMREFS
 	xr_surfmap_vec		m_surfmaps;	// EMESH_CHUNK_SFACE
 	xr_vmap_vec		m_vmaps;	// EMESH_CHUNK_VMAPS
+	std::vector<fvector3>	m_source_normals;	// EMESH_CHUNK_NORMALS
 };
 
 TYPEDEF_STD_VECTOR_PTR(xr_mesh)

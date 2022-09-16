@@ -54,6 +54,7 @@ enum emesh_chunk_id {
 	EMESH_CHUNK_VMAPS_1	= 0x1011,
 	EMESH_CHUNK_VMAPS_2	= 0x1012,
 	EMESH_CHUNK_SG		= 0x1013,
+	EMESH_CHUNK_NORMALS	= 0x1014,
 };
 
 const uint16_t BONE_VERSION_1 = 0x1;
