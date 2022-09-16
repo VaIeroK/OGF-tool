@@ -109,13 +109,13 @@ namespace OGF_tool
                 CreationTimeDate.Value = dt_c;
                 ModifedTimeDate.Value = dt_m;
             }
+            else
+                RepairTimersButton.Enabled = false;
 
             SourceTextBox.Enabled = OGF.description != null;
             ConverterTextBox.Enabled = OGF.description != null;
             CreatorTextBox.Enabled = OGF.description != null;
             EditorTextBox.Enabled = OGF.description != null;
-
-            RepairTimersButton.Enabled = OGF.description != null;
 
             ExportTimeDate.Enabled = OGF.description != null;
             CreationTimeDate.Enabled = OGF.description != null;

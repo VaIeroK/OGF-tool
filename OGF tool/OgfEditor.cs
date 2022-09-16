@@ -909,6 +909,8 @@ namespace OGF_tool
 						id++;
 						xr_loader.SetStream(temp);
 					}
+
+					xr_loader.SetStream(r.BaseStream);
 				}
 				else
                 {
@@ -929,8 +931,6 @@ namespace OGF_tool
 					MessageBox.Show("Unsupported OGF format! Can't find children chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					return false;
 				}
-
-				xr_loader.SetStream(r.BaseStream);
 
 				if (OGF_C.IsSkeleton())
 				{
