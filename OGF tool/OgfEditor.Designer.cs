@@ -679,7 +679,7 @@ namespace OGF_tool
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LodPathBox.Location = new System.Drawing.Point(3, 23);
             this.LodPathBox.Name = "LodPathBox";
-            this.LodPathBox.Size = new System.Drawing.Size(470, 20);
+            this.LodPathBox.Size = new System.Drawing.Size(482, 20);
             this.LodPathBox.TabIndex = 1;
             // 
             // label1
