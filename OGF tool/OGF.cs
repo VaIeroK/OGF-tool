@@ -142,6 +142,9 @@ namespace OGF_tool
         public float[] tang;
         public float[] binorm;
 
+        public uint[] bones_id;
+        public float[] bones_infl;
+
         public SSkelVert()
         {
             uv = new float[2];
@@ -149,6 +152,8 @@ namespace OGF_tool
             norm = new float[3];
             tang = new float[3];
             binorm = new float[3];
+            bones_id = new uint[4];
+            bones_infl = new float[4];
 
             uv[0] = 0.0f;
             uv[1] = 0.0f;
@@ -168,6 +173,16 @@ namespace OGF_tool
             binorm[0] = 0.0f;
             binorm[1] = 0.0f;
             binorm[2] = 0.0f;
+
+            bones_id[0] = 0;
+            bones_id[1] = 0;
+            bones_id[2] = 0;
+            bones_id[3] = 0;
+
+            bones_infl[0] = 0.0f;
+            bones_infl[1] = 0.0f;
+            bones_infl[2] = 0.0f;
+            bones_infl[3] = 0.0f;
         }
     };
 

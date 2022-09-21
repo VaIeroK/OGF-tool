@@ -61,7 +61,7 @@ namespace OGF_tool
 
         public uint LinksCount()
         {
-            uint temp_links = 0;
+            uint temp_links;
             if (links >= 0x12071980)
                 temp_links = links / 0x12071980;
             else

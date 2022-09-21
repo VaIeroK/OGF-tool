@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Diagnostics;
+using System.Security.Policy;
 
 
 namespace OGF_tool
@@ -61,7 +62,17 @@ namespace OGF_tool
 
 		delegate void TriangleParser(XRayLoader loader, OGF_Child child, bool v3);
 
-		private int RunConverter(string path, string out_path, int mode, int convert_to_mode)
+        public static T Clamp<T>(T value, T max, T min) where T : System.IComparable<T>
+        {
+            T result = value;
+            if (value.CompareTo(max) > 0)
+                result = max;
+            if (value.CompareTo(min) < 0)
+                result = min;
+            return result;
+        }
+
+        private int RunConverter(string path, string out_path, int mode, int convert_to_mode)
 		{
 			string dll_path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\converter.dll";
 			if (File.Exists(dll_path))
@@ -505,16 +516,75 @@ namespace OGF_tool
 
 						fileStream.BaseStream.Position += ch.old_size + 8;
 
-						if (ch.links != 0)
+						if (OGF_V.IsSkeleton()) // Verts
 						{
-							temp = fileStream.ReadBytes(8);
-							fileStream.ReadUInt32();
+                            uint VertsChunk = fileStream.ReadUInt32(); // VertsChunk
+                            uint VertsSize = fileStream.ReadUInt32(); // VertsSize
 
-							if (!ch.to_delete)
+                            if (!ch.to_delete)
 							{
-								file_bytes.AddRange(temp);
-								file_bytes.AddRange(BitConverter.GetBytes(ch.links));
-							}
+								file_bytes.AddRange(BitConverter.GetBytes(VertsChunk));
+                                file_bytes.AddRange(BitConverter.GetBytes(VertsSize));
+
+                                file_bytes.AddRange(BitConverter.GetBytes(ch.links)); // Линковка
+                                file_bytes.AddRange(BitConverter.GetBytes(ch.Vertices.Count));
+
+                                for (int i = 0; i < ch.Vertices.Count; i++)
+								{
+									SSkelVert vert = ch.Vertices[i];
+
+                                    switch (ch.LinksCount())
+									{
+										case 1:
+											file_bytes.AddRange(GetVec3Bytes(vert.offs));
+                                            file_bytes.AddRange(GetVec3Bytes(vert.norm));
+
+											if (OGF_V.m_version == 4)
+											{
+                                                file_bytes.AddRange(GetVec3Bytes(vert.tang));
+                                                file_bytes.AddRange(GetVec3Bytes(vert.binorm));
+                                            }
+
+                                            file_bytes.AddRange(GetVec2Bytes(vert.uv));
+                                            file_bytes.AddRange(BitConverter.GetBytes(vert.bones_id[0]));
+                                            break;
+										case 2:
+                                            file_bytes.AddRange(BitConverter.GetBytes((short)vert.bones_id[0]));
+                                            file_bytes.AddRange(BitConverter.GetBytes((short)vert.bones_id[1]));
+
+                                            file_bytes.AddRange(GetVec3Bytes(vert.offs));
+                                            file_bytes.AddRange(GetVec3Bytes(vert.norm));
+
+                                            file_bytes.AddRange(GetVec3Bytes(vert.tang));
+                                            file_bytes.AddRange(GetVec3Bytes(vert.binorm));
+
+                                            file_bytes.AddRange(BitConverter.GetBytes(vert.bones_infl[0]));
+                                            file_bytes.AddRange(GetVec2Bytes(vert.uv));
+											break;
+										case 3:
+										case 4:
+                                            for (int j = 0; j < ch.LinksCount(); j++)
+                                            {
+                                                file_bytes.AddRange(BitConverter.GetBytes((short)vert.bones_id[j]));
+                                            }
+
+                                            file_bytes.AddRange(GetVec3Bytes(vert.offs));
+                                            file_bytes.AddRange(GetVec3Bytes(vert.norm));
+
+                                            file_bytes.AddRange(GetVec3Bytes(vert.tang));
+                                            file_bytes.AddRange(GetVec3Bytes(vert.binorm));
+
+                                            for (int j = 0; j < ch.LinksCount() - 1; j++)
+                                            {
+                                                file_bytes.AddRange(BitConverter.GetBytes(vert.bones_infl[j]));
+                                            }
+
+                                            file_bytes.AddRange(GetVec2Bytes(vert.uv));
+											break;
+									}
+								}
+                                fileStream.BaseStream.Position += VertsSize; 
+                            }
 						}
 
 						temp = fileStream.ReadBytes((int)ch.chunk_size - (int)(fileStream.BaseStream.Position - old_pos)); // Читаем все до конца чанка
@@ -774,12 +844,12 @@ namespace OGF_tool
 				TriangleParser LoadTriangles = (loader, child, v3) =>
 				{
 					int VertsChunk = v3 ? (int)OGF.OGF3_VERTICES : (int)OGF.OGF4_VERTICES;
-					if (loader.find_chunk(VertsChunk, false, true))
+                    if (loader.find_chunk(VertsChunk, false, true))
 					{
-						child.links = loader.ReadUInt32();
+                        child.links = loader.ReadUInt32();
 						uint verts = loader.ReadUInt32();
 
-						for (int i = 0; i < verts; i++)
+                        for (int i = 0; i < verts; i++)
 						{
 							SSkelVert Vert = new SSkelVert();
 							switch (child.LinksCount())
@@ -794,24 +864,24 @@ namespace OGF_tool
 									}
 									Vert.uv = loader.ReadVector2();
 
-									loader.ReadUInt32();
+                                    Vert.bones_id[0] = loader.ReadUInt32();
 									break;
 								case 2:
-									loader.ReadUInt16();
-									loader.ReadUInt16();
+                                    Vert.bones_id[0] = loader.ReadUInt16();
+                                    Vert.bones_id[1] = loader.ReadUInt16();
 
 									Vert.offs = loader.ReadVector();
 									Vert.norm = loader.ReadVector();
 									Vert.tang = loader.ReadVector();
 									Vert.binorm = loader.ReadVector();
-									loader.ReadFloat();
+                                    Vert.bones_infl[0] = loader.ReadFloat();
 									Vert.uv = loader.ReadVector2();
 									break;
 								case 3:
 								case 4:
                                     for (int j = 0; j < child.LinksCount(); j++)
                                     {
-                                        loader.ReadUInt16();
+                                        Vert.bones_id[j] = loader.ReadUInt16();
                                     }
 
                                     Vert.offs = loader.ReadVector();
@@ -821,13 +891,12 @@ namespace OGF_tool
 
                                     for (int j = 0; j < child.LinksCount() - 1; j++)
                                     {
-                                        loader.ReadFloat();
+                                        Vert.bones_infl[j] = loader.ReadFloat();
                                     }
 
                                     Vert.uv = loader.ReadVector2();
 									break;
 								default:
-									child.links = 0;
 									Vert.offs = loader.ReadVector();
 									Vert.norm = loader.ReadVector();
 									Vert.uv = loader.ReadVector2();
@@ -900,7 +969,7 @@ namespace OGF_tool
 
 						if (size == 0) break;
 
-						OGF_Child chld = new OGF_Child(xr_loader.chunk_pos + pos, pos - 8, chunk_size,(int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
+						OGF_Child chld = new OGF_Child(xr_loader.chunk_pos + pos, pos - 8, chunk_size, (int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
 
 						LoadTriangles(xr_loader, chld, OGF_C.m_version != 4);
 
@@ -1276,7 +1345,77 @@ skip_ik_data:
 			return vec[0].ToString("0.000000") + " " + vec[1].ToString("0.000000") + " " + vec[2].ToString("0.000000");
         }
 
-		private void TextBoxKeyDown(object sender, KeyEventArgs e)
+		private void AddBone(string bone, string parent_bone)
+		{
+			if (OGF_V != null && OGF_V.IsSkeleton())
+			{
+				OGF_V.bones.bone_names.Add(bone);
+				OGF_V.bones.parent_bone_names.Add(parent_bone);
+				OGF_V.bones.fobb.Add(OGF_V.bones.fobb[OGF_V.bones.fobb.Count - 1]);
+
+				float[] temp_vec = new float[3];
+				temp_vec[0] = 0.0f;
+				temp_vec[1] = 0.0f;
+				temp_vec[2] = 0.0f;
+
+                OGF_V.ikdata.materials.Add("default_object");
+                OGF_V.ikdata.mass.Add(10.0f);
+                OGF_V.ikdata.version.Add(4);
+                OGF_V.ikdata.center_mass.Add(temp_vec);
+
+                OGF_V.ikdata.bytes_1.Add(OGF_V.ikdata.bytes_1[OGF_V.ikdata.bytes_1.Count - 1]);
+                OGF_V.ikdata.position.Add(temp_vec);
+                OGF_V.ikdata.rotation.Add(temp_vec);
+            }
+		}
+
+        private void RemoveBone(string bone)
+        {
+            if (OGF_V != null && OGF_V.IsSkeleton())
+            {
+				for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
+				{
+					if (OGF_V.bones.bone_names[i] == bone)
+					{
+						RemoveBone(i);
+						break;
+					}
+				}
+            }
+        }
+
+        private void RemoveBone(int bone)
+        {
+            if (OGF_V != null && OGF_V.IsSkeleton())
+            {
+                OGF_V.bones.bone_names.RemoveAt(bone);
+                OGF_V.bones.parent_bone_names.RemoveAt(bone);
+                OGF_V.bones.fobb.RemoveAt(bone);
+
+                OGF_V.ikdata.materials.RemoveAt(bone);
+                OGF_V.ikdata.mass.RemoveAt(bone);
+                OGF_V.ikdata.version.RemoveAt(bone);
+                OGF_V.ikdata.center_mass.RemoveAt(bone);
+
+                OGF_V.ikdata.bytes_1.RemoveAt(bone);
+                OGF_V.ikdata.position.RemoveAt(bone);
+                OGF_V.ikdata.rotation.RemoveAt(bone);
+            }
+        }
+
+        private void ChangeParent(string old, string _new)
+        {
+            if (OGF_V != null && OGF_V.IsSkeleton())
+            {
+                for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
+				{
+                    if (OGF_V.bones.parent_bone_names[i] == old)
+						OGF_V.bones.parent_bone_names[i] = _new;
+                }
+            }
+        }
+
+        private void TextBoxKeyDown(object sender, KeyEventArgs e)
 		{
 			bKeyIsDown = true;
 		}
@@ -2941,5 +3080,22 @@ skip_ik_data:
 				PrFolder.Start();
 			}
 		}
+
+		private byte[] GetVec3Bytes(float[] vec)
+		{
+			List<byte> bytes = new List<byte>();
+			bytes.AddRange(BitConverter.GetBytes(vec[0]));
+            bytes.AddRange(BitConverter.GetBytes(vec[1]));
+            bytes.AddRange(BitConverter.GetBytes(vec[2]));
+			return bytes.ToArray();
+        }
+
+        private byte[] GetVec2Bytes(float[] vec)
+        {
+            List<byte> bytes = new List<byte>();
+            bytes.AddRange(BitConverter.GetBytes(vec[0]));
+            bytes.AddRange(BitConverter.GetBytes(vec[1]));
+            return bytes.ToArray();
+        }
     }
 }
