@@ -276,7 +276,7 @@ namespace OGF_tool
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ShaderTextBoxEx.Location = new System.Drawing.Point(6, 76);
             this.ShaderTextBoxEx.Name = "ShaderTextBoxEx";
-            this.ShaderTextBoxEx.Size = new System.Drawing.Size(470, 20);
+            this.ShaderTextBoxEx.Size = new System.Drawing.Size(476, 20);
             this.ShaderTextBoxEx.TabIndex = 1;
             // 
             // TexturesTextBoxEx
@@ -285,7 +285,7 @@ namespace OGF_tool
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TexturesTextBoxEx.Location = new System.Drawing.Point(6, 33);
             this.TexturesTextBoxEx.Name = "TexturesTextBoxEx";
-            this.TexturesTextBoxEx.Size = new System.Drawing.Size(470, 20);
+            this.TexturesTextBoxEx.Size = new System.Drawing.Size(476, 20);
             this.TexturesTextBoxEx.TabIndex = 0;
             // 
             // UserDataPage
