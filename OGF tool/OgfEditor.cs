@@ -1340,7 +1340,16 @@ skip_ik_data:
 			return dest;
 		}
 
-		private string vPUSH(float[] vec)
+        private float[] MirrorXY_transform(float[] vec)
+        {
+            float[] dest = new float[3];
+            dest[0] = -vec[0];
+            dest[1] = -vec[1];
+            dest[2] = vec[2];
+            return dest;
+        }
+
+        private string vPUSH(float[] vec)
         {
 			return vec[0].ToString("0.000000") + " " + vec[1].ToString("0.000000") + " " + vec[2].ToString("0.000000");
         }
@@ -1369,19 +1378,22 @@ skip_ik_data:
             }
 		}
 
-        private void RemoveBone(string bone)
-        {
+		private int GetBoneID(string bone)
+		{
             if (OGF_V != null && OGF_V.IsSkeleton())
             {
-				for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
-				{
-					if (OGF_V.bones.bone_names[i] == bone)
-					{
-						RemoveBone(i);
-						break;
-					}
-				}
+                for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
+                {
+                    if (OGF_V.bones.bone_names[i] == bone)
+						return i;
+                }
             }
+			return -1;
+        }
+
+        private void RemoveBone(string bone)
+        {
+			RemoveBone(GetBoneID(bone));
         }
 
         private void RemoveBone(int bone)
@@ -3080,6 +3092,58 @@ skip_ik_data:
 				PrFolder.Start();
 			}
 		}
+
+		private void NPC_ToSoC()
+		{
+			if (CheckNPC())
+			{
+				RemoveBone("root_stalker");
+				RemoveBone("bip01");
+
+				ChangeParent("root_stalker", "bip01_pelvis");
+				ChangeParent("bip01", "bip01_pelvis");
+
+				OGF_V.bones.parent_bone_names[0] = "";
+
+                OGF_V.ikdata.position[0] = Resources.SoC_Skeleton(0, true);
+                OGF_V.ikdata.rotation[0] = Resources.SoC_Skeleton(0, false);
+
+                OGF_V.ikdata.position[GetBoneID("bip01_l_hand")] = Resources.SoC_Skeleton(0, true);
+                OGF_V.ikdata.rotation[GetBoneID("bip01_l_hand")] = Resources.SoC_Skeleton(0, false);
+
+                OGF_V.ikdata.position[GetBoneID("bip01_r_hand")] = Resources.SoC_Skeleton(0, true);
+                OGF_V.ikdata.rotation[GetBoneID("bip01_r_hand")] = Resources.SoC_Skeleton(0, false);
+
+                foreach (var ch in OGF_V.childs)
+				{
+					for (int i = 0; i < ch.Vertices.Count; i++)
+					{
+						for (int j = 0; j < ch.LinksCount(); j++)
+						{
+                            int id = (int)ch.Vertices[i].bones_id[j];
+                            id -= 2;
+                            id = Clamp(id, id, 0);
+                            ch.Vertices[i].bones_id[j] = (uint)id;
+                        }
+
+                        ch.Vertices[i].offs = MirrorZ_transform(ch.Vertices[i].offs);
+                        ch.Vertices[i].norm = MirrorXY_transform(ch.Vertices[i].norm);
+                        ch.Vertices[i].tang = MirrorXY_transform(ch.Vertices[i].tang);
+                        ch.Vertices[i].binorm = MirrorXY_transform(ch.Vertices[i].binorm);
+                    }
+				}
+			}
+		}
+
+		private bool CheckNPC()
+		{
+			return true;
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			NPC_ToSoC();
+        }
 
 		private byte[] GetVec3Bytes(float[] vec)
 		{
