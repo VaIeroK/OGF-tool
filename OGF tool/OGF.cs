@@ -154,35 +154,6 @@ namespace OGF_tool
             binorm = new float[3];
             bones_id = new uint[4];
             bones_infl = new float[4];
-
-            uv[0] = 0.0f;
-            uv[1] = 0.0f;
-
-            offs[0] = 0.0f;
-            offs[1] = 0.0f;
-            offs[2] = 0.0f;
-
-            norm[0] = 0.0f;
-            norm[1] = 0.0f;
-            norm[2] = 0.0f;
-
-            tang[0] = 0.0f;
-            tang[1] = 0.0f;
-            tang[2] = 0.0f;
-
-            binorm[0] = 0.0f;
-            binorm[1] = 0.0f;
-            binorm[2] = 0.0f;
-
-            bones_id[0] = 0;
-            bones_id[1] = 0;
-            bones_id[2] = 0;
-            bones_id[3] = 0;
-
-            bones_infl[0] = 0.0f;
-            bones_infl[1] = 0.0f;
-            bones_infl[2] = 0.0f;
-            bones_infl[3] = 0.0f;
         }
     };
 
@@ -192,10 +163,6 @@ namespace OGF_tool
         public SSkelFace()
         {
             v = new ushort[3];
-
-            v[0] = 0;
-            v[1] = 0;
-            v[2] = 0;
         }
     };
 
