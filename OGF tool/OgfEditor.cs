@@ -61,17 +61,6 @@ namespace OGF_tool
 		private static extern int CSharpStartAgent(string path, string out_path, int mode, int convert_to_mode, string motion_list);
 
 		delegate void TriangleParser(XRayLoader loader, OGF_Child child, bool v3);
-
-        public static T Clamp<T>(T value, T max, T min) where T : System.IComparable<T>
-        {
-            T result = value;
-            if (value.CompareTo(max) > 0)
-                result = max;
-            if (value.CompareTo(min) < 0)
-                result = min;
-            return result;
-        }
-
         private int RunConverter(string path, string out_path, int mode, int convert_to_mode)
 		{
 			string dll_path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\converter.dll";
@@ -1340,41 +1329,32 @@ skip_ik_data:
 			return dest;
 		}
 
-        private float[] MirrorXY_transform(float[] vec)
-        {
-            float[] dest = new float[3];
-            dest[0] = -vec[0];
-            dest[1] = -vec[1];
-            dest[2] = vec[2];
-            return dest;
-        }
-
         private string vPUSH(float[] vec)
         {
 			return vec[0].ToString("0.000000") + " " + vec[1].ToString("0.000000") + " " + vec[2].ToString("0.000000");
         }
 
-		private void AddBone(string bone, string parent_bone)
+		private void AddBone(string bone, string parent_bone, int pos)
 		{
 			if (OGF_V != null && OGF_V.IsSkeleton())
 			{
-				OGF_V.bones.bone_names.Add(bone);
-				OGF_V.bones.parent_bone_names.Add(parent_bone);
-				OGF_V.bones.fobb.Add(OGF_V.bones.fobb[OGF_V.bones.fobb.Count - 1]);
+				OGF_V.bones.bone_names.Insert(pos, bone);
+				OGF_V.bones.parent_bone_names.Insert(pos, parent_bone);
+				OGF_V.bones.fobb.Insert(pos, OGF_V.bones.fobb[OGF_V.bones.fobb.Count - 1]);
 
 				float[] temp_vec = new float[3];
 				temp_vec[0] = 0.0f;
 				temp_vec[1] = 0.0f;
 				temp_vec[2] = 0.0f;
 
-                OGF_V.ikdata.materials.Add("default_object");
-                OGF_V.ikdata.mass.Add(10.0f);
-                OGF_V.ikdata.version.Add(4);
-                OGF_V.ikdata.center_mass.Add(temp_vec);
+                OGF_V.ikdata.materials.Insert(pos, "default_object");
+                OGF_V.ikdata.mass.Insert(pos, 10.0f);
+                OGF_V.ikdata.version.Insert(pos, 4);
+                OGF_V.ikdata.center_mass.Insert(pos, temp_vec);
 
-                OGF_V.ikdata.bytes_1.Add(OGF_V.ikdata.bytes_1[OGF_V.ikdata.bytes_1.Count - 1]);
-                OGF_V.ikdata.position.Add(temp_vec);
-                OGF_V.ikdata.rotation.Add(temp_vec);
+                OGF_V.ikdata.bytes_1.Insert(pos, OGF_V.ikdata.bytes_1[OGF_V.ikdata.bytes_1.Count - 1]);
+                OGF_V.ikdata.position.Insert(pos, temp_vec);
+                OGF_V.ikdata.rotation.Insert(pos, temp_vec);
             }
 		}
 
@@ -1389,6 +1369,15 @@ skip_ik_data:
                 }
             }
 			return -1;
+        }
+
+        private string GetBoneName(int bone)
+        {
+            if (OGF_V != null && OGF_V.IsSkeleton())
+            {
+				return OGF_V.bones.bone_names[bone];
+            }
+            return "";
         }
 
         private void RemoveBone(string bone)
@@ -3093,7 +3082,16 @@ skip_ik_data:
 			}
 		}
 
-		private void NPC_ToSoC()
+        private float[] RotateZ(float[] vec)
+        {
+            float[] dest = new float[3];
+            dest[0] = -vec[0];
+            dest[1] = vec[1];
+            dest[2] = -vec[2];
+            return dest;
+        }
+
+        private void NPC_ToSoC()
 		{
 			if (CheckNPC())
 			{
@@ -3105,37 +3103,65 @@ skip_ik_data:
 
 				OGF_V.bones.parent_bone_names[0] = "";
 
-                OGF_V.ikdata.position[0] = Resources.SoC_Skeleton(0, true);
-                OGF_V.ikdata.rotation[0] = Resources.SoC_Skeleton(0, false);
-
-                OGF_V.ikdata.position[GetBoneID("bip01_l_hand")] = Resources.SoC_Skeleton(0, true);
-                OGF_V.ikdata.rotation[GetBoneID("bip01_l_hand")] = Resources.SoC_Skeleton(0, false);
-
-                OGF_V.ikdata.position[GetBoneID("bip01_r_hand")] = Resources.SoC_Skeleton(0, true);
-                OGF_V.ikdata.rotation[GetBoneID("bip01_r_hand")] = Resources.SoC_Skeleton(0, false);
-
-                foreach (var ch in OGF_V.childs)
+				for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
 				{
-					for (int i = 0; i < ch.Vertices.Count; i++)
-					{
-						for (int j = 0; j < ch.LinksCount(); j++)
-						{
-                            int id = (int)ch.Vertices[i].bones_id[j];
-                            id -= 2;
-                            id = Clamp(id, id, 0);
-                            ch.Vertices[i].bones_id[j] = (uint)id;
-                        }
+					OGF_V.ikdata.position[i] = Resources.SoCSkeleton.Pos(i);
+                    OGF_V.ikdata.rotation[i] = Resources.SoCSkeleton.Rot(i);
+                    OGF_V.ikdata.center_mass[i] = RotateZ(OGF_V.ikdata.center_mass[i]); // Нужно тестить
+                }
 
-                        ch.Vertices[i].offs = MirrorZ_transform(ch.Vertices[i].offs);
-                        ch.Vertices[i].norm = MirrorXY_transform(ch.Vertices[i].norm);
-                        ch.Vertices[i].tang = MirrorXY_transform(ch.Vertices[i].tang);
-                        ch.Vertices[i].binorm = MirrorXY_transform(ch.Vertices[i].binorm);
+				foreach (var ch in OGF_V.childs)
+				{
+                    uint links = ch.LinksCount();
+
+                    for (int i = 0; i < ch.Vertices.Count; i++)
+					{
+						// Чиним id костей
+                        for (int j = 0; j < links; j++)
+							ch.Vertices[i].bones_id[j] = (ch.Vertices[i].bones_id[j] >= 2 ? ch.Vertices[i].bones_id[j] - 2 : 0);
+
+                        ch.Vertices[i].offs = RotateZ(ch.Vertices[i].offs);
+                        ch.Vertices[i].norm = RotateZ(ch.Vertices[i].norm);
+                        ch.Vertices[i].tang = RotateZ(ch.Vertices[i].tang);
+                        ch.Vertices[i].binorm = RotateZ(ch.Vertices[i].binorm);
                     }
-				}
-			}
+                }
+            }
 		}
 
-		private bool CheckNPC()
+        private void NPC_ToCoP()
+        {
+            if (CheckNPC())
+            {
+                AddBone("root_stalker", "", 0);
+                AddBone("bip01", "root_stalker", 1);
+
+                for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
+                {
+                    OGF_V.ikdata.position[i] = Resources.CoPSkeleton.Pos(i);
+                    OGF_V.ikdata.rotation[i] = Resources.CoPSkeleton.Rot(i);
+                    OGF_V.ikdata.center_mass[i] = RotateZ(OGF_V.ikdata.center_mass[i]); // Нужно тестить
+                }
+
+                foreach (var ch in OGF_V.childs)
+                {
+                    for (int i = 0; i < ch.Vertices.Count; i++)
+                    {
+                        for (int j = 0; j < ch.LinksCount(); j++)
+                        {
+                            ch.Vertices[i].bones_id[j] = ch.Vertices[i].bones_id[j] + 2;
+                        }
+
+                        ch.Vertices[i].offs = RotateZ(ch.Vertices[i].offs);
+                        ch.Vertices[i].norm = RotateZ(ch.Vertices[i].norm);
+                        ch.Vertices[i].tang = RotateZ(ch.Vertices[i].tang);
+                        ch.Vertices[i].binorm = RotateZ(ch.Vertices[i].binorm);
+                    }
+                }
+            }
+        }
+
+        private bool CheckNPC()
 		{
 			return true;
 		}
@@ -3143,7 +3169,17 @@ skip_ik_data:
 		private void button1_Click(object sender, EventArgs e)
 		{
 			NPC_ToSoC();
-        }
+
+			//BoneNamesBox.Text = "float[] soc_skel = {\n";
+
+			//for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
+			//{
+			//	BoneNamesBox.Text += $"                   {(decimal)OGF_V.ikdata.position[i][0]}f, {(decimal)OGF_V.ikdata.position[i][1]}f, {(decimal)OGF_V.ikdata.position[i][2]}f,\n";
+			//	BoneNamesBox.Text += $"                   {(decimal)OGF_V.ikdata.rotation[i][0]}f, {(decimal)OGF_V.ikdata.rotation[i][1]}f, {(decimal)OGF_V.ikdata.rotation[i][2]}f,\n";
+			//}
+
+			//BoneNamesBox.Text += "};";
+		}
 
 		private byte[] GetVec3Bytes(float[] vec)
 		{
@@ -3160,6 +3196,16 @@ skip_ik_data:
             bytes.AddRange(BitConverter.GetBytes(vec[0]));
             bytes.AddRange(BitConverter.GetBytes(vec[1]));
             return bytes.ToArray();
+        }
+
+		private float[] CreateVec(int size)
+		{
+			float[] vec = new float[size];
+
+			for (int i = 0; i < size; i++)
+				vec[i] = 0.0f;
+
+			return vec;
         }
     }
 }

@@ -70,6 +70,14 @@ namespace OGF_tool
             return temp_links;
         }
 
+        public void SetLinks(uint count)
+        {
+            if (links >= 0x12071980)
+                links = count * 0x12071980;
+            else
+                links = count;
+        }
+
         public uint NewSize()
         {
             return (uint)(m_texture.Length + m_shader.Length + 2 - old_size);
