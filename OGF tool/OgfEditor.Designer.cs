@@ -917,7 +917,7 @@ namespace OGF_tool
             this.CurrentFormat.Name = "CurrentFormat";
             this.CurrentFormat.Size = new System.Drawing.Size(97, 20);
             this.CurrentFormat.Text = "Model Format:";
-            this.CurrentFormat.Click += new System.EventHandler(this.ChangeRefsFormat);
+            this.CurrentFormat.Click += new System.EventHandler(this.ChangeModelFormat);
             // 
             // viewPortToolStripMenuItem
             // 

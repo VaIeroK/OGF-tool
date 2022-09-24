@@ -24,12 +24,14 @@ namespace OGF_tool
             chunk_size = _chunk_size;
             links = 0;
             to_delete = false;
+            old_verts_size = 0;
         }
 
         public long pos;
         public long parent_pos;
         public uint chunk_size;
         public int old_size;
+        public int old_verts_size;
 
         public uint links;
         public bool to_delete;
@@ -37,6 +39,34 @@ namespace OGF_tool
         public List<SSkelVert> Vertices;
         public List<SSkelFace> Faces;
         public List<VIPM_SWR> SWI;
+
+        public long GetVertsSize(uint vers)
+        {
+            int size = 0;
+            switch (LinksCount())
+            {
+                case 1:
+                    size = 12 + 12 + (vers == 4 ? 12 + 12 : 0) + 8 + 4;
+                    break;
+                case 2:
+                    size = 2 + 2 + 12 + 12 + 12 + 12 + 4 + 8;
+                    break;
+                case 3:
+                case 4:
+                    for (int j = 0; j < LinksCount(); j++)
+                        size += 2;
+
+                    size += 12 + 12 + 12 + 12;
+
+                    for (int j = 0; j < LinksCount() - 1; j++)
+                        size += 4;
+
+                    size += 8;
+                    break;
+            }
+
+            return size * Vertices.Count + 4 + 4;
+        }
 
         private int CalcLod(float lod)
         {

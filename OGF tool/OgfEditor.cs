@@ -472,7 +472,10 @@ namespace OGF_tool
 						if (ch.to_delete)
 							new_size -= ch.chunk_size + 8;
 						else
+						{
 							new_size += ch.NewSize();
+                            new_size += (uint)(ch.GetVertsSize(OGF_V.m_version) - ch.old_verts_size);
+                        }
 					}
 
 					int ChildChunk = (OGF_V.m_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
@@ -489,7 +492,8 @@ namespace OGF_tool
 						if (!ch.to_delete)
 						{
 							new_size = size + ch.NewSize();
-							file_bytes.AddRange(BitConverter.GetBytes(child_id));
+                            new_size += (uint)(ch.GetVertsSize(OGF_V.m_version) - ch.old_verts_size);
+                            file_bytes.AddRange(BitConverter.GetBytes(child_id));
 							file_bytes.AddRange(BitConverter.GetBytes(new_size));
 
 							child_id++;
@@ -507,13 +511,14 @@ namespace OGF_tool
 
 						if (OGF_V.IsSkeleton()) // Verts
 						{
-                            uint VertsChunk = fileStream.ReadUInt32(); // VertsChunk
+                            fileStream.ReadUInt32(); // VertsChunk
                             uint VertsSize = fileStream.ReadUInt32(); // VertsSize
 
                             if (!ch.to_delete)
 							{
-								file_bytes.AddRange(BitConverter.GetBytes(VertsChunk));
-                                file_bytes.AddRange(BitConverter.GetBytes(VertsSize));
+                                uint VertsChunk = (OGF_V.m_version == 4 ? (uint)OGF.OGF4_VERTICES : (uint)OGF.OGF3_VERTICES);
+                                file_bytes.AddRange(BitConverter.GetBytes(VertsChunk));
+                                file_bytes.AddRange(BitConverter.GetBytes((uint)ch.GetVertsSize(OGF_V.m_version)));
 
                                 file_bytes.AddRange(BitConverter.GetBytes(ch.links)); // Линковка
                                 file_bytes.AddRange(BitConverter.GetBytes(ch.Vertices.Count));
@@ -833,8 +838,10 @@ namespace OGF_tool
 				TriangleParser LoadTriangles = (loader, child, v3) =>
 				{
 					int VertsChunk = v3 ? (int)OGF.OGF3_VERTICES : (int)OGF.OGF4_VERTICES;
-                    if (loader.find_chunk(VertsChunk, false, true))
+					uint VertsChunkSize = loader.find_chunkSize(VertsChunk, false, true);
+                    if (VertsChunkSize > 0)
 					{
+						child.old_verts_size = (int)VertsChunkSize;
                         child.links = loader.ReadUInt32();
 						uint verts = loader.ReadUInt32();
 
@@ -2108,7 +2115,7 @@ skip_ik_data:
 			motionToolsToolStripMenuItem.Enabled = Current_OMF != null;
 		}
 
-		private void ChangeRefsFormat(object sender, EventArgs e)
+		private void ChangeModelFormat(object sender, EventArgs e)
 		{
 			if (OGF_V != null)
 			{
@@ -2135,22 +2142,22 @@ skip_ik_data:
                 {
 					uint links = 0;
 
+                    foreach (var ch in OGF_V.childs)
+                        links = Math.Max(links, ch.LinksCount());
+
+                    if (links > 2 && MessageBox.Show("Model has more than 2 links. After converting to SoC model will lose influence data, continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    {
+                        OGF_V.IsCopModel = !OGF_V.IsCopModel;
+                        return;
+                    }
+
 					foreach (var ch in OGF_V.childs)
 					{
-						if (ch.links >= 0x12071980)
-							links = Math.Max(links, ch.links / 0x12071980);
-						else
-							links = Math.Max(links, ch.links);
+						if (ch.LinksCount() > 2)
+							ch.SetLinks(1);
 					}
 
-					if (links > 2)
-                    {
-						MessageBox.Show("Can't convert to SoC. Model has more than 2 links!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						OGF_V.IsCopModel = !OGF_V.IsCopModel;
-						return;
-					}
-
-					if (Current_OMF != null)
+                    if (Current_OMF != null)
 					{
 						var xr_loader = new XRayLoader();
 						using (var fileStream = new BinaryReader(new MemoryStream(Current_OMF)))
@@ -2575,7 +2582,7 @@ skip_ik_data:
 					OGF_V.ikdata.center_mass[i] = RotateZ(OGF_V.ikdata.center_mass[i]);
 				}
 
-				foreach (var ch in OGF_V.childs)
+                foreach (var ch in OGF_V.childs)
 				{
 					uint links = ch.LinksCount();
 
