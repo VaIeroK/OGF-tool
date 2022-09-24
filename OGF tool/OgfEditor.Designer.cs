@@ -105,6 +105,9 @@ namespace OGF_tool
             this.replaceMotionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.importDataFromModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeLodButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.converterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nPCCoPToSoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nPCSoCToCoPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OgfInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CurrentFormat = new System.Windows.Forms.ToolStripMenuItem();
@@ -126,9 +129,6 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.converterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nPCCoPToSoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nPCSoCToCoPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TexturesGropuBox.SuspendLayout();
@@ -717,7 +717,7 @@ namespace OGF_tool
             this.viewPortToolStripMenuItem});
             this.MenuPanel.Location = new System.Drawing.Point(0, 2);
             this.MenuPanel.Name = "MenuPanel";
-            this.MenuPanel.Size = new System.Drawing.Size(501, 24);
+            this.MenuPanel.Size = new System.Drawing.Size(381, 24);
             this.MenuPanel.TabIndex = 8;
             // 
             // FileMenuItem
@@ -898,6 +898,29 @@ namespace OGF_tool
             this.ChangeLodButton.Text = "Change lod";
             this.ChangeLodButton.Click += new System.EventHandler(this.changeLodToolStripMenuItem_Click);
             // 
+            // converterToolStripMenuItem
+            // 
+            this.converterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nPCCoPToSoCToolStripMenuItem,
+            this.nPCSoCToCoPToolStripMenuItem});
+            this.converterToolStripMenuItem.Name = "converterToolStripMenuItem";
+            this.converterToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.converterToolStripMenuItem.Text = "Converter";
+            // 
+            // nPCCoPToSoCToolStripMenuItem
+            // 
+            this.nPCCoPToSoCToolStripMenuItem.Name = "nPCCoPToSoCToolStripMenuItem";
+            this.nPCCoPToSoCToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.nPCCoPToSoCToolStripMenuItem.Text = "NPC CoP to SoC";
+            this.nPCCoPToSoCToolStripMenuItem.Click += new System.EventHandler(this.NPC_ToSoC);
+            // 
+            // nPCSoCToCoPToolStripMenuItem
+            // 
+            this.nPCSoCToCoPToolStripMenuItem.Name = "nPCSoCToCoPToolStripMenuItem";
+            this.nPCSoCToCoPToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.nPCSoCToCoPToolStripMenuItem.Text = "NPC SoC to CoP";
+            this.nPCSoCToCoPToolStripMenuItem.Click += new System.EventHandler(this.NPC_ToCoP);
+            // 
             // OgfInfo
             // 
             this.OgfInfo.Name = "OgfInfo";
@@ -1032,29 +1055,6 @@ namespace OGF_tool
             // 
             this.SaveObjDialog.Filter = "Obj file|*.obj";
             // 
-            // converterToolStripMenuItem
-            // 
-            this.converterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.nPCCoPToSoCToolStripMenuItem,
-            this.nPCSoCToCoPToolStripMenuItem});
-            this.converterToolStripMenuItem.Name = "converterToolStripMenuItem";
-            this.converterToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.converterToolStripMenuItem.Text = "Converter";
-            // 
-            // nPCCoPToSoCToolStripMenuItem
-            // 
-            this.nPCCoPToSoCToolStripMenuItem.Name = "nPCCoPToSoCToolStripMenuItem";
-            this.nPCCoPToSoCToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.nPCCoPToSoCToolStripMenuItem.Text = "NPC CoP to SoC";
-            this.nPCCoPToSoCToolStripMenuItem.Click += new System.EventHandler(this.NPC_ToSoC);
-            // 
-            // nPCSoCToCoPToolStripMenuItem
-            // 
-            this.nPCSoCToCoPToolStripMenuItem.Name = "nPCSoCToCoPToolStripMenuItem";
-            this.nPCSoCToCoPToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.nPCSoCToCoPToolStripMenuItem.Text = "NPC SoC to CoP";
-            this.nPCSoCToCoPToolStripMenuItem.Click += new System.EventHandler(this.NPC_ToCoP);
-            // 
             // OGF_Editor
             // 
             this.AllowDrop = true;
@@ -1071,7 +1071,7 @@ namespace OGF_tool
             this.MinimumSize = new System.Drawing.Size(536, 251);
             this.Name = "OGF_Editor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "OGF Params Editor";
+            this.Text = "OGF Params Editor 3.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ClosingForm);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ClosedForm);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragDropCallback);
