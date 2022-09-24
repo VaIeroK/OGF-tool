@@ -126,7 +126,9 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.button1 = new System.Windows.Forms.Button();
+            this.converterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nPCCoPToSoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nPCSoCToCoPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TexturesGropuBox.SuspendLayout();
@@ -715,7 +717,7 @@ namespace OGF_tool
             this.viewPortToolStripMenuItem});
             this.MenuPanel.Location = new System.Drawing.Point(0, 2);
             this.MenuPanel.Name = "MenuPanel";
-            this.MenuPanel.Size = new System.Drawing.Size(381, 24);
+            this.MenuPanel.Size = new System.Drawing.Size(501, 24);
             this.MenuPanel.TabIndex = 8;
             // 
             // FileMenuItem
@@ -837,7 +839,8 @@ namespace OGF_tool
             this.openSkeletonInObjectEditorToolStripMenuItem,
             this.motionToolsToolStripMenuItem,
             this.importDataFromModelToolStripMenuItem,
-            this.ChangeLodButton});
+            this.ChangeLodButton,
+            this.converterToolStripMenuItem});
             this.ToolsMenuItem.Name = "ToolsMenuItem";
             this.ToolsMenuItem.Size = new System.Drawing.Size(46, 20);
             this.ToolsMenuItem.Text = "Tools";
@@ -1029,15 +1032,28 @@ namespace OGF_tool
             // 
             this.SaveObjDialog.Filter = "Obj file|*.obj";
             // 
-            // button1
+            // converterToolStripMenuItem
             // 
-            this.button1.Location = new System.Drawing.Point(188, 338);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 33;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.converterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nPCCoPToSoCToolStripMenuItem,
+            this.nPCSoCToCoPToolStripMenuItem});
+            this.converterToolStripMenuItem.Name = "converterToolStripMenuItem";
+            this.converterToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.converterToolStripMenuItem.Text = "Converter";
+            // 
+            // nPCCoPToSoCToolStripMenuItem
+            // 
+            this.nPCCoPToSoCToolStripMenuItem.Name = "nPCCoPToSoCToolStripMenuItem";
+            this.nPCCoPToSoCToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nPCCoPToSoCToolStripMenuItem.Text = "NPC CoP to SoC";
+            this.nPCCoPToSoCToolStripMenuItem.Click += new System.EventHandler(this.NPC_ToSoC);
+            // 
+            // nPCSoCToCoPToolStripMenuItem
+            // 
+            this.nPCSoCToCoPToolStripMenuItem.Name = "nPCSoCToCoPToolStripMenuItem";
+            this.nPCSoCToCoPToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nPCSoCToCoPToolStripMenuItem.Text = "NPC SoC to CoP";
+            this.nPCSoCToCoPToolStripMenuItem.Click += new System.EventHandler(this.NPC_ToCoP);
             // 
             // OGF_Editor
             // 
@@ -1045,7 +1061,6 @@ namespace OGF_tool
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(520, 362);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.LabelBroken);
             this.Controls.Add(this.MenuPanel);
             this.Controls.Add(this.BkpCheckBox);
@@ -1182,7 +1197,9 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem ChangeLodButton;
         private System.Windows.Forms.Label LodLabel;
         private System.Windows.Forms.ToolStripMenuItem disableAlphaToolStripMenuItem;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripMenuItem converterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nPCCoPToSoCToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nPCSoCToCoPToolStripMenuItem;
     }
 }
 

@@ -2506,13 +2506,137 @@ skip_ik_data:
 			}
 		}
 
-		void Msg(string text)
+        private float[] RotateZ(float[] vec)
+        {
+            float[] dest = new float[3];
+            dest[0] = -vec[0];
+            dest[1] = vec[1];
+            dest[2] = -vec[2];
+            return dest;
+        }
+
+        private void NPC_ToSoC(object sender, EventArgs e)
+        {
+            if (CheckNPC(true))
+            {
+                RemoveBone("root_stalker");
+                RemoveBone("bip01");
+
+                ChangeParent("root_stalker", "bip01_pelvis");
+                ChangeParent("bip01", "bip01_pelvis");
+
+                OGF_V.bones.parent_bone_names[0] = "";
+
+                for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
+                {
+                    OGF_V.ikdata.position[i] = Resources.SoCSkeleton.Pos(i);
+                    OGF_V.ikdata.rotation[i] = Resources.SoCSkeleton.Rot(i);
+                    OGF_V.ikdata.center_mass[i] = RotateZ(OGF_V.ikdata.center_mass[i]); // Нужно тестить
+                }
+
+                foreach (var ch in OGF_V.childs)
+                {
+                    uint links = ch.LinksCount();
+
+                    for (int i = 0; i < ch.Vertices.Count; i++)
+                    {
+                        // Чиним id костей
+                        for (int j = 0; j < links; j++)
+                            ch.Vertices[i].bones_id[j] = (ch.Vertices[i].bones_id[j] >= 2 ? ch.Vertices[i].bones_id[j] - 2 : 0);
+
+                        ch.Vertices[i].offs = RotateZ(ch.Vertices[i].offs);
+                        ch.Vertices[i].norm = RotateZ(ch.Vertices[i].norm);
+                        ch.Vertices[i].tang = RotateZ(ch.Vertices[i].tang);
+                        ch.Vertices[i].binorm = RotateZ(ch.Vertices[i].binorm);
+                    }
+                }
+                AutoClosingMessageBox.Show("Successful!", "", 700, MessageBoxIcon.Information);
+            }
+			else
+                AutoClosingMessageBox.Show("This model is not CoP NPC!", "", 2500, MessageBoxIcon.Error);
+        }
+
+        private void NPC_ToCoP(object sender, EventArgs e)
+        {
+            if (CheckNPC(false))
+            {
+                AddBone("root_stalker", "", 0);
+                AddBone("bip01", "root_stalker", 1);
+
+                for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
+                {
+                    OGF_V.ikdata.position[i] = Resources.CoPSkeleton.Pos(i);
+                    OGF_V.ikdata.rotation[i] = Resources.CoPSkeleton.Rot(i);
+                    OGF_V.ikdata.center_mass[i] = RotateZ(OGF_V.ikdata.center_mass[i]); // Нужно тестить
+                }
+
+                foreach (var ch in OGF_V.childs)
+                {
+                    for (int i = 0; i < ch.Vertices.Count; i++)
+                    {
+                        for (int j = 0; j < ch.LinksCount(); j++)
+                        {
+                            ch.Vertices[i].bones_id[j] = ch.Vertices[i].bones_id[j] + 2;
+                        }
+
+                        ch.Vertices[i].offs = RotateZ(ch.Vertices[i].offs);
+                        ch.Vertices[i].norm = RotateZ(ch.Vertices[i].norm);
+                        ch.Vertices[i].tang = RotateZ(ch.Vertices[i].tang);
+                        ch.Vertices[i].binorm = RotateZ(ch.Vertices[i].binorm);
+                    }
+                }
+                AutoClosingMessageBox.Show("Successful!", "", 700, MessageBoxIcon.Information);
+            }
+            else
+                AutoClosingMessageBox.Show("This model is not SoC NPC!", "", 2500, MessageBoxIcon.Error);
+        }
+
+        private bool CheckNPC(bool cop_npc)
+        {
+            if (cop_npc)
+            {
+                if (OGF_V != null && OGF_V.IsSkeleton())
+                {
+                    if (OGF_V.ikdata.position.Count == 47 && OGF_V.bones.bone_names.Contains("root_stalker"))
+                        return true;
+                }
+            }
+            else
+            {
+                if (OGF_V != null && OGF_V.IsSkeleton())
+                {
+                    if (OGF_V.ikdata.position.Count == 45 && OGF_V.bones.bone_names.Contains("bip01_pelvis") && !OGF_V.bones.bone_names.Contains("root_stalker"))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        void Msg(string text)
         {
 			MessageBox.Show(text);
         }
 
-		// Interface
-		private void InitViewPort(bool create_model = true, bool force_texture_reload = false, bool force_reload = false)
+        private byte[] GetVec3Bytes(float[] vec)
+        {
+            List<byte> bytes = new List<byte>();
+            bytes.AddRange(BitConverter.GetBytes(vec[0]));
+            bytes.AddRange(BitConverter.GetBytes(vec[1]));
+            bytes.AddRange(BitConverter.GetBytes(vec[2]));
+            return bytes.ToArray();
+        }
+
+        private byte[] GetVec2Bytes(float[] vec)
+        {
+            List<byte> bytes = new List<byte>();
+            bytes.AddRange(BitConverter.GetBytes(vec[0]));
+            bytes.AddRange(BitConverter.GetBytes(vec[1]));
+            return bytes.ToArray();
+        }
+
+        // Interface
+        private void InitViewPort(bool create_model = true, bool force_texture_reload = false, bool force_reload = false)
         {
 			if (OGF_V == null) return;
 
@@ -3081,131 +3205,5 @@ skip_ik_data:
 				PrFolder.Start();
 			}
 		}
-
-        private float[] RotateZ(float[] vec)
-        {
-            float[] dest = new float[3];
-            dest[0] = -vec[0];
-            dest[1] = vec[1];
-            dest[2] = -vec[2];
-            return dest;
-        }
-
-        private void NPC_ToSoC()
-		{
-			if (CheckNPC())
-			{
-				RemoveBone("root_stalker");
-				RemoveBone("bip01");
-
-				ChangeParent("root_stalker", "bip01_pelvis");
-				ChangeParent("bip01", "bip01_pelvis");
-
-				OGF_V.bones.parent_bone_names[0] = "";
-
-				for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
-				{
-					OGF_V.ikdata.position[i] = Resources.SoCSkeleton.Pos(i);
-                    OGF_V.ikdata.rotation[i] = Resources.SoCSkeleton.Rot(i);
-                    OGF_V.ikdata.center_mass[i] = RotateZ(OGF_V.ikdata.center_mass[i]); // Нужно тестить
-                }
-
-				foreach (var ch in OGF_V.childs)
-				{
-                    uint links = ch.LinksCount();
-
-                    for (int i = 0; i < ch.Vertices.Count; i++)
-					{
-						// Чиним id костей
-                        for (int j = 0; j < links; j++)
-							ch.Vertices[i].bones_id[j] = (ch.Vertices[i].bones_id[j] >= 2 ? ch.Vertices[i].bones_id[j] - 2 : 0);
-
-                        ch.Vertices[i].offs = RotateZ(ch.Vertices[i].offs);
-                        ch.Vertices[i].norm = RotateZ(ch.Vertices[i].norm);
-                        ch.Vertices[i].tang = RotateZ(ch.Vertices[i].tang);
-                        ch.Vertices[i].binorm = RotateZ(ch.Vertices[i].binorm);
-                    }
-                }
-            }
-		}
-
-        private void NPC_ToCoP()
-        {
-            if (CheckNPC())
-            {
-                AddBone("root_stalker", "", 0);
-                AddBone("bip01", "root_stalker", 1);
-
-                for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
-                {
-                    OGF_V.ikdata.position[i] = Resources.CoPSkeleton.Pos(i);
-                    OGF_V.ikdata.rotation[i] = Resources.CoPSkeleton.Rot(i);
-                    OGF_V.ikdata.center_mass[i] = RotateZ(OGF_V.ikdata.center_mass[i]); // Нужно тестить
-                }
-
-                foreach (var ch in OGF_V.childs)
-                {
-                    for (int i = 0; i < ch.Vertices.Count; i++)
-                    {
-                        for (int j = 0; j < ch.LinksCount(); j++)
-                        {
-                            ch.Vertices[i].bones_id[j] = ch.Vertices[i].bones_id[j] + 2;
-                        }
-
-                        ch.Vertices[i].offs = RotateZ(ch.Vertices[i].offs);
-                        ch.Vertices[i].norm = RotateZ(ch.Vertices[i].norm);
-                        ch.Vertices[i].tang = RotateZ(ch.Vertices[i].tang);
-                        ch.Vertices[i].binorm = RotateZ(ch.Vertices[i].binorm);
-                    }
-                }
-            }
-        }
-
-        private bool CheckNPC()
-		{
-			return true;
-		}
-
-		private void button1_Click(object sender, EventArgs e)
-		{
-			NPC_ToSoC();
-
-			//BoneNamesBox.Text = "float[] soc_skel = {\n";
-
-			//for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
-			//{
-			//	BoneNamesBox.Text += $"                   {(decimal)OGF_V.ikdata.position[i][0]}f, {(decimal)OGF_V.ikdata.position[i][1]}f, {(decimal)OGF_V.ikdata.position[i][2]}f,\n";
-			//	BoneNamesBox.Text += $"                   {(decimal)OGF_V.ikdata.rotation[i][0]}f, {(decimal)OGF_V.ikdata.rotation[i][1]}f, {(decimal)OGF_V.ikdata.rotation[i][2]}f,\n";
-			//}
-
-			//BoneNamesBox.Text += "};";
-		}
-
-		private byte[] GetVec3Bytes(float[] vec)
-		{
-			List<byte> bytes = new List<byte>();
-			bytes.AddRange(BitConverter.GetBytes(vec[0]));
-            bytes.AddRange(BitConverter.GetBytes(vec[1]));
-            bytes.AddRange(BitConverter.GetBytes(vec[2]));
-			return bytes.ToArray();
-        }
-
-        private byte[] GetVec2Bytes(float[] vec)
-        {
-            List<byte> bytes = new List<byte>();
-            bytes.AddRange(BitConverter.GetBytes(vec[0]));
-            bytes.AddRange(BitConverter.GetBytes(vec[1]));
-            return bytes.ToArray();
-        }
-
-		private float[] CreateVec(int size)
-		{
-			float[] vec = new float[size];
-
-			for (int i = 0; i < size; i++)
-				vec[i] = 0.0f;
-
-			return vec;
-        }
-    }
+	}
 }
