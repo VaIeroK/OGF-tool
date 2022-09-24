@@ -717,7 +717,7 @@ namespace OGF_tool
             this.viewPortToolStripMenuItem});
             this.MenuPanel.Location = new System.Drawing.Point(0, 2);
             this.MenuPanel.Name = "MenuPanel";
-            this.MenuPanel.Size = new System.Drawing.Size(381, 24);
+            this.MenuPanel.Size = new System.Drawing.Size(533, 24);
             this.MenuPanel.TabIndex = 8;
             // 
             // FileMenuItem
@@ -738,7 +738,7 @@ namespace OGF_tool
             // 
             this.LoadMenuParam.Name = "LoadMenuParam";
             this.LoadMenuParam.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.LoadMenuParam.Size = new System.Drawing.Size(140, 22);
+            this.LoadMenuParam.Size = new System.Drawing.Size(180, 22);
             this.LoadMenuParam.Text = "Load";
             this.LoadMenuParam.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -746,7 +746,7 @@ namespace OGF_tool
             // 
             this.SaveMenuParam.Name = "SaveMenuParam";
             this.SaveMenuParam.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.SaveMenuParam.Size = new System.Drawing.Size(140, 22);
+            this.SaveMenuParam.Size = new System.Drawing.Size(180, 22);
             this.SaveMenuParam.Text = "Save";
             this.SaveMenuParam.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -754,7 +754,7 @@ namespace OGF_tool
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAsToolStripMenuItem.Text = "Save as...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -768,7 +768,7 @@ namespace OGF_tool
             this.sklToolStripMenuItem,
             this.sklsToolStripMenuItem});
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportToolStripMenuItem.Text = "Export";
             // 
             // objectToolStripMenuItem
@@ -816,20 +816,20 @@ namespace OGF_tool
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(137, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
             this.reloadToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.reloadToolStripMenuItem.Text = "Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -938,8 +938,8 @@ namespace OGF_tool
             // CurrentFormat
             // 
             this.CurrentFormat.Name = "CurrentFormat";
-            this.CurrentFormat.Size = new System.Drawing.Size(97, 20);
-            this.CurrentFormat.Text = "Model Format:";
+            this.CurrentFormat.Size = new System.Drawing.Size(129, 20);
+            this.CurrentFormat.Text = "Model Format: None";
             this.CurrentFormat.Click += new System.EventHandler(this.ChangeModelFormat);
             // 
             // viewPortToolStripMenuItem

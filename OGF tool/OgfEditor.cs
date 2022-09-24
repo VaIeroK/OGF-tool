@@ -116,8 +116,10 @@ namespace OGF_tool
 			LabelBroken.Visible = false;
 			viewPortToolStripMenuItem.Visible = false;
 			ChangeLodButton.Enabled = false;
+            reloadToolStripMenuItem.Enabled = false;
+            CurrentFormat.Enabled = false;
 
-			SaveSklDialog = new FolderSelectDialog();
+            SaveSklDialog = new FolderSelectDialog();
 
 			if (Environment.GetCommandLineArgs().Length > 1)
 			{
@@ -179,7 +181,8 @@ namespace OGF_tool
 			{
 				StatusFile.Text = FILE_NAME.Substring(FILE_NAME.LastIndexOf('\\') + 1);
 
-				SaveMenuParam.Enabled = true;
+                reloadToolStripMenuItem.Enabled = true;
+                SaveMenuParam.Enabled = true;
 				saveAsToolStripMenuItem.Enabled = true;
 				ToolsMenuItem.Enabled = !OGF_V.IsDM;
 				openSkeletonInObjectEditorToolStripMenuItem.Enabled = OGF_V.IsSkeleton();
@@ -1882,6 +1885,8 @@ skip_ik_data:
 
 		private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
+			if (FILE_NAME == "") return;
+
 			string cur_fname = FILE_NAME;
 			Clear(false);
 			if (OpenFile(cur_fname, ref OGF_V, ref Current_OGF, ref Current_OMF))
