@@ -14,7 +14,7 @@ namespace OGF_tool
     {
         public Description descr = new Description();
         public bool res = false;
-        public OgfInfo(OGF_Children OGF, bool refs_correct, float lod, List<byte> motions_flags)
+        public OgfInfo(OGF_Children OGF, bool refs_correct, float lod)
         {
             InitializeComponent();
 
@@ -47,11 +47,11 @@ namespace OGF_tool
             bool bit16 = false;
             bool no_bit = false;
 
-            if (motions_flags.Count > 0)
+            if (OGF.motions.Anims != null && OGF.motions.Anims.Count > 0)
             {
-                for (int i = 0; i < motions_flags.Count; i++)
+                for (int i = 0; i < OGF.motions.Anims.Count; i++)
                 {
-                    byte flag = motions_flags[i];
+                    byte flag = OGF.motions.Anims[i].flags;
 
                     bool key16bit = (flag & (int)MotionKeyFlags.flTKey16IsBit) == (int)MotionKeyFlags.flTKey16IsBit;
                     bool keynocompressbit = (flag & (int)MotionKeyFlags.flTKeyFFT_Bit) == (int)MotionKeyFlags.flTKeyFFT_Bit;

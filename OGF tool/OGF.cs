@@ -195,28 +195,28 @@ namespace OGF_tool
         public UserData userdata;
         public Lod lod;
         public MotionRefs motion_refs;
-        public string motions;
+        public OMF motions;
 
         public uint chunk_size;
         public long pos;
 
         public OGF_Children()
         {
-            this.pos = 0;
-            this.chunk_size = 0;
-            this.BrokenType = 0;
-            this.motions = "";
-            this.IsDM = false;
-            this.m_model_type = 0;
-            this.m_version = 0;
-            this.description = null;
-            this.childs = new List<OGF_Child>();
-            this.bones = null;
-            this.ikdata = null;
-            this.userdata = null;
-            this.lod = null;
-            this.motion_refs = null;
-            this.IsCopModel = false;
+            pos = 0;
+            chunk_size = 0;
+            BrokenType = 0;
+            motions = new OMF();
+            IsDM = false;
+            m_model_type = 0;
+            m_version = 0;
+            description = null;
+            childs = new List<OGF_Child>();
+            bones = null;
+            ikdata = null;
+            userdata = null;
+            lod = null;
+            motion_refs = null;
+            IsCopModel = false;
         }
 
         public bool IsProgressive()

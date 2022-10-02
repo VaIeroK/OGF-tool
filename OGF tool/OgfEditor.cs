@@ -23,7 +23,6 @@ namespace OGF_tool
 		public EditorSettings pSettings = null;
 		public OGF_Children OGF_V = null;
 		public byte[] Current_OGF = null;
-		public byte[] Current_OMF = null;
 		public List<byte> file_bytes = new List<byte>();
 		public string FILE_NAME = "";
 		FolderSelectDialog SaveSklDialog = null;
@@ -76,10 +75,12 @@ namespace OGF_tool
 		public OGF_Editor()
 		{
 			InitializeComponent();
-			
-			// Start init settings
 
-			string file_path = AppPath() + "\\Settings.ini";
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+
+            // Start init settings
+
+            string file_path = AppPath() + "\\Settings.ini";
 			bool SettingsExist = File.Exists(file_path);
 			pSettings = new EditorSettings(file_path);
 
@@ -104,7 +105,6 @@ namespace OGF_tool
 			// End init settings
 
 			number_mask = @"^-[0-9.]*$";
-			Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
 			OgfInfo.Enabled = false;
 			SaveMenuParam.Enabled = false;
@@ -124,7 +124,7 @@ namespace OGF_tool
 			if (Environment.GetCommandLineArgs().Length > 1)
 			{
 				Clear(false);
-				if (OpenFile(Environment.GetCommandLineArgs()[1], ref OGF_V, ref Current_OGF, ref Current_OMF))
+				if (OpenFile(Environment.GetCommandLineArgs()[1], ref OGF_V, ref Current_OGF))
 				{
 					FILE_NAME = Environment.GetCommandLineArgs()[1];
 					AfterLoad(true);
@@ -188,9 +188,6 @@ namespace OGF_tool
 				openSkeletonInObjectEditorToolStripMenuItem.Enabled = OGF_V.IsSkeleton();
 				exportToolStripMenuItem.Enabled = true;
 				bonesToolStripMenuItem.Enabled = OGF_V.IsSkeleton();
-				omfToolStripMenuItem.Enabled = Current_OMF != null;
-				sklToolStripMenuItem.Enabled = Current_OMF != null;
-				sklsToolStripMenuItem.Enabled = Current_OMF != null;
 				ChangeLodButton.Enabled = OGF_V.IsProgressive();
 				OgfInfo.Enabled = !OGF_V.IsDM;
 
@@ -213,8 +210,12 @@ namespace OGF_tool
 				CurrentLod = 0;
 			}
 
-			// Textures
-			TabControl.Controls.Add(TexturesPage);
+            omfToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
+            sklToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
+            sklsToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
+
+            // Textures
+            TabControl.Controls.Add(TexturesPage);
 
 			if (OGF_V.IsSkeleton())
 			{
@@ -246,13 +247,14 @@ namespace OGF_tool
 
 				// Motions
 				TabControl.Controls.Add(MotionPage);
-				MotionBox.Text = OGF_V.motions;
+				MotionBox.Text = "";
 
-				if (OGF_V.motions != "")
+				if (OGF_V.motions.data() != null)
 				{
 					AppendOMFButton.Visible = false;
 					MotionBox.Visible = true;
-				}
+                    MotionBox.Text = OGF_V.motions.ToString();
+                }
 				else
 				{
 					MotionBox.Visible = false;
@@ -710,8 +712,8 @@ namespace OGF_tool
 							fileStream.ReadBytes(OGF_V.motion_refs.old_size + 8);
 					}
 
-					if (Current_OMF != null && !refs_created)
-						file_bytes.AddRange(Current_OMF);
+					if (OGF_V.motions.data() != null && !refs_created)
+						file_bytes.AddRange(OGF_V.motions.data());
 				}
 				else
 				{
@@ -723,7 +725,7 @@ namespace OGF_tool
 			WriteFile(filename, file_bytes.ToArray());
 		}
 
-		private bool OpenFile(string filename, ref OGF_Children OGF_C, ref byte[] Cur_OGF, ref byte[] Cur_OMF)
+		private bool OpenFile(string filename, ref OGF_Children OGF_C, ref byte[] Cur_OGF)
 		{
 			var xr_loader = new XRayLoader();
 
@@ -1219,35 +1221,13 @@ skip_ik_data:
 					if (xr_loader.find_chunk((int)OGF.OGF_S_MOTIONS, false, true))
 					{
 						xr_loader.reader.BaseStream.Position -= 8;
-						Cur_OMF = xr_loader.ReadBytes((int)xr_loader.reader.BaseStream.Length - (int)xr_loader.reader.BaseStream.Position);
-					}
-
-					if (xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk((int)OGF.OGF_S_MOTIONS, false, true)))
-					{
-						id = 0;
-
-						while (true)
-						{
-							if (!xr_loader.find_chunk(id)) break;
-
-							Stream temp = xr_loader.reader.BaseStream;
-
-							if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(id, false, true))) break;
-
-							if (id == 0)
-								OGF_C.motions += $"Motions count : {xr_loader.ReadUInt32()}\n";
-							else
-								OGF_C.motions += $"\n{id}. {xr_loader.read_stringZ()}";
-
-							id++;
-							xr_loader.SetStream(temp);
-						}
-					}
+						byte[] OMF = xr_loader.ReadBytes((int)xr_loader.reader.BaseStream.Length - (int)xr_loader.reader.BaseStream.Position);
+						OGF_C.motions.SetData(OMF);
+                    }
 				}
 			}
 			return true;
 		}
-
 
 		private void SaveAsObj(string filename, float lod)
 		{
@@ -1628,7 +1608,7 @@ skip_ik_data:
 			if (res == DialogResult.OK)
 			{
 				Clear(false);
-				if (OpenFile(OpenOGF_DmDialog.FileName, ref OGF_V, ref Current_OGF, ref Current_OMF))
+				if (OpenFile(OpenOGF_DmDialog.FileName, ref OGF_V, ref Current_OGF))
 				{
 					OpenOGF_DmDialog.InitialDirectory = "";
 					FILE_NAME = OpenOGF_DmDialog.FileName;
@@ -1641,43 +1621,7 @@ skip_ik_data:
         {
 			System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
 
-			List<byte> flags = new List<byte>();
-			if (Current_OMF != null)
-			{
-				var xr_loader = new XRayLoader();
-				using (var fileStream = new BinaryReader(new MemoryStream(Current_OMF)))
-				{
-					xr_loader.SetStream(fileStream.BaseStream);
-
-					if (xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk((int)OGF.OGF_S_MOTIONS, false, true)))
-					{
-						int id = 0;
-
-						while (true)
-						{
-							if (!xr_loader.find_chunk(id)) break;
-
-							Stream temp = xr_loader.reader.BaseStream;
-
-							if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(id, false, true))) break;
-
-							if (id == 0)
-								xr_loader.ReadUInt32();
-							else
-							{
-								xr_loader.read_stringZ();
-								xr_loader.ReadUInt32();
-								flags.Add(xr_loader.ReadByte());
-							}
-
-							id++;
-							xr_loader.SetStream(temp);
-						}
-					}
-				}
-			}
-
-			OgfInfo Info = new OgfInfo(OGF_V, IsTextCorrect(MotionRefsBox.Text), CurrentLod, flags);
+			OgfInfo Info = new OgfInfo(OGF_V, IsTextCorrect(MotionRefsBox.Text), CurrentLod);
             Info.ShowDialog();
 
 			if (Info.res && OGF_V.description != null)
@@ -1768,7 +1712,7 @@ skip_ik_data:
 			{
 				using (var fileStream = new FileStream(filename, FileMode.OpenOrCreate))
 				{
-					fileStream.Write(Current_OMF, 0, Current_OMF.Length);
+					fileStream.Write(OGF_V.motions.data(), 0, OGF_V.motions.data().Length);
 				}
 			}
 			else if (format == 6)
@@ -1852,14 +1796,13 @@ skip_ik_data:
 
         private void CreateMotionRefsButton_Click(object sender, EventArgs e)
         {
-			if (Current_OMF == null || Current_OMF != null && MessageBox.Show("New motion refs chunk will remove built-in motions, continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+			if (OGF_V.motions.data() == null || OGF_V.motions.data() != null && MessageBox.Show("New motion refs chunk will remove built-in motions, continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 			{
 				// Чистим все связанное со встроенными анимами
 				MotionBox.Clear();
 				MotionBox.Visible = false;
-				Current_OMF = null;
 				AppendOMFButton.Visible = true;
-				OGF_V.motions = "";
+				OGF_V.motions.SetData(null);
 
 				// Обновляем тип модели
 				UpdateModelType();
@@ -1889,7 +1832,7 @@ skip_ik_data:
 
 			string cur_fname = FILE_NAME;
 			Clear(false);
-			if (OpenFile(cur_fname, ref OGF_V, ref Current_OGF, ref Current_OMF))
+			if (OpenFile(cur_fname, ref OGF_V, ref Current_OGF))
 			{
 				FILE_NAME = cur_fname;
 				AfterLoad(true);
@@ -1966,48 +1909,19 @@ skip_ik_data:
 
             byte[] OpenedOmf = File.ReadAllBytes(OpenOMFDialog.FileName);
 
-			var xr_loader = new XRayLoader();
-
-			using (var r = new BinaryReader(new MemoryStream(OpenedOmf)))
+			if (OGF_V.motions.SetData(OpenedOmf))
 			{
-				xr_loader.SetStream(r.BaseStream);
+                // Апдейтим визуал встроенных анимаций
+                AppendOMFButton.Visible = false;
+                MotionBox.Visible = true;
 
-				if (xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk((int)OGF.OGF_S_MOTIONS, false, true)))
-				{
-					// Апдейтим визуал встроенных анимаций
-					AppendOMFButton.Visible = false;
-					MotionBox.Visible = true;
+                // Чистим встроенные рефы, интерфейс почистится сам при активации вкладки
+                MotionRefsBox.Clear();
+                if (OGF_V.motion_refs != null)
+                    OGF_V.motion_refs.refs.Clear();
 
-					// Чистим встроенные рефы, интерфейс почистится сам при активации вкладки
-					MotionRefsBox.Clear();
-					if (OGF_V.motion_refs != null)
-						OGF_V.motion_refs.refs.Clear();
-
-					Current_OMF = OpenedOmf;
-					OGF_V.motions = "";
-
-					int id = 0;
-
-					while (true)
-					{
-						if (!xr_loader.find_chunk(id)) break;
-
-						Stream temp = xr_loader.reader.BaseStream;
-
-						if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(id, false, true))) break;
-
-						if (id == 0)
-							OGF_V.motions += $"Motions count : {xr_loader.ReadUInt32()}\n";
-						else
-							OGF_V.motions += $"\n{id}. {xr_loader.read_stringZ()}";
-
-						id++;
-						xr_loader.SetStream(temp);
-					}
-
-					MotionBox.Text = OGF_V.motions;
-				}
-			}
+                MotionBox.Text = OGF_V.motions.ToString();
+            }
 
 			UpdateModelType();
 			UpdateModelFormat();
@@ -2017,9 +1931,8 @@ skip_ik_data:
         {
 			MotionBox.Visible = false;
 			AppendOMFButton.Visible = true;
-			Current_OMF = null;
-			MotionBox.Clear();
-			OGF_V.motions = "";
+			OGF_V.motions.SetData(null);
+            MotionBox.Clear();
 			UpdateModelType();
 			UpdateModelFormat();
 		}
@@ -2029,82 +1942,75 @@ skip_ik_data:
 			OpenOGFDialog.FileName = "";
 			if (OpenOGFDialog.ShowDialog() == DialogResult.OK)
 			{
-				bool UpdateUi = false;
-
 				OGF_Children SecondOgf = null;
 				byte[] SecondOgfByte = null;
-				byte[] SecondOmfByte = null;
-				OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte, ref SecondOmfByte);
+				OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
 
-				if (OGF_V.childs.Count == SecondOgf.childs.Count && MessageBox.Show("Import textures and shaders path?\nThey may have different positions", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				ImportParams Params = new ImportParams(OGF_V, SecondOgf);
+
+                Params.ShowDialog();
+
+                if (Params.Textures)
 				{
 					for (int i = 0; i < OGF_V.childs.Count; i++)
 					{
 						OGF_V.childs[i].m_texture = SecondOgf.childs[i].m_texture;
 						OGF_V.childs[i].m_shader = SecondOgf.childs[i].m_shader;
 					}
-					UpdateUi = true;
 				}
 
-				if (OGF_V.IsSkeleton())
+				if (Params.Userdata)
 				{
-					if (SecondOgf.userdata != null)
+					if (OGF_V.userdata == null)
+						OGF_V.userdata = new UserData();
+
+					OGF_V.userdata.userdata = SecondOgf.userdata.userdata;
+				}
+				else if (Params.Remove && OGF_V.userdata != null)
+					OGF_V.userdata.userdata = "";
+
+				if (Params.Lod)
+				{
+					if (OGF_V.lod == null)
+						OGF_V.lod = new Lod();
+
+					OGF_V.lod.lod_path = SecondOgf.lod.lod_path;
+				}
+                else if (Params.Remove && OGF_V.lod != null)
+                    OGF_V.lod.lod_path = "";
+
+                if (Params.MotionRefs)
+				{
+					if (OGF_V.motion_refs == null)
+						OGF_V.motion_refs = new MotionRefs();
+
+					OGF_V.motion_refs.refs = SecondOgf.motion_refs.refs;
+				}
+                else if (Params.Remove && OGF_V.motion_refs != null)
+                    OGF_V.motion_refs.refs.Clear();
+
+				if (Params.Motions)
+				{
+					OGF_V.motions.SetData(SecondOgf.motions.data());
+
+                    if (OGF_V.motion_refs != null)
+                        OGF_V.motion_refs.refs.Clear();
+				}
+                else if (Params.Remove)
+                    OGF_V.motions.SetData(null);
+
+                if (Params.Materials)
+				{
+					for (int i = 0; i < OGF_V.ikdata.materials.Count; i++)
 					{
-						if (OGF_V.userdata == null)
-							OGF_V.userdata = new UserData();
-						OGF_V.userdata.userdata = SecondOgf.userdata.userdata;
-
-						UpdateUi = true;
-					}
-					else
-						OGF_V.userdata = null;
-
-					if (SecondOgf.lod != null)
-					{
-						if (OGF_V.lod == null)
-							OGF_V.lod = new Lod();
-						OGF_V.lod.lod_path = SecondOgf.lod.lod_path;
-
-						UpdateUi = true;
-					}
-					else
-						OGF_V.lod = null;
-
-					if (SecondOgf.motion_refs != null)
-					{
-						if (OGF_V.motion_refs == null)
-							OGF_V.motion_refs = new MotionRefs();
-
-						OGF_V.motion_refs.refs = SecondOgf.motion_refs.refs;
-
-						UpdateUi = true;
-					}
-					else
-						OGF_V.motion_refs = null;
-
-					if (SecondOmfByte != null)
-					{
-						if (!IsTextCorrect(MotionRefsBox.Text) && (OGF_V.motion_refs == null || OGF_V.motion_refs.refs.Count() == 0) || (IsTextCorrect(MotionRefsBox.Text) || OGF_V.motion_refs != null && OGF_V.motion_refs.refs.Count() > 0) && MessageBox.Show("Build-in motions will remove motion refs, continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-						{
-							Current_OMF = SecondOmfByte;
-							UpdateUi = true;
-						}
-					}
-
-					if (OGF_V.ikdata.materials.Count == SecondOgf.ikdata.materials.Count)
-					{
-						for (int i = 0; i < OGF_V.ikdata.materials.Count; i++)
-						{
-							OGF_V.ikdata.materials[i] = SecondOgf.ikdata.materials[i];
-							OGF_V.ikdata.mass[i] = SecondOgf.ikdata.mass[i];
-						}
-						UpdateUi = true;
+						OGF_V.ikdata.materials[i] = SecondOgf.ikdata.materials[i];
+						OGF_V.ikdata.mass[i] = SecondOgf.ikdata.mass[i];
 					}
 				}
 
-				if (UpdateUi)
+				if (Params.Valid())
 				{
-					Clear(true);
+                    Clear(true);
 					AfterLoad(false);
 					AutoClosingMessageBox.Show("OGF Params changed!", "", 1000, MessageBoxIcon.Information);
 				}
@@ -2117,7 +2023,7 @@ skip_ik_data:
 
 		private void ToolsClick(object sender, EventArgs e)
 		{
-			motionToolsToolStripMenuItem.Enabled = Current_OMF != null;
+			motionToolsToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
 		}
 
 		private void ChangeModelFormat(object sender, EventArgs e)
@@ -2162,48 +2068,20 @@ skip_ik_data:
 							ch.SetLinks(1);
 					}
 
-                    if (Current_OMF != null)
+                    if (OGF_V.motions.Anims != null)
 					{
-						var xr_loader = new XRayLoader();
-						using (var fileStream = new BinaryReader(new MemoryStream(Current_OMF)))
+						foreach (var Anim in OGF_V.motions.Anims)
 						{
-							xr_loader.SetStream(fileStream.BaseStream);
+                            bool key16bit = (Anim.flags & (int)MotionKeyFlags.flTKey16IsBit) == (int)MotionKeyFlags.flTKey16IsBit;
+                            bool keynocompressbit = (Anim.flags & (int)MotionKeyFlags.flTKeyFFT_Bit) == (int)MotionKeyFlags.flTKeyFFT_Bit;
 
-							if (xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk((int)OGF.OGF_S_MOTIONS, false, true)))
-							{
-								int id = 0;
-
-								while (true)
-								{
-									if (!xr_loader.find_chunk(id)) break;
-
-									Stream temp = xr_loader.reader.BaseStream;
-
-									if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(id, false, true))) break;
-
-									if (id == 0)
-										xr_loader.ReadUInt32();
-									else
-									{
-										xr_loader.read_stringZ();
-										xr_loader.ReadUInt32();
-										byte flags = xr_loader.ReadByte();
-
-										bool key16bit = (flags & (int)MotionKeyFlags.flTKey16IsBit) == (int)MotionKeyFlags.flTKey16IsBit;
-										bool keynocompressbit = (flags & (int)MotionKeyFlags.flTKeyFFT_Bit) == (int)MotionKeyFlags.flTKeyFFT_Bit;
-
-										if (key16bit || keynocompressbit)
-                                        {
-											MessageBox.Show("Build-in motions are in " + (keynocompressbit ? "no compression" : "16 bit compression") + " format, not supported in SoC.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-											break;
-										}
-									}
-
-									id++;
-									xr_loader.SetStream(temp);
-								}
-							}
-						}
+                            if (key16bit || keynocompressbit)
+                            {
+								if (MessageBox.Show("Build-in motions are in " + (keynocompressbit ? "no compression" : "16 bit compression") + " format, not supported in SoC. Delete motions?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+									OGF_V.motions.SetData(null);
+                                break;
+                            }
+                        }
 					}
 
 					if (OGF_V.motion_refs != null)
@@ -2226,15 +2104,15 @@ skip_ik_data:
 
 			if (OGF_V.bones == null)
 				OGF_V.m_model_type = OGF_V.Static();
-			else if (Current_OMF == null && !IsTextCorrect(MotionRefsBox.Text))
+			else if (OGF_V.motions.data() == null && !IsTextCorrect(MotionRefsBox.Text))
 				OGF_V.m_model_type = OGF_V.Skeleton();
 			else
 				OGF_V.m_model_type = OGF_V.Animated();
 
 			// Апдейтим экспорт аним тут, т.к. при любом изменении омф вызывается эта функция
-			omfToolStripMenuItem.Enabled = Current_OMF != null;
-			sklToolStripMenuItem.Enabled = Current_OMF != null;
-			sklsToolStripMenuItem.Enabled = Current_OMF != null;
+			omfToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
+			sklToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
+			sklsToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
 		}
 
 		private void UpdateModelFormat()
@@ -2270,7 +2148,7 @@ skip_ik_data:
 
 			using (var fileStream = new FileStream(Filename, FileMode.OpenOrCreate))
 			{
-				fileStream.Write(Current_OMF, 0, Current_OMF.Length);
+				fileStream.Write(OGF_V.motions.data(), 0, OGF_V.motions.data().Length);
 			}
 
 			Process proc = new Process();
@@ -2541,7 +2419,7 @@ skip_ik_data:
 				if (Path.GetExtension(file) == ".ogf" || Path.GetExtension(file) == ".dm")
 				{
 					Clear(false);
-					if (OpenFile(file, ref OGF_V, ref Current_OGF, ref Current_OMF))
+					if (OpenFile(file, ref OGF_V, ref Current_OGF))
 					{
 						FILE_NAME = file;
 						AfterLoad(true);
