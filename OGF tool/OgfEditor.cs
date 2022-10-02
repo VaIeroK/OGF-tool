@@ -1975,6 +1975,8 @@ skip_ik_data:
 			OpenOGFDialog.FileName = "";
 			if (OpenOGFDialog.ShowDialog() == DialogResult.OK)
 			{
+				bool Update = false;
+
 				OGF_Children SecondOgf = null;
 				byte[] SecondOgfByte = null;
 				OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
@@ -1990,7 +1992,9 @@ skip_ik_data:
 						OGF_V.childs[i].m_texture = SecondOgf.childs[i].m_texture;
 						OGF_V.childs[i].m_shader = SecondOgf.childs[i].m_shader;
 					}
-				}
+
+					Update = true;
+                }
 
 				if (Params.Userdata)
 				{
@@ -1998,9 +2002,14 @@ skip_ik_data:
 						OGF_V.userdata = new UserData();
 
 					OGF_V.userdata.userdata = SecondOgf.userdata.userdata;
+
+					Update = true;
 				}
 				else if (Params.Remove && OGF_V.userdata != null)
+				{
 					OGF_V.userdata.userdata = "";
+                    Update = true;
+                }
 
 				if (Params.Lod)
 				{
@@ -2008,29 +2017,44 @@ skip_ik_data:
 						OGF_V.lod = new Lod();
 
 					OGF_V.lod.lod_path = SecondOgf.lod.lod_path;
-				}
-                else if (Params.Remove && OGF_V.lod != null)
-                    OGF_V.lod.lod_path = "";
 
-                if (Params.MotionRefs)
+					Update = true;
+				}
+				else if (Params.Remove && OGF_V.lod != null)
+				{
+					OGF_V.lod.lod_path = "";
+                    Update = true;
+                }
+
+				if (Params.MotionRefs)
 				{
 					if (OGF_V.motion_refs == null)
 						OGF_V.motion_refs = new MotionRefs();
 
 					OGF_V.motion_refs.refs = SecondOgf.motion_refs.refs;
+
+					Update = true;
 				}
-                else if (Params.Remove && OGF_V.motion_refs != null)
-                    OGF_V.motion_refs.refs.Clear();
+				else if (Params.Remove && OGF_V.motion_refs != null)
+				{
+					OGF_V.motion_refs.refs.Clear();
+					Update = true;
+				}
 
 				if (Params.Motions)
 				{
 					OGF_V.motions.SetData(SecondOgf.motions.data());
 
-                    if (OGF_V.motion_refs != null)
-                        OGF_V.motion_refs.refs.Clear();
+					if (OGF_V.motion_refs != null)
+						OGF_V.motion_refs.refs.Clear();
+
+					Update = true;
 				}
-                else if (Params.Remove)
-                    OGF_V.motions.SetData(null);
+				else if (Params.Remove)
+				{
+					OGF_V.motions.SetData(null);
+                    Update = true;
+                }
 
                 if (Params.Materials)
 				{
@@ -2039,9 +2063,11 @@ skip_ik_data:
 						OGF_V.ikdata.materials[i] = SecondOgf.ikdata.materials[i];
 						OGF_V.ikdata.mass[i] = SecondOgf.ikdata.mass[i];
 					}
-				}
 
-				if (Params.Valid())
+                    Update = true;
+                }
+
+				if (Update)
 				{
                     Clear(true);
 					AfterLoad(false);

@@ -53,10 +53,5 @@ namespace OGF_tool
 
             Remove = RemoveChbx.Checked;
         }
-
-        public bool Valid()
-        {
-            return Textures || MotionRefs || Motions || Userdata || Lod || Materials;
-        }
     }
 }
