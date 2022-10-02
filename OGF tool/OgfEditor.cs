@@ -74,9 +74,10 @@ namespace OGF_tool
 
 		public OGF_Editor()
 		{
-			InitializeComponent();
-
+            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+
+            InitializeComponent();
 
             // Start init settings
 
@@ -109,8 +110,7 @@ namespace OGF_tool
 			OgfInfo.Enabled = false;
 			SaveMenuParam.Enabled = false;
 			saveAsToolStripMenuItem.Enabled = false;
-			motionToolsToolStripMenuItem.Enabled = false;
-			openSkeletonInObjectEditorToolStripMenuItem.Enabled = false;
+			OpenInObjectEditor.Enabled = false;
 			ToolsMenuItem.Enabled = false;
 			exportToolStripMenuItem.Enabled = false;
 			LabelBroken.Visible = false;
@@ -185,7 +185,7 @@ namespace OGF_tool
                 SaveMenuParam.Enabled = true;
 				saveAsToolStripMenuItem.Enabled = true;
 				ToolsMenuItem.Enabled = !OGF_V.IsDM;
-				openSkeletonInObjectEditorToolStripMenuItem.Enabled = OGF_V.IsSkeleton();
+				OpenInObjectEditor.Enabled = true;
 				exportToolStripMenuItem.Enabled = true;
 				bonesToolStripMenuItem.Enabled = OGF_V.IsSkeleton();
 				ChangeLodButton.Enabled = OGF_V.IsProgressive();
@@ -1896,7 +1896,46 @@ skip_ik_data:
             }
 		}
 
-		private void AppendOMFButton_Click(object sender, EventArgs e)
+        private void EditInOmfEditor(object sender, EventArgs e)
+        {
+            string Filename = TempFolder() + $"\\{StatusFile.Text}_temp.omf";
+            string OmfEditor = pSettings.Load("OmfEditorPath");
+
+            if (!File.Exists(OmfEditor))
+            {
+                MessageBox.Show("Please, set OMF Editor path!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (var fileStream = new FileStream(Filename, FileMode.OpenOrCreate))
+            {
+                fileStream.Write(OGF_V.motions.data(), 0, OGF_V.motions.data().Length);
+            }
+
+            Process proc = new Process();
+            proc.StartInfo.FileName = OmfEditor;
+            proc.StartInfo.Arguments += $"\"{Filename}\"";
+            proc.Start();
+            proc.WaitForExit();
+
+            OpenOMFDialog.FileName = Filename;
+            AppendMotion(null, null);
+            OpenOMFDialog.FileName = "";
+
+            File.Delete(Filename);
+        }
+
+        private void DeleteOmf(object sender, EventArgs e)
+        {
+            MotionBox.Visible = false;
+            AppendOMFButton.Visible = true;
+            OGF_V.motions.SetData(null);
+            MotionBox.Clear();
+            UpdateModelType();
+            UpdateModelFormat();
+        }
+
+        private void AppendOMFButton_Click(object sender, EventArgs e)
         {
 			if (!IsTextCorrect(MotionRefsBox.Text) && (OGF_V.motion_refs == null || OGF_V.motion_refs.refs.Count() == 0) || (IsTextCorrect(MotionRefsBox.Text) || OGF_V.motion_refs != null && OGF_V.motion_refs.refs.Count() > 0) && MessageBox.Show("Build-in motions will remove motion refs, continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 				OpenOMFDialog.ShowDialog();
@@ -1923,16 +1962,6 @@ skip_ik_data:
                 MotionBox.Text = OGF_V.motions.ToString();
             }
 
-			UpdateModelType();
-			UpdateModelFormat();
-		}
-
-        private void deleteChunkToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-			MotionBox.Visible = false;
-			AppendOMFButton.Visible = true;
-			OGF_V.motions.SetData(null);
-            MotionBox.Clear();
 			UpdateModelType();
 			UpdateModelFormat();
 		}
@@ -2019,11 +2048,6 @@ skip_ik_data:
 					AutoClosingMessageBox.Show("OGF Params don't changed!", "", 1000, MessageBoxIcon.Warning);
 				}
 			}
-		}
-
-		private void ToolsClick(object sender, EventArgs e)
-		{
-			motionToolsToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
 		}
 
 		private void ChangeModelFormat(object sender, EventArgs e)
@@ -2135,35 +2159,6 @@ skip_ik_data:
 			CurrentFormat.Text = (OGF_V.IsCopModel ? strings.CoPFormat : strings.SoCFormat);
 		}
 
-		private void editImOMFEditorToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			string Filename = TempFolder() + $"\\{StatusFile.Text}_temp.omf";
-			string OmfEditor = pSettings.Load("OmfEditorPath");
-
-			if (!File.Exists(OmfEditor))
-            {
-				MessageBox.Show("Please, set OMF Editor path!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
-            }
-
-			using (var fileStream = new FileStream(Filename, FileMode.OpenOrCreate))
-			{
-				fileStream.Write(OGF_V.motions.data(), 0, OGF_V.motions.data().Length);
-			}
-
-			Process proc = new Process();
-			proc.StartInfo.FileName = OmfEditor;
-			proc.StartInfo.Arguments += $"\"{Filename}\"";
-			proc.Start();
-			proc.WaitForExit();
-
-			OpenOMFDialog.FileName = Filename;
-			AppendMotion(null, null);
-			OpenOMFDialog.FileName = "";
-
-			File.Delete(Filename);
-		}
-
 		private void openSkeletonInObjectEditorToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			string Filename = TempFolder() + $"\\{StatusFile.Text}_temp.ogf";
@@ -2177,6 +2172,9 @@ skip_ik_data:
 				MessageBox.Show("Please, set Object Editor path!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
+
+			if (File.Exists(Filename))
+				File.Delete(Filename);
 
 			File.Copy(FILE_NAME, Filename);
 			CopyParams();
@@ -3143,5 +3141,12 @@ skip_ik_data:
 				PrFolder.Start();
 			}
 		}
+
+		private void MotionBoxKeyPress(object sender, MouseEventArgs e)
+		{
+            if (e.Button != MouseButtons.Right) return;
+
+            MotionsContextStrip.Show(Cursor.Position);
+        }
 	}
 }

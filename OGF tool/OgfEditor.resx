@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="OpenOGFDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
+    <value>181, 17</value>
   </metadata>
   <data name="OpenOGFDialog.Filter" xml:space="preserve">
     <value>OGF file|*.ogf</value>
@@ -130,9 +130,301 @@
   <data name="TabControl.Appearance" type="System.Windows.Forms.TabAppearance, System.Windows.Forms">
     <value>Buttons</value>
   </data>
+  <data name="&gt;&gt;TexturesPage.Name" xml:space="preserve">
+    <value>TexturesPage</value>
+  </data>
+  <data name="&gt;&gt;TexturesPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TexturesPage.Parent" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;TexturesPage.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;UserDataPage.Name" xml:space="preserve">
+    <value>UserDataPage</value>
+  </data>
+  <data name="&gt;&gt;UserDataPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;UserDataPage.Parent" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;UserDataPage.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;MotionRefsPage.Name" xml:space="preserve">
+    <value>MotionRefsPage</value>
+  </data>
+  <data name="&gt;&gt;MotionRefsPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MotionRefsPage.Parent" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;MotionRefsPage.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;MotionPage.Name" xml:space="preserve">
+    <value>MotionPage</value>
+  </data>
+  <data name="&gt;&gt;MotionPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MotionPage.Parent" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;MotionPage.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;BoneNamesPage.Name" xml:space="preserve">
+    <value>BoneNamesPage</value>
+  </data>
+  <data name="&gt;&gt;BoneNamesPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BoneNamesPage.Parent" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;BoneNamesPage.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsPage.Name" xml:space="preserve">
+    <value>BoneParamsPage</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsPage.Parent" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsPage.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;LodPage.Name" xml:space="preserve">
+    <value>LodPage</value>
+  </data>
+  <data name="&gt;&gt;LodPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LodPage.Parent" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;LodPage.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;ViewPage.Name" xml:space="preserve">
+    <value>ViewPage</value>
+  </data>
+  <data name="&gt;&gt;ViewPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ViewPage.Parent" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;ViewPage.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="TabControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 27</value>
+  </data>
+  <data name="TabControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>496, 310</value>
+  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="TabControl.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;TabControl.Name" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;TabControl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TabControl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;TabControl.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
   <data name="TexturesPage.AutoScroll" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="&gt;&gt;TexturesGropuBox.Name" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;TexturesGropuBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TexturesGropuBox.Parent" xml:space="preserve">
+    <value>TexturesPage</value>
+  </data>
+  <data name="&gt;&gt;TexturesGropuBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="TexturesPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 25</value>
+  </data>
+  <data name="TexturesPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="TexturesPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="TexturesPage.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="TexturesPage.Text" xml:space="preserve">
+    <value>Textures</value>
+  </data>
+  <data name="&gt;&gt;TexturesPage.Name" xml:space="preserve">
+    <value>TexturesPage</value>
+  </data>
+  <data name="&gt;&gt;TexturesPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TexturesPage.Parent" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;TexturesPage.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;LodLabel.Name" xml:space="preserve">
+    <value>LodLabel</value>
+  </data>
+  <data name="&gt;&gt;LodLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LodLabel.Parent" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;LodLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;LinksLabel.Name" xml:space="preserve">
+    <value>LinksLabel</value>
+  </data>
+  <data name="&gt;&gt;LinksLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LinksLabel.Parent" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;LinksLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;DeleteMesh.Name" xml:space="preserve">
+    <value>DeleteMesh</value>
+  </data>
+  <data name="&gt;&gt;DeleteMesh.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;DeleteMesh.Parent" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;DeleteMesh.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;VertsLabel.Name" xml:space="preserve">
+    <value>VertsLabel</value>
+  </data>
+  <data name="&gt;&gt;VertsLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;VertsLabel.Parent" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;VertsLabel.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;FaceLabel.Name" xml:space="preserve">
+    <value>FaceLabel</value>
+  </data>
+  <data name="&gt;&gt;FaceLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;FaceLabel.Parent" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;FaceLabel.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;ShaderNameLabelEx.Name" xml:space="preserve">
+    <value>ShaderNameLabelEx</value>
+  </data>
+  <data name="&gt;&gt;ShaderNameLabelEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ShaderNameLabelEx.Parent" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;ShaderNameLabelEx.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;TexturesPathLabelEx.Name" xml:space="preserve">
+    <value>TexturesPathLabelEx</value>
+  </data>
+  <data name="&gt;&gt;TexturesPathLabelEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TexturesPathLabelEx.Parent" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;TexturesPathLabelEx.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;ShaderTextBoxEx.Name" xml:space="preserve">
+    <value>ShaderTextBoxEx</value>
+  </data>
+  <data name="&gt;&gt;ShaderTextBoxEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ShaderTextBoxEx.Parent" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;ShaderTextBoxEx.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;TexturesTextBoxEx.Name" xml:space="preserve">
+    <value>TexturesTextBoxEx</value>
+  </data>
+  <data name="&gt;&gt;TexturesTextBoxEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TexturesTextBoxEx.Parent" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;TexturesTextBoxEx.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="TexturesGropuBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="TexturesGropuBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="TexturesGropuBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 127</value>
+  </data>
+  <data name="TexturesGropuBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="TexturesGropuBox.Text" xml:space="preserve">
+    <value>Mesh:</value>
+  </data>
+  <data name="&gt;&gt;TexturesGropuBox.Name" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;TexturesGropuBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TexturesGropuBox.Parent" xml:space="preserve">
+    <value>TexturesPage</value>
+  </data>
+  <data name="&gt;&gt;TexturesGropuBox.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="LodLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -140,7 +432,6 @@
   <data name="LodLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="LodLabel.Location" type="System.Drawing.Point, System.Drawing">
     <value>314, 104</value>
   </data>
@@ -393,59 +684,56 @@
   <data name="&gt;&gt;TexturesTextBoxEx.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
-  <data name="TexturesGropuBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+  <data name="&gt;&gt;CreateUserdataButton.Name" xml:space="preserve">
+    <value>CreateUserdataButton</value>
   </data>
-  <data name="TexturesGropuBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="&gt;&gt;CreateUserdataButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="TexturesGropuBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 127</value>
+  <data name="&gt;&gt;CreateUserdataButton.Parent" xml:space="preserve">
+    <value>UserDataPage</value>
   </data>
-  <data name="TexturesGropuBox.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;CreateUserdataButton.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="TexturesGropuBox.Text" xml:space="preserve">
-    <value>Mesh:</value>
+  <data name="&gt;&gt;UserDataBox.Name" xml:space="preserve">
+    <value>UserDataBox</value>
   </data>
-  <data name="&gt;&gt;TexturesGropuBox.Name" xml:space="preserve">
-    <value>TexturesGropuBox</value>
+  <data name="&gt;&gt;UserDataBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;TexturesGropuBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;UserDataBox.Parent" xml:space="preserve">
+    <value>UserDataPage</value>
   </data>
-  <data name="&gt;&gt;TexturesGropuBox.Parent" xml:space="preserve">
-    <value>TexturesPage</value>
+  <data name="&gt;&gt;UserDataBox.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
-  <data name="&gt;&gt;TexturesGropuBox.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="TexturesPage.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="UserDataPage.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 25</value>
   </data>
-  <data name="TexturesPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="UserDataPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
-  <data name="TexturesPage.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="UserDataPage.Size" type="System.Drawing.Size, System.Drawing">
     <value>488, 281</value>
   </data>
-  <data name="TexturesPage.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="UserDataPage.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
-  <data name="TexturesPage.Text" xml:space="preserve">
-    <value>Textures</value>
+  <data name="UserDataPage.Text" xml:space="preserve">
+    <value>UserData</value>
   </data>
-  <data name="&gt;&gt;TexturesPage.Name" xml:space="preserve">
-    <value>TexturesPage</value>
+  <data name="&gt;&gt;UserDataPage.Name" xml:space="preserve">
+    <value>UserDataPage</value>
   </data>
-  <data name="&gt;&gt;TexturesPage.Type" xml:space="preserve">
+  <data name="&gt;&gt;UserDataPage.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;TexturesPage.Parent" xml:space="preserve">
+  <data name="&gt;&gt;UserDataPage.Parent" xml:space="preserve">
     <value>TabControl</value>
   </data>
-  <data name="&gt;&gt;TexturesPage.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;UserDataPage.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="CreateUserdataButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -501,32 +789,56 @@
   <data name="&gt;&gt;UserDataBox.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="UserDataPage.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="&gt;&gt;CreateMotionRefsButton.Name" xml:space="preserve">
+    <value>CreateMotionRefsButton</value>
+  </data>
+  <data name="&gt;&gt;CreateMotionRefsButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CreateMotionRefsButton.Parent" xml:space="preserve">
+    <value>MotionRefsPage</value>
+  </data>
+  <data name="&gt;&gt;CreateMotionRefsButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;MotionRefsBox.Name" xml:space="preserve">
+    <value>MotionRefsBox</value>
+  </data>
+  <data name="&gt;&gt;MotionRefsBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MotionRefsBox.Parent" xml:space="preserve">
+    <value>MotionRefsPage</value>
+  </data>
+  <data name="&gt;&gt;MotionRefsBox.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="MotionRefsPage.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 25</value>
   </data>
-  <data name="UserDataPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="MotionRefsPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
-  <data name="UserDataPage.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="MotionRefsPage.Size" type="System.Drawing.Size, System.Drawing">
     <value>488, 281</value>
   </data>
-  <data name="UserDataPage.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+  <data name="MotionRefsPage.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
-  <data name="UserDataPage.Text" xml:space="preserve">
-    <value>UserData</value>
+  <data name="MotionRefsPage.Text" xml:space="preserve">
+    <value>Motion Refs</value>
   </data>
-  <data name="&gt;&gt;UserDataPage.Name" xml:space="preserve">
-    <value>UserDataPage</value>
+  <data name="&gt;&gt;MotionRefsPage.Name" xml:space="preserve">
+    <value>MotionRefsPage</value>
   </data>
-  <data name="&gt;&gt;UserDataPage.Type" xml:space="preserve">
+  <data name="&gt;&gt;MotionRefsPage.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;UserDataPage.Parent" xml:space="preserve">
+  <data name="&gt;&gt;MotionRefsPage.Parent" xml:space="preserve">
     <value>TabControl</value>
   </data>
-  <data name="&gt;&gt;UserDataPage.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;MotionRefsPage.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="CreateMotionRefsButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -585,32 +897,56 @@
   <data name="&gt;&gt;MotionRefsBox.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="MotionRefsPage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 25</value>
+  <data name="&gt;&gt;AppendOMFButton.Name" xml:space="preserve">
+    <value>AppendOMFButton</value>
   </data>
-  <data name="MotionRefsPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
+  <data name="&gt;&gt;AppendOMFButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="MotionRefsPage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
+  <data name="&gt;&gt;AppendOMFButton.Parent" xml:space="preserve">
+    <value>MotionPage</value>
   </data>
-  <data name="MotionRefsPage.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;AppendOMFButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;MotionBox.Name" xml:space="preserve">
+    <value>MotionBox</value>
+  </data>
+  <data name="&gt;&gt;MotionBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MotionBox.Parent" xml:space="preserve">
+    <value>MotionPage</value>
+  </data>
+  <data name="&gt;&gt;MotionBox.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="MotionRefsPage.Text" xml:space="preserve">
-    <value>Motion Refs</value>
+  <data name="MotionPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 25</value>
   </data>
-  <data name="&gt;&gt;MotionRefsPage.Name" xml:space="preserve">
-    <value>MotionRefsPage</value>
+  <data name="MotionPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
   </data>
-  <data name="&gt;&gt;MotionRefsPage.Type" xml:space="preserve">
+  <data name="MotionPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="MotionPage.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="MotionPage.Text" xml:space="preserve">
+    <value>Motions</value>
+  </data>
+  <data name="&gt;&gt;MotionPage.Name" xml:space="preserve">
+    <value>MotionPage</value>
+  </data>
+  <data name="&gt;&gt;MotionPage.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;MotionRefsPage.Parent" xml:space="preserve">
+  <data name="&gt;&gt;MotionPage.Parent" xml:space="preserve">
     <value>TabControl</value>
   </data>
-  <data name="&gt;&gt;MotionRefsPage.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="&gt;&gt;MotionPage.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="AppendOMFButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -666,51 +1002,6 @@
   <data name="&gt;&gt;MotionBox.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="MotionPage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 25</value>
-  </data>
-  <data name="MotionPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="MotionPage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="MotionPage.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="MotionPage.Text" xml:space="preserve">
-    <value>Motions</value>
-  </data>
-  <data name="&gt;&gt;MotionPage.Name" xml:space="preserve">
-    <value>MotionPage</value>
-  </data>
-  <data name="&gt;&gt;MotionPage.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;MotionPage.Parent" xml:space="preserve">
-    <value>TabControl</value>
-  </data>
-  <data name="&gt;&gt;MotionPage.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="BoneNamesBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="BoneNamesBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="BoneNamesBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="BoneNamesBox.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="BoneNamesBox.Text" xml:space="preserve">
-    <value />
-  </data>
-  <data name="BoneNamesBox.WordWrap" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
   <data name="&gt;&gt;BoneNamesBox.Name" xml:space="preserve">
     <value>BoneNamesBox</value>
   </data>
@@ -750,8 +1041,239 @@
   <data name="&gt;&gt;BoneNamesPage.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="BoneNamesBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="BoneNamesBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="BoneNamesBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="BoneNamesBox.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="BoneNamesBox.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="BoneNamesBox.WordWrap" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;BoneNamesBox.Name" xml:space="preserve">
+    <value>BoneNamesBox</value>
+  </data>
+  <data name="&gt;&gt;BoneNamesBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BoneNamesBox.Parent" xml:space="preserve">
+    <value>BoneNamesPage</value>
+  </data>
+  <data name="&gt;&gt;BoneNamesBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="BoneParamsPage.AutoScroll" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsGroupBox.Name" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsGroupBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsGroupBox.Parent" xml:space="preserve">
+    <value>BoneParamsPage</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsGroupBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="BoneParamsPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 25</value>
+  </data>
+  <data name="BoneParamsPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="BoneParamsPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="BoneParamsPage.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="BoneParamsPage.Text" xml:space="preserve">
+    <value>Bone Params</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsPage.Name" xml:space="preserve">
+    <value>BoneParamsPage</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsPage.Parent" xml:space="preserve">
+    <value>TabControl</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsPage.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;RotationLabelEx.Name" xml:space="preserve">
+    <value>RotationLabelEx</value>
+  </data>
+  <data name="&gt;&gt;RotationLabelEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RotationLabelEx.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;RotationLabelEx.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;PositionLabelEx.Name" xml:space="preserve">
+    <value>PositionLabelEx</value>
+  </data>
+  <data name="&gt;&gt;PositionLabelEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;PositionLabelEx.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;PositionLabelEx.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassLabelEx.Name" xml:space="preserve">
+    <value>CenterOfMassLabelEx</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassLabelEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassLabelEx.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassLabelEx.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;MassLabelEx.Name" xml:space="preserve">
+    <value>MassLabelEx</value>
+  </data>
+  <data name="&gt;&gt;MassLabelEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MassLabelEx.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;MassLabelEx.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;BonesParamsPanel.Name" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;BonesParamsPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BonesParamsPanel.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;BonesParamsPanel.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="BonesParamsPanel.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="RotationZTextBox" Row="3" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="RotationYTextBox" Row="3" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="RotationXTextBox" Row="3" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="PositionZTextBox" Row="2" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="PositionYTextBox" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="PositionXTextBox" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="CenterOfMassZTextBox" Row="1" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="CenterOfMassYTextBox" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="CenterOfMassXTextBox" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="MassTextBoxEx" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,33,33333,Percent,33,33334,Percent,33,33334" /&gt;&lt;Rows Styles="Percent,25,Percent,25,Percent,25,Percent,25" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="&gt;&gt;MaterialLabelEx.Name" xml:space="preserve">
+    <value>MaterialLabelEx</value>
+  </data>
+  <data name="&gt;&gt;MaterialLabelEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MaterialLabelEx.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;MaterialLabelEx.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;MaterialTextBoxEx.Name" xml:space="preserve">
+    <value>MaterialTextBoxEx</value>
+  </data>
+  <data name="&gt;&gt;MaterialTextBoxEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MaterialTextBoxEx.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;MaterialTextBoxEx.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;ParentBoneTextBoxEx.Name" xml:space="preserve">
+    <value>ParentBoneTextBoxEx</value>
+  </data>
+  <data name="&gt;&gt;ParentBoneTextBoxEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ParentBoneTextBoxEx.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;ParentBoneTextBoxEx.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;BoneNameTextBoxEx.Name" xml:space="preserve">
+    <value>BoneNameTextBoxEx</value>
+  </data>
+  <data name="&gt;&gt;BoneNameTextBoxEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BoneNameTextBoxEx.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;BoneNameTextBoxEx.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;ParentBoneLabelEx.Name" xml:space="preserve">
+    <value>ParentBoneLabelEx</value>
+  </data>
+  <data name="&gt;&gt;ParentBoneLabelEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ParentBoneLabelEx.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;ParentBoneLabelEx.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;BoneNameLabelEx.Name" xml:space="preserve">
+    <value>BoneNameLabelEx</value>
+  </data>
+  <data name="&gt;&gt;BoneNameLabelEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BoneNameLabelEx.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;BoneNameLabelEx.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="BoneParamsGroupBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="BoneParamsGroupBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="BoneParamsGroupBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 213</value>
+  </data>
+  <data name="BoneParamsGroupBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="BoneParamsGroupBox.Text" xml:space="preserve">
+    <value>Bone id:</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsGroupBox.Name" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsGroupBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsGroupBox.Parent" xml:space="preserve">
+    <value>BoneParamsPage</value>
+  </data>
+  <data name="&gt;&gt;BoneParamsGroupBox.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="RotationLabelEx.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -866,6 +1388,153 @@
   </data>
   <data name="BonesParamsPanel.ColumnCount" type="System.Int32, mscorlib">
     <value>3</value>
+  </data>
+  <data name="&gt;&gt;RotationZTextBox.Name" xml:space="preserve">
+    <value>RotationZTextBox</value>
+  </data>
+  <data name="&gt;&gt;RotationZTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RotationZTextBox.Parent" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;RotationZTextBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;RotationYTextBox.Name" xml:space="preserve">
+    <value>RotationYTextBox</value>
+  </data>
+  <data name="&gt;&gt;RotationYTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RotationYTextBox.Parent" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;RotationYTextBox.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;RotationXTextBox.Name" xml:space="preserve">
+    <value>RotationXTextBox</value>
+  </data>
+  <data name="&gt;&gt;RotationXTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RotationXTextBox.Parent" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;RotationXTextBox.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;PositionZTextBox.Name" xml:space="preserve">
+    <value>PositionZTextBox</value>
+  </data>
+  <data name="&gt;&gt;PositionZTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;PositionZTextBox.Parent" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;PositionZTextBox.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;PositionYTextBox.Name" xml:space="preserve">
+    <value>PositionYTextBox</value>
+  </data>
+  <data name="&gt;&gt;PositionYTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;PositionYTextBox.Parent" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;PositionYTextBox.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;PositionXTextBox.Name" xml:space="preserve">
+    <value>PositionXTextBox</value>
+  </data>
+  <data name="&gt;&gt;PositionXTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;PositionXTextBox.Parent" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;PositionXTextBox.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassZTextBox.Name" xml:space="preserve">
+    <value>CenterOfMassZTextBox</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassZTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassZTextBox.Parent" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassZTextBox.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassYTextBox.Name" xml:space="preserve">
+    <value>CenterOfMassYTextBox</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassYTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassYTextBox.Parent" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassYTextBox.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassXTextBox.Name" xml:space="preserve">
+    <value>CenterOfMassXTextBox</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassXTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassXTextBox.Parent" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;CenterOfMassXTextBox.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;MassTextBoxEx.Name" xml:space="preserve">
+    <value>MassTextBoxEx</value>
+  </data>
+  <data name="&gt;&gt;MassTextBoxEx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MassTextBoxEx.Parent" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;MassTextBoxEx.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="BonesParamsPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>93, 97</value>
+  </data>
+  <data name="BonesParamsPanel.RowCount" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="BonesParamsPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>392, 111</value>
+  </data>
+  <data name="BonesParamsPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;BonesParamsPanel.Name" xml:space="preserve">
+    <value>BonesParamsPanel</value>
+  </data>
+  <data name="&gt;&gt;BonesParamsPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BonesParamsPanel.Parent" xml:space="preserve">
+    <value>BoneParamsGroupBox</value>
+  </data>
+  <data name="&gt;&gt;BonesParamsPanel.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="BonesParamsPanel.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="RotationZTextBox" Row="3" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="RotationYTextBox" Row="3" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="RotationXTextBox" Row="3" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="PositionZTextBox" Row="2" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="PositionYTextBox" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="PositionXTextBox" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="CenterOfMassZTextBox" Row="1" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="CenterOfMassYTextBox" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="CenterOfMassXTextBox" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="MassTextBoxEx" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,33,33333,Percent,33,33334,Percent,33,33334" /&gt;&lt;Rows Styles="Percent,25,Percent,25,Percent,25,Percent,25" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="RotationZTextBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -1107,33 +1776,6 @@
   <data name="&gt;&gt;MassTextBoxEx.ZOrder" xml:space="preserve">
     <value>9</value>
   </data>
-  <data name="BonesParamsPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>93, 97</value>
-  </data>
-  <data name="BonesParamsPanel.RowCount" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="BonesParamsPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>392, 111</value>
-  </data>
-  <data name="BonesParamsPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;BonesParamsPanel.Name" xml:space="preserve">
-    <value>BonesParamsPanel</value>
-  </data>
-  <data name="&gt;&gt;BonesParamsPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;BonesParamsPanel.Parent" xml:space="preserve">
-    <value>BoneParamsGroupBox</value>
-  </data>
-  <data name="&gt;&gt;BonesParamsPanel.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="BonesParamsPanel.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="RotationZTextBox" Row="3" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="RotationYTextBox" Row="3" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="RotationXTextBox" Row="3" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="PositionZTextBox" Row="2" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="PositionYTextBox" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="PositionXTextBox" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="CenterOfMassZTextBox" Row="1" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="CenterOfMassYTextBox" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="CenterOfMassXTextBox" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="MassTextBoxEx" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,33,33333,Percent,33,33334,Percent,33,33334" /&gt;&lt;Rows Styles="Percent,25,Percent,25,Percent,25,Percent,25" /&gt;&lt;/TableLayoutSettings&gt;</value>
-  </data>
   <data name="MaterialLabelEx.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -1287,59 +1929,68 @@
   <data name="&gt;&gt;BoneNameLabelEx.ZOrder" xml:space="preserve">
     <value>10</value>
   </data>
-  <data name="BoneParamsGroupBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+  <data name="&gt;&gt;CreateLodButton.Name" xml:space="preserve">
+    <value>CreateLodButton</value>
   </data>
-  <data name="BoneParamsGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="&gt;&gt;CreateLodButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="BoneParamsGroupBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 213</value>
+  <data name="&gt;&gt;CreateLodButton.Parent" xml:space="preserve">
+    <value>LodPage</value>
   </data>
-  <data name="BoneParamsGroupBox.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;CreateLodButton.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="BoneParamsGroupBox.Text" xml:space="preserve">
-    <value>Bone id:</value>
+  <data name="&gt;&gt;LodPathBox.Name" xml:space="preserve">
+    <value>LodPathBox</value>
   </data>
-  <data name="&gt;&gt;BoneParamsGroupBox.Name" xml:space="preserve">
-    <value>BoneParamsGroupBox</value>
+  <data name="&gt;&gt;LodPathBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;BoneParamsGroupBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;LodPathBox.Parent" xml:space="preserve">
+    <value>LodPage</value>
   </data>
-  <data name="&gt;&gt;BoneParamsGroupBox.Parent" xml:space="preserve">
-    <value>BoneParamsPage</value>
+  <data name="&gt;&gt;LodPathBox.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
-  <data name="&gt;&gt;BoneParamsGroupBox.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
   </data>
-  <data name="BoneParamsPage.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>LodPage</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="LodPage.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 25</value>
   </data>
-  <data name="BoneParamsPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="LodPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
-  <data name="BoneParamsPage.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="LodPage.Size" type="System.Drawing.Size, System.Drawing">
     <value>488, 281</value>
   </data>
-  <data name="BoneParamsPage.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="LodPage.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
   </data>
-  <data name="BoneParamsPage.Text" xml:space="preserve">
-    <value>Bone Params</value>
+  <data name="LodPage.Text" xml:space="preserve">
+    <value>Lod</value>
   </data>
-  <data name="&gt;&gt;BoneParamsPage.Name" xml:space="preserve">
-    <value>BoneParamsPage</value>
+  <data name="&gt;&gt;LodPage.Name" xml:space="preserve">
+    <value>LodPage</value>
   </data>
-  <data name="&gt;&gt;BoneParamsPage.Type" xml:space="preserve">
+  <data name="&gt;&gt;LodPage.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;BoneParamsPage.Parent" xml:space="preserve">
+  <data name="&gt;&gt;LodPage.Parent" xml:space="preserve">
     <value>TabControl</value>
   </data>
-  <data name="&gt;&gt;BoneParamsPage.ZOrder" xml:space="preserve">
-    <value>5</value>
+  <data name="&gt;&gt;LodPage.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
   <data name="CreateLodButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -1419,33 +2070,6 @@
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="LodPage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 25</value>
-  </data>
-  <data name="LodPage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="LodPage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="LodPage.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="LodPage.Text" xml:space="preserve">
-    <value>Lod</value>
-  </data>
-  <data name="&gt;&gt;LodPage.Name" xml:space="preserve">
-    <value>LodPage</value>
-  </data>
-  <data name="&gt;&gt;LodPage.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;LodPage.Parent" xml:space="preserve">
-    <value>TabControl</value>
-  </data>
-  <data name="&gt;&gt;LodPage.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
   <data name="ViewPage.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 25</value>
   </data>
@@ -1473,32 +2097,68 @@
   <data name="&gt;&gt;ViewPage.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
-  <data name="TabControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 27</value>
-  </data>
-  <data name="TabControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>496, 310</value>
-  </data>
-  <data name="TabControl.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;TabControl.Name" xml:space="preserve">
-    <value>TabControl</value>
-  </data>
-  <data name="&gt;&gt;TabControl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;TabControl.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;TabControl.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
   <metadata name="MenuPanel.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>157, 17</value>
+    <value>322, 17</value>
   </metadata>
   <data name="MenuPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>None</value>
+  </data>
+  <data name="FileMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 20</value>
+  </data>
+  <data name="FileMenuItem.Text" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="ToolsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>46, 20</value>
+  </data>
+  <data name="ToolsMenuItem.Text" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="OgfInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>66, 20</value>
+  </data>
+  <data name="OgfInfo.Text" xml:space="preserve">
+    <value>OGF Info</value>
+  </data>
+  <data name="settingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 20</value>
+  </data>
+  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="CurrentFormat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>129, 20</value>
+  </data>
+  <data name="CurrentFormat.Text" xml:space="preserve">
+    <value>Model Format: None</value>
+  </data>
+  <data name="viewPortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>66, 20</value>
+  </data>
+  <data name="viewPortToolStripMenuItem.Text" xml:space="preserve">
+    <value>ViewPort</value>
+  </data>
+  <data name="MenuPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 2</value>
+  </data>
+  <data name="MenuPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>413, 24</value>
+  </data>
+  <data name="MenuPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;MenuPanel.Name" xml:space="preserve">
+    <value>MenuPanel</value>
+  </data>
+  <data name="&gt;&gt;MenuPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MenuPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;MenuPanel.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="LoadMenuParam.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>F4</value>
@@ -1526,6 +2186,12 @@
   </data>
   <data name="saveAsToolStripMenuItem.Text" xml:space="preserve">
     <value>Save as...</value>
+  </data>
+  <data name="exportToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
+  </data>
+  <data name="exportToolStripMenuItem.Text" xml:space="preserve">
+    <value>Export</value>
   </data>
   <data name="objectToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>109, 22</value>
@@ -1563,12 +2229,6 @@
   <data name="sklsToolStripMenuItem.Text" xml:space="preserve">
     <value>Skls</value>
   </data>
-  <data name="exportToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
-  </data>
-  <data name="exportToolStripMenuItem.Text" xml:space="preserve">
-    <value>Export</value>
-  </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
     <value>137, 6</value>
   </data>
@@ -1587,53 +2247,29 @@
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>Exit</value>
   </data>
-  <data name="FileMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 20</value>
+  <data name="OpenInObjectEditor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 22</value>
   </data>
-  <data name="FileMenuItem.Text" xml:space="preserve">
-    <value>File</value>
-  </data>
-  <data name="openSkeletonInObjectEditorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
-  </data>
-  <data name="openSkeletonInObjectEditorToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open skeleton in Object Editor</value>
-  </data>
-  <data name="deleteMotionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 22</value>
-  </data>
-  <data name="deleteMotionsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Delete motions</value>
-  </data>
-  <data name="editInOMFEditorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 22</value>
-  </data>
-  <data name="editInOMFEditorToolStripMenuItem.Text" xml:space="preserve">
-    <value>Edit in OMF Editor</value>
-  </data>
-  <data name="replaceMotionsToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 22</value>
-  </data>
-  <data name="replaceMotionsToolStripMenuItem1.Text" xml:space="preserve">
-    <value>Replace motions</value>
-  </data>
-  <data name="motionToolsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
-  </data>
-  <data name="motionToolsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Motion tools</value>
+  <data name="OpenInObjectEditor.Text" xml:space="preserve">
+    <value>Open in Object Editor</value>
   </data>
   <data name="importDataFromModelToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
+    <value>188, 22</value>
   </data>
   <data name="importDataFromModelToolStripMenuItem.Text" xml:space="preserve">
     <value>Import OGF Params</value>
   </data>
   <data name="ChangeLodButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
+    <value>188, 22</value>
   </data>
   <data name="ChangeLodButton.Text" xml:space="preserve">
     <value>Change lod</value>
+  </data>
+  <data name="converterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 22</value>
+  </data>
+  <data name="converterToolStripMenuItem.Text" xml:space="preserve">
+    <value>Converter</value>
   </data>
   <data name="nPCCoPToSoCToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>161, 22</value>
@@ -1646,36 +2282,6 @@
   </data>
   <data name="nPCSoCToCoPToolStripMenuItem.Text" xml:space="preserve">
     <value>NPC SoC to CoP</value>
-  </data>
-  <data name="converterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
-  </data>
-  <data name="converterToolStripMenuItem.Text" xml:space="preserve">
-    <value>Converter</value>
-  </data>
-  <data name="ToolsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>46, 20</value>
-  </data>
-  <data name="ToolsMenuItem.Text" xml:space="preserve">
-    <value>Tools</value>
-  </data>
-  <data name="OgfInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>66, 20</value>
-  </data>
-  <data name="OgfInfo.Text" xml:space="preserve">
-    <value>OGF Info</value>
-  </data>
-  <data name="settingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 20</value>
-  </data>
-  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="CurrentFormat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>129, 20</value>
-  </data>
-  <data name="CurrentFormat.Text" xml:space="preserve">
-    <value>Model Format: None</value>
   </data>
   <data name="reloadToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
     <value>173, 22</value>
@@ -1695,33 +2301,6 @@
   <data name="openImageFolderToolStripMenuItem.Text" xml:space="preserve">
     <value>Open image folder</value>
   </data>
-  <data name="viewPortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>66, 20</value>
-  </data>
-  <data name="viewPortToolStripMenuItem.Text" xml:space="preserve">
-    <value>ViewPort</value>
-  </data>
-  <data name="MenuPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 2</value>
-  </data>
-  <data name="MenuPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>413, 24</value>
-  </data>
-  <data name="MenuPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;MenuPanel.Name" xml:space="preserve">
-    <value>MenuPanel</value>
-  </data>
-  <data name="&gt;&gt;MenuPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;MenuPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;MenuPanel.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="FileLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>28, 17</value>
   </data>
@@ -1735,7 +2314,7 @@
     <value>-</value>
   </data>
   <metadata name="StatusPanel.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>799, 17</value>
+    <value>600, 17</value>
   </metadata>
   <data name="StatusPanel.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 340</value>
@@ -1759,7 +2338,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;StatusPanel.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="BkpCheckBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -1789,52 +2368,52 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;BkpCheckBox.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <metadata name="SaveAsDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>915, 17</value>
+    <value>715, 17</value>
   </metadata>
   <data name="SaveAsDialog.Filter" xml:space="preserve">
     <value>OGF file|*.ogf|Object file|*.object|Bones file|*.bones|Skl file|*.skl|Skls file|*.skls|OMF file|*.omf</value>
   </data>
   <metadata name="OpenOMFDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1051, 17</value>
+    <value>840, 17</value>
   </metadata>
   <data name="OpenOMFDialog.Filter" xml:space="preserve">
     <value>OMF file|*.omf</value>
   </data>
   <metadata name="OpenProgramDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1191, 17</value>
+    <value>983, 17</value>
   </metadata>
   <data name="OpenProgramDialog.Filter" xml:space="preserve">
     <value>Program|*.exe</value>
   </data>
   <metadata name="OpenOGF_DmDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>278, 17</value>
+    <value>435, 17</value>
   </metadata>
   <data name="OpenOGF_DmDialog.Filter" xml:space="preserve">
     <value>OGF/DM file|*.ogf;*.dm</value>
   </data>
   <metadata name="SaveSklsDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1355, 17</value>
+    <value>1147, 17</value>
   </metadata>
   <data name="SaveSklsDialog.Filter" xml:space="preserve">
     <value>Skls file|*.skls</value>
   </data>
   <metadata name="SaveOmfDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1488, 17</value>
+    <value>1280, 17</value>
   </metadata>
   <data name="SaveOmfDialog.Filter" xml:space="preserve">
     <value>OMF file|*.omf</value>
   </data>
   <metadata name="SaveBonesDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1624, 17</value>
+    <value>1416, 17</value>
   </metadata>
   <data name="SaveBonesDialog.Filter" xml:space="preserve">
     <value>Bones file|*.bones</value>
   </data>
   <metadata name="SaveObjectDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>149, 56</value>
+    <value>1693, 17</value>
   </metadata>
   <data name="SaveObjectDialog.Filter" xml:space="preserve">
     <value>Object file|*.object</value>
@@ -1867,17 +2446,44 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelBroken.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <metadata name="SaveObjDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 56</value>
+    <value>1561, 17</value>
   </metadata>
   <data name="SaveObjDialog.Filter" xml:space="preserve">
     <value>Obj file|*.obj</value>
   </data>
-  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>en</value>
+  <metadata name="MotionsContextStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
   </metadata>
+  <data name="EditToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="EditToolStrip.Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="LoadToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="LoadToolStrip.Text" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="DeleteToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="DeleteToolStrip.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="MotionsContextStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>181, 92</value>
+  </data>
+  <data name="&gt;&gt;MotionsContextStrip.Name" xml:space="preserve">
+    <value>MotionsContextStrip</value>
+  </data>
+  <data name="&gt;&gt;MotionsContextStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -2279,34 +2885,10 @@
   <data name="&gt;&gt;ToolsMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;openSkeletonInObjectEditorToolStripMenuItem.Name" xml:space="preserve">
-    <value>openSkeletonInObjectEditorToolStripMenuItem</value>
+  <data name="&gt;&gt;OpenInObjectEditor.Name" xml:space="preserve">
+    <value>OpenInObjectEditor</value>
   </data>
-  <data name="&gt;&gt;openSkeletonInObjectEditorToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;motionToolsToolStripMenuItem.Name" xml:space="preserve">
-    <value>motionToolsToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;motionToolsToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;deleteMotionsToolStripMenuItem.Name" xml:space="preserve">
-    <value>deleteMotionsToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;deleteMotionsToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;editInOMFEditorToolStripMenuItem.Name" xml:space="preserve">
-    <value>editInOMFEditorToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;editInOMFEditorToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;replaceMotionsToolStripMenuItem1.Name" xml:space="preserve">
-    <value>replaceMotionsToolStripMenuItem1</value>
-  </data>
-  <data name="&gt;&gt;replaceMotionsToolStripMenuItem1.Type" xml:space="preserve">
+  <data name="&gt;&gt;OpenInObjectEditor.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;importDataFromModelToolStripMenuItem.Name" xml:space="preserve">
@@ -2446,6 +3028,24 @@
   </data>
   <data name="&gt;&gt;SaveObjDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;EditToolStrip.Name" xml:space="preserve">
+    <value>EditToolStrip</value>
+  </data>
+  <data name="&gt;&gt;EditToolStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LoadToolStrip.Name" xml:space="preserve">
+    <value>LoadToolStrip</value>
+  </data>
+  <data name="&gt;&gt;LoadToolStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;DeleteToolStrip.Name" xml:space="preserve">
+    <value>DeleteToolStrip</value>
+  </data>
+  <data name="&gt;&gt;DeleteToolStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>OGF_Editor</value>

@@ -29,6 +29,7 @@ namespace OGF_tool
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OGF_Editor));
             this.OpenOGFDialog = new System.Windows.Forms.OpenFileDialog();
             this.TabControl = new System.Windows.Forms.TabControl();
@@ -98,11 +99,7 @@ namespace OGF_tool
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openSkeletonInObjectEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.motionToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteMotionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editInOMFEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.replaceMotionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenInObjectEditor = new System.Windows.Forms.ToolStripMenuItem();
             this.importDataFromModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeLodButton = new System.Windows.Forms.ToolStripMenuItem();
             this.converterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -129,6 +126,10 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
+            this.MotionsContextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.EditToolStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.LoadToolStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.DeleteToolStrip = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TexturesGropuBox.SuspendLayout();
@@ -142,6 +143,7 @@ namespace OGF_tool
             this.LodPage.SuspendLayout();
             this.MenuPanel.SuspendLayout();
             this.StatusPanel.SuspendLayout();
+            this.MotionsContextStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // OpenOGFDialog
@@ -294,6 +296,7 @@ namespace OGF_tool
             resources.ApplyResources(this.MotionBox, "MotionBox");
             this.MotionBox.Name = "MotionBox";
             this.MotionBox.ReadOnly = true;
+            this.MotionBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MotionBoxKeyPress);
             // 
             // BoneNamesPage
             // 
@@ -590,47 +593,18 @@ namespace OGF_tool
             // ToolsMenuItem
             // 
             this.ToolsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openSkeletonInObjectEditorToolStripMenuItem,
-            this.motionToolsToolStripMenuItem,
+            this.OpenInObjectEditor,
             this.importDataFromModelToolStripMenuItem,
             this.ChangeLodButton,
             this.converterToolStripMenuItem});
             this.ToolsMenuItem.Name = "ToolsMenuItem";
             resources.ApplyResources(this.ToolsMenuItem, "ToolsMenuItem");
-            this.ToolsMenuItem.Click += new System.EventHandler(this.ToolsClick);
             // 
-            // openSkeletonInObjectEditorToolStripMenuItem
+            // OpenInObjectEditor
             // 
-            this.openSkeletonInObjectEditorToolStripMenuItem.Name = "openSkeletonInObjectEditorToolStripMenuItem";
-            resources.ApplyResources(this.openSkeletonInObjectEditorToolStripMenuItem, "openSkeletonInObjectEditorToolStripMenuItem");
-            this.openSkeletonInObjectEditorToolStripMenuItem.Click += new System.EventHandler(this.openSkeletonInObjectEditorToolStripMenuItem_Click);
-            // 
-            // motionToolsToolStripMenuItem
-            // 
-            this.motionToolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deleteMotionsToolStripMenuItem,
-            this.editInOMFEditorToolStripMenuItem,
-            this.replaceMotionsToolStripMenuItem1});
-            this.motionToolsToolStripMenuItem.Name = "motionToolsToolStripMenuItem";
-            resources.ApplyResources(this.motionToolsToolStripMenuItem, "motionToolsToolStripMenuItem");
-            // 
-            // deleteMotionsToolStripMenuItem
-            // 
-            this.deleteMotionsToolStripMenuItem.Name = "deleteMotionsToolStripMenuItem";
-            resources.ApplyResources(this.deleteMotionsToolStripMenuItem, "deleteMotionsToolStripMenuItem");
-            this.deleteMotionsToolStripMenuItem.Click += new System.EventHandler(this.deleteChunkToolStripMenuItem_Click);
-            // 
-            // editInOMFEditorToolStripMenuItem
-            // 
-            this.editInOMFEditorToolStripMenuItem.Name = "editInOMFEditorToolStripMenuItem";
-            resources.ApplyResources(this.editInOMFEditorToolStripMenuItem, "editInOMFEditorToolStripMenuItem");
-            this.editInOMFEditorToolStripMenuItem.Click += new System.EventHandler(this.editImOMFEditorToolStripMenuItem_Click);
-            // 
-            // replaceMotionsToolStripMenuItem1
-            // 
-            this.replaceMotionsToolStripMenuItem1.Name = "replaceMotionsToolStripMenuItem1";
-            resources.ApplyResources(this.replaceMotionsToolStripMenuItem1, "replaceMotionsToolStripMenuItem1");
-            this.replaceMotionsToolStripMenuItem1.Click += new System.EventHandler(this.AppendOMFButton_Click);
+            this.OpenInObjectEditor.Name = "OpenInObjectEditor";
+            resources.ApplyResources(this.OpenInObjectEditor, "OpenInObjectEditor");
+            this.OpenInObjectEditor.Click += new System.EventHandler(this.openSkeletonInObjectEditorToolStripMenuItem_Click);
             // 
             // importDataFromModelToolStripMenuItem
             // 
@@ -775,6 +749,33 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
             // 
+            // MotionsContextStrip
+            // 
+            this.MotionsContextStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.EditToolStrip,
+            this.LoadToolStrip,
+            this.DeleteToolStrip});
+            this.MotionsContextStrip.Name = "MotionsContextStrip";
+            resources.ApplyResources(this.MotionsContextStrip, "MotionsContextStrip");
+            // 
+            // EditToolStrip
+            // 
+            this.EditToolStrip.Name = "EditToolStrip";
+            resources.ApplyResources(this.EditToolStrip, "EditToolStrip");
+            this.EditToolStrip.Click += new System.EventHandler(this.EditInOmfEditor);
+            // 
+            // LoadToolStrip
+            // 
+            this.LoadToolStrip.Name = "LoadToolStrip";
+            resources.ApplyResources(this.LoadToolStrip, "LoadToolStrip");
+            this.LoadToolStrip.Click += new System.EventHandler(this.AppendOMFButton_Click);
+            // 
+            // DeleteToolStrip
+            // 
+            this.DeleteToolStrip.Name = "DeleteToolStrip";
+            resources.ApplyResources(this.DeleteToolStrip, "DeleteToolStrip");
+            this.DeleteToolStrip.Click += new System.EventHandler(this.DeleteOmf);
+            // 
             // OGF_Editor
             // 
             this.AllowDrop = true;
@@ -810,6 +811,7 @@ namespace OGF_tool
             this.MenuPanel.PerformLayout();
             this.StatusPanel.ResumeLayout(false);
             this.StatusPanel.PerformLayout();
+            this.MotionsContextStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -848,11 +850,7 @@ namespace OGF_tool
         private System.Windows.Forms.OpenFileDialog OpenOMFDialog;
         private System.Windows.Forms.OpenFileDialog OpenProgramDialog;
         private System.Windows.Forms.ToolStripMenuItem ToolsMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openSkeletonInObjectEditorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem motionToolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteMotionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editInOMFEditorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem replaceMotionsToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem OpenInObjectEditor;
         private System.Windows.Forms.TabPage LodPage;
         private System.Windows.Forms.TextBox LodPathBox;
         private System.Windows.Forms.Label label1;
@@ -915,6 +913,10 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem converterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nPCCoPToSoCToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nPCSoCToCoPToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip MotionsContextStrip;
+        private System.Windows.Forms.ToolStripMenuItem EditToolStrip;
+        private System.Windows.Forms.ToolStripMenuItem LoadToolStrip;
+        private System.Windows.Forms.ToolStripMenuItem DeleteToolStrip;
     }
 }
 
