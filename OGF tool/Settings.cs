@@ -30,6 +30,7 @@ namespace OGF_tool
             pSettings.Save(ImagePath);
             pSettings.Save(OmfEditorPath);
             pSettings.Save(ObjectEditorPath);
+            pSettings.Save(ViewportAlpha);
         }
 
         public void Settings_Load(object sender, EventArgs e)
@@ -40,6 +41,7 @@ namespace OGF_tool
             pSettings.Load(ImagePath);
             pSettings.Load(OmfEditorPath);
             pSettings.Load(ObjectEditorPath);
+            pSettings.Load(ViewportAlpha);
         }
 
         private string GetFSPath(string filename, string key)

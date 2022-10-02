@@ -103,9 +103,13 @@ namespace OGF_tool
 			if (File.Exists(gamemtl))
 				game_materials = GameMtlParser(gamemtl);
 
-			// End init settings
+			bool ViewPortAlpha = false;
+			pSettings.Load("ViewportAlpha", ref ViewPortAlpha);
+			SetAlphaToolStrip(ViewPortAlpha);
 
-			number_mask = @"^-[0-9.]*$";
+            // End init settings
+
+            number_mask = @"^-[0-9.]*$";
 
 			OgfInfo.Enabled = false;
 			SaveMenuParam.Enabled = false;
@@ -2193,7 +2197,10 @@ skip_ik_data:
 			string old_game_mtl = "";
 			pSettings.Load("GameMtlPath", ref old_game_mtl);
 
-			Settings ProgramSettings = new Settings(pSettings);
+            bool OldViewPortAlpha = false;
+            pSettings.Load("ViewportAlpha", ref OldViewPortAlpha);
+
+            Settings ProgramSettings = new Settings(pSettings);
 			ProgramSettings.ShowDialog();
 
 			string game_mtl = "";
@@ -2201,7 +2208,13 @@ skip_ik_data:
 
 			if (old_game_mtl != game_mtl)
 				ReloadGameMtl(game_mtl);
-		}
+
+            bool ViewPortAlpha = false;
+            pSettings.Load("ViewportAlpha", ref ViewPortAlpha);
+
+			if (OldViewPortAlpha != ViewPortAlpha)
+                disableAlphaToolStripMenuItem_Click(null, null);
+        }
 
 		private void changeLodToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -2748,13 +2761,19 @@ skip_ik_data:
 				return;
 
 			ViewPortAlpha = !ViewPortAlpha;
-			if (ViewPortAlpha)
-				disableAlphaToolStripMenuItem.Text = "Disable Alpha";
-			else
-				disableAlphaToolStripMenuItem.Text = "Enable Alpha";
+			SetAlphaToolStrip(ViewPortAlpha);
 
 			InitViewPort(false, true, true);
 		}
+
+		private void SetAlphaToolStrip(bool enable)
+		{
+            ViewPortAlpha = enable;
+            if (ViewPortAlpha)
+                disableAlphaToolStripMenuItem.Text = "Disable Alpha";
+            else
+                disableAlphaToolStripMenuItem.Text = "Enable Alpha";
+        }
 
 		private void ResizeEmbeddedApp(object sender, EventArgs e)
 		{

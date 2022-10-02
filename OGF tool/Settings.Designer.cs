@@ -47,6 +47,7 @@
             this.button6 = new System.Windows.Forms.Button();
             this.ObjectEditorPath = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.ViewportAlpha = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -152,10 +153,17 @@
             resources.ApplyResources(this.label6, "label6");
             this.label6.Name = "label6";
             // 
+            // ViewportAlpha
+            // 
+            resources.ApplyResources(this.ViewportAlpha, "ViewportAlpha");
+            this.ViewportAlpha.Name = "ViewportAlpha";
+            this.ViewportAlpha.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.ViewportAlpha);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.ObjectEditorPath);
             this.Controls.Add(this.label6);
@@ -202,5 +210,6 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.TextBox ObjectEditorPath;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox ViewportAlpha;
     }
 }
