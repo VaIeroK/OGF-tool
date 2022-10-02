@@ -2243,7 +2243,7 @@ skip_ik_data:
 
 			if (!CurrentFormat.Enabled)
 			{
-				CurrentFormat.Text = "Model Format: All";
+				CurrentFormat.Text = strings.AllFormat;
 				return;
 			}
 
@@ -2254,7 +2254,7 @@ skip_ik_data:
 
 			OGF_V.IsCopModel = (IsTextCorrect(MotionRefsBox.Text) && OGF_V.motion_refs != null && !OGF_V.motion_refs.soc || !IsTextCorrect(MotionRefsBox.Text)) && links < 0x12071980;
 
-			CurrentFormat.Text = "Model Format: " + (OGF_V.IsCopModel ? "CoP" : "SoC");
+			CurrentFormat.Text = (OGF_V.IsCopModel ? strings.CoPFormat : strings.SoCFormat);
 		}
 
 		private void editImOMFEditorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2898,7 +2898,7 @@ skip_ik_data:
 			var GroupBox = new GroupBox();
 			GroupBox.Location = new System.Drawing.Point(TexturesGropuBox.Location.X, TexturesGropuBox.Location.Y + (TexturesGropuBox.Size.Height + 2) * idx);
 			GroupBox.Size = TexturesGropuBox.Size;
-			GroupBox.Text = "Mesh: [" + idx + "]";
+			GroupBox.Text = TexturesGropuBox.Text + " [" + idx + "]";
 			GroupBox.Name = "TextureGrpBox_" + idx;
 			GroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 			GroupBox.Dock = TexturesGropuBox.Dock;
@@ -2940,12 +2940,12 @@ skip_ik_data:
 		{
 			var newLbl = new Label();
 			newLbl.Name = "textureLbl_" + idx;
-			newLbl.Text = "Texture Path:";
+			newLbl.Text = TexturesPathLabelEx.Text;
 			newLbl.Location = TexturesPathLabelEx.Location;
 
 			var newLbl2 = new Label();
 			newLbl2.Name = "shaderLbl_" + idx;
-			newLbl2.Text = "Shader Name:";
+			newLbl2.Text = ShaderNameLabelEx.Text;
 			newLbl2.Location = ShaderNameLabelEx.Location;
 
 			var newLbl3 = new Label();
@@ -2997,7 +2997,7 @@ skip_ik_data:
 			var GroupBox = new GroupBox();
 			GroupBox.Location = new System.Drawing.Point(BoneParamsGroupBox.Location.X, BoneParamsGroupBox.Location.Y + (BoneParamsGroupBox.Size.Height + 2) * idx);
 			GroupBox.Size = BoneParamsGroupBox.Size;
-			GroupBox.Text = "Bone id: [" + idx + "]";
+			GroupBox.Text = BoneParamsGroupBox.Text + " [" + idx + "]";
 			GroupBox.Name = "BoneGrpBox_" + idx;
 			GroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 			GroupBox.Dock = BoneParamsGroupBox.Dock;
@@ -3022,7 +3022,7 @@ skip_ik_data:
 			BoneNameLabel.Name = "boneLabel_" + idx;
 			BoneNameLabel.Size = BoneNameLabelEx.Size;
 			BoneNameLabel.Location = BoneNameLabelEx.Location;
-			BoneNameLabel.Text = "Bone Name:";
+			BoneNameLabel.Text = BoneNameLabelEx.Text;
 
 			var ParentBoneNameTextBox = new TextBox();
 			ParentBoneNameTextBox.Name = "ParentboneBox_" + idx;
@@ -3037,7 +3037,7 @@ skip_ik_data:
 			ParentBoneNameLabel.Name = "ParentboneLabel_" + idx;
 			ParentBoneNameLabel.Size = ParentBoneLabelEx.Size;
 			ParentBoneNameLabel.Location = ParentBoneLabelEx.Location;
-			ParentBoneNameLabel.Text = "Parent Bone:";
+			ParentBoneNameLabel.Text = ParentBoneLabelEx.Text;
 
 			var MateriaBox = new Control();
 			if (game_materials.Count() == 0)
@@ -3082,7 +3082,7 @@ skip_ik_data:
 			MaterialLabel.Name = "MaterialLabel_" + idx;
 			MaterialLabel.Size = MaterialLabelEx.Size;
 			MaterialLabel.Location = MaterialLabelEx.Location;
-			MaterialLabel.Text = "Material:";
+			MaterialLabel.Text = MaterialLabelEx.Text;
 
 			var MassTextBox = new TextBox();
 			MassTextBox.Name = "MassBox_" + idx;
@@ -3098,7 +3098,7 @@ skip_ik_data:
 			MassLabel.Name = "MassLabel_" + idx;
 			MassLabel.Size = MassLabelEx.Size;
 			MassLabel.Location = MassLabelEx.Location;
-			MassLabel.Text = "Mass:";
+			MassLabel.Text = MassLabelEx.Text;
 
 			var LayoutPanel = new TableLayoutPanel();
 			LayoutPanel.Name = "LayoutPanel_" + idx;
@@ -3148,7 +3148,7 @@ skip_ik_data:
 			CenterMassLabel.Name = "CenterMassLabel_" + idx;
 			CenterMassLabel.Size = CenterOfMassLabelEx.Size;
 			CenterMassLabel.Location = CenterOfMassLabelEx.Location;
-			CenterMassLabel.Text = "Center of Mass:";
+			CenterMassLabel.Text = CenterOfMassLabelEx.Text;
 
 			var PositionX = new TextBox();
 			PositionX.Name = "PositionX_" + idx;
@@ -3184,7 +3184,7 @@ skip_ik_data:
 			PositionLabel.Name = "PositionLabel_" + idx;
 			PositionLabel.Size = PositionLabelEx.Size;
 			PositionLabel.Location = PositionLabelEx.Location;
-			PositionLabel.Text = "Position:";
+			PositionLabel.Text = PositionLabelEx.Text;
 
 			var RotationX = new TextBox();
 			RotationX.Name = "RotationX_" + idx;
@@ -3220,7 +3220,7 @@ skip_ik_data:
 			RotationLabel.Name = "RotationLabel_" + idx;
 			RotationLabel.Size = RotationLabelEx.Size;
 			RotationLabel.Location = RotationLabelEx.Location;
-			RotationLabel.Text = "Rotation:";
+			RotationLabel.Text = RotationLabelEx.Text;
 
 			LayoutPanel.Controls.Add(MassTextBox, 0, 0);
 			LayoutPanel.Controls.Add(CenterMassTextBoxX, 0, 1);

@@ -118,271 +118,458 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="TabControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>624, 310</value>
+  </data>
+  <data name="TexturesPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="TexturesPage.Text" xml:space="preserve">
+    <value>Текстуры</value>
+  </data>
+  <data name="TexturesGropuBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 127</value>
+  </data>
+  <data name="TexturesGropuBox.Text" xml:space="preserve">
+    <value>Меш:</value>
+  </data>
+  <data name="LodLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>386, 104</value>
+  </data>
+  <data name="LodLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 13</value>
+  </data>
+  <data name="LodLabel.Text" xml:space="preserve">
+    <value>Лоды: </value>
+  </data>
+  <data name="LinksLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>426, 104</value>
+  </data>
+  <data name="LinksLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 13</value>
+  </data>
+  <data name="LinksLabel.Text" xml:space="preserve">
+    <value>Соединения: </value>
+  </data>
+  <data name="DeleteMesh.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 23</value>
+  </data>
+  <data name="DeleteMesh.Text" xml:space="preserve">
+    <value>Удалить меш</value>
+  </data>
+  <data name="VertsLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>501, 104</value>
+  </data>
+  <data name="VertsLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 13</value>
+  </data>
+  <data name="VertsLabel.Text" xml:space="preserve">
+    <value>Вертексы: </value>
+  </data>
+  <data name="FaceLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>562, 104</value>
+  </data>
+  <data name="FaceLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 13</value>
+  </data>
+  <data name="FaceLabel.Text" xml:space="preserve">
+    <value>Фейсы: </value>
+  </data>
+  <data name="ShaderNameLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>49, 13</value>
+  </data>
+  <data name="ShaderNameLabelEx.Text" xml:space="preserve">
+    <value>Шейдер:</value>
+  </data>
+  <data name="TexturesPathLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>57, 13</value>
+  </data>
+  <data name="TexturesPathLabelEx.Text" xml:space="preserve">
+    <value>Текстура:</value>
+  </data>
+  <data name="ShaderTextBoxEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>604, 20</value>
+  </data>
+  <data name="TexturesTextBoxEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>604, 20</value>
+  </data>
+  <data name="UserDataPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="UserDataPage.Text" xml:space="preserve">
+    <value>Юзердата</value>
+  </data>
+  <data name="CreateUserdataButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="CreateUserdataButton.Text" xml:space="preserve">
+    <value>Создать юзердату</value>
+  </data>
+  <data name="UserDataBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="MotionRefsPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="MotionRefsPage.Text" xml:space="preserve">
+    <value>Моушн референсы</value>
+  </data>
+  <data name="CreateMotionRefsButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="CreateMotionRefsButton.Text" xml:space="preserve">
+    <value>Создать моушн референсы</value>
+  </data>
+  <data name="MotionRefsBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="MotionPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="MotionPage.Text" xml:space="preserve">
+    <value>Анимации</value>
+  </data>
+  <data name="AppendOMFButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="AppendOMFButton.Text" xml:space="preserve">
+    <value>Загрузить OMF</value>
+  </data>
+  <data name="MotionBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="BoneNamesPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="BoneNamesPage.Text" xml:space="preserve">
+    <value>Названия костей</value>
+  </data>
+  <data name="BoneNamesBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="BoneParamsPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="BoneParamsPage.Text" xml:space="preserve">
+    <value>Параметры костей</value>
+  </data>
+  <data name="BoneParamsGroupBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 213</value>
+  </data>
+  <data name="BoneParamsGroupBox.Text" xml:space="preserve">
+    <value>Id кости:</value>
+  </data>
+  <data name="RotationLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 13</value>
+  </data>
+  <data name="RotationLabelEx.Text" xml:space="preserve">
+    <value>Ротация:</value>
+  </data>
+  <data name="PositionLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 13</value>
+  </data>
+  <data name="PositionLabelEx.Text" xml:space="preserve">
+    <value>Позиция:</value>
+  </data>
+  <data name="CenterOfMassLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 13</value>
+  </data>
+  <data name="CenterOfMassLabelEx.Text" xml:space="preserve">
+    <value>Центр массы</value>
+  </data>
+  <data name="MassLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 13</value>
+  </data>
+  <data name="MassLabelEx.Text" xml:space="preserve">
+    <value>Масса:</value>
+  </data>
+  <data name="BonesParamsPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>520, 111</value>
+  </data>
+  <data name="RotationZTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>349, 84</value>
+  </data>
+  <data name="RotationZTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 20</value>
+  </data>
+  <data name="RotationYTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>176, 84</value>
+  </data>
+  <data name="RotationYTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 20</value>
+  </data>
+  <data name="RotationXTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 20</value>
+  </data>
+  <data name="PositionZTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>349, 57</value>
+  </data>
+  <data name="PositionZTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 20</value>
+  </data>
+  <data name="PositionYTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>176, 57</value>
+  </data>
+  <data name="PositionYTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 20</value>
+  </data>
+  <data name="PositionXTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 20</value>
+  </data>
+  <data name="CenterOfMassZTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>349, 30</value>
+  </data>
+  <data name="CenterOfMassZTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 20</value>
+  </data>
+  <data name="CenterOfMassYTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>176, 30</value>
+  </data>
+  <data name="CenterOfMassYTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 20</value>
+  </data>
+  <data name="CenterOfMassXTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 20</value>
+  </data>
+  <data name="MassTextBoxEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 20</value>
+  </data>
+  <data name="MaterialLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 13</value>
+  </data>
+  <data name="MaterialLabelEx.Text" xml:space="preserve">
+    <value>Материал:</value>
+  </data>
+  <data name="MaterialTextBoxEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>514, 20</value>
+  </data>
+  <data name="ParentBoneTextBoxEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>514, 20</value>
+  </data>
+  <data name="BoneNameTextBoxEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>514, 20</value>
+  </data>
+  <data name="ParentBoneLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 13</value>
+  </data>
+  <data name="ParentBoneLabelEx.Text" xml:space="preserve">
+    <value>Родит. кость:</value>
+  </data>
+  <data name="BoneNameLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 13</value>
+  </data>
+  <data name="BoneNameLabelEx.Text" xml:space="preserve">
+    <value>Название кости:</value>
+  </data>
+  <data name="LodPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="LodPage.Text" xml:space="preserve">
+    <value>Лод</value>
+  </data>
+  <data name="CreateLodButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 281</value>
+  </data>
+  <data name="CreateLodButton.Text" xml:space="preserve">
+    <value>Создать лод</value>
+  </data>
+  <data name="LodPathBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>610, 20</value>
+  </data>
+  <data name="ViewPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 49</value>
+  </data>
+  <data name="ViewPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>586, 257</value>
+  </data>
+  <data name="ViewPage.Text" xml:space="preserve">
+    <value>Вьюпорт</value>
+  </data>
+  <data name="FileMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>48, 20</value>
+  </data>
+  <data name="FileMenuItem.Text" xml:space="preserve">
+    <value>Файл</value>
+  </data>
+  <data name="ToolsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 20</value>
+  </data>
+  <data name="ToolsMenuItem.Text" xml:space="preserve">
+    <value>Инструменты</value>
+  </data>
+  <data name="OgfInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>148, 20</value>
+  </data>
+  <data name="OgfInfo.Text" xml:space="preserve">
+    <value>Информация о модели</value>
+  </data>
+  <data name="settingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>79, 20</value>
+  </data>
+  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="CurrentFormat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>88, 20</value>
+  </data>
+  <data name="CurrentFormat.Text" xml:space="preserve">
+    <value>Формат: Нет</value>
+  </data>
+  <data name="viewPortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>68, 20</value>
+  </data>
+  <data name="viewPortToolStripMenuItem.Text" xml:space="preserve">
+    <value>Вьюпорт</value>
+  </data>
+  <data name="MenuPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>534, 24</value>
+  </data>
+  <data name="LoadMenuParam.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 22</value>
+  </data>
+  <data name="LoadMenuParam.Text" xml:space="preserve">
+    <value>Загрузить</value>
+  </data>
+  <data name="SaveMenuParam.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 22</value>
+  </data>
+  <data name="SaveMenuParam.Text" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="saveAsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 22</value>
+  </data>
+  <data name="saveAsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Сохранить как...</value>
+  </data>
+  <data name="exportToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 22</value>
+  </data>
+  <data name="exportToolStripMenuItem.Text" xml:space="preserve">
+    <value>Экспорт</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 6</value>
+  </data>
+  <data name="reloadToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 22</value>
+  </data>
+  <data name="reloadToolStripMenuItem.Text" xml:space="preserve">
+    <value>Перезагрузить</value>
+  </data>
+  <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 22</value>
+  </data>
+  <data name="exitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="openSkeletonInObjectEditorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>238, 22</value>
+  </data>
+  <data name="openSkeletonInObjectEditorToolStripMenuItem.Text" xml:space="preserve">
+    <value>Открыть в Object Editor</value>
+  </data>
+  <data name="motionToolsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>238, 22</value>
+  </data>
+  <data name="motionToolsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Анимационные инструменты</value>
+  </data>
+  <data name="deleteMotionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>226, 22</value>
+  </data>
+  <data name="deleteMotionsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Удалить анимации</value>
+  </data>
+  <data name="editInOMFEditorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>226, 22</value>
+  </data>
+  <data name="editInOMFEditorToolStripMenuItem.Text" xml:space="preserve">
+    <value>Редактировать в OMF Editor</value>
+  </data>
+  <data name="replaceMotionsToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>226, 22</value>
+  </data>
+  <data name="replaceMotionsToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Заменить анимации</value>
+  </data>
+  <data name="importDataFromModelToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>238, 22</value>
+  </data>
+  <data name="importDataFromModelToolStripMenuItem.Text" xml:space="preserve">
+    <value>Загрузить параметры из OGF</value>
+  </data>
+  <data name="ChangeLodButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>238, 22</value>
+  </data>
+  <data name="ChangeLodButton.Text" xml:space="preserve">
+    <value>Изменить лод</value>
+  </data>
+  <data name="converterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>238, 22</value>
+  </data>
+  <data name="converterToolStripMenuItem.Text" xml:space="preserve">
+    <value>Конвертер</value>
+  </data>
+  <data name="nPCCoPToSoCToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="nPCCoPToSoCToolStripMenuItem.Text" xml:space="preserve">
+    <value>ЗП НПС в ТЧ</value>
+  </data>
+  <data name="nPCSoCToCoPToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="nPCSoCToCoPToolStripMenuItem.Text" xml:space="preserve">
+    <value>ТЧ НПС в ЗП</value>
+  </data>
+  <data name="reloadToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>228, 22</value>
+  </data>
+  <data name="reloadToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Перезагрузить</value>
+  </data>
+  <data name="disableAlphaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>228, 22</value>
+  </data>
+  <data name="disableAlphaToolStripMenuItem.Text" xml:space="preserve">
+    <value>Отключить альфа канал</value>
+  </data>
+  <data name="openImageFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>228, 22</value>
+  </data>
+  <data name="openImageFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>Открыть папку скриншотов</value>
+  </data>
+  <data name="FileLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 17</value>
+  </data>
+  <data name="FileLabel.Text" xml:space="preserve">
+    <value>Файл:</value>
+  </data>
+  <data name="StatusPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>648, 22</value>
+  </data>
+  <data name="BkpCheckBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>543, 7</value>
+  </data>
+  <data name="BkpCheckBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>101, 17</value>
+  </data>
+  <data name="BkpCheckBox.Text" xml:space="preserve">
+    <value>Создать бекап</value>
+  </data>
+  <data name="LabelBroken.Location" type="System.Drawing.Point, System.Drawing">
+    <value>550, 344</value>
+  </data>
+  <data name="LabelBroken.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 13</value>
+  </data>
+  <data name="LabelBroken.Text" xml:space="preserve">
+    <value>Тип поломки:</value>
+  </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>386, 160</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="label2.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="FSLtxPath.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="button2.Text" xml:space="preserve">
-    <value>Find</value>
-  </data>
-  <data name="OmfEditorPath.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="&gt;&gt;ObjectEditorPath.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="button6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 23</value>
-  </data>
-  <data name="&gt;&gt;button1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;OmfEditorPath.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 139</value>
-  </data>
-  <data name="OmfEditorPath.Size" type="System.Drawing.Size, System.Drawing">
-    <value>234, 20</value>
-  </data>
-  <data name="&gt;&gt;button2.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="button4.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="button2.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;button1.ZOrder" xml:space="preserve">
-    <value>15</value>
-  </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
-  </data>
-  <data name="&gt;&gt;button3.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="TexturesPath.Size" type="System.Drawing.Size, System.Drawing">
-    <value>234, 20</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Game Mtl path:</value>
-  </data>
-  <data name="OmfEditorPath.Location" type="System.Drawing.Point, System.Drawing">
-    <value>102, 110</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="&gt;&gt;ImagePath.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;button2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label6.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="label5.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 60</value>
-  </data>
-  <data name="&gt;&gt;FSLtxPath.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;button5.Name" xml:space="preserve">
-    <value>button5</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterParent</value>
-  </data>
-  <data name="&gt;&gt;button4.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="ImagePath.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;TexturesPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 23</value>
-  </data>
-  <data name="&gt;&gt;label6.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="button5.Text" xml:space="preserve">
-    <value>Find</value>
-  </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 87</value>
-  </data>
-  <data name="label4.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="ObjectEditorPath.Location" type="System.Drawing.Point, System.Drawing">
-    <value>102, 136</value>
-  </data>
-  <data name="label4.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>79, 13</value>
-  </data>
-  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;label3.Name" xml:space="preserve">
-    <value>label3</value>
-  </data>
-  <data name="button4.Text" xml:space="preserve">
-    <value>Find</value>
-  </data>
-  <data name="&gt;&gt;label2.Name" xml:space="preserve">
-    <value>label2</value>
-  </data>
-  <data name="ObjectEditorPath.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="&gt;&gt;OmfEditorPath.Name" xml:space="preserve">
-    <value>OmfEditorPath</value>
-  </data>
-  <data name="button6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>342, 134</value>
-  </data>
-  <data name="&gt;&gt;button2.Name" xml:space="preserve">
-    <value>button2</value>
-  </data>
-  <data name="TexturesPath.Location" type="System.Drawing.Point, System.Drawing">
-    <value>102, 57</value>
-  </data>
-  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="GameMtlPath.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;button6.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="label3.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="ImagePath.Size" type="System.Drawing.Size, System.Drawing">
-    <value>234, 20</value>
-  </data>
-  <data name="button5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 23</value>
-  </data>
-  <data name="button1.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;label4.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;GameMtlPath.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="&gt;&gt;button5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="GameMtlPath.Size" type="System.Drawing.Size, System.Drawing">
-    <value>234, 20</value>
-  </data>
-  <data name="ObjectEditorPath.Size" type="System.Drawing.Size, System.Drawing">
-    <value>234, 20</value>
-  </data>
-  <data name="button4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>342, 3</value>
-  </data>
-  <data name="button3.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="button6.Text" xml:space="preserve">
-    <value>Find</value>
-  </data>
-  <data name="&gt;&gt;FSLtxPath.ZOrder" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;button5.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;ObjectEditorPath.Name" xml:space="preserve">
-    <value>ObjectEditorPath</value>
-  </data>
-  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;TexturesPath.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;button4.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 13</value>
-  </data>
-  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="FSLtxPath.Location" type="System.Drawing.Point, System.Drawing">
-    <value>102, 31</value>
-  </data>
-  <data name="&gt;&gt;label5.Name" xml:space="preserve">
-    <value>label5</value>
-  </data>
-  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>17</value>
-  </data>
-  <data name="button3.Text" xml:space="preserve">
-    <value>Find</value>
+    <value>648, 362</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -671,196 +858,4 @@
         AAAAAAADwAAAAAAAAAPAAAAAAAAAA8AAAAAAAAAD//////////8=
 </value>
   </data>
-  <data name="label6.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="button2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>342, 29</value>
-  </data>
-  <data name="button3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 23</value>
-  </data>
-  <data name="ImagePath.Location" type="System.Drawing.Point, System.Drawing">
-    <value>102, 5</value>
-  </data>
-  <data name="&gt;&gt;button6.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 8</value>
-  </data>
-  <data name="&gt;&gt;ObjectEditorPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button5.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;ImagePath.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>64, 13</value>
-  </data>
-  <data name="label5.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="&gt;&gt;GameMtlPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="button5.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="button5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>342, 108</value>
-  </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 34</value>
-  </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 113</value>
-  </data>
-  <data name="&gt;&gt;label3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;TexturesPath.Name" xml:space="preserve">
-    <value>TexturesPath</value>
-  </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 13</value>
-  </data>
-  <data name="&gt;&gt;button4.Name" xml:space="preserve">
-    <value>button4</value>
-  </data>
-  <data name="&gt;&gt;OmfEditorPath.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;button6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button3.Name" xml:space="preserve">
-    <value>button3</value>
-  </data>
-  <data name="&gt;&gt;label6.Name" xml:space="preserve">
-    <value>label6</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>FS Ltx path:</value>
-  </data>
-  <data name="button4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 23</value>
-  </data>
-  <data name="button3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>342, 55</value>
-  </data>
-  <data name="label6.Text" xml:space="preserve">
-    <value>Object Editor path:</value>
-  </data>
-  <data name="&gt;&gt;button1.Name" xml:space="preserve">
-    <value>button1</value>
-  </data>
-  <data name="label4.Text" xml:space="preserve">
-    <value>Image path:</value>
-  </data>
-  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>63, 13</value>
-  </data>
-  <data name="button1.Text" xml:space="preserve">
-    <value>Find</value>
-  </data>
-  <data name="&gt;&gt;GameMtlPath.ZOrder" xml:space="preserve">
-    <value>16</value>
-  </data>
-  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 13</value>
-  </data>
-  <data name="GameMtlPath.Location" type="System.Drawing.Point, System.Drawing">
-    <value>102, 84</value>
-  </data>
-  <data name="&gt;&gt;FSLtxPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button6.Name" xml:space="preserve">
-    <value>button6</value>
-  </data>
-  <data name="&gt;&gt;GameMtlPath.Name" xml:space="preserve">
-    <value>GameMtlPath</value>
-  </data>
-  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="&gt;&gt;button4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="FSLtxPath.Size" type="System.Drawing.Size, System.Drawing">
-    <value>234, 20</value>
-  </data>
-  <data name="button6.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
-  </data>
-  <data name="label3.Text" xml:space="preserve">
-    <value>Textures path:</value>
-  </data>
-  <data name="&gt;&gt;button2.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>342, 82</value>
-  </data>
-  <data name="label5.Text" xml:space="preserve">
-    <value>OMF Editor path:</value>
-  </data>
-  <data name="&gt;&gt;ImagePath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="button2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 23</value>
-  </data>
-  <data name="TexturesPath.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;ImagePath.Name" xml:space="preserve">
-    <value>ImagePath</value>
-  </data>
-  <data name="&gt;&gt;OmfEditorPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button3.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;TexturesPath.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;FSLtxPath.Name" xml:space="preserve">
-    <value>FSLtxPath</value>
-  </data>
-  <data name="&gt;&gt;label6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ObjectEditorPath.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label4.Name" xml:space="preserve">
-    <value>label4</value>
-  </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>ru</value>
-  </metadata>
 </root>

@@ -102,6 +102,11 @@
     <Compile Include="Settings.designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
     <Compile Include="SwiLod.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,7 +117,13 @@
     <EmbeddedResource Include="OgfEditor.resx">
       <DependentUpon>OgfEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="OgfEditor.ru.resx">
+      <DependentUpon>OgfEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OgfInfo.resx">
+      <DependentUpon>OgfInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OgfInfo.ru.resx">
       <DependentUpon>OgfInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -128,6 +139,14 @@
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Settings.ru.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="strings.ru.resx" />
     <EmbeddedResource Include="SwiLod.resx">
       <DependentUpon>SwiLod.cs</DependentUpon>
     </EmbeddedResource>
