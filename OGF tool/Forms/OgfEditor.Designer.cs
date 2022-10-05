@@ -34,6 +34,8 @@ namespace OGF_tool
             this.OpenOGFDialog = new System.Windows.Forms.OpenFileDialog();
             this.TabControl = new System.Windows.Forms.TabControl();
             this.TexturesPage = new System.Windows.Forms.TabPage();
+            this.AddMeshGroupBox = new System.Windows.Forms.GroupBox();
+            this.AddMeshButton = new System.Windows.Forms.Button();
             this.TexturesGropuBox = new System.Windows.Forms.GroupBox();
             this.LodLabel = new System.Windows.Forms.Label();
             this.LinksLabel = new System.Windows.Forms.Label();
@@ -53,6 +55,10 @@ namespace OGF_tool
             this.MotionPage = new System.Windows.Forms.TabPage();
             this.AppendOMFButton = new System.Windows.Forms.Button();
             this.MotionBox = new System.Windows.Forms.RichTextBox();
+            this.MotionsContextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.EditToolStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.LoadToolStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.DeleteToolStrip = new System.Windows.Forms.ToolStripMenuItem();
             this.BoneNamesPage = new System.Windows.Forms.TabPage();
             this.BoneNamesBox = new System.Windows.Forms.RichTextBox();
             this.BoneParamsPage = new System.Windows.Forms.TabPage();
@@ -126,16 +132,14 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.MotionsContextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.EditToolStrip = new System.Windows.Forms.ToolStripMenuItem();
-            this.LoadToolStrip = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteToolStrip = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
+            this.AddMeshGroupBox.SuspendLayout();
             this.TexturesGropuBox.SuspendLayout();
             this.UserDataPage.SuspendLayout();
             this.MotionRefsPage.SuspendLayout();
             this.MotionPage.SuspendLayout();
+            this.MotionsContextStrip.SuspendLayout();
             this.BoneNamesPage.SuspendLayout();
             this.BoneParamsPage.SuspendLayout();
             this.BoneParamsGroupBox.SuspendLayout();
@@ -143,7 +147,6 @@ namespace OGF_tool
             this.LodPage.SuspendLayout();
             this.MenuPanel.SuspendLayout();
             this.StatusPanel.SuspendLayout();
-            this.MotionsContextStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // OpenOGFDialog
@@ -171,8 +174,22 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.TexturesPage, "TexturesPage");
             this.TexturesPage.BackColor = System.Drawing.SystemColors.Control;
+            this.TexturesPage.Controls.Add(this.AddMeshGroupBox);
             this.TexturesPage.Controls.Add(this.TexturesGropuBox);
             this.TexturesPage.Name = "TexturesPage";
+            // 
+            // AddMeshGroupBox
+            // 
+            this.AddMeshGroupBox.Controls.Add(this.AddMeshButton);
+            resources.ApplyResources(this.AddMeshGroupBox, "AddMeshGroupBox");
+            this.AddMeshGroupBox.Name = "AddMeshGroupBox";
+            this.AddMeshGroupBox.TabStop = false;
+            // 
+            // AddMeshButton
+            // 
+            resources.ApplyResources(this.AddMeshButton, "AddMeshButton");
+            this.AddMeshButton.Name = "AddMeshButton";
+            this.AddMeshButton.UseVisualStyleBackColor = true;
             // 
             // TexturesGropuBox
             // 
@@ -293,10 +310,37 @@ namespace OGF_tool
             // 
             // MotionBox
             // 
+            this.MotionBox.ContextMenuStrip = this.MotionsContextStrip;
             resources.ApplyResources(this.MotionBox, "MotionBox");
             this.MotionBox.Name = "MotionBox";
             this.MotionBox.ReadOnly = true;
-            this.MotionBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MotionBoxKeyPress);
+            // 
+            // MotionsContextStrip
+            // 
+            this.MotionsContextStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.EditToolStrip,
+            this.LoadToolStrip,
+            this.DeleteToolStrip});
+            this.MotionsContextStrip.Name = "MotionsContextStrip";
+            resources.ApplyResources(this.MotionsContextStrip, "MotionsContextStrip");
+            // 
+            // EditToolStrip
+            // 
+            this.EditToolStrip.Name = "EditToolStrip";
+            resources.ApplyResources(this.EditToolStrip, "EditToolStrip");
+            this.EditToolStrip.Click += new System.EventHandler(this.EditInOmfEditor);
+            // 
+            // LoadToolStrip
+            // 
+            this.LoadToolStrip.Name = "LoadToolStrip";
+            resources.ApplyResources(this.LoadToolStrip, "LoadToolStrip");
+            this.LoadToolStrip.Click += new System.EventHandler(this.AppendOMFButton_Click);
+            // 
+            // DeleteToolStrip
+            // 
+            this.DeleteToolStrip.Name = "DeleteToolStrip";
+            resources.ApplyResources(this.DeleteToolStrip, "DeleteToolStrip");
+            this.DeleteToolStrip.Click += new System.EventHandler(this.DeleteOmf);
             // 
             // BoneNamesPage
             // 
@@ -749,33 +793,6 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
             // 
-            // MotionsContextStrip
-            // 
-            this.MotionsContextStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.EditToolStrip,
-            this.LoadToolStrip,
-            this.DeleteToolStrip});
-            this.MotionsContextStrip.Name = "MotionsContextStrip";
-            resources.ApplyResources(this.MotionsContextStrip, "MotionsContextStrip");
-            // 
-            // EditToolStrip
-            // 
-            this.EditToolStrip.Name = "EditToolStrip";
-            resources.ApplyResources(this.EditToolStrip, "EditToolStrip");
-            this.EditToolStrip.Click += new System.EventHandler(this.EditInOmfEditor);
-            // 
-            // LoadToolStrip
-            // 
-            this.LoadToolStrip.Name = "LoadToolStrip";
-            resources.ApplyResources(this.LoadToolStrip, "LoadToolStrip");
-            this.LoadToolStrip.Click += new System.EventHandler(this.AppendOMFButton_Click);
-            // 
-            // DeleteToolStrip
-            // 
-            this.DeleteToolStrip.Name = "DeleteToolStrip";
-            resources.ApplyResources(this.DeleteToolStrip, "DeleteToolStrip");
-            this.DeleteToolStrip.Click += new System.EventHandler(this.DeleteOmf);
-            // 
             // OGF_Editor
             // 
             this.AllowDrop = true;
@@ -794,11 +811,13 @@ namespace OGF_tool
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnterCallback);
             this.TabControl.ResumeLayout(false);
             this.TexturesPage.ResumeLayout(false);
+            this.AddMeshGroupBox.ResumeLayout(false);
             this.TexturesGropuBox.ResumeLayout(false);
             this.TexturesGropuBox.PerformLayout();
             this.UserDataPage.ResumeLayout(false);
             this.MotionRefsPage.ResumeLayout(false);
             this.MotionPage.ResumeLayout(false);
+            this.MotionsContextStrip.ResumeLayout(false);
             this.BoneNamesPage.ResumeLayout(false);
             this.BoneParamsPage.ResumeLayout(false);
             this.BoneParamsGroupBox.ResumeLayout(false);
@@ -811,7 +830,6 @@ namespace OGF_tool
             this.MenuPanel.PerformLayout();
             this.StatusPanel.ResumeLayout(false);
             this.StatusPanel.PerformLayout();
-            this.MotionsContextStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -917,6 +935,8 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem EditToolStrip;
         private System.Windows.Forms.ToolStripMenuItem LoadToolStrip;
         private System.Windows.Forms.ToolStripMenuItem DeleteToolStrip;
+        private System.Windows.Forms.GroupBox AddMeshGroupBox;
+        private System.Windows.Forms.Button AddMeshButton;
     }
 }
 

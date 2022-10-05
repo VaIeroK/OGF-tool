@@ -134,13 +134,67 @@
   <data name="TexturesPage.AutoScroll" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="AddMeshButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="AddMeshButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 13</value>
+  </data>
+  <data name="AddMeshButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>482, 33</value>
+  </data>
+  <data name="AddMeshButton.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="AddMeshButton.Text" xml:space="preserve">
+    <value>Add meshes</value>
+  </data>
+  <data name="&gt;&gt;AddMeshButton.Name" xml:space="preserve">
+    <value>AddMeshButton</value>
+  </data>
+  <data name="&gt;&gt;AddMeshButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;AddMeshButton.Parent" xml:space="preserve">
+    <value>AddMeshGroupBox</value>
+  </data>
+  <data name="&gt;&gt;AddMeshButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="AddMeshGroupBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="AddMeshGroupBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 127</value>
+  </data>
+  <data name="AddMeshGroupBox.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 0, 3, 3</value>
+  </data>
+  <data name="AddMeshGroupBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 49</value>
+  </data>
+  <data name="AddMeshGroupBox.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;AddMeshGroupBox.Name" xml:space="preserve">
+    <value>AddMeshGroupBox</value>
+  </data>
+  <data name="&gt;&gt;AddMeshGroupBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;AddMeshGroupBox.Parent" xml:space="preserve">
+    <value>TexturesPage</value>
+  </data>
+  <data name="&gt;&gt;AddMeshGroupBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="LodLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
   </data>
   <data name="LodLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="LodLabel.Location" type="System.Drawing.Point, System.Drawing">
     <value>314, 104</value>
   </data>
@@ -418,7 +472,7 @@
     <value>TexturesPage</value>
   </data>
   <data name="&gt;&gt;TexturesGropuBox.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="TexturesPage.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 25</value>
@@ -638,6 +692,36 @@
   </data>
   <data name="&gt;&gt;AppendOMFButton.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <metadata name="MotionsContextStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="EditToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 22</value>
+  </data>
+  <data name="EditToolStrip.Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="LoadToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 22</value>
+  </data>
+  <data name="LoadToolStrip.Text" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="DeleteToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 22</value>
+  </data>
+  <data name="DeleteToolStrip.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="MotionsContextStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 70</value>
+  </data>
+  <data name="&gt;&gt;MotionsContextStrip.Name" xml:space="preserve">
+    <value>MotionsContextStrip</value>
+  </data>
+  <data name="&gt;&gt;MotionsContextStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="MotionBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -1851,36 +1935,6 @@
   <data name="SaveObjDialog.Filter" xml:space="preserve">
     <value>Obj file|*.obj</value>
   </data>
-  <metadata name="MotionsContextStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="EditToolStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>107, 22</value>
-  </data>
-  <data name="EditToolStrip.Text" xml:space="preserve">
-    <value>Edit</value>
-  </data>
-  <data name="LoadToolStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>107, 22</value>
-  </data>
-  <data name="LoadToolStrip.Text" xml:space="preserve">
-    <value>Load</value>
-  </data>
-  <data name="DeleteToolStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>107, 22</value>
-  </data>
-  <data name="DeleteToolStrip.Text" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="MotionsContextStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 70</value>
-  </data>
-  <data name="&gt;&gt;MotionsContextStrip.Name" xml:space="preserve">
-    <value>MotionsContextStrip</value>
-  </data>
-  <data name="&gt;&gt;MotionsContextStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -2184,13 +2238,31 @@
     <value>CenterScreen</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>OGF Params Editor 3.1</value>
+    <value>OGF/DM Params Editor 3.2</value>
   </data>
   <data name="&gt;&gt;OpenOGFDialog.Name" xml:space="preserve">
     <value>OpenOGFDialog</value>
   </data>
   <data name="&gt;&gt;OpenOGFDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;EditToolStrip.Name" xml:space="preserve">
+    <value>EditToolStrip</value>
+  </data>
+  <data name="&gt;&gt;EditToolStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LoadToolStrip.Name" xml:space="preserve">
+    <value>LoadToolStrip</value>
+  </data>
+  <data name="&gt;&gt;LoadToolStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;DeleteToolStrip.Name" xml:space="preserve">
+    <value>DeleteToolStrip</value>
+  </data>
+  <data name="&gt;&gt;DeleteToolStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;FileMenuItem.Name" xml:space="preserve">
     <value>FileMenuItem</value>
@@ -2425,24 +2497,6 @@
   </data>
   <data name="&gt;&gt;SaveObjDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;EditToolStrip.Name" xml:space="preserve">
-    <value>EditToolStrip</value>
-  </data>
-  <data name="&gt;&gt;EditToolStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;LoadToolStrip.Name" xml:space="preserve">
-    <value>LoadToolStrip</value>
-  </data>
-  <data name="&gt;&gt;LoadToolStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;DeleteToolStrip.Name" xml:space="preserve">
-    <value>DeleteToolStrip</value>
-  </data>
-  <data name="&gt;&gt;DeleteToolStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>OGF_Editor</value>

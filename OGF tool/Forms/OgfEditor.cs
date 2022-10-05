@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Diagnostics;
 using System.Security.Policy;
+using System.Runtime.InteropServices.ComTypes;
 
 
 namespace OGF_tool
@@ -221,8 +222,10 @@ namespace OGF_tool
 				SaveBonesDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".bones";
 				SaveObjectDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				SaveObjectDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".object";
+                SaveObjDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
+                SaveObjDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".obj";
 
-				CurrentLod = 0;
+                CurrentLod = 0;
 			}
 
             omfToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
@@ -317,7 +320,9 @@ namespace OGF_tool
 					CreateLodButton.Visible = true;
 			}
 
-			for (int i = OGF_V.childs.Count - 1; i >= 0; i--)
+            CreateTextureAddButton();
+
+            for (int i = OGF_V.childs.Count - 1; i >= 0; i--)
 			{
 				CreateTextureGroupBox(i);
 
@@ -415,6 +420,19 @@ namespace OGF_tool
 				fileStream.Write(data, 0, data.Length);
 				fileStream.Close();
             }
+		}
+
+		private bool CheckMeshes()
+		{
+			if (OGF_V == null) return false;
+
+			foreach (var ch in OGF_V.childs)
+			{
+				if (!ch.to_delete)
+					return true;
+			}
+
+            return false;
 		}
 
 		private void SaveFile(string filename)
@@ -1469,33 +1487,28 @@ skip_ik_data:
 			switch (currentField)
 			{
 				case "DeleteButton":
-					int chld_cnt = OGF_V.childs.Count;
+					OGF_V.childs[idx].to_delete = !OGF_V.childs[idx].to_delete;
 
-					foreach (var ch in OGF_V.childs)
+					if (OGF_V.childs[idx].to_delete)
                     {
-						if (ch.to_delete) chld_cnt--;
-					}
-
-					if (chld_cnt > 1 || OGF_V.childs[idx].to_delete)
-					{
-						OGF_V.childs[idx].to_delete = !OGF_V.childs[idx].to_delete;
-
-						if (OGF_V.childs[idx].to_delete)
-                        {
-							curBox.Text = "Return Mesh";
-							curBox.BackColor = Color.FromArgb(255, 255, 128, 128);
-						}
-						else
-                        {
-							curBox.Text = "Delete Mesh";
-							curBox.BackColor = SystemColors.Control;
-						}
+						curBox.Text = "Return Mesh";
+						curBox.BackColor = Color.FromArgb(255, 255, 128, 128);
 					}
 					else
                     {
-						MessageBox.Show("Can't delete last mesh!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						curBox.Text = "Delete Mesh";
+						curBox.BackColor = SystemColors.Control;
 					}
 					break;
+				case "AddMeshButton":
+                    OGF_Children SecondOgf = null;
+                    byte[] SecondOgfByte = null;
+					OpenOGFDialog.ShowDialog();
+                    OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
+
+                    AddMesh addMeshDialog = new AddMesh(ref OGF_V, SecondOgf);
+                    addMeshDialog.ShowDialog();
+                    break;
 			}
 		}
 
@@ -1532,8 +1545,7 @@ skip_ik_data:
 								return;
 
 							int temp = curBox.SelectionStart;
-							string mask = number_mask;
-							Regex.Match(curControl.Text, mask);
+							Regex.Match(curControl.Text, number_mask);
 
                             try
 							{
@@ -1610,6 +1622,12 @@ skip_ik_data:
         {
 			if (FILE_NAME == "") return;
 
+			if (!CheckMeshes())
+			{
+                AutoClosingMessageBox.Show("Can't save model without meshes!", "", 1500, MessageBoxIcon.Error);
+				return;
+            }
+
 			CopyParams();
 			SaveFile(FILE_NAME);
 			AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Saved!" : "Saved!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxIcon.Information);
@@ -1656,7 +1674,13 @@ skip_ik_data:
 
 		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			if (OGF_V.IsDM)
+            if (!CheckMeshes())
+            {
+                AutoClosingMessageBox.Show("Can't save file without meshes!", "", 1500, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (OGF_V.IsDM)
 				SaveAsDialog.Filter = "DM file|*.dm";
 			else
 				SaveAsDialog.Filter = "OGF file|*.ogf";
@@ -1668,9 +1692,15 @@ skip_ik_data:
 			}
 		}
 
-		private void SaveTools(string filename, ExportFormat format, bool silent = false)
+		private void SaveTools(string filename, ExportFormat format)
 		{
-			if (File.Exists(filename) && filename != FILE_NAME)
+            if (!CheckMeshes())
+            {
+                AutoClosingMessageBox.Show("Can't save file without meshes!", "", 1500, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (File.Exists(filename) && filename != FILE_NAME)
                 File.Delete(filename);
 
             switch (format)
@@ -1702,8 +1732,11 @@ skip_ik_data:
 						File.Delete(filename + ext);
                     break;
 				case ExportFormat.OMF:
-                    using (var fileStream = new FileStream(filename, FileMode.OpenOrCreate))
-                        fileStream.Write(OGF_V.motions.data(), 0, OGF_V.motions.data().Length);
+					using (var fileStream = new FileStream(filename, FileMode.OpenOrCreate))
+					{
+						fileStream.Write(OGF_V.motions.data(), 0, OGF_V.motions.data().Length);
+						fileStream.Close();
+                    }
                     break;
                 case ExportFormat.Bones:
                     RunConverter(FILE_NAME, filename, 0, 1);
@@ -1716,11 +1749,8 @@ skip_ik_data:
                     break;
             }
 
-			if (!silent)
-			{
-				string Text = (OGF_V.BrokenType > 0 ? "Repaired and " : "") + (format == ExportFormat.OGF ? "Saved!" : "Exported!");
-                AutoClosingMessageBox.Show(Text, "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxIcon.Information);
-            }
+			string Text = (OGF_V.BrokenType > 0 ? "Repaired and " : "") + (format == ExportFormat.OGF ? "Saved!" : "Exported!");
+            AutoClosingMessageBox.Show(Text, "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxIcon.Information);
 		}
 
 		private void objectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1911,6 +1941,7 @@ skip_ik_data:
             using (var fileStream = new FileStream(Filename, FileMode.OpenOrCreate))
             {
                 fileStream.Write(OGF_V.motions.data(), 0, OGF_V.motions.data().Length);
+				fileStream.Close();
             }
 
             Process proc = new Process();
@@ -2188,7 +2219,13 @@ skip_ik_data:
 
 		private void openSkeletonInObjectEditorToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string Filename = TempFolder() + $"\\{StatusFile.Text}_temp.ogf";
+            if (!CheckMeshes())
+            {
+                AutoClosingMessageBox.Show("Can't open model without meshes!", "", 1500, MessageBoxIcon.Error);
+                return;
+            }
+
+            string Filename = TempFolder() + $"\\{StatusFile.Text}_temp.ogf";
 			string ObjectName = Filename.Substring(0, Filename.LastIndexOf('.'));
 			ObjectName = ObjectName.Substring(0, ObjectName.LastIndexOf('.')) + ".object";
 
@@ -2712,7 +2749,7 @@ skip_ik_data:
 				pSettings.Load("FirstLoad", ref first_load, true);
 
 				if (create_model)
-					SaveTools(ObjName, ExportFormat.Obj, true);
+                    SaveAsObj(ObjName, CurrentLod);
 
 				ViewerProcess.StartInfo.FileName = exe_path;
 				ViewerProcess.StartInfo.Arguments = $"--input=\"{ObjName}\" --output=\"{image_path}\"" + (first_load ? " --filename" : "");
@@ -2811,7 +2848,31 @@ skip_ik_data:
 			SetWindowPos(ViewerProcess.MainWindowHandle, IntPtr.Zero, 0, 0, width, height, SWP_NOACTIVATE | SWP_NOZORDER);
 		}
 
-		private void CreateTextureGroupBox(int idx)
+        private void CreateTextureAddButton()
+        {
+			var GroupBox = new GroupBox();
+			GroupBox.Location = new System.Drawing.Point(AddMeshGroupBox.Location.X, 0);
+			GroupBox.Size = AddMeshGroupBox.Size;
+			GroupBox.Name = "AddMeshGrpBox";
+			GroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			GroupBox.Dock = AddMeshGroupBox.Dock;
+			GroupBox.Padding = AddMeshGroupBox.Padding;
+
+            var newButton = new Button();
+            newButton.Name = "AddMeshButton_0";
+            newButton.Size = AddMeshButton.Size;
+            newButton.Location = AddMeshButton.Location;
+            newButton.Click += new System.EventHandler(this.ButtonFilter);
+            newButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+            newButton.Text = AddMeshButton.Text;
+			newButton.Dock = AddMeshButton.Dock;
+
+			GroupBox.Controls.Add(newButton);
+
+            TexturesPage.Controls.Add(GroupBox);
+		}
+
+        private void CreateTextureGroupBox(int idx)
 		{
 			var GroupBox = new GroupBox();
 			GroupBox.Location = new System.Drawing.Point(TexturesGropuBox.Location.X, TexturesGropuBox.Location.Y + (TexturesGropuBox.Size.Height + 2) * idx);
@@ -3183,12 +3244,5 @@ skip_ik_data:
 				PrFolder.Start();
 			}
 		}
-
-		private void MotionBoxKeyPress(object sender, MouseEventArgs e)
-		{
-            if (e.Button != MouseButtons.Right) return;
-
-            MotionsContextStrip.Show(Cursor.Position);
-        }
 	}
 }
