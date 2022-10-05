@@ -72,6 +72,17 @@ namespace OGF_tool
 			}
 		}
 
+		public enum ExportFormat
+		{
+			OGF,
+			Object,
+            Obj,
+            Bones,
+			OMF,
+			Skl,
+			Skls
+		}
+
 		public OGF_Editor()
 		{
             Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
@@ -321,7 +332,7 @@ namespace OGF_tool
 				}
 			}
 
-			MotionRefsBox.Clear();
+            MotionRefsBox.Clear();
 			UserDataBox.Clear();
 
 			if (OGF_V.motion_refs != null)
@@ -1657,80 +1668,66 @@ skip_ik_data:
 			}
 		}
 
-		private void SaveTools(string filename, int format, bool silent = false)
+		private void SaveTools(string filename, ExportFormat format, bool silent = false)
 		{
-			bool has_msg = false;
-
 			if (File.Exists(filename) && filename != FILE_NAME)
+                File.Delete(filename);
+
+            switch (format)
 			{
-				FileInfo backup_file = new FileInfo(filename);
-				backup_file.Delete();
-			}
+				case ExportFormat.OGF:
+                    if (filename != FILE_NAME)
+                        File.Copy(FILE_NAME, filename);
 
-			if (format == 0)
+                    CopyParams();
+                    SaveFile(filename);
+                    break;
+				case ExportFormat.Obj:
+                    SaveAsObj(filename, CurrentLod);
+                    break;
+                case ExportFormat.Object:
+                    string ext = OGF_V.IsDM ? ".dm" : ".ogf";
+
+                    if (File.Exists(filename + ext))
+                        File.Delete(filename + ext);
+
+                    File.Copy(FILE_NAME, filename + ext);
+
+                    CopyParams();
+                    SaveFile(filename + ext);
+
+                    RunConverter(filename + ext, filename, OGF_V.IsDM ? 2 : 0, 0);
+
+                    if (File.Exists(filename + ext))
+						File.Delete(filename + ext);
+                    break;
+				case ExportFormat.OMF:
+                    using (var fileStream = new FileStream(filename, FileMode.OpenOrCreate))
+                        fileStream.Write(OGF_V.motions.data(), 0, OGF_V.motions.data().Length);
+                    break;
+                case ExportFormat.Bones:
+                    RunConverter(FILE_NAME, filename, 0, 1);
+                    break;
+                case ExportFormat.Skl:
+                    RunConverter(FILE_NAME, filename, 0, 2);
+                    break;
+                case ExportFormat.Skls:
+                    RunConverter(FILE_NAME, filename, 0, 3);
+                    break;
+            }
+
+			if (!silent)
 			{
-				if (filename != FILE_NAME)
-				{
-					FileInfo file = new FileInfo(FILE_NAME);
-					file.CopyTo(filename);
-				}
-
-				CopyParams();
-				SaveFile(filename);
-				has_msg = true;
-			}
-			else if (format == 1)
-			{
-				string ext = OGF_V.IsDM ? ".dm" : ".ogf";
-
-				if (filename != FILE_NAME)
-				{
-					if (File.Exists(filename + ext))
-					{
-						FileInfo backup_file = new FileInfo(filename + ext);
-						backup_file.Delete();
-					}
-
-					FileInfo file = new FileInfo(FILE_NAME);
-					file.CopyTo(filename + ext);
-				}
-
-				CopyParams();
-				SaveFile(filename + ext);
-
-				RunConverter(filename + ext, filename, OGF_V.IsDM ? 2 : 0, 0);
-
-				if (File.Exists(filename + ext))
-				{
-					FileInfo backup_file = new FileInfo(filename + ext);
-					backup_file.Delete();
-				}
-			}
-			else if (format == 2)
-				RunConverter(FILE_NAME, filename, 0, 1);
-			else if (format == 3)
-				RunConverter(FILE_NAME, filename, 0, 2);
-			else if (format == 4)
-				RunConverter(FILE_NAME, filename, 0, 3);
-			else if (format == 5)
-			{
-				using (var fileStream = new FileStream(filename, FileMode.OpenOrCreate))
-				{
-					fileStream.Write(OGF_V.motions.data(), 0, OGF_V.motions.data().Length);
-				}
-			}
-			else if (format == 6)
-				SaveAsObj(filename, CurrentLod);
-
-			if (!has_msg && !silent)
-				AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Exported!" : "Exported!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxIcon.Information);
+				string Text = (OGF_V.BrokenType > 0 ? "Repaired and " : "") + (format == ExportFormat.OGF ? "Saved!" : "Exported!");
+                AutoClosingMessageBox.Show(Text, "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxIcon.Information);
+            }
 		}
 
 		private void objectToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (SaveObjectDialog.ShowDialog() == DialogResult.OK)
 			{
-				SaveTools(SaveObjectDialog.FileName, 1);
+				SaveTools(SaveObjectDialog.FileName, ExportFormat.Object);
 				SaveObjectDialog.InitialDirectory = "";
 			}
 		}
@@ -1739,7 +1736,7 @@ skip_ik_data:
 		{
 			if (SaveBonesDialog.ShowDialog() == DialogResult.OK)
 			{
-				SaveTools(SaveBonesDialog.FileName, 2);
+				SaveTools(SaveBonesDialog.FileName, ExportFormat.Bones);
 				SaveBonesDialog.InitialDirectory = "";
 			}
 		}
@@ -1748,7 +1745,7 @@ skip_ik_data:
 		{
 			if (SaveOmfDialog.ShowDialog() == DialogResult.OK)
 			{
-				SaveTools(SaveOmfDialog.FileName, 5);
+				SaveTools(SaveOmfDialog.FileName, ExportFormat.OMF);
 				SaveOmfDialog.InitialDirectory = "";
 			}
 		}
@@ -1759,7 +1756,7 @@ skip_ik_data:
 			{
 				float old_lod = CurrentLod;
 				CurrentLod = 0.0f;
-				SaveTools(SaveObjDialog.FileName, 6);
+				SaveTools(SaveObjDialog.FileName, ExportFormat.Obj);
 				CurrentLod = old_lod;
 				SaveObjDialog.InitialDirectory = "";
 			}
@@ -1769,7 +1766,7 @@ skip_ik_data:
 		{
 			if (SaveSklDialog.ShowDialog(this.Handle))
 			{
-				SaveTools(SaveSklDialog.FileName, 3);
+				SaveTools(SaveSklDialog.FileName, ExportFormat.Skl);
 				SaveSklDialog.InitialDirectory = "";
 			}
 		}
@@ -1778,7 +1775,7 @@ skip_ik_data:
 		{
 			if (SaveSklsDialog.ShowDialog() == DialogResult.OK)
 			{
-				SaveTools(SaveSklsDialog.FileName, 4);
+				SaveTools(SaveSklsDialog.FileName, ExportFormat.Skls);
 				SaveSklsDialog.InitialDirectory = "";
 			}
 		}
@@ -2715,7 +2712,7 @@ skip_ik_data:
 				pSettings.Load("FirstLoad", ref first_load, true);
 
 				if (create_model)
-					SaveTools(ObjName, 6, true);
+					SaveTools(ObjName, ExportFormat.Obj, true);
 
 				ViewerProcess.StartInfo.FileName = exe_path;
 				ViewerProcess.StartInfo.Arguments = $"--input=\"{ObjName}\" --output=\"{image_path}\"" + (first_load ? " --filename" : "");
