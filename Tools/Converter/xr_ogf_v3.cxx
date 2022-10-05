@@ -89,7 +89,7 @@ bool xr_ogf_v3::versioned() const { return false; }
 void xr_ogf_v3::setup_ib0()
 {
 	m_ib0 = m_ib;
-	size_t fix_idx = 0;
+	uint_fast32_t fix_idx = 0;
 	uint16_t active_vb_size = uint16_t(m_min_vertices & UINT16_MAX);
 	for (ogf3_vsplit *p = m_vsplits, *end = p + m_vb.size() - m_min_vertices; p != end; ++p) {
 		for (uint_fast32_t end_idx = fix_idx + p->fix_faces; fix_idx < end_idx; ++fix_idx)

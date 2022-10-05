@@ -1,6 +1,11 @@
 #pragma once
 
 #if !defined(_DEBUG) && defined(_WIN64) 
+#include "tbb/parallel_for.h" 
+#include "tbb/blocked_range.h"
+#endif
+
+#if !defined(_DEBUG) && defined(_WIN64) 
 #define FOR_START(type, start, finish, counter)\
 tbb::parallel_for(tbb::blocked_range<type>(start, finish), [&](const tbb::blocked_range<type>& range) {\
     for (type counter = range.begin(); counter != range.end(); ++counter)

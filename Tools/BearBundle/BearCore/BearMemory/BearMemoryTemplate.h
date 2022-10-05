@@ -1,4 +1,6 @@
 #pragma once
+#pragma warning(disable:4984)
+
 template<typename C>
 inline void bear_copy(C*dst, const C*source, bsize count)
 {

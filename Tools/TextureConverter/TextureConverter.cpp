@@ -4,12 +4,9 @@
 #include "..\BearBundle\BearCore\BearCore.hpp"
 #include "..\BearBundle\BearGraphics\BearGraphics.hpp"
 
-#if !defined(_DEBUG) && defined(_WIN64) 
-#include "tbb/parallel_for.h" 
-#include "tbb/blocked_range.h"
-#endif
-
 #include "Utils.hpp"
+
+#pragma warning(disable:4267)
 
 int iReaderPos = 1;
 

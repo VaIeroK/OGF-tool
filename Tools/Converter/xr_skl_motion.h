@@ -131,7 +131,7 @@ inline xr_bone_motion_vec& xr_skl_motion::bone_motions()
 }
 inline int xr_skl_motion::marks_size()
 {
-	return m_marks.size();
+	return (int)m_marks.size();
 }
 
 } // end of namespace xray_re

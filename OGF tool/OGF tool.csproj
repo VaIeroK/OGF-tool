@@ -34,7 +34,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
+    <OutputPath>..\Bin\x64\Debug\</OutputPath>
+	<IntermediateOutputPath>..\Intermediate\x64\Debug\OGF Tool</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -43,7 +44,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
+    <OutputPath>..\Bin\x64\Release\</OutputPath>
+	<IntermediateOutputPath>..\Intermediate\x64\Release\OGF Tool</IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -189,6 +191,6 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y /d  "$(SolutionDir)SDK\binaries\f3d.exe" "$(OutDir)..\..\..\"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y /d  "$(SolutionDir)SDK\binaries\f3d.exe" "$(OutDir)..\..\..\$(Configuration)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

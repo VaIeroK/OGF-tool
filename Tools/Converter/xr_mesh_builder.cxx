@@ -592,7 +592,7 @@ void xr_mesh_builder::create_mappings(lw_face_vec& faces, lw_vmref_vec& vmrefs, 
 	}
 	uint32_t* vmap_remap = new uint32_t[vmaps.size()];
 	unsigned used = 0;
-	for (uint_fast32_t i = 0, n = vmaps.size(); i != n; ++i) {
+	for (uint_fast32_t i = 0, n = (uint_fast32_t)vmaps.size(); i != n; ++i) {
 		if (i != used)
 			vmaps[used] = vmaps[i];
 		vmap_remap[i] = vmaps[i] ? used++ : BAD_IDX;
