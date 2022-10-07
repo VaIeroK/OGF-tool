@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Copy.cs" />
     <Compile Include="Forms\AddMesh.cs">
       <SubType>Form</SubType>
     </Compile>

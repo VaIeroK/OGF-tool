@@ -131,9 +131,10 @@ namespace OGF_tool
 			exportToolStripMenuItem.Enabled = false;
 			LabelBroken.Visible = false;
 			viewPortToolStripMenuItem.Visible = false;
-			ChangeLodButton.Enabled = false;
+            LodMenuItem.Enabled = false;
             reloadToolStripMenuItem.Enabled = false;
             CurrentFormat.Enabled = false;
+            AddMeshesMenuItem.Enabled = false;
 
             SaveSklDialog = new FolderSelectDialog();
 
@@ -204,8 +205,9 @@ namespace OGF_tool
 				OpenInObjectEditor.Enabled = true;
 				exportToolStripMenuItem.Enabled = true;
 				bonesToolStripMenuItem.Enabled = OGF_V.IsSkeleton();
-				ChangeLodButton.Enabled = OGF_V.IsProgressive();
-				OgfInfo.Enabled = !OGF_V.IsDM;
+                LodMenuItem.Enabled = OGF_V.IsProgressive();
+                AddMeshesMenuItem.Enabled = OGF_V.IsSkeleton();
+                OgfInfo.Enabled = !OGF_V.IsDM;
 
 				OpenOGFDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				OpenOGF_DmDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
@@ -320,21 +322,13 @@ namespace OGF_tool
 					CreateLodButton.Visible = true;
 			}
 
-            CreateTextureAddButton();
-
             for (int i = OGF_V.childs.Count - 1; i >= 0; i--)
 			{
 				CreateTextureGroupBox(i);
 
-				var box = TexturesPage.Controls["TextureGrpBox_" + i.ToString()];
-
-				if (box != null)
-				{
-					var Cntrl = box.Controls["textureBox_" + i.ToString()];
-					Cntrl.Text = OGF_V.childs[i].m_texture;
-					var Cntrl2 = box.Controls["shaderBox_" + i.ToString()];
-					Cntrl2.Text = OGF_V.childs[i].m_shader;
-				}
+				var TextureGroupBox = TexturesPage.Controls["TextureGrpBox_" + i.ToString()];
+                TextureGroupBox.Controls["textureBox_" + i.ToString()].Text = OGF_V.childs[i].m_texture; ;
+                TextureGroupBox.Controls["shaderBox_" + i.ToString()].Text = OGF_V.childs[i].m_shader;
 			}
 
             MotionRefsBox.Clear();
@@ -406,13 +400,9 @@ namespace OGF_tool
 				string backup_path = filename + ".bak";
 
 				if (File.Exists(backup_path))
-				{
-					FileInfo backup_file = new FileInfo(backup_path);
-					backup_file.Delete();
-				}
+					File.Delete(backup_path);
 
-				FileInfo file = new FileInfo(filename);
-				file.CopyTo(backup_path);
+				File.Copy(filename, backup_path);
 			}
 
 			using (var fileStream = new FileStream(filename, File.Exists(filename) ? FileMode.Truncate : FileMode.Create))
@@ -550,7 +540,7 @@ namespace OGF_tool
 						if (OGF_V.IsSkeleton()) // Verts
 						{
                             fileStream.ReadUInt32(); // VertsChunk
-                            uint VertsSize = fileStream.ReadUInt32(); // VertsSize
+                            fileStream.BaseStream.Position += fileStream.ReadUInt32(); // VertsSize
 
                             if (!ch.to_delete)
 							{
@@ -615,7 +605,6 @@ namespace OGF_tool
 											break;
 									}
 								}
-                                fileStream.BaseStream.Position += VertsSize; 
                             }
 						}
 
@@ -1500,15 +1489,6 @@ skip_ik_data:
 						curBox.BackColor = SystemColors.Control;
 					}
 					break;
-				case "AddMeshButton":
-                    OGF_Children SecondOgf = null;
-                    byte[] SecondOgfByte = null;
-					OpenOGFDialog.ShowDialog();
-                    OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
-
-                    AddMesh addMeshDialog = new AddMesh(ref OGF_V, SecondOgf);
-                    addMeshDialog.ShowDialog();
-                    break;
 			}
 		}
 
@@ -2500,6 +2480,20 @@ skip_ik_data:
 			}
 		}
 
+		private void addMeshesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			if (OpenOGFDialog.ShowDialog() == DialogResult.OK)
+			{
+                OGF_Children SecondOgf = null;
+                byte[] SecondOgfByte = null;
+
+                OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
+
+				AddMesh addMeshDialog = new AddMesh(ref OGF_V, SecondOgf);
+				addMeshDialog.ShowDialog();
+			}
+        }
+
         private float[] RotateZ(float[] vec)
         {
             float[] dest = new float[3];
@@ -2848,30 +2842,6 @@ skip_ik_data:
 			SetWindowPos(ViewerProcess.MainWindowHandle, IntPtr.Zero, 0, 0, width, height, SWP_NOACTIVATE | SWP_NOZORDER);
 		}
 
-        private void CreateTextureAddButton()
-        {
-			var GroupBox = new GroupBox();
-			GroupBox.Location = new System.Drawing.Point(AddMeshGroupBox.Location.X, 0);
-			GroupBox.Size = AddMeshGroupBox.Size;
-			GroupBox.Name = "AddMeshGrpBox";
-			GroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			GroupBox.Dock = AddMeshGroupBox.Dock;
-			GroupBox.Padding = AddMeshGroupBox.Padding;
-
-            var newButton = new Button();
-            newButton.Name = "AddMeshButton_0";
-            newButton.Size = AddMeshButton.Size;
-            newButton.Location = AddMeshButton.Location;
-            newButton.Click += new System.EventHandler(this.ButtonFilter);
-            newButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-            newButton.Text = AddMeshButton.Text;
-			newButton.Dock = AddMeshButton.Dock;
-
-			GroupBox.Controls.Add(newButton);
-
-            TexturesPage.Controls.Add(GroupBox);
-		}
-
         private void CreateTextureGroupBox(int idx)
 		{
 			var GroupBox = new GroupBox();
@@ -2917,47 +2887,35 @@ skip_ik_data:
 
 		private void CreateTextureLabels(int idx, GroupBox box)
 		{
-			var newLbl = new Label();
+			var newLbl = Copy.Label(TexturesPathLabelEx);
 			newLbl.Name = "textureLbl_" + idx;
-			newLbl.Text = TexturesPathLabelEx.Text;
-			newLbl.Location = TexturesPathLabelEx.Location;
 
-			var newLbl2 = new Label();
+			var newLbl2 = Copy.Label(ShaderNameLabelEx);
 			newLbl2.Name = "shaderLbl_" + idx;
-			newLbl2.Text = ShaderNameLabelEx.Text;
-			newLbl2.Location = ShaderNameLabelEx.Location;
 
-			var newLbl3 = new Label();
+			var newLbl3 = Copy.Label(FaceLabel);
 			newLbl3.Name = "FacesLbl_" + idx;
 			newLbl3.Text = FaceLabel.Text + OGF_V.childs[idx].Faces_SWI(CurrentLod).Count.ToString();
 			newLbl3.Size = new Size(FaceLabel.Size.Width + (OGF_V.childs[idx].Faces_SWI(CurrentLod).Count.ToString().Length * 6), FaceLabel.Size.Height);
 			newLbl3.Location = new Point(FaceLabel.Location.X - (OGF_V.childs[idx].Faces_SWI(CurrentLod).Count.ToString().Length * 6), FaceLabel.Location.Y);
-			newLbl3.Anchor = FaceLabel.Anchor;
-			newLbl3.TextAlign = FaceLabel.TextAlign;
 
-			var newLbl4 = new Label();
+			var newLbl4 = Copy.Label(VertsLabel);
 			newLbl4.Name = "VertsLbl_" + idx;
 			newLbl4.Text = VertsLabel.Text + OGF_V.childs[idx].Vertices.Count.ToString();
 			newLbl4.Size = new Size(VertsLabel.Size.Width + (OGF_V.childs[idx].Vertices.Count.ToString().Length * 6), VertsLabel.Size.Height);
 			newLbl4.Location = new Point(VertsLabel.Location.X - (OGF_V.childs[idx].Vertices.Count.ToString().Length * 6) - (OGF_V.childs[idx].Faces_SWI(CurrentLod).Count.ToString().Length * 6), VertsLabel.Location.Y);
-			newLbl4.Anchor = VertsLabel.Anchor;
-			newLbl4.TextAlign = VertsLabel.TextAlign;
 
-			var newLbl5 = new Label();
+			var newLbl5 = Copy.Label(LinksLabel);
 			newLbl5.Name = "LinksLbl_" + idx;
 			newLbl5.Text = LinksLabel.Text + OGF_V.childs[idx].LinksCount().ToString();
 			newLbl5.Size = new Size(LinksLabel.Size.Width + (OGF_V.childs[idx].LinksCount().ToString().Length * 6), LinksLabel.Size.Height);
 			newLbl5.Location = new Point(LinksLabel.Location.X - (OGF_V.childs[idx].Vertices.Count.ToString().Length * 6) - (OGF_V.childs[idx].Faces_SWI(CurrentLod).Count.ToString().Length * 6) - (OGF_V.childs[idx].LinksCount().ToString().Length * 6), LinksLabel.Location.Y);
-			newLbl5.Anchor = LinksLabel.Anchor;
-			newLbl5.TextAlign = LinksLabel.TextAlign;
 
-			var newLbl6 = new Label();
+			var newLbl6 = Copy.Label(LodLabel);
 			newLbl6.Name = "LodsLbl_" + idx;
 			newLbl6.Text = LodLabel.Text + OGF_V.childs[idx].SWI.Count.ToString();
 			newLbl6.Size = new Size(LodLabel.Size.Width + (OGF_V.childs[idx].SWI.Count.ToString().Length * 6), LodLabel.Size.Height);
 			newLbl6.Location = new Point(LodLabel.Location.X - (OGF_V.childs[idx].Vertices.Count.ToString().Length * 6) - (OGF_V.childs[idx].Faces_SWI(CurrentLod).Count.ToString().Length * 6) - (OGF_V.childs[idx].LinksCount().ToString().Length * 6) - (OGF_V.childs[idx].SWI.Count.ToString().Length * 6), LodLabel.Location.Y);
-			newLbl6.Anchor = LodLabel.Anchor;
-			newLbl6.TextAlign = LodLabel.TextAlign;
 
 			box.Controls.Add(newLbl);
 			box.Controls.Add(newLbl2);
@@ -2997,11 +2955,8 @@ skip_ik_data:
 			BoneNameTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			BoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
-			var BoneNameLabel = new Label();
+			var BoneNameLabel = Copy.Label(BoneNameLabelEx);
 			BoneNameLabel.Name = "boneLabel_" + idx;
-			BoneNameLabel.Size = BoneNameLabelEx.Size;
-			BoneNameLabel.Location = BoneNameLabelEx.Location;
-			BoneNameLabel.Text = BoneNameLabelEx.Text;
 
 			var ParentBoneNameTextBox = new TextBox();
 			ParentBoneNameTextBox.Name = "ParentboneBox_" + idx;
@@ -3012,7 +2967,7 @@ skip_ik_data:
 			ParentBoneNameTextBox.ReadOnly = true;
 			ParentBoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
-			var ParentBoneNameLabel = new Label();
+			var ParentBoneNameLabel = Copy.Label(ParentBoneLabelEx);
 			ParentBoneNameLabel.Name = "ParentboneLabel_" + idx;
 			ParentBoneNameLabel.Size = ParentBoneLabelEx.Size;
 			ParentBoneNameLabel.Location = ParentBoneLabelEx.Location;
@@ -3057,11 +3012,8 @@ skip_ik_data:
 				MateriaBox = MaterialTextBox;
 			}
 
-			var MaterialLabel = new Label();
+			var MaterialLabel = Copy.Label(MaterialLabelEx);
 			MaterialLabel.Name = "MaterialLabel_" + idx;
-			MaterialLabel.Size = MaterialLabelEx.Size;
-			MaterialLabel.Location = MaterialLabelEx.Location;
-			MaterialLabel.Text = MaterialLabelEx.Text;
 
 			var MassTextBox = new TextBox();
 			MassTextBox.Name = "MassBox_" + idx;
@@ -3073,11 +3025,8 @@ skip_ik_data:
 			MassTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			MassTextBox.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			var MassLabel = new Label();
+			var MassLabel = Copy.Label(MassLabelEx);
 			MassLabel.Name = "MassLabel_" + idx;
-			MassLabel.Size = MassLabelEx.Size;
-			MassLabel.Location = MassLabelEx.Location;
-			MassLabel.Text = MassLabelEx.Text;
 
 			var LayoutPanel = new TableLayoutPanel();
 			LayoutPanel.Name = "LayoutPanel_" + idx;
@@ -3123,11 +3072,8 @@ skip_ik_data:
 			CenterMassTextBoxZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			CenterMassTextBoxZ.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			var CenterMassLabel = new Label();
+			var CenterMassLabel = Copy.Label(CenterOfMassLabelEx);
 			CenterMassLabel.Name = "CenterMassLabel_" + idx;
-			CenterMassLabel.Size = CenterOfMassLabelEx.Size;
-			CenterMassLabel.Location = CenterOfMassLabelEx.Location;
-			CenterMassLabel.Text = CenterOfMassLabelEx.Text;
 
 			var PositionX = new TextBox();
 			PositionX.Name = "PositionX_" + idx;
@@ -3159,11 +3105,8 @@ skip_ik_data:
 			PositionZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			PositionZ.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			var PositionLabel = new Label();
+			var PositionLabel = Copy.Label(PositionLabelEx);
 			PositionLabel.Name = "PositionLabel_" + idx;
-			PositionLabel.Size = PositionLabelEx.Size;
-			PositionLabel.Location = PositionLabelEx.Location;
-			PositionLabel.Text = PositionLabelEx.Text;
 
 			var RotationX = new TextBox();
 			RotationX.Name = "RotationX_" + idx;
@@ -3195,11 +3138,8 @@ skip_ik_data:
 			RotationZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
 			RotationZ.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			var RotationLabel = new Label();
+			var RotationLabel = Copy.Label(RotationLabelEx);
 			RotationLabel.Name = "RotationLabel_" + idx;
-			RotationLabel.Size = RotationLabelEx.Size;
-			RotationLabel.Location = RotationLabelEx.Location;
-			RotationLabel.Text = RotationLabelEx.Text;
 
 			LayoutPanel.Controls.Add(MassTextBox, 0, 0);
 			LayoutPanel.Controls.Add(CenterMassTextBoxX, 0, 1);

@@ -134,60 +134,30 @@
   <data name="TexturesPage.AutoScroll" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="AddMeshButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
+  <metadata name="TextureContextStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 56</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="AddMeshButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 13</value>
+  <data name="AddMeshesMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>169, 22</value>
   </data>
-  <data name="AddMeshButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>482, 33</value>
-  </data>
-  <data name="AddMeshButton.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="AddMeshButton.Text" xml:space="preserve">
+  <data name="AddMeshesMenuItem.Text" xml:space="preserve">
     <value>Add meshes</value>
   </data>
-  <data name="&gt;&gt;AddMeshButton.Name" xml:space="preserve">
-    <value>AddMeshButton</value>
+  <data name="LodMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>169, 22</value>
   </data>
-  <data name="&gt;&gt;AddMeshButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="LodMenuItem.Text" xml:space="preserve">
+    <value>Change lod factor</value>
   </data>
-  <data name="&gt;&gt;AddMeshButton.Parent" xml:space="preserve">
-    <value>AddMeshGroupBox</value>
+  <data name="TextureContextStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>170, 48</value>
   </data>
-  <data name="&gt;&gt;AddMeshButton.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;TextureContextStrip.Name" xml:space="preserve">
+    <value>TextureContextStrip</value>
   </data>
-  <data name="AddMeshGroupBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="AddMeshGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 127</value>
-  </data>
-  <data name="AddMeshGroupBox.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 0, 3, 3</value>
-  </data>
-  <data name="AddMeshGroupBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 49</value>
-  </data>
-  <data name="AddMeshGroupBox.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;AddMeshGroupBox.Name" xml:space="preserve">
-    <value>AddMeshGroupBox</value>
-  </data>
-  <data name="&gt;&gt;AddMeshGroupBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;AddMeshGroupBox.Parent" xml:space="preserve">
-    <value>TexturesPage</value>
-  </data>
-  <data name="&gt;&gt;AddMeshGroupBox.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;TextureContextStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="LodLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -472,7 +442,7 @@
     <value>TexturesPage</value>
   </data>
   <data name="&gt;&gt;TexturesGropuBox.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>0</value>
   </data>
   <data name="TexturesPage.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 25</value>
@@ -1576,7 +1546,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TabControl.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <metadata name="MenuPanel.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>322, 17</value>
@@ -1588,7 +1558,7 @@
     <value>F4</value>
   </data>
   <data name="LoadMenuParam.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="LoadMenuParam.Text" xml:space="preserve">
     <value>Load</value>
@@ -1597,7 +1567,7 @@
     <value>Ctrl+S</value>
   </data>
   <data name="SaveMenuParam.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="SaveMenuParam.Text" xml:space="preserve">
     <value>Save</value>
@@ -1606,7 +1576,7 @@
     <value>F5</value>
   </data>
   <data name="saveAsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="saveAsToolStripMenuItem.Text" xml:space="preserve">
     <value>Save as...</value>
@@ -1648,25 +1618,25 @@
     <value>Skls</value>
   </data>
   <data name="exportToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="exportToolStripMenuItem.Text" xml:space="preserve">
     <value>Export</value>
   </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 6</value>
+    <value>177, 6</value>
   </data>
   <data name="reloadToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>F3</value>
   </data>
   <data name="reloadToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="reloadToolStripMenuItem.Text" xml:space="preserve">
     <value>Reload</value>
   </data>
   <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>Exit</value>
@@ -1689,20 +1659,14 @@
   <data name="importDataFromModelToolStripMenuItem.Text" xml:space="preserve">
     <value>Import OGF Params</value>
   </data>
-  <data name="ChangeLodButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 22</value>
-  </data>
-  <data name="ChangeLodButton.Text" xml:space="preserve">
-    <value>Change lod</value>
-  </data>
   <data name="nPCCoPToSoCToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>161, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="nPCCoPToSoCToolStripMenuItem.Text" xml:space="preserve">
     <value>NPC CoP to SoC</value>
   </data>
   <data name="nPCSoCToCoPToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>161, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="nPCSoCToCoPToolStripMenuItem.Text" xml:space="preserve">
     <value>NPC SoC to CoP</value>
@@ -1780,7 +1744,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;MenuPanel.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="FileLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>28, 17</value>
@@ -1819,7 +1783,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;StatusPanel.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="BkpCheckBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -1849,7 +1813,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;BkpCheckBox.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <metadata name="SaveAsDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>715, 17</value>
@@ -1927,7 +1891,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelBroken.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <metadata name="SaveObjDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1561, 17</value>
@@ -1937,6 +1901,9 @@
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>257</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>96, 96</value>
@@ -2366,12 +2333,6 @@
   <data name="&gt;&gt;importDataFromModelToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ChangeLodButton.Name" xml:space="preserve">
-    <value>ChangeLodButton</value>
-  </data>
-  <data name="&gt;&gt;ChangeLodButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;converterToolStripMenuItem.Name" xml:space="preserve">
     <value>converterToolStripMenuItem</value>
   </data>
@@ -2497,6 +2458,18 @@
   </data>
   <data name="&gt;&gt;SaveObjDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LodMenuItem.Name" xml:space="preserve">
+    <value>LodMenuItem</value>
+  </data>
+  <data name="&gt;&gt;LodMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;AddMeshesMenuItem.Name" xml:space="preserve">
+    <value>AddMeshesMenuItem</value>
+  </data>
+  <data name="&gt;&gt;AddMeshesMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>OGF_Editor</value>
