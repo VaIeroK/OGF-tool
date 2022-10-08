@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,17 @@ namespace OGF_tool
         {
             min = new float[3];
             max = new float[3];
+        }
+
+        public void Load(XRayLoader xr_loader)
+        {
+            min[0] = xr_loader.ReadFloat();
+            min[1] = xr_loader.ReadFloat();
+            min[2] = xr_loader.ReadFloat();
+
+            max[0] = xr_loader.ReadFloat();
+            max[1] = xr_loader.ReadFloat();
+            max[2] = xr_loader.ReadFloat();
         }
 
         public byte[] data()
@@ -42,6 +54,14 @@ namespace OGF_tool
         {
             c = new float[3];
             r = 0.0f;
+        }
+
+        public void Load(XRayLoader xr_loader)
+        {
+            c[0] = xr_loader.ReadFloat();
+            c[1] = xr_loader.ReadFloat();
+            c[2] = xr_loader.ReadFloat();
+            r = xr_loader.ReadFloat();
         }
 
         public byte[] data()
@@ -74,18 +94,31 @@ namespace OGF_tool
             shader_id = 0;
         }
 
-        public byte[] data(byte version)
+        public void Load(XRayLoader xr_loader)
+        {
+            format_version = xr_loader.ReadByte();
+            type = xr_loader.ReadByte();
+            shader_id = (short)xr_loader.ReadUInt16();
+
+            if (format_version == 4)
+            {
+                bb.Load(xr_loader);
+                bs.Load(xr_loader);
+            }
+        }
+
+        public byte[] data()
         {
             List<byte> temp = new List<byte>();
 
             temp.AddRange(BitConverter.GetBytes((uint)OGF.OGF_HEADER));
-            temp.AddRange(BitConverter.GetBytes((version == 4 ? 44 : 4)));
+            temp.AddRange(BitConverter.GetBytes((format_version == 4 ? 44 : 4)));
 
             temp.Add(format_version);
             temp.Add(type);
             temp.AddRange(BitConverter.GetBytes(shader_id));
 
-            if (version == 4)
+            if (format_version == 4)
             {
                 temp.AddRange(bb.data());
                 temp.AddRange(bs.data());
@@ -100,22 +133,18 @@ namespace OGF_tool
         public string m_texture;
         public string m_shader;
 
-        public OGF_Child(int _old_size, string texture, string shader)
+        public OGF_Child()
         {
             Vertices = new List<SSkelVert>();
             Faces = new List<SSkelFace>();
             SWI = new List<VIPM_SWR>();
-            m_texture = texture;
-            m_shader = shader;
-            old_size = _old_size;
+            old_size = 0;
             links = 0;
             to_delete = false;
-            old_verts_size = 0;
             FVF = 0;
         }
 
         public int old_size;
-        public int old_verts_size;
 
         public uint links;
         public uint FVF;
@@ -166,13 +195,140 @@ namespace OGF_tool
                 links = count;
         }
 
-        public byte[] data(byte version)
+        public bool Load(XRayLoader xr_loader, byte version)
+        {
+            // Header start
+            if (!xr_loader.find_chunk((int)OGF.OGF_HEADER, false, true)) 
+                return false;
+
+            Header = new OGF_Header();
+            Header.Load(xr_loader);
+            // Header end
+
+            // Texture start
+            if (!xr_loader.find_chunk((int)OGF.OGF_TEXTURE, false, true))
+                return false;
+
+            m_texture = xr_loader.read_stringZ();
+            m_shader = xr_loader.read_stringZ();
+            // Texture end
+
+            // Verts start
+            int VertsChunk = (version == 3 ? (int)OGF.OGF3_VERTICES : (int)OGF.OGF4_VERTICES);
+
+            if (!xr_loader.find_chunk(VertsChunk, false, true))
+                return false;
+
+            FVF = links = xr_loader.ReadUInt32();
+            uint verts = xr_loader.ReadUInt32();
+
+            for (int i = 0; i < verts; i++)
+            {
+                SSkelVert Vert = new SSkelVert();
+                switch (LinksCount())
+                {
+                    case 1:
+                        Vert.offs = xr_loader.ReadVector();
+                        Vert.norm = xr_loader.ReadVector();
+                        if (version == 4)
+                        {
+                            Vert.tang = xr_loader.ReadVector();
+                            Vert.binorm = xr_loader.ReadVector();
+                        }
+                        Vert.uv = xr_loader.ReadVector2();
+
+                        Vert.bones_id[0] = xr_loader.ReadUInt32();
+                        break;
+                    case 2:
+                        Vert.bones_id[0] = xr_loader.ReadUInt16();
+                        Vert.bones_id[1] = xr_loader.ReadUInt16();
+
+                        Vert.offs = xr_loader.ReadVector();
+                        Vert.norm = xr_loader.ReadVector();
+                        Vert.tang = xr_loader.ReadVector();
+                        Vert.binorm = xr_loader.ReadVector();
+                        Vert.bones_infl[0] = xr_loader.ReadFloat();
+                        Vert.uv = xr_loader.ReadVector2();
+                        break;
+                    case 3:
+                    case 4:
+                        for (int j = 0; j < LinksCount(); j++)
+                            Vert.bones_id[j] = xr_loader.ReadUInt16();
+
+                        Vert.offs = xr_loader.ReadVector();
+                        Vert.norm = xr_loader.ReadVector();
+                        Vert.tang = xr_loader.ReadVector();
+                        Vert.binorm = xr_loader.ReadVector();
+
+                        for (int j = 0; j < LinksCount() - 1; j++)
+                            Vert.bones_infl[j] = xr_loader.ReadFloat();
+
+                        Vert.uv = xr_loader.ReadVector2();
+                        break;
+                    default:
+                        Vert.offs = xr_loader.ReadVector();
+                        Vert.norm = xr_loader.ReadVector();
+                        Vert.uv = xr_loader.ReadVector2();
+                        break;
+                }
+                Vertices.Add(Vert);
+            }
+            // Verts end
+
+            // Indices start
+            int FacesChunk = (version == 3 ? (int)OGF.OGF3_INDICES : (int)OGF.OGF4_INDICES);
+
+            if (!xr_loader.find_chunk(FacesChunk, false, true))
+                return false;
+
+            uint faces = xr_loader.ReadUInt32() / 3;
+
+            for (uint i = 0; i < faces; i++)
+            {
+                SSkelFace Face = new SSkelFace();
+                Face.v[0] = (ushort)xr_loader.ReadUInt16();
+                Face.v[1] = (ushort)xr_loader.ReadUInt16();
+                Face.v[2] = (ushort)xr_loader.ReadUInt16();
+                Faces.Add(Face);
+            }
+            // Indices end
+
+            // SWR start
+            if (version == 4)
+            {
+                if (xr_loader.find_chunk((int)OGF.OGF4_SWIDATA, false, true))
+                {
+                    xr_loader.ReadUInt32();
+                    xr_loader.ReadUInt32();
+                    xr_loader.ReadUInt32();
+                    xr_loader.ReadUInt32();
+
+                    uint swi_size = xr_loader.ReadUInt32();
+
+                    for (uint i = 0; i < swi_size; i++)
+                    {
+                        VIPM_SWR SWR = new VIPM_SWR();
+                        SWR.offset = xr_loader.ReadUInt32();
+                        SWR.num_tris = (ushort)xr_loader.ReadUInt16();
+                        SWR.num_verts = (ushort)xr_loader.ReadUInt16();
+                        SWI.Add(SWR);
+                    }
+                }
+            }
+
+            old_size = data().Length;
+
+            // SWR end
+            return true;
+        }
+
+        public byte[] data()
         {
             List<byte> temp = new List<byte>();
 
             // Header start
             if (Header != null)
-                temp.AddRange(Header.data(version));
+                temp.AddRange(Header.data());
             // Header end
 
             // Texture start
@@ -186,16 +342,16 @@ namespace OGF_tool
             // Texture end
 
             // Verts start
-            uint VertsChunk = (version == 4 ? (uint)OGF.OGF4_VERTICES : (uint)OGF.OGF3_VERTICES);
+            uint VertsChunk = (Header.format_version == 4 ? (uint)OGF.OGF4_VERTICES : (uint)OGF.OGF3_VERTICES);
             temp.AddRange(BitConverter.GetBytes(VertsChunk));
-            temp.AddRange(BitConverter.GetBytes((uint)GetVertsChunk(version).Length));
+            temp.AddRange(BitConverter.GetBytes((uint)GetVertsChunk().Length));
 
-            temp.AddRange(GetVertsChunk(version));
+            temp.AddRange(GetVertsChunk());
 
             // Verts end
 
             // Indices start
-            uint FacesChunk = (version == 4 ? (uint)OGF.OGF4_INDICES : (uint)OGF.OGF3_INDICES);
+            uint FacesChunk = (Header.format_version == 4 ? (uint)OGF.OGF4_INDICES : (uint)OGF.OGF3_INDICES);
             temp.AddRange(BitConverter.GetBytes(FacesChunk));
             temp.AddRange(BitConverter.GetBytes(Faces.Count * 3 * 2 + 4));
 
@@ -232,7 +388,7 @@ namespace OGF_tool
             return temp.ToArray();
         }
 
-        private byte[] GetVertsChunk(byte version)
+        private byte[] GetVertsChunk()
         {
             List<byte> temp = new List<byte>();
 
@@ -252,7 +408,7 @@ namespace OGF_tool
                         temp.AddRange(OGF_Editor.GetVec3Bytes(vert.offs));
                         temp.AddRange(OGF_Editor.GetVec3Bytes(vert.norm));
 
-                        if (version == 4)
+                        if (Header.format_version == 4)
                         {
                             temp.AddRange(OGF_Editor.GetVec3Bytes(vert.tang));
                             temp.AddRange(OGF_Editor.GetVec3Bytes(vert.binorm));

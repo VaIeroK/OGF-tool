@@ -36,6 +36,54 @@ namespace OGF_tool
 
         }
 
+        public byte Load(XRayLoader xr_loader, uint chunk_size)
+        {
+            byte broken_type = 0;
+
+            pos = xr_loader.chunk_pos;
+
+            // Читаем таймеры в 8 байт
+            long reader_start_pos = xr_loader.reader.BaseStream.Position;
+            m_source = xr_loader.read_stringZ();
+            m_export_tool = xr_loader.read_stringZ();
+            m_export_time = xr_loader.ReadInt64();
+            m_owner_name = xr_loader.read_stringZ();
+            m_creation_time = xr_loader.ReadInt64();
+            m_export_modif_name_tool = xr_loader.read_stringZ();
+            m_modified_time = xr_loader.ReadInt64();
+            long description_end_pos = xr_loader.reader.BaseStream.Position;
+
+            old_size = m_source.Length + 1 + m_export_tool.Length + 1 + 8 + m_owner_name.Length + 1 + 8 + m_export_modif_name_tool.Length + 1 + 8;
+
+            if ((description_end_pos - reader_start_pos) != chunk_size) // Размер не состыковывается, пробуем читать 4 байта
+            {
+                xr_loader.reader.BaseStream.Position = reader_start_pos;
+                m_source = xr_loader.read_stringZ();
+                m_export_tool = xr_loader.read_stringZ();
+                m_export_time = xr_loader.ReadUInt32();
+                m_owner_name = xr_loader.read_stringZ();
+                m_creation_time = xr_loader.ReadUInt32();
+                m_export_modif_name_tool = xr_loader.read_stringZ();
+                m_modified_time = xr_loader.ReadUInt32();
+                description_end_pos = xr_loader.reader.BaseStream.Position;
+
+                old_size = m_source.Length + 1 + m_export_tool.Length + 1 + 4 + m_owner_name.Length + 1 + 4 + m_export_modif_name_tool.Length + 1 + 4;
+                four_byte = true; // Ставим флаг на то что мы прочитали чанк с 4х байтными таймерами, если модель будет сломана то чинить чанк будем в 8 байт
+
+                if ((description_end_pos - reader_start_pos) != chunk_size) // Все равно разный размер? Походу модель сломана
+                {
+                    broken_type = 1;
+
+                    // Чистим таймеры, так как прочитаны битые байты
+                    m_export_time = 0;
+                    m_creation_time = 0;
+                    m_modified_time = 0;
+                }
+            }
+
+            return broken_type;
+        }
+
         public byte[] data()
         {
             List<byte> temp = new List<byte>();

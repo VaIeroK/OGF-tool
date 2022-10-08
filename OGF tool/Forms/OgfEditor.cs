@@ -310,7 +310,7 @@ namespace OGF_tool
 				}
 
 				// Lod
-				if (OGF_V.m_version == 4)
+				if (OGF_V.Header.format_version == 4)
 					TabControl.Controls.Add(LodPage);
 
 				if (OGF_V.lod != null)
@@ -433,7 +433,9 @@ namespace OGF_tool
 
 			using (var fileStream = new BinaryReader(new MemoryStream(Current_OGF)))
 			{
-				if (OGF_V.IsDM)
+				byte[] temp;
+
+                if (OGF_V.IsDM)
 				{
                     fileStream.ReadBytes(OGF_V.childs[0].old_size);
 					file_bytes.AddRange(Encoding.Default.GetBytes(OGF_V.childs[0].m_shader));
@@ -446,28 +448,15 @@ namespace OGF_tool
 					return;
 				}
 
-				uint HeaderSize = (uint)((OGF_V.m_version == 4) ? 44 : 4);
-				fileStream.ReadBytes(8);
-				file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF_HEADER));
-				file_bytes.AddRange(BitConverter.GetBytes(HeaderSize));
-
-				fileStream.ReadBytes(2);
-				file_bytes.Add(OGF_V.m_version);
-				file_bytes.Add(OGF_V.m_model_type);
-
-				byte[] temp = fileStream.ReadBytes(2);
-				file_bytes.AddRange(temp);
-
-				if (OGF_V.m_version == 4)
+				if (!OGF_V.IsStaticSingle())
 				{
-					temp = fileStream.ReadBytes(40);
 					if (OGF_V.BrokenType == 2)
 					{
-						for (int i = 0; i < 40; i++)
-							file_bytes.Add(0);
-					}
-					else
-						file_bytes.AddRange(temp);
+						OGF_V.Header.bb = new BBox();
+                        OGF_V.Header.bs = new BSphere();
+                    }
+
+                    file_bytes.AddRange(OGF_V.Header.data());
 				}
 
 				if (OGF_V.description != null)
@@ -485,9 +474,9 @@ namespace OGF_tool
 
 				if (OGF_V.IsStaticSingle()) // Single mesh
 				{
-					file_bytes.AddRange(OGF_V.childs[0].data(OGF_V.m_version));
-					fileStream.ReadBytes(OGF_V.childs[0].old_size + 8);
-				}
+					file_bytes.AddRange(OGF_V.childs[0].data());
+					fileStream.BaseStream.Position += OGF_V.childs[0].old_size;
+                }
 				else // Hierrarhy mesh
 				{
 					fileStream.ReadBytes((int)(OGF_V.pos - fileStream.BaseStream.Position));
@@ -500,20 +489,22 @@ namespace OGF_tool
                     foreach (var ch in OGF_V.childs)
 					{
 						if (!ch.to_delete)
-							ChildrenChunkSize += (uint)ch.data(OGF_V.m_version).Length + 8;
+							ChildrenChunkSize += (uint)ch.data().Length + 8;
 					}
 
-					int ChildrenChunk = (OGF_V.m_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
+					int ChildrenChunk = (OGF_V.Header.format_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
 					file_bytes.AddRange(BitConverter.GetBytes(ChildrenChunk));
 					file_bytes.AddRange(BitConverter.GetBytes(ChildrenChunkSize));
 
 					int ChildChunk = 0;
 					foreach (var ch in OGF_V.childs)
 					{
-                        file_bytes.AddRange(BitConverter.GetBytes(ChildChunk));
-                        file_bytes.AddRange(BitConverter.GetBytes(ch.data(OGF_V.m_version).Length));
+						if (ch.to_delete) continue;
 
-                        file_bytes.AddRange(ch.data(OGF_V.m_version));
+                        file_bytes.AddRange(BitConverter.GetBytes(ChildChunk));
+                        file_bytes.AddRange(BitConverter.GetBytes(ch.data().Length));
+
+                        file_bytes.AddRange(ch.data());
                         ChildChunk++;
                     }
 				}
@@ -548,7 +539,7 @@ namespace OGF_tool
 						switch (OGF_V.ikdata.chunk_version)
 						{
 							case 4:
-								IKDataChunk = (OGF_V.m_version == 4 ? (uint)OGF.OGF4_S_IKDATA : (uint)OGF.OGF3_S_IKDATA_2);
+								IKDataChunk = (OGF_V.Header.format_version == 4 ? (uint)OGF.OGF4_S_IKDATA : (uint)OGF.OGF3_S_IKDATA_2);
 								break;
 							case 3:
 								IKDataChunk = (uint)OGF.OGF3_S_IKDATA;
@@ -575,17 +566,17 @@ namespace OGF_tool
 
 						if (OGF_V.userdata.userdata != "") // Пишем если есть что писать
 						{
-							uint UserDataChunk = (OGF_V.m_version == 4 ? (uint)OGF.OGF4_S_USERDATA : (uint)OGF.OGF3_S_USERDATA);
+							uint UserDataChunk = (OGF_V.Header.format_version == 4 ? (uint)OGF.OGF4_S_USERDATA : (uint)OGF.OGF3_S_USERDATA);
 							file_bytes.AddRange(BitConverter.GetBytes(UserDataChunk));
-							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.userdata.data(OGF_V.m_version).Length));
-							file_bytes.AddRange(OGF_V.userdata.data(OGF_V.m_version));
+							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.userdata.data(OGF_V.Header.format_version).Length));
+							file_bytes.AddRange(OGF_V.userdata.data(OGF_V.Header.format_version));
 						}
 
 						if (OGF_V.userdata.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
 							fileStream.ReadBytes(OGF_V.userdata.old_size + 8);
 					}
 
-					if (OGF_V.lod != null && OGF_V.m_version == 4) // Стринг лод только у релизных OGF
+					if (OGF_V.lod != null && OGF_V.Header.format_version == 4) // Стринг лод только у релизных OGF
 					{
 						if (OGF_V.lod.pos > 0 && (OGF_V.lod.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
 						{
@@ -621,7 +612,7 @@ namespace OGF_tool
 								file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_MOTION_REFS2));
 							else
 							{
-								uint RefsChunk = (OGF_V.m_version == 4 ? (uint)OGF.OGF4_S_MOTION_REFS : (uint)OGF.OGF3_S_MOTION_REFS);
+								uint RefsChunk = (OGF_V.Header.format_version == 4 ? (uint)OGF.OGF4_S_MOTION_REFS : (uint)OGF.OGF3_S_MOTION_REFS);
 								file_bytes.AddRange(BitConverter.GetBytes(RefsChunk));
 							}
 							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.motion_refs.data(OGF_V.motion_refs.soc).Length));
@@ -670,8 +661,12 @@ namespace OGF_tool
 					xr_loader.ReadUInt32();
 					xr_loader.ReadFloat();
 					xr_loader.ReadFloat();
-					OGF_Child chld = new OGF_Child(shader.Length + texture.Length + 2, texture, shader);
-					uint verts = xr_loader.ReadUInt32();
+					OGF_Child chld = new OGF_Child();
+					chld.old_size = shader.Length + texture.Length + 2;
+					chld.m_texture = texture;
+					chld.m_shader = shader;
+
+                    uint verts = xr_loader.ReadUInt32();
 					uint faces = xr_loader.ReadUInt32() / 3;
 
 					for (int i = 0; i < verts; i++)
@@ -702,176 +697,31 @@ namespace OGF_tool
 				}
 				else
 				{
-					OGF_C.m_version = xr_loader.ReadByte();
+					OGF_C.Header.Load(xr_loader);
 
-					if (OGF_C.m_version < 3)
+					if (OGF_C.Header.format_version < 3)
                     {
-						MessageBox.Show($"Unsupported OGF version: {OGF_C.m_version}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						MessageBox.Show($"Unsupported OGF version: {OGF_C.Header.format_version}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 						return false;
 					}
-
-					OGF_C.m_model_type = xr_loader.ReadByte();
-					xr_loader.ReadBytes(42);
 				}
 
-				int DescChunk = (OGF_C.m_version == 4 ? (int)OGF.OGF4_S_DESC : (int)OGF.OGF3_S_DESC);
+				int DescChunk = (OGF_C.Header.format_version == 4 ? (int)OGF.OGF4_S_DESC : (int)OGF.OGF3_S_DESC);
 				uint DescriptionSize = xr_loader.find_chunkSize(DescChunk, false, true);
 				if (DescriptionSize > 0)
 				{
 					OGF_C.description = new Description();
-					OGF_C.description.pos = xr_loader.chunk_pos;
-
-					// Читаем таймеры в 8 байт
-					long reader_start_pos = xr_loader.reader.BaseStream.Position;
-					OGF_C.description.m_source = xr_loader.read_stringZ();
-					OGF_C.description.m_export_tool = xr_loader.read_stringZ();
-					OGF_C.description.m_export_time = xr_loader.ReadInt64();
-					OGF_C.description.m_owner_name = xr_loader.read_stringZ();
-					OGF_C.description.m_creation_time = xr_loader.ReadInt64();
-					OGF_C.description.m_export_modif_name_tool = xr_loader.read_stringZ();
-					OGF_C.description.m_modified_time = xr_loader.ReadInt64();
-					long description_end_pos = xr_loader.reader.BaseStream.Position;
-
-					OGF_C.description.old_size = OGF_C.description.m_source.Length + 1 + OGF_C.description.m_export_tool.Length + 1 + 8 + OGF_C.description.m_owner_name.Length + 1 + 8 + OGF_C.description.m_export_modif_name_tool.Length + 1 + 8;
-
-					if ((description_end_pos - reader_start_pos) != DescriptionSize) // Размер не состыковывается, пробуем читать 4 байта
-                    {
-						xr_loader.reader.BaseStream.Position = reader_start_pos;
-						OGF_C.description.m_source = xr_loader.read_stringZ();
-						OGF_C.description.m_export_tool = xr_loader.read_stringZ();
-						OGF_C.description.m_export_time = xr_loader.ReadUInt32();
-						OGF_C.description.m_owner_name = xr_loader.read_stringZ();
-						OGF_C.description.m_creation_time = xr_loader.ReadUInt32();
-						OGF_C.description.m_export_modif_name_tool = xr_loader.read_stringZ();
-						OGF_C.description.m_modified_time = xr_loader.ReadUInt32();
-						description_end_pos = xr_loader.reader.BaseStream.Position;
-
-						OGF_C.description.old_size = OGF_C.description.m_source.Length + 1 + OGF_C.description.m_export_tool.Length + 1 + 4 + OGF_C.description.m_owner_name.Length + 1 + 4 + OGF_C.description.m_export_modif_name_tool.Length + 1 + 4;
-						OGF_C.description.four_byte = true; // Ставим флаг на то что мы прочитали чанк с 4х байтными таймерами, если модель будет сломана то чинить чанк будем в 8 байт
-
-						if ((description_end_pos - reader_start_pos) != DescriptionSize) // Все равно разный размер? Походу модель сломана
-						{
-							OGF_C.BrokenType = 1;
-
-							// Чистим таймеры, так как прочитаны битые байты
-							OGF_C.description.m_export_time = 0;
-							OGF_C.description.m_creation_time = 0;
-							OGF_C.description.m_modified_time = 0;
-						}
-					}
+					OGF_C.description.Load(xr_loader, DescriptionSize);
 				}
 
-				TriangleParser LoadTriangles = (loader, child, v3) =>
-				{
-					int VertsChunk = v3 ? (int)OGF.OGF3_VERTICES : (int)OGF.OGF4_VERTICES;
-					uint VertsChunkSize = loader.find_chunkSize(VertsChunk, false, true);
-                    if (VertsChunkSize > 0)
-					{
-						child.old_verts_size = (int)VertsChunkSize;
-
-                        child.FVF = child.links = loader.ReadUInt32();
-						uint verts = loader.ReadUInt32();
-
-                        for (int i = 0; i < verts; i++)
-						{
-							SSkelVert Vert = new SSkelVert();
-							switch (child.LinksCount())
-							{
-								case 1:
-									Vert.offs = loader.ReadVector();
-									Vert.norm = loader.ReadVector();
-									if (!v3)
-									{
-										Vert.tang = loader.ReadVector();
-										Vert.binorm = loader.ReadVector();
-									}
-									Vert.uv = loader.ReadVector2();
-
-                                    Vert.bones_id[0] = loader.ReadUInt32();
-									break;
-								case 2:
-                                    Vert.bones_id[0] = loader.ReadUInt16();
-                                    Vert.bones_id[1] = loader.ReadUInt16();
-
-									Vert.offs = loader.ReadVector();
-									Vert.norm = loader.ReadVector();
-									Vert.tang = loader.ReadVector();
-									Vert.binorm = loader.ReadVector();
-                                    Vert.bones_infl[0] = loader.ReadFloat();
-									Vert.uv = loader.ReadVector2();
-									break;
-								case 3:
-								case 4:
-                                    for (int j = 0; j < child.LinksCount(); j++)
-                                        Vert.bones_id[j] = loader.ReadUInt16();
-
-                                    Vert.offs = loader.ReadVector();
-									Vert.norm = loader.ReadVector();
-									Vert.tang = loader.ReadVector();
-									Vert.binorm = loader.ReadVector();
-
-                                    for (int j = 0; j < child.LinksCount() - 1; j++)
-                                        Vert.bones_infl[j] = loader.ReadFloat();
-
-                                    Vert.uv = loader.ReadVector2();
-									break;
-								default:
-									Vert.offs = loader.ReadVector();
-									Vert.norm = loader.ReadVector();
-									Vert.uv = loader.ReadVector2();
-									break;
-							}
-							child.Vertices.Add(Vert);
-						}
-					}
-
-					int FacesChunk = v3 ? (int)OGF.OGF3_INDICES : (int)OGF.OGF4_INDICES;
-					if (loader.find_chunk(FacesChunk, false, true))
-					{
-						uint faces = loader.ReadUInt32() / 3;
-
-						for (uint i = 0; i < faces; i++)
-						{
-							SSkelFace Face = new SSkelFace();
-							Face.v[0] = (ushort)loader.ReadUInt16();
-							Face.v[1] = (ushort)loader.ReadUInt16();
-							Face.v[2] = (ushort)loader.ReadUInt16();
-							child.Faces.Add(Face);
-						}
-					}
-
-					if (!v3)
-					{
-						if (loader.find_chunk((int)OGF.OGF4_SWIDATA, false, true))
-						{
-							loader.ReadUInt32();
-							loader.ReadUInt32();
-							loader.ReadUInt32();
-							loader.ReadUInt32();
-
-							uint swi_size = loader.ReadUInt32();
-
-							for (uint i = 0; i < swi_size; i++)
-							{
-								VIPM_SWR SWR = new VIPM_SWR();
-								SWR.offset = loader.ReadUInt32();
-								SWR.num_tris = (ushort)loader.ReadUInt16();
-								SWR.num_verts = (ushort)loader.ReadUInt16();
-								child.SWI.Add(SWR);
-							}
-						}
-					}
-				};
-
-				int ChildChunk = (OGF_C.m_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
+				int ChildChunk = (OGF_C.Header.format_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
 				bool bFindChunk = xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(ChildChunk, false, true));
 
 				OGF_C.pos = xr_loader.chunk_pos;
 
 				int id = 0;
-				uint size;
 
-				// Texture && shader
+				// Childs
 				if (bFindChunk)
 				{
 					while (true)
@@ -882,36 +732,11 @@ namespace OGF_tool
 
 						if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(id, false, true))) break;
 
-                        size = xr_loader.find_chunkSize((int)OGF.OGF_HEADER);
+                        OGF_Child Child = new OGF_Child();
+						if (!Child.Load(xr_loader, OGF_C.Header.format_version))
+							break;
 
-                        if (size == 0) break;
-
-						OGF_Header header = new OGF_Header();
-						header.format_version = xr_loader.ReadByte();
-                        header.type = xr_loader.ReadByte();
-                        header.shader_id = (short)xr_loader.ReadUInt16();
-
-                        header.bb.min[0] = xr_loader.ReadFloat();
-                        header.bb.min[1] = xr_loader.ReadFloat();
-                        header.bb.min[2] = xr_loader.ReadFloat();
-                        header.bb.max[0] = xr_loader.ReadFloat();
-                        header.bb.max[1] = xr_loader.ReadFloat();
-                        header.bb.max[2] = xr_loader.ReadFloat();
-
-                        header.bs.c[0] = xr_loader.ReadFloat();
-                        header.bs.c[1] = xr_loader.ReadFloat();
-                        header.bs.c[2] = xr_loader.ReadFloat();
-                        header.bs.r = xr_loader.ReadFloat();
-
-                        size = xr_loader.find_chunkSize((int)OGF.OGF_TEXTURE);
-
-						if (size == 0) break;
-
-						OGF_Child chld = new OGF_Child((int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
-                        chld.Header = header;
-                        LoadTriangles(xr_loader, chld, OGF_C.m_version != 4);
-
-						OGF_C.childs.Add(chld);
+						OGF_C.childs.Add(Child);
 
 						id++;
 						xr_loader.SetStream(temp);
@@ -921,40 +746,10 @@ namespace OGF_tool
 				}
 				else
                 {
-                    OGF_Header header = null;
-                    if (xr_loader.find_chunk((int)OGF.OGF_HEADER))
-					{
-                        header = new OGF_Header();
-                        header.format_version = xr_loader.ReadByte();
-						header.type = xr_loader.ReadByte();
-						header.shader_id = (short)xr_loader.ReadUInt16();
-
-						header.bb.min[0] = xr_loader.ReadFloat();
-						header.bb.min[1] = xr_loader.ReadFloat();
-						header.bb.min[2] = xr_loader.ReadFloat();
-						header.bb.max[0] = xr_loader.ReadFloat();
-						header.bb.max[1] = xr_loader.ReadFloat();
-						header.bb.max[2] = xr_loader.ReadFloat();
-
-						header.bs.c[0] = xr_loader.ReadFloat();
-						header.bs.c[1] = xr_loader.ReadFloat();
-						header.bs.c[2] = xr_loader.ReadFloat();
-						header.bs.r = xr_loader.ReadFloat();
-					}
-
-                    size = xr_loader.find_chunkSize((int)OGF.OGF_TEXTURE, false, true);
-
-					if (size != 0)
-					{
-						OGF_Child chld = new OGF_Child((int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
-
-						chld.Header = header;
-
-                        LoadTriangles(xr_loader, chld, false);
-
-						OGF_C.childs.Add(chld);
-					}
-				}
+                    OGF_Child Child = new OGF_Child();
+                    if (Child.Load(xr_loader, OGF_C.Header.format_version))
+						OGF_C.childs.Add(Child);
+                }
 
 				if (OGF_C.childs.Count == 0)
 				{
@@ -1010,7 +805,7 @@ namespace OGF_tool
 					// Ik Data
 					byte IKDataVers = 0;
 
-					int IKDataChunkRelease = (OGF_C.m_version == 4 ? (int)OGF.OGF4_S_IKDATA : (int)OGF.OGF3_S_IKDATA_2);
+					int IKDataChunkRelease = (OGF_C.Header.format_version == 4 ? (int)OGF.OGF4_S_IKDATA : (int)OGF.OGF3_S_IKDATA_2);
 					bool IKDataChunkFind = xr_loader.find_chunk(IKDataChunkRelease, false, true);
 
 					if (IKDataChunkFind) // Load Release chunk
@@ -1019,7 +814,7 @@ namespace OGF_tool
 						goto load_ik_data;
 					}
 
-					IKDataChunkFind = OGF_C.m_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA, false, true);
+					IKDataChunkFind = OGF_C.Header.format_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA, false, true);
 
 					if (IKDataChunkFind) // Load Pre Release chunk
 					{
@@ -1027,7 +822,7 @@ namespace OGF_tool
 						goto load_ik_data;
 					}
 
-					IKDataChunkFind = OGF_C.m_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA_0, false, true);
+					IKDataChunkFind = OGF_C.Header.format_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA_0, false, true);
 
 					if (IKDataChunkFind) // Load Builds chunk
 					{
@@ -1091,14 +886,14 @@ load_ik_data:
 
 skip_ik_data:
 
-					if (IKDataVers == 0 && OGF_C.m_version == 4) // Chunk not find, exit if Release OGF
+					if (IKDataVers == 0 && OGF_C.Header.format_version == 4) // Chunk not find, exit if Release OGF
 					{
 						MessageBox.Show("Unsupported OGF format! Can't find ik data chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 						return false;
 					}
 
 					// Userdata
-					int UserDataChunk = (OGF_C.m_version == 4 ? (int)OGF.OGF4_S_USERDATA : (int)OGF.OGF3_S_USERDATA);
+					int UserDataChunk = (OGF_C.Header.format_version == 4 ? (int)OGF.OGF4_S_USERDATA : (int)OGF.OGF3_S_USERDATA);
 					uint UserDataSize = xr_loader.find_chunkSize(UserDataChunk, false, true);
 					if (UserDataSize > 0)
 					{
@@ -1118,7 +913,7 @@ skip_ik_data:
 					}
 
 					// Lod ref
-					if (OGF_C.m_version == 4 && xr_loader.find_chunk((int)OGF.OGF4_S_LODS, false, true))
+					if (OGF_C.Header.format_version == 4 && xr_loader.find_chunk((int)OGF.OGF4_S_LODS, false, true))
 					{
 						OGF_C.lod = new Lod();
 						OGF_C.lod.pos = xr_loader.chunk_pos;
@@ -1127,10 +922,10 @@ skip_ik_data:
 					}
 
 					// Motion Refs
-					int RefsChunk = (OGF_C.m_version == 4 ? (int)OGF.OGF4_S_MOTION_REFS : (int)OGF.OGF3_S_MOTION_REFS);
+					int RefsChunk = (OGF_C.Header.format_version == 4 ? (int)OGF.OGF4_S_MOTION_REFS : (int)OGF.OGF3_S_MOTION_REFS);
 					bool StringRefs = xr_loader.find_chunk(RefsChunk, false, true);
 
-					if (StringRefs || OGF_C.m_version == 4 && xr_loader.find_chunk((int)OGF.OGF4_S_MOTION_REFS2, false, true))
+					if (StringRefs || OGF_C.Header.format_version == 4 && xr_loader.find_chunk((int)OGF.OGF4_S_MOTION_REFS2, false, true))
 					{
 						OGF_C.motion_refs = new MotionRefs();
 						OGF_C.motion_refs.pos = xr_loader.chunk_pos;
@@ -2009,9 +1804,9 @@ skip_ik_data:
 		{
 			if (OGF_V != null)
 			{
-				if (OGF_V.m_version != 4)
+				if (OGF_V.Header.format_version != 4)
 				{
-					MessageBox.Show("Can't convert model. Unsupported OGF version: " + OGF_V.m_version.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show("Can't convert model. Unsupported OGF version: " + OGF_V.Header.format_version.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					return;
 				}
 
@@ -2082,11 +1877,11 @@ skip_ik_data:
 			if (OGF_V == null) return;
 
 			if (OGF_V.bones == null)
-				OGF_V.m_model_type = OGF_V.Static();
+				OGF_V.Header.type = OGF_V.Static();
 			else if (OGF_V.motions.data() == null && !IsTextCorrect(MotionRefsBox.Text))
-				OGF_V.m_model_type = OGF_V.Skeleton();
+                OGF_V.Header.type = OGF_V.Skeleton();
 			else
-				OGF_V.m_model_type = OGF_V.Animated();
+                OGF_V.Header.type = OGF_V.Animated();
 
 			// Апдейтим экспорт аним тут, т.к. при любом изменении омф вызывается эта функция
 			omfToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
@@ -2548,7 +2343,7 @@ skip_ik_data:
             return false;
         }
 
-        void Msg(string text)
+        public static void Msg(string text)
         {
 			MessageBox.Show(text);
         }
@@ -2708,6 +2503,8 @@ skip_ik_data:
 
 		private bool CheckViewportModelVers()
         {
+			if (OldChildTextures.Count != OGF_V.childs.Count || OldChildVisible.Count != OGF_V.childs.Count) return false;
+
 			if (OldChildTextures.Count != 0)
             {
 				int i = 0;

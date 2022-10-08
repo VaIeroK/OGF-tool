@@ -182,12 +182,11 @@ namespace OGF_tool
 
     public class OGF_Children
     {
-        public byte m_version;
-        public byte m_model_type;
         public bool IsDM;
         public uint BrokenType;
         public bool IsCopModel;
 
+        public OGF_Header Header;
         public Description description;
         public List<OGF_Child> childs;
         public BoneData bones;
@@ -207,8 +206,6 @@ namespace OGF_tool
             BrokenType = 0;
             motions = new OMF();
             IsDM = false;
-            m_model_type = 0;
-            m_version = 0;
             description = null;
             childs = new List<OGF_Child>();
             bones = null;
@@ -217,6 +214,7 @@ namespace OGF_tool
             lod = null;
             motion_refs = null;
             IsCopModel = false;
+            Header = new OGF_Header();
         }
 
         public bool IsProgressive()
@@ -231,39 +229,39 @@ namespace OGF_tool
 
         public bool IsSkeleton()
         {
-            if (m_version == 4)
-                return m_model_type == (byte)ModelType.MT4_SKELETON_ANIM || m_model_type == (byte)ModelType.MT4_SKELETON_RIGID;
+            if (Header.format_version == 4)
+                return Header.type == (byte)ModelType.MT4_SKELETON_ANIM || Header.type == (byte)ModelType.MT4_SKELETON_RIGID;
             else
-                return m_model_type == (byte)ModelType.MT3_SKELETON_ANIM || m_model_type == (byte)ModelType.MT3_SKELETON_RIGID;
+                return Header.type == (byte)ModelType.MT3_SKELETON_ANIM || Header.type == (byte)ModelType.MT3_SKELETON_RIGID;
         }
 
         public bool IsAnimated()
         {
-            if (m_version == 4)
-                return m_model_type == (byte)ModelType.MT4_SKELETON_ANIM;
+            if (Header.format_version == 4)
+                return Header.type == (byte)ModelType.MT4_SKELETON_ANIM;
             else
-                return m_model_type == (byte)ModelType.MT3_SKELETON_ANIM;
+                return Header.type == (byte)ModelType.MT3_SKELETON_ANIM;
         }
 
         public bool IsStatic()
         {
-            if (m_version == 4)
-                return m_model_type == (byte)ModelType.MT4_HIERRARHY;
+            if (Header.format_version == 4)
+                return Header.type == (byte)ModelType.MT4_HIERRARHY;
             else
-                return m_model_type == (byte)ModelType.MT3_HIERRARHY;
+                return Header.type == (byte)ModelType.MT3_HIERRARHY;
         }
 
         public bool IsStaticSingle()
         {
-            if (m_version == 4)
-                return m_model_type == (byte)ModelType.MT4_NORMAL || m_model_type == (byte)ModelType.MT4_PROGRESSIVE;
+            if (Header.format_version == 4)
+                return Header.type == (byte)ModelType.MT4_NORMAL || Header.type == (byte)ModelType.MT4_PROGRESSIVE;
             else
-                return m_model_type == (byte)ModelType.MT3_NORMAL || m_model_type == (byte)ModelType.MT3_PROGRESSIVE || m_model_type == (byte)ModelType.MT3_PROGRESSIVE2;
+                return Header.type == (byte)ModelType.MT3_NORMAL || Header.type == (byte)ModelType.MT3_PROGRESSIVE || Header.type == (byte)ModelType.MT3_PROGRESSIVE2;
         }
 
         public byte Skeleton()
         {
-            if (m_version == 4)
+            if (Header.format_version == 4)
                 return (byte)ModelType.MT4_SKELETON_RIGID;
             else
                 return (byte)ModelType.MT3_SKELETON_RIGID;
@@ -272,7 +270,7 @@ namespace OGF_tool
 
         public byte Animated()
         {
-            if (m_version == 4)
+            if (Header.format_version == 4)
                 return (byte)ModelType.MT4_SKELETON_ANIM;
             else
                 return (byte)ModelType.MT3_SKELETON_ANIM;
@@ -282,7 +280,7 @@ namespace OGF_tool
         {
             if (childs.Count == 1) return StaticSingle();
 
-            if (m_version == 4)
+            if (Header.format_version == 4)
                 return (byte)ModelType.MT4_HIERRARHY;
             else
                 return (byte)ModelType.MT3_HIERRARHY;
@@ -292,7 +290,7 @@ namespace OGF_tool
         {
             if (childs.Count > 1) return Static();
 
-            if (m_version == 4)
+            if (Header.format_version == 4)
                 return (childs[0].SWI.Count > 0) ? (byte)ModelType.MT4_PROGRESSIVE : (byte)ModelType.MT4_NORMAL;
             else
                 return (childs[0].SWI.Count > 0) ? (byte)ModelType.MT3_PROGRESSIVE : (byte)ModelType.MT3_NORMAL;
