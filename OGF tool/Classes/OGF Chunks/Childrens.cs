@@ -327,8 +327,7 @@ namespace OGF_tool
             List<byte> temp = new List<byte>();
 
             // Header start
-            if (Header != null)
-                temp.AddRange(Header.data());
+            temp.AddRange(Header.data());
             // Header end
 
             // Texture start
