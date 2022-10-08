@@ -26,18 +26,22 @@ namespace OGF_tool
             this.bone_childs = new List<List<int>>();
         }
 
-        public uint chunk_size()
+        public int GetBoneID(string bone)
         {
-            uint temp = 4;                                  // count byte
-
             for (int i = 0; i < bone_names.Count; i++)
             {
-                temp += (uint)bone_names[i].Length + 1;          // bone name
-                temp += (uint)parent_bone_names[i].Length + 1;   // parent bone name
-                temp += 60;                                 // obb
+                if (bone_names[i] == bone)
+                    return i;
             }
+            return -1;
+        }
 
-            return temp;
+        public string GetBoneName(int bone)
+        {
+            if (bone_names.Count > bone)
+                return bone_names[bone];
+
+            return "";
         }
 
         public byte[] data(bool repair)

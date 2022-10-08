@@ -34,29 +34,6 @@ namespace OGF_tool
             this.chunk_version = 0;
         }
 
-        public uint chunk_size()
-        {
-            uint temp = 0;
-            for (int i = 0; i < materials.Count; i++)
-            {
-                if (chunk_version == 4)
-                    temp += 4;
-
-                temp += (uint)materials[i].Length + 1;       // bone name
-                temp += 112;
-
-                uint ImportBytes = (uint)((chunk_version == 4) ? 76 : ((chunk_version == 3) ? 72 : 60));
-                temp += ImportBytes;
-
-                temp += 12;
-                temp += 12;
-                temp += 4;
-                temp += 12;
-            }
-
-            return temp;
-        }
-
         public byte[] data()
         {
             List<byte> temp = new List<byte>();

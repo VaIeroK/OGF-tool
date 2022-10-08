@@ -63,19 +63,5 @@ namespace OGF_tool
 
             return temp.ToArray();
         }
-
-        public uint chunk_size()
-        {
-            uint time_size = (uint)(four_byte ? 4 : 8);
-            uint size = 0;
-            size += (uint)m_source.Length + 1;
-            size += (uint)m_export_tool.Length + 1;
-            size += time_size;
-            size += (uint)m_owner_name.Length + 1;
-            size += time_size;
-            size += (uint)m_export_modif_name_tool.Length + 1;
-            size += time_size;
-            return size;
-        }
     }
 }

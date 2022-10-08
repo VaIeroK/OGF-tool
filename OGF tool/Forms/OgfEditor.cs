@@ -477,7 +477,7 @@ namespace OGF_tool
 						OGF_V.description.four_byte = false;
 
 					file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_DESC));
-					file_bytes.AddRange(BitConverter.GetBytes(OGF_V.description.chunk_size()));
+					file_bytes.AddRange(BitConverter.GetBytes(OGF_V.description.data().Length));
 					file_bytes.AddRange(OGF_V.description.data());
 
 					OGF_V.description.four_byte = old_byte; // Восстанавливаем отображение колличества байтов у таймера
@@ -485,7 +485,7 @@ namespace OGF_tool
 
 				if (OGF_V.IsStaticSingle()) // Single mesh
 				{
-					file_bytes.AddRange(OGF_V.childs[0].data());
+					file_bytes.AddRange(OGF_V.childs[0].data(OGF_V.m_version));
 					fileStream.ReadBytes(OGF_V.childs[0].old_size + 8);
 				}
 				else // Hierrarhy mesh
@@ -493,126 +493,29 @@ namespace OGF_tool
 					fileStream.ReadBytes((int)(OGF_V.pos - fileStream.BaseStream.Position));
 
 					fileStream.ReadBytes(4);
-					uint new_size = fileStream.ReadUInt32();
+					uint OldChildrenChunkSize = fileStream.ReadUInt32();
+					fileStream.BaseStream.Position += OldChildrenChunkSize;
 
-					foreach (var ch in OGF_V.childs)
+					uint ChildrenChunkSize = 0;
+                    foreach (var ch in OGF_V.childs)
 					{
-						if (ch.to_delete)
-							new_size -= ch.chunk_size + 8;
-						else
-						{
-							new_size += ch.NewSize();
-                            new_size += (uint)(ch.GetVertsSize(OGF_V.m_version) - ch.old_verts_size);
-                        }
+						if (!ch.to_delete)
+							ChildrenChunkSize += (uint)ch.data(OGF_V.m_version).Length + 8;
 					}
 
-					int ChildChunk = (OGF_V.m_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
-					file_bytes.AddRange(BitConverter.GetBytes(ChildChunk));
-					file_bytes.AddRange(BitConverter.GetBytes(new_size));
+					int ChildrenChunk = (OGF_V.m_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
+					file_bytes.AddRange(BitConverter.GetBytes(ChildrenChunk));
+					file_bytes.AddRange(BitConverter.GetBytes(ChildrenChunkSize));
 
-					int child_id = 0;
+					int ChildChunk = 0;
 					foreach (var ch in OGF_V.childs)
 					{
-						fileStream.ReadUInt32();
-						uint size = fileStream.ReadUInt32();
-						long old_pos = fileStream.BaseStream.Position; // Записываем начальную позицию чанка
+                        file_bytes.AddRange(BitConverter.GetBytes(ChildChunk));
+                        file_bytes.AddRange(BitConverter.GetBytes(ch.data(OGF_V.m_version).Length));
 
-						if (!ch.to_delete)
-						{
-							new_size = size + ch.NewSize();
-                            new_size += (uint)(ch.GetVertsSize(OGF_V.m_version) - ch.old_verts_size);
-                            file_bytes.AddRange(BitConverter.GetBytes(child_id));
-							file_bytes.AddRange(BitConverter.GetBytes(new_size));
-
-							child_id++;
-						}
-
-						temp = fileStream.ReadBytes((int)(ch.pos - fileStream.BaseStream.Position));
-
-						if (!ch.to_delete)
-						{
-							file_bytes.AddRange(temp);
-							file_bytes.AddRange(ch.data());
-						}
-
-						fileStream.BaseStream.Position += ch.old_size + 8;
-
-						if (OGF_V.IsSkeleton()) // Verts
-						{
-                            fileStream.ReadUInt32(); // VertsChunk
-                            fileStream.BaseStream.Position += fileStream.ReadUInt32(); // VertsSize
-
-                            if (!ch.to_delete)
-							{
-                                uint VertsChunk = (OGF_V.m_version == 4 ? (uint)OGF.OGF4_VERTICES : (uint)OGF.OGF3_VERTICES);
-                                file_bytes.AddRange(BitConverter.GetBytes(VertsChunk));
-                                file_bytes.AddRange(BitConverter.GetBytes((uint)ch.GetVertsSize(OGF_V.m_version)));
-
-                                file_bytes.AddRange(BitConverter.GetBytes(ch.links)); // Линковка
-                                file_bytes.AddRange(BitConverter.GetBytes(ch.Vertices.Count));
-
-                                for (int i = 0; i < ch.Vertices.Count; i++)
-								{
-									SSkelVert vert = ch.Vertices[i];
-
-                                    switch (ch.LinksCount())
-									{
-										case 1:
-											file_bytes.AddRange(GetVec3Bytes(vert.offs));
-                                            file_bytes.AddRange(GetVec3Bytes(vert.norm));
-
-											if (OGF_V.m_version == 4)
-											{
-                                                file_bytes.AddRange(GetVec3Bytes(vert.tang));
-                                                file_bytes.AddRange(GetVec3Bytes(vert.binorm));
-                                            }
-
-                                            file_bytes.AddRange(GetVec2Bytes(vert.uv));
-                                            file_bytes.AddRange(BitConverter.GetBytes(vert.bones_id[0]));
-                                            break;
-										case 2:
-                                            file_bytes.AddRange(BitConverter.GetBytes((short)vert.bones_id[0]));
-                                            file_bytes.AddRange(BitConverter.GetBytes((short)vert.bones_id[1]));
-
-                                            file_bytes.AddRange(GetVec3Bytes(vert.offs));
-                                            file_bytes.AddRange(GetVec3Bytes(vert.norm));
-
-                                            file_bytes.AddRange(GetVec3Bytes(vert.tang));
-                                            file_bytes.AddRange(GetVec3Bytes(vert.binorm));
-
-                                            file_bytes.AddRange(BitConverter.GetBytes(vert.bones_infl[0]));
-                                            file_bytes.AddRange(GetVec2Bytes(vert.uv));
-											break;
-										case 3:
-										case 4:
-                                            for (int j = 0; j < ch.LinksCount(); j++)
-                                            {
-                                                file_bytes.AddRange(BitConverter.GetBytes((short)vert.bones_id[j]));
-                                            }
-
-                                            file_bytes.AddRange(GetVec3Bytes(vert.offs));
-                                            file_bytes.AddRange(GetVec3Bytes(vert.norm));
-
-                                            file_bytes.AddRange(GetVec3Bytes(vert.tang));
-                                            file_bytes.AddRange(GetVec3Bytes(vert.binorm));
-
-                                            for (int j = 0; j < ch.LinksCount() - 1; j++)
-                                            {
-                                                file_bytes.AddRange(BitConverter.GetBytes(vert.bones_infl[j]));
-                                            }
-
-                                            file_bytes.AddRange(GetVec2Bytes(vert.uv));
-											break;
-									}
-								}
-                            }
-						}
-
-						temp = fileStream.ReadBytes((int)ch.chunk_size - (int)(fileStream.BaseStream.Position - old_pos)); // Читаем все до конца чанка
-
-						if (!ch.to_delete) // Дописываем чанк если он не претендент на удаление
-							file_bytes.AddRange(temp);
-					}
+                        file_bytes.AddRange(ch.data(OGF_V.m_version));
+                        ChildChunk++;
+                    }
 				}
 
 				if (OGF_V.IsSkeleton())
@@ -626,7 +529,7 @@ namespace OGF_tool
 						}
 
 						file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF_S_BONE_NAMES));
-						file_bytes.AddRange(BitConverter.GetBytes(OGF_V.bones.chunk_size()));
+						file_bytes.AddRange(BitConverter.GetBytes(OGF_V.bones.data(false).Length));
 						file_bytes.AddRange(OGF_V.bones.data(false));
 
 						fileStream.ReadBytes(OGF_V.bones.old_size + 8);
@@ -656,7 +559,7 @@ namespace OGF_tool
 						}
 
 						file_bytes.AddRange(BitConverter.GetBytes(IKDataChunk));
-						file_bytes.AddRange(BitConverter.GetBytes(OGF_V.ikdata.chunk_size()));
+						file_bytes.AddRange(BitConverter.GetBytes(OGF_V.ikdata.data().Length));
 						file_bytes.AddRange(OGF_V.ikdata.data());
 
 						fileStream.ReadBytes(OGF_V.ikdata.old_size + 8);
@@ -674,7 +577,7 @@ namespace OGF_tool
 						{
 							uint UserDataChunk = (OGF_V.m_version == 4 ? (uint)OGF.OGF4_S_USERDATA : (uint)OGF.OGF3_S_USERDATA);
 							file_bytes.AddRange(BitConverter.GetBytes(UserDataChunk));
-							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.userdata.chunk_size(OGF_V.m_version)));
+							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.userdata.data(OGF_V.m_version).Length));
 							file_bytes.AddRange(OGF_V.userdata.data(OGF_V.m_version));
 						}
 
@@ -693,7 +596,7 @@ namespace OGF_tool
 						if (OGF_V.lod.lod_path != "") // Пишем если есть что писать
 						{
 							file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_LODS));
-							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.lod.chunk_size()));
+							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.lod.data().Length));
 							file_bytes.AddRange(OGF_V.lod.data());
 						}
 
@@ -721,11 +624,7 @@ namespace OGF_tool
 								uint RefsChunk = (OGF_V.m_version == 4 ? (uint)OGF.OGF4_S_MOTION_REFS : (uint)OGF.OGF3_S_MOTION_REFS);
 								file_bytes.AddRange(BitConverter.GetBytes(RefsChunk));
 							}
-
-							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.motion_refs.chunk_size(OGF_V.motion_refs.soc)));
-
-							if (!OGF_V.motion_refs.soc)
-								file_bytes.AddRange(OGF_V.motion_refs.count());
+							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.motion_refs.data(OGF_V.motion_refs.soc).Length));
 
 							file_bytes.AddRange(OGF_V.motion_refs.data(OGF_V.motion_refs.soc));
 						}
@@ -771,7 +670,7 @@ namespace OGF_tool
 					xr_loader.ReadUInt32();
 					xr_loader.ReadFloat();
 					xr_loader.ReadFloat();
-					OGF_Child chld = new OGF_Child( 0, 0, 0, shader.Length + texture.Length + 2, texture, shader);
+					OGF_Child chld = new OGF_Child(shader.Length + texture.Length + 2, texture, shader);
 					uint verts = xr_loader.ReadUInt32();
 					uint faces = xr_loader.ReadUInt32() / 3;
 
@@ -869,7 +768,8 @@ namespace OGF_tool
                     if (VertsChunkSize > 0)
 					{
 						child.old_verts_size = (int)VertsChunkSize;
-                        child.links = loader.ReadUInt32();
+
+                        child.FVF = child.links = loader.ReadUInt32();
 						uint verts = loader.ReadUInt32();
 
                         for (int i = 0; i < verts; i++)
@@ -903,9 +803,7 @@ namespace OGF_tool
 								case 3:
 								case 4:
                                     for (int j = 0; j < child.LinksCount(); j++)
-                                    {
                                         Vert.bones_id[j] = loader.ReadUInt16();
-                                    }
 
                                     Vert.offs = loader.ReadVector();
 									Vert.norm = loader.ReadVector();
@@ -913,9 +811,7 @@ namespace OGF_tool
 									Vert.binorm = loader.ReadVector();
 
                                     for (int j = 0; j < child.LinksCount() - 1; j++)
-                                    {
                                         Vert.bones_infl[j] = loader.ReadFloat();
-                                    }
 
                                     Vert.uv = loader.ReadVector2();
 									break;
@@ -980,21 +876,40 @@ namespace OGF_tool
 				{
 					while (true)
 					{
-						uint chunk_size = xr_loader.find_chunkSize(id);
-						if (chunk_size == 0) break;
+						if (!xr_loader.find_chunk(id)) break;
 
 						Stream temp = xr_loader.reader.BaseStream;
 
 						if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(id, false, true))) break;
 
-						long pos = xr_loader.chunk_pos + OGF_C.pos + 16;
-						size = xr_loader.find_chunkSize((int)OGF.OGF_TEXTURE);
+                        size = xr_loader.find_chunkSize((int)OGF.OGF_HEADER);
+
+                        if (size == 0) break;
+
+						OGF_Header header = new OGF_Header();
+						header.format_version = xr_loader.ReadByte();
+                        header.type = xr_loader.ReadByte();
+                        header.shader_id = (short)xr_loader.ReadUInt16();
+
+                        header.bb.min[0] = xr_loader.ReadFloat();
+                        header.bb.min[1] = xr_loader.ReadFloat();
+                        header.bb.min[2] = xr_loader.ReadFloat();
+                        header.bb.max[0] = xr_loader.ReadFloat();
+                        header.bb.max[1] = xr_loader.ReadFloat();
+                        header.bb.max[2] = xr_loader.ReadFloat();
+
+                        header.bs.c[0] = xr_loader.ReadFloat();
+                        header.bs.c[1] = xr_loader.ReadFloat();
+                        header.bs.c[2] = xr_loader.ReadFloat();
+                        header.bs.r = xr_loader.ReadFloat();
+
+                        size = xr_loader.find_chunkSize((int)OGF.OGF_TEXTURE);
 
 						if (size == 0) break;
 
-						OGF_Child chld = new OGF_Child(xr_loader.chunk_pos + pos, pos - 8, chunk_size, (int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
-
-						LoadTriangles(xr_loader, chld, OGF_C.m_version != 4);
+						OGF_Child chld = new OGF_Child((int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
+                        chld.Header = header;
+                        LoadTriangles(xr_loader, chld, OGF_C.m_version != 4);
 
 						OGF_C.childs.Add(chld);
 
@@ -1006,13 +921,36 @@ namespace OGF_tool
 				}
 				else
                 {
-					size = xr_loader.find_chunkSize((int)OGF.OGF_TEXTURE, false, true);
+                    OGF_Header header = null;
+                    if (xr_loader.find_chunk((int)OGF.OGF_HEADER))
+					{
+                        header = new OGF_Header();
+                        header.format_version = xr_loader.ReadByte();
+						header.type = xr_loader.ReadByte();
+						header.shader_id = (short)xr_loader.ReadUInt16();
+
+						header.bb.min[0] = xr_loader.ReadFloat();
+						header.bb.min[1] = xr_loader.ReadFloat();
+						header.bb.min[2] = xr_loader.ReadFloat();
+						header.bb.max[0] = xr_loader.ReadFloat();
+						header.bb.max[1] = xr_loader.ReadFloat();
+						header.bb.max[2] = xr_loader.ReadFloat();
+
+						header.bs.c[0] = xr_loader.ReadFloat();
+						header.bs.c[1] = xr_loader.ReadFloat();
+						header.bs.c[2] = xr_loader.ReadFloat();
+						header.bs.r = xr_loader.ReadFloat();
+					}
+
+                    size = xr_loader.find_chunkSize((int)OGF.OGF_TEXTURE, false, true);
 
 					if (size != 0)
 					{
-						OGF_Child chld = new OGF_Child(0, 0, 0, (int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
+						OGF_Child chld = new OGF_Child((int)size, xr_loader.read_stringZ(), xr_loader.read_stringZ());
 
-						LoadTriangles(xr_loader, chld, false);
+						chld.Header = header;
+
+                        LoadTriangles(xr_loader, chld, false);
 
 						OGF_C.childs.Add(chld);
 					}
@@ -1403,31 +1341,10 @@ skip_ik_data:
             }
         }
 
-        private int GetBoneID(string bone)
-		{
-            if (OGF_V != null && OGF_V.IsSkeleton())
-            {
-                for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
-                {
-                    if (OGF_V.bones.bone_names[i] == bone)
-						return i;
-                }
-            }
-			return -1;
-        }
-
-        private string GetBoneName(int bone)
-        {
-            if (OGF_V != null && OGF_V.IsSkeleton())
-            {
-				return OGF_V.bones.bone_names[bone];
-            }
-            return "";
-        }
-
         private void RemoveBone(string bone)
         {
-			RemoveBone(GetBoneID(bone));
+			if (OGF_V != null && OGF_V.IsSkeleton() && OGF_V.bones != null)
+				RemoveBone(OGF_V.bones.GetBoneID(bone));
         }
 
         private void RemoveBone(int bone)
@@ -2489,9 +2406,24 @@ skip_ik_data:
 
                 OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
 
-				AddMesh addMeshDialog = new AddMesh(ref OGF_V, SecondOgf);
+				int old_childs_count = OGF_V.childs.Count;
+
+                AddMesh addMeshDialog = new AddMesh(ref OGF_V, SecondOgf);
 				addMeshDialog.ShowDialog();
-			}
+
+				if (old_childs_count != OGF_V.childs.Count)
+				{
+					TexturesPage.Controls.Clear();
+					for (int i = OGF_V.childs.Count - 1; i >= 0; i--)
+					{
+						CreateTextureGroupBox(i);
+
+						var TextureGroupBox = TexturesPage.Controls["TextureGrpBox_" + i.ToString()];
+						TextureGroupBox.Controls["textureBox_" + i.ToString()].Text = OGF_V.childs[i].m_texture; ;
+						TextureGroupBox.Controls["shaderBox_" + i.ToString()].Text = OGF_V.childs[i].m_shader;
+					}
+				}
+            }
         }
 
         private float[] RotateZ(float[] vec)
@@ -2621,7 +2553,7 @@ skip_ik_data:
 			MessageBox.Show(text);
         }
 
-        private byte[] GetVec3Bytes(float[] vec)
+        static public byte[] GetVec3Bytes(float[] vec)
         {
             List<byte> bytes = new List<byte>();
             bytes.AddRange(BitConverter.GetBytes(vec[0]));
@@ -2630,7 +2562,7 @@ skip_ik_data:
             return bytes.ToArray();
         }
 
-        private byte[] GetVec2Bytes(float[] vec)
+        static public byte[] GetVec2Bytes(float[] vec)
         {
             List<byte> bytes = new List<byte>();
             bytes.AddRange(BitConverter.GetBytes(vec[0]));
@@ -2858,27 +2790,18 @@ skip_ik_data:
 
 		private void CreateTextureBoxes(int idx, GroupBox box)
 		{
-			var newTextBox = new TextBox();
+			var newTextBox = Copy.TextBox(TexturesTextBoxEx);
 			newTextBox.Name = "textureBox_" + idx;
-			newTextBox.Size = TexturesTextBoxEx.Size;
-			newTextBox.Location = TexturesTextBoxEx.Location;
 			newTextBox.TextChanged += new System.EventHandler(this.TextBoxFilter);
-			newTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
-			var newTextBox2 = new TextBox();
+			var newTextBox2 = Copy.TextBox(ShaderTextBoxEx);
 			newTextBox2.Name = "shaderBox_" + idx;
-			newTextBox2.Size = ShaderTextBoxEx.Size;
-			newTextBox2.Location = ShaderTextBoxEx.Location;
 			newTextBox2.TextChanged += new System.EventHandler(this.TextBoxFilter);
-			newTextBox2.Anchor = AnchorStyles.Left | AnchorStyles.Right;;
 
-			var newButton = new Button();
+			var newButton = Copy.Button(DeleteMesh);
 			newButton.Name = "DeleteButton_" + idx;
-			newButton.Size = DeleteMesh.Size;
-			newButton.Location = DeleteMesh.Location;
 			newButton.Click += new System.EventHandler(this.ButtonFilter);
 			newButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-			newButton.Text = DeleteMesh.Text;
 
 			box.Controls.Add(newTextBox);
 			box.Controls.Add(newTextBox2);
@@ -2945,27 +2868,18 @@ skip_ik_data:
 
 		private void CreateBoneTextBox(int idx, GroupBox box, string bone_name, string parent_bone_name, string material, float mass, float[] center, float[] pos, float[] rot)
 		{
-			var BoneNameTextBox = new TextBox();
+			var BoneNameTextBox = Copy.TextBox(BoneNameTextBoxEx);
 			BoneNameTextBox.Name = "boneBox_" + idx;
-			BoneNameTextBox.Size = BoneNameTextBoxEx.Size;
-			BoneNameTextBox.Location = BoneNameTextBoxEx.Location;
 			BoneNameTextBox.Text = bone_name;
-			BoneNameTextBox.Tag = "string";
 			BoneNameTextBox.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			BoneNameTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			BoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
 			var BoneNameLabel = Copy.Label(BoneNameLabelEx);
 			BoneNameLabel.Name = "boneLabel_" + idx;
 
-			var ParentBoneNameTextBox = new TextBox();
+			var ParentBoneNameTextBox = Copy.TextBox(ParentBoneTextBoxEx);
 			ParentBoneNameTextBox.Name = "ParentboneBox_" + idx;
-			ParentBoneNameTextBox.Size = ParentBoneTextBoxEx.Size;
-			ParentBoneNameTextBox.Location = ParentBoneTextBoxEx.Location;
 			ParentBoneNameTextBox.Text = parent_bone_name;
-			ParentBoneNameTextBox.Tag = "string";
-			ParentBoneNameTextBox.ReadOnly = true;
-			ParentBoneNameTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
 			var ParentBoneNameLabel = Copy.Label(ParentBoneLabelEx);
 			ParentBoneNameLabel.Name = "ParentboneLabel_" + idx;
@@ -2976,15 +2890,11 @@ skip_ik_data:
 			var MateriaBox = new Control();
 			if (game_materials.Count() == 0)
 			{
-				var MaterialTextBox = new TextBox();
+				var MaterialTextBox = Copy.TextBox(MaterialTextBoxEx);
 				MaterialTextBox.Name = "MaterialBox_" + idx;
-				MaterialTextBox.Size = MaterialTextBoxEx.Size;
-				MaterialTextBox.Location = MaterialTextBoxEx.Location;
 				MaterialTextBox.Text = material;
-				MaterialTextBox.Tag = "string";
 				MaterialTextBox.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 				MaterialTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-				MaterialTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
 				MateriaBox = MaterialTextBox;
 			}
@@ -3015,128 +2925,77 @@ skip_ik_data:
 			var MaterialLabel = Copy.Label(MaterialLabelEx);
 			MaterialLabel.Name = "MaterialLabel_" + idx;
 
-			var MassTextBox = new TextBox();
+			var MassTextBox = Copy.TextBox(MassTextBoxEx);
 			MassTextBox.Name = "MassBox_" + idx;
-			MassTextBox.Size = MassTextBoxEx.Size;
-			MassTextBox.Location = MassTextBoxEx.Location;
 			MassTextBox.Text = CheckNaN(mass);
-			MassTextBox.Tag = "float";
 			MassTextBox.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			MassTextBox.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			MassTextBox.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
 			var MassLabel = Copy.Label(MassLabelEx);
 			MassLabel.Name = "MassLabel_" + idx;
 
-			var LayoutPanel = new TableLayoutPanel();
+			var LayoutPanel = Copy.TableLayoutPanel(BonesParamsPanel);
 			LayoutPanel.Name = "LayoutPanel_" + idx;
-			LayoutPanel.Size = BonesParamsPanel.Size;
-			LayoutPanel.Location = BonesParamsPanel.Location;
-			LayoutPanel.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			LayoutPanel.RowCount = 4;
-			for (int x = 0; x < LayoutPanel.RowCount; x++)
-				LayoutPanel.RowStyles.Add(new RowStyle() { Height = 25.0f, SizeType = SizeType.Percent });
-
-			LayoutPanel.ColumnCount = 3;
-			for (int x = 0; x < LayoutPanel.ColumnCount; x++)
-				LayoutPanel.ColumnStyles.Add(new ColumnStyle() { Width = 33.33f, SizeType = SizeType.Percent });
-
-			var CenterMassTextBoxX = new TextBox();
+			var CenterMassTextBoxX = Copy.TextBox(CenterOfMassXTextBox);
 			CenterMassTextBoxX.Name = "CenterBoxX_" + idx;
-			CenterMassTextBoxX.Size = CenterOfMassXTextBox.Size;
-			CenterMassTextBoxX.Location = CenterOfMassXTextBox.Location;
 			CenterMassTextBoxX.Text = CheckNaN(center[0]);
-			CenterMassTextBoxX.Tag = "float";
 			CenterMassTextBoxX.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			CenterMassTextBoxX.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			var CenterMassTextBoxY = new TextBox();
+			var CenterMassTextBoxY = Copy.TextBox(CenterOfMassYTextBox);
 			CenterMassTextBoxY.Name = "CenterBoxY_" + idx;
-			CenterMassTextBoxY.Size = CenterOfMassYTextBox.Size;
-			CenterMassTextBoxY.Location = CenterOfMassYTextBox.Location;
 			CenterMassTextBoxY.Text = CheckNaN(center[1]);
-			CenterMassTextBoxY.Tag = "float";
 			CenterMassTextBoxY.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			CenterMassTextBoxY.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			var CenterMassTextBoxZ = new TextBox();
+			var CenterMassTextBoxZ = Copy.TextBox(CenterOfMassZTextBox);
 			CenterMassTextBoxZ.Name = "CenterBoxZ_" + idx;
-			CenterMassTextBoxZ.Size = CenterOfMassZTextBox.Size;
-			CenterMassTextBoxZ.Location = CenterOfMassZTextBox.Location;
 			CenterMassTextBoxZ.Text = CheckNaN(center[2]);
-			CenterMassTextBoxZ.Tag = "float";
 			CenterMassTextBoxZ.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			CenterMassTextBoxZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			CenterMassTextBoxZ.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
 			var CenterMassLabel = Copy.Label(CenterOfMassLabelEx);
 			CenterMassLabel.Name = "CenterMassLabel_" + idx;
 
-			var PositionX = new TextBox();
+			var PositionX = Copy.TextBox(PositionXTextBox);
 			PositionX.Name = "PositionX_" + idx;
-			PositionX.Size = PositionXTextBox.Size;
-			PositionX.Location = PositionXTextBox.Location;
 			PositionX.Text = CheckNaN(pos[0]);
-			PositionX.Tag = "float";
 			PositionX.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			PositionX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			PositionX.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			var PositionY = new TextBox();
+			var PositionY = Copy.TextBox(PositionYTextBox);
 			PositionY.Name = "PositionY_" + idx;
-			PositionY.Size = PositionYTextBox.Size;
-			PositionY.Location = PositionYTextBox.Location;
 			PositionY.Text = CheckNaN(pos[1]);
-			PositionY.Tag = "float";
 			PositionY.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			PositionY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			PositionY.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			var PositionZ = new TextBox();
+			var PositionZ = Copy.TextBox(PositionZTextBox);
 			PositionZ.Name = "PositionZ_" + idx;
-			PositionZ.Size = PositionZTextBox.Size;
-			PositionZ.Location = PositionZTextBox.Location;
 			PositionZ.Text = CheckNaN(pos[2]);
-			PositionZ.Tag = "float";
 			PositionZ.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			PositionZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			PositionZ.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
 			var PositionLabel = Copy.Label(PositionLabelEx);
 			PositionLabel.Name = "PositionLabel_" + idx;
 
-			var RotationX = new TextBox();
+			var RotationX = Copy.TextBox(RotationXTextBox);
 			RotationX.Name = "RotationX_" + idx;
-			RotationX.Size = RotationXTextBox.Size;
-			RotationX.Location = RotationXTextBox.Location;
 			RotationX.Text = CheckNaN(rot[0]);
-			RotationX.Tag = "float";
 			RotationX.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			RotationX.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			RotationX.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			var RotationY = new TextBox();
+			var RotationY = Copy.TextBox(RotationYTextBox);
 			RotationY.Name = "RotationY_" + idx;
-			RotationY.Size = RotationYTextBox.Size;
-			RotationY.Location = RotationYTextBox.Location;
 			RotationY.Text = CheckNaN(rot[1]);
-			RotationY.Tag = "float";
 			RotationY.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			RotationY.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			RotationY.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
-			var RotationZ = new TextBox();
+			var RotationZ = Copy.TextBox(RotationZTextBox);
 			RotationZ.Name = "RotationZ_" + idx;
-			RotationZ.Size = RotationZTextBox.Size;
-			RotationZ.Location = RotationZTextBox.Location;
 			RotationZ.Text = CheckNaN(rot[2]);
-			RotationZ.Tag = "float";
 			RotationZ.TextChanged += new System.EventHandler(this.TextBoxBonesFilter);
 			RotationZ.KeyDown += new KeyEventHandler(this.TextBoxKeyDown);
-			RotationZ.Anchor = AnchorStyles.Top |AnchorStyles.Left | AnchorStyles.Right;
 
 			var RotationLabel = Copy.Label(RotationLabelEx);
 			RotationLabel.Name = "RotationLabel_" + idx;

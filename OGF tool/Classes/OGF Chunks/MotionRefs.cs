@@ -21,23 +21,14 @@ namespace OGF_tool
             this.soc = false;
         }
 
-        public uint chunk_size(bool v3)
-        {
-            uint temp = (uint)(v3 ? 0 : 4);
-            foreach (var text in refs)
-                temp += (uint)text.Length + 1;
-            return temp;
-        }
-        public byte[] count()
-        {
-            return BitConverter.GetBytes(refs.Count);
-        }
         public byte[] data(bool v3)
         {
             List<byte> temp = new List<byte>();
 
             if (!v3)
             {
+                temp.AddRange(BitConverter.GetBytes(refs.Count));
+
                 foreach (var str in refs)
                 {
                     temp.AddRange(Encoding.Default.GetBytes(str));

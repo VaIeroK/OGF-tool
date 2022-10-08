@@ -36,10 +36,5 @@ namespace OGF_tool
 
             return temp.ToArray();
         }
-
-        public uint chunk_size()
-        {
-            return (uint)lod_path.Length + (uint)(data_str ? 2 : 1);
-        }
     }
 }

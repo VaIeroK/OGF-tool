@@ -34,6 +34,9 @@ namespace OGF_tool
             this.OpenOGFDialog = new System.Windows.Forms.OpenFileDialog();
             this.TabControl = new System.Windows.Forms.TabControl();
             this.TexturesPage = new System.Windows.Forms.TabPage();
+            this.TextureContextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.AddMeshesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.LodMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TexturesGropuBox = new System.Windows.Forms.GroupBox();
             this.LodLabel = new System.Windows.Forms.Label();
             this.LinksLabel = new System.Windows.Forms.Label();
@@ -129,11 +132,9 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.TextureContextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.LodMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddMeshesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
+            this.TextureContextStrip.SuspendLayout();
             this.TexturesGropuBox.SuspendLayout();
             this.UserDataPage.SuspendLayout();
             this.MotionRefsPage.SuspendLayout();
@@ -146,7 +147,6 @@ namespace OGF_tool
             this.LodPage.SuspendLayout();
             this.MenuPanel.SuspendLayout();
             this.StatusPanel.SuspendLayout();
-            this.TextureContextStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // OpenOGFDialog
@@ -177,6 +177,26 @@ namespace OGF_tool
             this.TexturesPage.ContextMenuStrip = this.TextureContextStrip;
             this.TexturesPage.Controls.Add(this.TexturesGropuBox);
             this.TexturesPage.Name = "TexturesPage";
+            // 
+            // TextureContextStrip
+            // 
+            this.TextureContextStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AddMeshesMenuItem,
+            this.LodMenuItem});
+            this.TextureContextStrip.Name = "TextureContextStrip";
+            resources.ApplyResources(this.TextureContextStrip, "TextureContextStrip");
+            // 
+            // AddMeshesMenuItem
+            // 
+            this.AddMeshesMenuItem.Name = "AddMeshesMenuItem";
+            resources.ApplyResources(this.AddMeshesMenuItem, "AddMeshesMenuItem");
+            this.AddMeshesMenuItem.Click += new System.EventHandler(this.addMeshesToolStripMenuItem_Click);
+            // 
+            // LodMenuItem
+            // 
+            this.LodMenuItem.Name = "LodMenuItem";
+            resources.ApplyResources(this.LodMenuItem, "LodMenuItem");
+            this.LodMenuItem.Click += new System.EventHandler(this.changeLodToolStripMenuItem_Click);
             // 
             // TexturesGropuBox
             // 
@@ -404,51 +424,61 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.RotationZTextBox, "RotationZTextBox");
             this.RotationZTextBox.Name = "RotationZTextBox";
+            this.RotationZTextBox.Tag = "float";
             // 
             // RotationYTextBox
             // 
             resources.ApplyResources(this.RotationYTextBox, "RotationYTextBox");
             this.RotationYTextBox.Name = "RotationYTextBox";
+            this.RotationYTextBox.Tag = "float";
             // 
             // RotationXTextBox
             // 
             resources.ApplyResources(this.RotationXTextBox, "RotationXTextBox");
             this.RotationXTextBox.Name = "RotationXTextBox";
+            this.RotationXTextBox.Tag = "float";
             // 
             // PositionZTextBox
             // 
             resources.ApplyResources(this.PositionZTextBox, "PositionZTextBox");
             this.PositionZTextBox.Name = "PositionZTextBox";
+            this.PositionZTextBox.Tag = "float";
             // 
             // PositionYTextBox
             // 
             resources.ApplyResources(this.PositionYTextBox, "PositionYTextBox");
             this.PositionYTextBox.Name = "PositionYTextBox";
+            this.PositionYTextBox.Tag = "float";
             // 
             // PositionXTextBox
             // 
             resources.ApplyResources(this.PositionXTextBox, "PositionXTextBox");
             this.PositionXTextBox.Name = "PositionXTextBox";
+            this.PositionXTextBox.Tag = "float";
             // 
             // CenterOfMassZTextBox
             // 
             resources.ApplyResources(this.CenterOfMassZTextBox, "CenterOfMassZTextBox");
             this.CenterOfMassZTextBox.Name = "CenterOfMassZTextBox";
+            this.CenterOfMassZTextBox.Tag = "float";
             // 
             // CenterOfMassYTextBox
             // 
             resources.ApplyResources(this.CenterOfMassYTextBox, "CenterOfMassYTextBox");
             this.CenterOfMassYTextBox.Name = "CenterOfMassYTextBox";
+            this.CenterOfMassYTextBox.Tag = "float";
             // 
             // CenterOfMassXTextBox
             // 
             resources.ApplyResources(this.CenterOfMassXTextBox, "CenterOfMassXTextBox");
             this.CenterOfMassXTextBox.Name = "CenterOfMassXTextBox";
+            this.CenterOfMassXTextBox.Tag = "float";
             // 
             // MassTextBoxEx
             // 
             resources.ApplyResources(this.MassTextBoxEx, "MassTextBoxEx");
             this.MassTextBoxEx.Name = "MassTextBoxEx";
+            this.MassTextBoxEx.Tag = "float";
             // 
             // MaterialLabelEx
             // 
@@ -459,17 +489,20 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.MaterialTextBoxEx, "MaterialTextBoxEx");
             this.MaterialTextBoxEx.Name = "MaterialTextBoxEx";
+            this.MaterialTextBoxEx.Tag = "string";
             // 
             // ParentBoneTextBoxEx
             // 
             resources.ApplyResources(this.ParentBoneTextBoxEx, "ParentBoneTextBoxEx");
             this.ParentBoneTextBoxEx.Name = "ParentBoneTextBoxEx";
             this.ParentBoneTextBoxEx.ReadOnly = true;
+            this.ParentBoneTextBoxEx.Tag = "string";
             // 
             // BoneNameTextBoxEx
             // 
             resources.ApplyResources(this.BoneNameTextBoxEx, "BoneNameTextBoxEx");
             this.BoneNameTextBoxEx.Name = "BoneNameTextBoxEx";
+            this.BoneNameTextBoxEx.Tag = "string";
             // 
             // ParentBoneLabelEx
             // 
@@ -773,26 +806,6 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
             // 
-            // TextureContextStrip
-            // 
-            this.TextureContextStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AddMeshesMenuItem,
-            this.LodMenuItem});
-            this.TextureContextStrip.Name = "TextureContextStrip";
-            resources.ApplyResources(this.TextureContextStrip, "TextureContextStrip");
-            // 
-            // LodMenuItem
-            // 
-            this.LodMenuItem.Name = "LodMenuItem";
-            resources.ApplyResources(this.LodMenuItem, "LodMenuItem");
-            this.LodMenuItem.Click += new System.EventHandler(this.changeLodToolStripMenuItem_Click);
-            // 
-            // AddMeshesMenuItem
-            // 
-            this.AddMeshesMenuItem.Name = "AddMeshesMenuItem";
-            resources.ApplyResources(this.AddMeshesMenuItem, "AddMeshesMenuItem");
-            this.AddMeshesMenuItem.Click += new System.EventHandler(this.addMeshesToolStripMenuItem_Click);
-            // 
             // OGF_Editor
             // 
             this.AllowDrop = true;
@@ -811,6 +824,7 @@ namespace OGF_tool
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnterCallback);
             this.TabControl.ResumeLayout(false);
             this.TexturesPage.ResumeLayout(false);
+            this.TextureContextStrip.ResumeLayout(false);
             this.TexturesGropuBox.ResumeLayout(false);
             this.TexturesGropuBox.PerformLayout();
             this.UserDataPage.ResumeLayout(false);
@@ -829,7 +843,6 @@ namespace OGF_tool
             this.MenuPanel.PerformLayout();
             this.StatusPanel.ResumeLayout(false);
             this.StatusPanel.PerformLayout();
-            this.TextureContextStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -29,10 +29,5 @@ namespace OGF_tool
 
             return temp.ToArray();
         }
-
-        public uint chunk_size(uint ogf_ver)
-        {
-            return (uint)userdata.Length + (uint)(ogf_ver == 4 ? 1 : 0);
-        }
     }
 }
