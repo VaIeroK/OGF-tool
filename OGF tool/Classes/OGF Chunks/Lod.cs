@@ -11,14 +11,21 @@ namespace OGF_tool
         public long pos;
         public int old_size;
         public string lod_path;
-        public bool data_str;
+        private bool data_str;
 
         public Lod()
         {
-            this.pos = 0;
-            this.old_size = 0;
-            this.lod_path = "";
-            this.data_str = true;
+            pos = 0;
+            old_size = 0;
+            lod_path = "";
+            data_str = true;
+        }
+
+        public void Load(XRayLoader xr_loader)
+        {
+            pos = xr_loader.chunk_pos;
+            lod_path = xr_loader.read_stringData(ref data_str);
+            old_size = data().Length;
         }
 
         public byte[] data()

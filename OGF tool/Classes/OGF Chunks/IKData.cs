@@ -47,6 +47,9 @@ namespace OGF_tool
 
         public void Load(XRayLoader xr_loader, int bones_count, byte chunk_ver)
         {
+            pos = xr_loader.chunk_pos;
+            chunk_version = chunk_ver;
+
             for (int i = 0; i < bones_count; i++)
             {
                 IK_Bone bone = new IK_Bone();
@@ -55,7 +58,7 @@ namespace OGF_tool
 
                 byte[] temp_byte;
 
-                if (chunk_ver == 4)
+                if (chunk_version == 4)
                     bone.version = xr_loader.ReadUInt32();
 
                 bone.material = xr_loader.read_stringZ();
@@ -63,7 +66,7 @@ namespace OGF_tool
                 temp_byte = xr_loader.ReadBytes(112);   // struct SBoneShape
                 kinematic_data.AddRange(temp_byte);
 
-                int ImportBytes = ((chunk_ver == 4) ? 76 : ((chunk_ver == 3) ? 72 : 60));
+                int ImportBytes = ((chunk_version == 4) ? 76 : ((chunk_version == 3) ? 72 : 60));
                 temp_byte = xr_loader.ReadBytes(ImportBytes); // Import
                 kinematic_data.AddRange(temp_byte);
 

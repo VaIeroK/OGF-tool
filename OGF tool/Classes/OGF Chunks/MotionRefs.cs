@@ -15,10 +15,45 @@ namespace OGF_tool
 
         public MotionRefs()
         {
-            this.pos = 0;
-            this.old_size = 0;
-            this.refs = new List<string>();
-            this.soc = false;
+            pos = 0;
+            old_size = 0;
+            refs = new List<string>();
+            soc = false;
+        }
+
+        public void Load(XRayLoader xr_loader, bool string_refs)
+        {
+            pos = xr_loader.chunk_pos;
+
+            if (string_refs)
+            {
+                soc = true;
+                string motions = xr_loader.read_stringZ();
+                string motion = "";
+                for (int i = 0; i < motions.Length; i++)
+                {
+                    if (motions[i] != ',')
+                        motion += motions[i];
+                    else
+                    {
+                        refs.Add(motion);
+                        motion = "";
+                    }
+
+                }
+
+                if (motion != "")
+                    refs.Add(motion);
+            }
+            else
+            {
+                uint count = xr_loader.ReadUInt32();
+
+                for (int i = 0; i < count; i++)
+                    refs.Add(xr_loader.read_stringZ());
+            }
+
+            old_size = data(soc).Length;
         }
 
         public byte[] data(bool v3)

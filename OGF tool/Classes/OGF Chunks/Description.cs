@@ -22,18 +22,17 @@ namespace OGF_tool
 
         public Description()
         {
-            this.pos = 0;
-            this.old_size = 0;
-            this.four_byte = false;
+            pos = 0;
+            old_size = 0;
+            four_byte = false;
 
-            this.m_source = "";
-            this.m_export_tool = "";
-            this.m_export_time = 0;
-            this.m_owner_name = "";
-            this.m_creation_time = 0;
-            this.m_export_modif_name_tool = "";
-            this.m_modified_time = 0;
-
+            m_source = "";
+            m_export_tool = "";
+            m_export_time = 0;
+            m_owner_name = "";
+            m_creation_time = 0;
+            m_export_modif_name_tool = "";
+            m_modified_time = 0;
         }
 
         public byte Load(XRayLoader xr_loader, uint chunk_size)
@@ -53,8 +52,6 @@ namespace OGF_tool
             m_modified_time = xr_loader.ReadInt64();
             long description_end_pos = xr_loader.reader.BaseStream.Position;
 
-            old_size = m_source.Length + 1 + m_export_tool.Length + 1 + 8 + m_owner_name.Length + 1 + 8 + m_export_modif_name_tool.Length + 1 + 8;
-
             if ((description_end_pos - reader_start_pos) != chunk_size) // Размер не состыковывается, пробуем читать 4 байта
             {
                 xr_loader.reader.BaseStream.Position = reader_start_pos;
@@ -67,7 +64,6 @@ namespace OGF_tool
                 m_modified_time = xr_loader.ReadUInt32();
                 description_end_pos = xr_loader.reader.BaseStream.Position;
 
-                old_size = m_source.Length + 1 + m_export_tool.Length + 1 + 4 + m_owner_name.Length + 1 + 4 + m_export_modif_name_tool.Length + 1 + 4;
                 four_byte = true; // Ставим флаг на то что мы прочитали чанк с 4х байтными таймерами, если модель будет сломана то чинить чанк будем в 8 байт
 
                 if ((description_end_pos - reader_start_pos) != chunk_size) // Все равно разный размер? Походу модель сломана
@@ -80,6 +76,8 @@ namespace OGF_tool
                     m_modified_time = 0;
                 }
             }
+
+            old_size = data().Length;
 
             return broken_type;
         }

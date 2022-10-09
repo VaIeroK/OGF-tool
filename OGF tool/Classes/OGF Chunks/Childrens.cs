@@ -195,7 +195,38 @@ namespace OGF_tool
                 links = count;
         }
 
-        public bool Load(XRayLoader xr_loader, byte version)
+        public void LoadDM(XRayLoader xr_loader)
+        {
+            m_shader = xr_loader.read_stringZ();
+            m_texture = xr_loader.read_stringZ();
+            xr_loader.ReadUInt32();
+            xr_loader.ReadFloat();
+            xr_loader.ReadFloat();
+
+            old_size = m_shader.Length + m_texture.Length + 2;
+
+            uint verts = xr_loader.ReadUInt32();
+            uint faces = xr_loader.ReadUInt32() / 3;
+
+            for (int i = 0; i < verts; i++)
+            {
+                SSkelVert Vert = new SSkelVert();
+                Vert.offs = xr_loader.ReadVector();
+                Vert.uv = xr_loader.ReadVector2();
+                Vertices.Add(Vert);
+            }
+
+            for (int i = 0; i < faces; i++)
+            {
+                SSkelFace Face = new SSkelFace();
+                Face.v[0] = (ushort)xr_loader.ReadUInt16();
+                Face.v[1] = (ushort)xr_loader.ReadUInt16();
+                Face.v[2] = (ushort)xr_loader.ReadUInt16();
+                Faces.Add(Face);
+            }
+        }
+
+        public bool Load(XRayLoader xr_loader)
         {
             // Header start
             if (!xr_loader.find_chunk((int)OGF.OGF_HEADER, false, true)) 
@@ -214,7 +245,7 @@ namespace OGF_tool
             // Texture end
 
             // Verts start
-            int VertsChunk = (version == 3 ? (int)OGF.OGF3_VERTICES : (int)OGF.OGF4_VERTICES);
+            int VertsChunk = (Header.format_version == 3 ? (int)OGF.OGF3_VERTICES : (int)OGF.OGF4_VERTICES);
 
             if (!xr_loader.find_chunk(VertsChunk, false, true))
                 return false;
@@ -230,7 +261,7 @@ namespace OGF_tool
                     case 1:
                         Vert.offs = xr_loader.ReadVector();
                         Vert.norm = xr_loader.ReadVector();
-                        if (version == 4)
+                        if (Header.format_version == 4)
                         {
                             Vert.tang = xr_loader.ReadVector();
                             Vert.binorm = xr_loader.ReadVector();
@@ -276,7 +307,7 @@ namespace OGF_tool
             // Verts end
 
             // Indices start
-            int FacesChunk = (version == 3 ? (int)OGF.OGF3_INDICES : (int)OGF.OGF4_INDICES);
+            int FacesChunk = (Header.format_version == 3 ? (int)OGF.OGF3_INDICES : (int)OGF.OGF4_INDICES);
 
             if (!xr_loader.find_chunk(FacesChunk, false, true))
                 return false;
@@ -294,7 +325,7 @@ namespace OGF_tool
             // Indices end
 
             // SWR start
-            if (version == 4)
+            if (Header.format_version == 4)
             {
                 if (xr_loader.find_chunk((int)OGF.OGF4_SWIDATA, false, true))
                 {
