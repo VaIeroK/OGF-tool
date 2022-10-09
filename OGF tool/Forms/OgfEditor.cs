@@ -2092,7 +2092,7 @@ namespace OGF_tool
 
 				OGF_V.bonedata.bones[2].parent_name = "bip01";
 				OGF_V.bonedata.RecalcChilds();
-				BoneNamesBox.Clear();
+
                 for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
                 {
 					OGF_V.ikdata.bones[i].position = Resources.CoPSkeleton.Pos(i);
