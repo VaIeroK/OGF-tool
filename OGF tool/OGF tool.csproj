@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Bin\Win32\Debug\</OutputPath>
-	<IntermediateOutputPath>..\Intermediate\Win32\Debug\OGF Tool</IntermediateOutputPath>
+    <IntermediateOutputPath>..\Intermediate\Win32\Debug\OGF Tool</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\Bin\Win32\Release\</OutputPath>
-	<IntermediateOutputPath>..\Intermediate\Win32\Release\OGF Tool</IntermediateOutputPath>
+    <IntermediateOutputPath>..\Intermediate\Win32\Release\OGF Tool</IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

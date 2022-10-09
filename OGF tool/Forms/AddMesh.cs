@@ -13,6 +13,12 @@ namespace OGF_tool
 {
     public partial class AddMesh : Form
     {
+        private class Reassign
+        {
+            public int old_bone;
+            public int new_bone;
+        }
+
         private OGF_Children OGF, LoadedOGF;
         int last_height = 0;
         List<bool> mesh_to_add_list = new List<bool>();
@@ -191,6 +197,41 @@ namespace OGF_tool
                 if (mesh_to_add_list[i])
                 {
                     OGF_Child old_child = LoadedOGF.childs[i];
+                    GroupBox groupBox = MeshPanel.Controls["MeshGrpBox_" + i.ToString()] as GroupBox;
+
+                    List<Reassign> reassigns = new List<Reassign>();
+
+                    for (int j = 0; j < groupBox.Controls.Count; j++)
+                    {
+                        if (groupBox.Controls[j] is ComboBox)
+                        {
+                            ComboBox cmb = (ComboBox)groupBox.Controls[j];
+                            if (cmb.SelectedIndex != -1)
+                            {
+                                Reassign reassign = new Reassign();
+
+                                int idx = Convert.ToInt32(cmb.Name.ToString().Split('_')[2]); // id ряда с настройками
+                                TextBox OldBoneBox = groupBox.Controls["OldBone_" + idx] as TextBox; // Хранит текстовое название кости к которой привязаны вертексы
+
+                                reassign.old_bone = LoadedOGF.bonedata.GetBoneID(OldBoneBox.Text); // Получили id кости ряда
+                                reassign.new_bone = cmb.SelectedIndex; // Меняем старую кость на выбранный индекс
+                                reassigns.Add(reassign);
+                            }
+                        }
+                    }
+
+                    for (int j = 0; j < old_child.Vertices.Count; j++)
+                    {
+                        for (int r = 0; r < old_child.LinksCount(); r++)
+                        {
+                            foreach (var reass in reassigns)
+                            {
+                                if (old_child.Vertices[j].bones_id[r] == reass.old_bone)
+                                    old_child.Vertices[j].bones_id[r] = (uint)reass.new_bone;
+                            }
+                        }
+                    }
+
                     OGF.childs.Add(old_child);
                 }
             }
