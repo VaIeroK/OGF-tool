@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -195,6 +196,33 @@ namespace OGF_tool
                 links = count;
         }
 
+        private void MeshNormalize()
+        {
+            for (int i = 0; i < Vertices.Count; i++)
+                Vertices[i].norm = new float[3] { 0.0f, 0.0f, 0.0f};
+
+            for (int i = 0; i< Faces.Count; i++)
+            {
+                int ia = Faces[i].v[0];
+                int ib = Faces[i].v[1];
+                int ic = Faces[i].v[2];
+
+                float[] e1 = FVec.Sub(Vertices[ia].offs, Vertices[ib].offs);
+                float[] e2 = FVec.Sub(Vertices[ic].offs, Vertices[ib].offs);
+                float[] no = FVec.CrossProduct(e1, e2);
+
+                Vertices[ia].norm = FVec.Add(Vertices[ia].norm, no);
+                Vertices[ib].norm = FVec.Add(Vertices[ib].norm, no);
+                Vertices[ic].norm = FVec.Add(Vertices[ic].norm, no);
+            }
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                Vertices[i].norm = FVec.Normalize(Vertices[i].norm);
+                Vertices[i].norm = FVec.Mul(Vertices[i].norm, -1.0f);
+            }
+        }
+
         public void LoadDM(XRayLoader xr_loader)
         {
             m_shader = xr_loader.read_stringZ();
@@ -224,6 +252,8 @@ namespace OGF_tool
                 Face.v[2] = (ushort)xr_loader.ReadUInt16();
                 Faces.Add(Face);
             }
+
+            MeshNormalize();
         }
 
         public bool Load(XRayLoader xr_loader)
