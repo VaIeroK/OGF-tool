@@ -693,7 +693,7 @@ namespace OGF_tool
 				if (DescriptionSize > 0)
 				{
 					OGF_C.description = new Description();
-					OGF_C.description.Load(xr_loader, DescriptionSize);
+                    OGF_C.BrokenType = OGF_C.description.Load(xr_loader, DescriptionSize);
 				}
 
 				int ChildChunk = (OGF_C.Header.format_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
