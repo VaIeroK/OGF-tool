@@ -108,6 +108,7 @@ namespace OGF_tool
             this.ToolsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OpenInObjectEditor = new System.Windows.Forms.ToolStripMenuItem();
             this.importDataFromModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recalcNormalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.converterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCCoPToSoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCSoCToCoPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -118,6 +119,7 @@ namespace OGF_tool
             this.reloadToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.disableAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DisableTexturesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusFile = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusPanel = new System.Windows.Forms.StatusStrip();
@@ -132,7 +134,6 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.recalcNormalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -677,6 +678,12 @@ namespace OGF_tool
             resources.ApplyResources(this.importDataFromModelToolStripMenuItem, "importDataFromModelToolStripMenuItem");
             this.importDataFromModelToolStripMenuItem.Click += new System.EventHandler(this.importDataFromModelToolStripMenuItem_Click);
             // 
+            // recalcNormalsToolStripMenuItem
+            // 
+            this.recalcNormalsToolStripMenuItem.Name = "recalcNormalsToolStripMenuItem";
+            resources.ApplyResources(this.recalcNormalsToolStripMenuItem, "recalcNormalsToolStripMenuItem");
+            this.recalcNormalsToolStripMenuItem.Click += new System.EventHandler(this.recalcNormalsToolStripMenuItem_Click);
+            // 
             // converterToolStripMenuItem
             // 
             this.converterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -719,6 +726,7 @@ namespace OGF_tool
             // 
             this.viewPortToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.reloadToolStripMenuItem1,
+            this.DisableTexturesMenuItem,
             this.disableAlphaToolStripMenuItem,
             this.openImageFolderToolStripMenuItem});
             this.viewPortToolStripMenuItem.Name = "viewPortToolStripMenuItem";
@@ -741,6 +749,12 @@ namespace OGF_tool
             this.openImageFolderToolStripMenuItem.Name = "openImageFolderToolStripMenuItem";
             resources.ApplyResources(this.openImageFolderToolStripMenuItem, "openImageFolderToolStripMenuItem");
             this.openImageFolderToolStripMenuItem.Click += new System.EventHandler(this.openImageFolderToolStripMenuItem_Click);
+            // 
+            // DisableTexturesMenuItem
+            // 
+            this.DisableTexturesMenuItem.Name = "DisableTexturesMenuItem";
+            resources.ApplyResources(this.DisableTexturesMenuItem, "DisableTexturesMenuItem");
+            this.DisableTexturesMenuItem.Click += new System.EventHandler(this.DisableTexturesMenuItem_Click);
             // 
             // FileLabel
             // 
@@ -807,12 +821,6 @@ namespace OGF_tool
             // SaveObjDialog
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
-            // 
-            // recalcNormalsToolStripMenuItem
-            // 
-            this.recalcNormalsToolStripMenuItem.Name = "recalcNormalsToolStripMenuItem";
-            resources.ApplyResources(this.recalcNormalsToolStripMenuItem, "recalcNormalsToolStripMenuItem");
-            this.recalcNormalsToolStripMenuItem.Click += new System.EventHandler(this.recalcNormalsToolStripMenuItem_Click);
             // 
             // OGF_Editor
             // 
@@ -959,6 +967,7 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem LodMenuItem;
         private System.Windows.Forms.ToolStripMenuItem AddMeshesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem recalcNormalsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DisableTexturesMenuItem;
     }
 }
 

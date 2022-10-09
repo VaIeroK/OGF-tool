@@ -427,13 +427,13 @@
     <value>0</value>
   </data>
   <data name="AddMeshesMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>169, 22</value>
   </data>
   <data name="AddMeshesMenuItem.Text" xml:space="preserve">
     <value>Add meshes</value>
   </data>
   <data name="LodMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>169, 22</value>
   </data>
   <data name="LodMenuItem.Text" xml:space="preserve">
     <value>Change lod factor</value>
@@ -2151,30 +2151,6 @@
   <data name="FileMenuItem.Text" xml:space="preserve">
     <value>File</value>
   </data>
-  <data name="OpenInObjectEditor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 22</value>
-  </data>
-  <data name="OpenInObjectEditor.Text" xml:space="preserve">
-    <value>Open in Object Editor</value>
-  </data>
-  <data name="importDataFromModelToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 22</value>
-  </data>
-  <data name="importDataFromModelToolStripMenuItem.Text" xml:space="preserve">
-    <value>Import OGF Params</value>
-  </data>
-  <data name="recalcNormalsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 22</value>
-  </data>
-  <data name="recalcNormalsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Recalc Normals</value>
-  </data>
-  <data name="converterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 22</value>
-  </data>
-  <data name="converterToolStripMenuItem.Text" xml:space="preserve">
-    <value>Converter</value>
-  </data>
   <data name="ToolsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>46, 20</value>
   </data>
@@ -2198,6 +2174,30 @@
   </data>
   <data name="CurrentFormat.Text" xml:space="preserve">
     <value>Model Format: None</value>
+  </data>
+  <data name="reloadToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="reloadToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="DisableTexturesMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="DisableTexturesMenuItem.Text" xml:space="preserve">
+    <value>Disable Textures</value>
+  </data>
+  <data name="disableAlphaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="disableAlphaToolStripMenuItem.Text" xml:space="preserve">
+    <value>Disable Alpha</value>
+  </data>
+  <data name="openImageFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="openImageFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open image folder</value>
   </data>
   <data name="viewPortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 20</value>
@@ -2313,6 +2313,30 @@
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>Exit</value>
   </data>
+  <data name="OpenInObjectEditor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 22</value>
+  </data>
+  <data name="OpenInObjectEditor.Text" xml:space="preserve">
+    <value>Open in Object Editor</value>
+  </data>
+  <data name="importDataFromModelToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 22</value>
+  </data>
+  <data name="importDataFromModelToolStripMenuItem.Text" xml:space="preserve">
+    <value>Import OGF Params</value>
+  </data>
+  <data name="recalcNormalsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 22</value>
+  </data>
+  <data name="recalcNormalsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Recalc Normals</value>
+  </data>
+  <data name="converterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 22</value>
+  </data>
+  <data name="converterToolStripMenuItem.Text" xml:space="preserve">
+    <value>Converter</value>
+  </data>
   <data name="nPCCoPToSoCToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>161, 22</value>
   </data>
@@ -2324,24 +2348,6 @@
   </data>
   <data name="nPCSoCToCoPToolStripMenuItem.Text" xml:space="preserve">
     <value>NPC SoC to CoP</value>
-  </data>
-  <data name="reloadToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
-  </data>
-  <data name="reloadToolStripMenuItem1.Text" xml:space="preserve">
-    <value>Reload</value>
-  </data>
-  <data name="disableAlphaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
-  </data>
-  <data name="disableAlphaToolStripMenuItem.Text" xml:space="preserve">
-    <value>Disable Alpha</value>
-  </data>
-  <data name="openImageFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
-  </data>
-  <data name="openImageFolderToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open image folder</value>
   </data>
   <data name="FileLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>28, 17</value>
@@ -2942,6 +2948,12 @@
   <data name="&gt;&gt;importDataFromModelToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;recalcNormalsToolStripMenuItem.Name" xml:space="preserve">
+    <value>recalcNormalsToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;recalcNormalsToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;converterToolStripMenuItem.Name" xml:space="preserve">
     <value>converterToolStripMenuItem</value>
   </data>
@@ -3000,6 +3012,12 @@
     <value>openImageFolderToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;openImageFolderToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;DisableTexturesMenuItem.Name" xml:space="preserve">
+    <value>DisableTexturesMenuItem</value>
+  </data>
+  <data name="&gt;&gt;DisableTexturesMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;FileLabel.Name" xml:space="preserve">
@@ -3067,12 +3085,6 @@
   </data>
   <data name="&gt;&gt;SaveObjDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;recalcNormalsToolStripMenuItem.Name" xml:space="preserve">
-    <value>recalcNormalsToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;recalcNormalsToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>OGF_Editor</value>

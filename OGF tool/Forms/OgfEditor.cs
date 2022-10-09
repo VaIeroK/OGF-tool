@@ -38,6 +38,7 @@ namespace OGF_tool
 		public bool ViewerWorking = false;
 		public Thread ViewerThread = null;
 		bool ViewPortAlpha = true;
+		bool ViewPortTextures = true;
 		List<bool> OldChildVisible = new List<bool>();
 		List<string> OldChildTextures = new List<string>();
 
@@ -891,7 +892,7 @@ namespace OGF_tool
 			}
 		}
 
-		private void SaveMtl(string filename)
+		private void SaveMtl(string filename, bool with_texture = true)
         {
 			using (StreamWriter writer = File.CreateText(filename))
 			{
@@ -903,7 +904,8 @@ namespace OGF_tool
 					writer.WriteLine("Ka  0 0 0");
 					writer.WriteLine("Kd  1 1 1");
 					writer.WriteLine("Ks  0 0 0");
-					writer.WriteLine("map_Kd " + Path.GetFileName(ch.m_texture) + ".png\n");
+					if (with_texture)
+						writer.WriteLine("map_Kd " + Path.GetFileName(ch.m_texture) + ".png\n");
 				}
 				writer.Close();
 			}
@@ -2389,7 +2391,22 @@ namespace OGF_tool
 			InitViewPort(false, true, true);
 		}
 
-		private void SetAlphaToolStrip(bool enable)
+        private void DisableTexturesMenuItem_Click(object sender, EventArgs e)
+        {
+            ViewPortTextures = !ViewPortTextures;
+
+            string mtl_name = TempFolder() + "\\" + Path.GetFileName(Path.ChangeExtension(FILE_NAME, ".mtl"));
+            SaveMtl(mtl_name, ViewPortTextures);
+
+            if (!ViewPortTextures)
+				DisableTexturesMenuItem.Text = "Enable Textures";
+			else
+                DisableTexturesMenuItem.Text = "Disable Textures";
+
+            InitViewPort(false, false, true);
+        }
+
+        private void SetAlphaToolStrip(bool enable)
 		{
             ViewPortAlpha = enable;
             if (ViewPortAlpha)
