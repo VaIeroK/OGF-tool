@@ -464,9 +464,11 @@ namespace OGF_tool
 					if (OGF_V.BrokenType > 0) // Если модель сломана, то восстанавливаем чанк с 8 байтными таймерами
 						OGF_V.description.four_byte = false;
 
-					file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_DESC));
-					file_bytes.AddRange(BitConverter.GetBytes(OGF_V.description.data().Length));
-					file_bytes.AddRange(OGF_V.description.data());
+					byte[] DescriptionData = OGF_V.description.data();
+
+                    file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_DESC));
+					file_bytes.AddRange(BitConverter.GetBytes(DescriptionData.Length));
+					file_bytes.AddRange(DescriptionData);
 
 					OGF_V.description.four_byte = old_byte; // Восстанавливаем отображение колличества байтов у таймера
 				}
@@ -500,10 +502,11 @@ namespace OGF_tool
 					{
 						if (ch.to_delete) continue;
 
-                        file_bytes.AddRange(BitConverter.GetBytes(ChildChunk));
-                        file_bytes.AddRange(BitConverter.GetBytes(ch.data().Length));
+						byte[] ChildData = ch.data();
 
-                        file_bytes.AddRange(ch.data());
+                        file_bytes.AddRange(BitConverter.GetBytes(ChildChunk));
+                        file_bytes.AddRange(BitConverter.GetBytes(ChildData.Length));
+                        file_bytes.AddRange(ChildData);
                         ChildChunk++;
                     }
 				}
@@ -518,9 +521,11 @@ namespace OGF_tool
 							file_bytes.AddRange(temp);
 						}
 
-						file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF_S_BONE_NAMES));
-						file_bytes.AddRange(BitConverter.GetBytes(OGF_V.bonedata.data(OGF_V.BrokenType == 2).Length));
-						file_bytes.AddRange(OGF_V.bonedata.data(OGF_V.BrokenType == 2));
+						byte[] BonesData = OGF_V.bonedata.data(OGF_V.BrokenType == 2);
+
+                        file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF_S_BONE_NAMES));
+						file_bytes.AddRange(BitConverter.GetBytes(BonesData.Length));
+						file_bytes.AddRange(BonesData);
 
 						fileStream.ReadBytes(OGF_V.bonedata.old_size + 8);
 					}
@@ -548,9 +553,11 @@ namespace OGF_tool
 								break;
 						}
 
-						file_bytes.AddRange(BitConverter.GetBytes(IKDataChunk));
-						file_bytes.AddRange(BitConverter.GetBytes(OGF_V.ikdata.data().Length));
-						file_bytes.AddRange(OGF_V.ikdata.data());
+						byte[] IKDataData = OGF_V.ikdata.data();
+
+                        file_bytes.AddRange(BitConverter.GetBytes(IKDataChunk));
+						file_bytes.AddRange(BitConverter.GetBytes(IKDataData.Length));
+						file_bytes.AddRange(IKDataData);
 
 						fileStream.ReadBytes(OGF_V.ikdata.old_size + 8);
 					}
@@ -566,9 +573,11 @@ namespace OGF_tool
 						if (OGF_V.userdata.userdata != "") // Пишем если есть что писать
 						{
 							uint UserDataChunk = (OGF_V.Header.format_version == 4 ? (uint)OGF.OGF4_S_USERDATA : (uint)OGF.OGF3_S_USERDATA);
-							file_bytes.AddRange(BitConverter.GetBytes(UserDataChunk));
-							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.userdata.data().Length));
-							file_bytes.AddRange(OGF_V.userdata.data());
+							byte[] UserDataData = OGF_V.userdata.data();
+
+                            file_bytes.AddRange(BitConverter.GetBytes(UserDataChunk));
+							file_bytes.AddRange(BitConverter.GetBytes(UserDataData.Length));
+							file_bytes.AddRange(UserDataData);
 						}
 
 						if (OGF_V.userdata.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
@@ -585,9 +594,11 @@ namespace OGF_tool
 
 						if (OGF_V.lod.lod_path != "") // Пишем если есть что писать
 						{
-							file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_LODS));
-							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.lod.data().Length));
-							file_bytes.AddRange(OGF_V.lod.data());
+							byte[] LodData = OGF_V.lod.data();
+
+                            file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_LODS));
+							file_bytes.AddRange(BitConverter.GetBytes(LodData.Length));
+							file_bytes.AddRange(LodData);
 						}
 
 						if (OGF_V.lod.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
@@ -606,17 +617,17 @@ namespace OGF_tool
 						if (OGF_V.motion_refs.refs.Count > 0) // Пишем если есть что писать
 						{
 							refs_created = true;
+							byte[] MotionRefsData = OGF_V.motion_refs.data(OGF_V.motion_refs.soc);
 
-							if (!OGF_V.motion_refs.soc)
+                            if (!OGF_V.motion_refs.soc)
 								file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_MOTION_REFS2));
 							else
 							{
 								uint RefsChunk = (OGF_V.Header.format_version == 4 ? (uint)OGF.OGF4_S_MOTION_REFS : (uint)OGF.OGF3_S_MOTION_REFS);
 								file_bytes.AddRange(BitConverter.GetBytes(RefsChunk));
 							}
-							file_bytes.AddRange(BitConverter.GetBytes(OGF_V.motion_refs.data(OGF_V.motion_refs.soc).Length));
-
-							file_bytes.AddRange(OGF_V.motion_refs.data(OGF_V.motion_refs.soc));
+							file_bytes.AddRange(BitConverter.GetBytes(MotionRefsData.Length));
+							file_bytes.AddRange(MotionRefsData);
 						}
 
 						if (OGF_V.motion_refs.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
