@@ -2046,14 +2046,6 @@ namespace OGF_tool
         {
 			if (CheckNPC(true))
 			{
-				float[] skel_data = Resources.SoCSkeleton.InitIK();
-
-				if (skel_data.Length == 0)
-				{
-                    AutoClosingMessageBox.Show("NPC data not loaded!", "", 2500, MessageBoxIcon.Error);
-					return;
-                }
-
 				RemoveBone("root_stalker");
 				RemoveBone("bip01");
 
@@ -2065,9 +2057,9 @@ namespace OGF_tool
 
                 for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
 				{
-					OGF_V.ikdata.bones[i].position = Resources.SoCSkeleton.Pos(i, skel_data);
-					OGF_V.ikdata.bones[i].rotation = Resources.SoCSkeleton.Rot(i, skel_data);
-					OGF_V.ikdata.bones[i].center_mass = RotateZ(OGF_V.ikdata.bones[i].center_mass);
+					OGF_V.ikdata.bones[i].position = Resources.SoCSkeleton.Pos(i);
+					OGF_V.ikdata.bones[i].rotation = Resources.SoCSkeleton.Rot(i);
+                    OGF_V.ikdata.bones[i].center_mass = RotateZ(OGF_V.ikdata.bones[i].center_mass);
 				}
 
                 foreach (var ch in OGF_V.childs)
@@ -2076,7 +2068,6 @@ namespace OGF_tool
 
 					for (int i = 0; i < ch.Vertices.Count; i++)
 					{
-						// Чиним id костей
 						for (int j = 0; j < links; j++)
 							ch.Vertices[i].bones_id[j] = (ch.Vertices[i].bones_id[j] >= 2 ? ch.Vertices[i].bones_id[j] - 2 : 0);
 
@@ -2094,26 +2085,19 @@ namespace OGF_tool
 
         private void NPC_ToCoP(object sender, EventArgs e)
         {
-            if (CheckNPC(false))
-            {
-                float[] skel_data = Resources.CoPSkeleton.InitIK();
+			if (CheckNPC(false))
+			{
+				AddBone("root_stalker", "", 0);
+				AddBone("bip01", "root_stalker", 1);
 
-                if (skel_data.Length == 0)
-                {
-                    AutoClosingMessageBox.Show("NPC data not loaded!", "", 2500, MessageBoxIcon.Error);
-                    return;
-                }
-
-                AddBone("root_stalker", "", 0);
-                AddBone("bip01", "root_stalker", 1);
-                OGF_V.bonedata.bones[2].parent_name = "";
-                OGF_V.bonedata.RecalcChilds();
-
+				OGF_V.bonedata.bones[2].parent_name = "bip01";
+				OGF_V.bonedata.RecalcChilds();
+				BoneNamesBox.Clear();
                 for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
                 {
-                    OGF_V.ikdata.bones[i].position = Resources.CoPSkeleton.Pos(i, skel_data);
-                    OGF_V.ikdata.bones[i].rotation = Resources.CoPSkeleton.Rot(i, skel_data);
-                    OGF_V.ikdata.bones[i].center_mass = RotateZ(OGF_V.ikdata.bones[i].center_mass);
+					OGF_V.ikdata.bones[i].position = Resources.CoPSkeleton.Pos(i);
+					OGF_V.ikdata.bones[i].rotation = Resources.CoPSkeleton.Rot(i);
+					OGF_V.ikdata.bones[i].center_mass = RotateZ(OGF_V.ikdata.bones[i].center_mass);
                 }
 
                 foreach (var ch in OGF_V.childs)
