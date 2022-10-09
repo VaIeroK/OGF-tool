@@ -53,21 +53,11 @@ namespace OGF_tool
 
             var newLbl1 = Copy.Label(Texture_Label);
             var newLbl2 = Copy.Label(Shader_Label);
-            var newLbl3 = Copy.Label(Bone1_Label);
-            var newLbl7 = Copy.Label(Reassign1_Label);
-
-            var newCombo1 = FillComboBox(Copy.ComboBox(Bone1_ComboBox), child);
-            int bone_id = OGF.bonedata.GetBoneID(LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[0]].name);
-            if (bone_id != -1)
-                newCombo1.SelectedIndex = bone_id;
 
             var newTextbox1 = Copy.TextBox(Texture_Textbox);
             newTextbox1.Text = child.m_texture;
             var newTextbox2 = Copy.TextBox(Shader_Textbox);
             newTextbox2.Text = child.m_shader;
-
-            var newTextbox3 = Copy.TextBox(OldBone1_Textbox);
-            newTextbox3.Text = LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[0]].name;
 
             var newButton = Copy.Button(AddMeshButton);
             newButton.Click += new System.EventHandler(this.AddMeshButton_Click);
@@ -75,92 +65,63 @@ namespace OGF_tool
 
             box.Controls.Add(newLbl1);
             box.Controls.Add(newLbl2);
-            box.Controls.Add(newLbl3);
-            box.Controls.Add(newLbl7);
-
-            box.Controls.Add(newCombo1);
 
             box.Controls.Add(newTextbox1);
             box.Controls.Add(newTextbox2);
-            box.Controls.Add(newTextbox3);
 
             box.Controls.Add(newButton);
 
-            if (links >= 2) // Сет для 2х и более костей
+            List<uint> BonesList = new List<uint>(); // Лист всех костей к которым привязан меш
+
+            for (int i = 0; i < child.Vertices.Count; i++)
             {
-                var newLbl4 = Copy.Label(Bone2_Label);
-                var newLbl8 = Copy.Label(Reassign2_Label);
-                var newCombo2 = FillComboBox(Copy.ComboBox(Bone2_ComboBox), child);
-                var newTextbox4 = Copy.TextBox(OldBone2_Textbox);
+                SSkelVert vert = child.Vertices[i];
 
-                bone_id = OGF.bonedata.GetBoneID(LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[1]].name);
+                for (int j = 0; j < child.LinksCount(); j++)
+                {
+                    uint bone = vert.bones_id[j];
+                    if (!BonesList.Contains(bone))
+                        BonesList.Add(bone);
+                }
+            }
+
+            for (int i = 0; i < BonesList.Count; i++)
+            {
+                var newLbl3 = Copy.Label(Bone_Label);
+                var newLbl4 = Copy.Label(Reassign_Label);
+                var newCombo1 = FillComboBox(Copy.ComboBox(Bone_ComboBox), child);
+                var newTextbox3 = Copy.TextBox(OldBone_Textbox);
+
+                newLbl3.Text = $"Bone {i + 1} assigned to:";
+                newLbl4.Name = "ReassignBone_" + i;
+                newTextbox3.Name = "OldBone_" + i;
+
+                newLbl3.Location = new Point(newLbl3.Location.X, newLbl3.Location.Y + 27 * i);
+                newLbl4.Location = new Point(newLbl4.Location.X, newLbl4.Location.Y + 27 * i);
+                newCombo1.Location = new Point(newCombo1.Location.X, newCombo1.Location.Y + 27 * i);
+                newTextbox3.Location = new Point(newTextbox3.Location.X, newTextbox3.Location.Y + 27 * i);
+
+                if (i != BonesList.Count - 1)
+                    box.Size = new Size(box.Size.Width, box.Size.Height + 27);
+
+                int bone_id = OGF.bonedata.GetBoneID(LoadedOGF.bonedata.bones[(int)BonesList[i]].name);
                 if (bone_id != -1)
-                    newCombo2.SelectedIndex = bone_id;
+                    newCombo1.SelectedIndex = bone_id;
+                else
+                    newLbl4.ForeColor = Color.FromArgb(255, 255, 0, 0);
 
-                newTextbox4.Text = LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[1]].name;
+                newCombo1.SelectedIndexChanged += new System.EventHandler(this.ComboBoxIndexChanged);
+                newCombo1.Name = "BoneComboBox_" + idx + "_" + i;
 
+                newTextbox3.Text = LoadedOGF.bonedata.bones[(int)BonesList[i]].name;
+
+                box.Controls.Add(newLbl3);
                 box.Controls.Add(newLbl4);
-                box.Controls.Add(newLbl8);
-                box.Controls.Add(newCombo2);
-                box.Controls.Add(newTextbox4);
+                box.Controls.Add(newCombo1);
+                box.Controls.Add(newTextbox3);
             }
 
-            if (links >= 3) // Сет для 3х и более костей
-            {
-                var newLbl5 = Copy.Label(Bone3_Label);
-                var newLbl9 = Copy.Label(Reassign3_Label);
-                var newCombo3 = FillComboBox(Copy.ComboBox(Bone3_ComboBox), child);
-                var newTextbox5 = Copy.TextBox(OldBone3_Textbox);
-
-                bone_id = OGF.bonedata.GetBoneID(LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[2]].name);
-                if (bone_id != -1)
-                    newCombo3.SelectedIndex = bone_id;
-
-                newTextbox5.Text = LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[2]].name;
-
-                box.Controls.Add(newLbl5);
-                box.Controls.Add(newLbl9);
-                box.Controls.Add(newCombo3);
-                box.Controls.Add(newTextbox5);
-            }
-
-            if (links >= 4) // Сет для 4х и более костей
-            {
-                var newLbl6 = Copy.Label(Bone4_Label);
-                var newLbl10 = Copy.Label(Reassign4_Label);
-                var newCombo4 = FillComboBox(Copy.ComboBox(Bone4_ComboBox), child);
-                var newTextbox6 = Copy.TextBox(OldBone4_Textbox);
-
-                bone_id = OGF.bonedata.GetBoneID(LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[3]].name);
-                if (bone_id != -1)
-                    newCombo4.SelectedIndex = bone_id;
-
-                newTextbox6.Text = LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[3]].name;
-
-                box.Controls.Add(newLbl6);
-                box.Controls.Add(newLbl10);
-                box.Controls.Add(newCombo4);
-                box.Controls.Add(newTextbox6);
-            }
-
-            switch (links)
-            {
-                case 1:
-                    box.Size = new Size(box.Width, 130);
-                    last_height += box.Size.Height + 2;
-                    break;
-                case 2:
-                    box.Size = new Size(box.Width, 156);
-                    last_height += box.Size.Height + 2;
-                    break;
-                case 3:
-                    box.Size = new Size(box.Width, 182);
-                    last_height += box.Size.Height + 2;
-                    break;
-                case 4:
-                    last_height += box.Size.Height + 2;
-                    break;
-            }
+            last_height += box.Size.Height + 2;
         }
 
         public ComboBox FillComboBox(ComboBox box, OGF_Child child)
@@ -174,36 +135,21 @@ namespace OGF_tool
         private void AddMeshButton_Click(object sender, EventArgs e)
         {
             Button curBox = sender as Button;
-
-            string currentField = curBox.Name.ToString().Split('_')[0];
             int idx = Convert.ToInt32(curBox.Name.ToString().Split('_')[1]);
-
-            OGF_Child child = LoadedOGF.childs[idx];
-            int links = (int)child.LinksCount();
-
             GroupBox groupBox = MeshPanel.Controls["MeshGrpBox_" + idx.ToString()] as GroupBox;
+            bool can_add = true;
 
-            ComboBox comboBox = groupBox.Controls["Bone1_ComboBox"] as ComboBox;
-            bool can_add = comboBox.SelectedIndex != -1;
-
-            if (links >= 2)
+            for (int i = 0; i < groupBox.Controls.Count; i++)
             {
-                comboBox = groupBox.Controls["Bone2_ComboBox"] as ComboBox;
-                if (comboBox.SelectedIndex == -1)
-                    can_add = false;
-            }
-
-            if (links >= 3)
-            {
-                comboBox = groupBox.Controls["Bone3_ComboBox"] as ComboBox;
-                if (comboBox.SelectedIndex == -1)
-                    can_add = false;
-            }
-            if (links >= 4)
-            {
-                comboBox = groupBox.Controls["Bone4_ComboBox"] as ComboBox;
-                if (comboBox.SelectedIndex == -1)
-                    can_add = false;
+                if (groupBox.Controls[i] is ComboBox)
+                {
+                    ComboBox cmb = (ComboBox)groupBox.Controls[i];
+                    if (cmb.SelectedIndex == -1)
+                    {
+                        can_add = false;
+                        break;
+                    }
+                }
             }
 
             if (can_add)
@@ -221,6 +167,21 @@ namespace OGF_tool
                     curBox.BackColor = SystemColors.Control;
                 }
             }
+        }
+
+        private void ComboBoxIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox curBox = sender as ComboBox;
+            string currentField = curBox.Name.ToString().Split('_')[0];
+            int idx = Convert.ToInt32(curBox.Name.ToString().Split('_')[1]);
+            int i = Convert.ToInt32(curBox.Name.ToString().Split('_')[2]);
+
+            GroupBox groupBox = MeshPanel.Controls["MeshGrpBox_" + idx.ToString()] as GroupBox;
+
+            if (curBox.SelectedIndex != -1)
+                groupBox.Controls["ReassignBone_" + i].ForeColor = SystemColors.ControlText;
+            else
+                groupBox.Controls["ReassignBone_" + i].ForeColor = Color.FromArgb(255, 255, 0, 0);
         }
 
         private void ClosingCallback(object sender, FormClosingEventArgs e)
