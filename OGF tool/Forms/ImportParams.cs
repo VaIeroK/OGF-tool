@@ -33,7 +33,7 @@ namespace OGF_tool
             bool CanMergeOMF = (OGF.IsSkeleton() && ImportedOGF.motions.data() != null);
             bool CanMergeUserdata = (OGF.IsSkeleton() && ImportedOGF.userdata != null);
             bool CanMergeLod = (OGF.IsSkeleton() && ImportedOGF.lod != null);
-            bool CanMergeIkData = (OGF.IsSkeleton() && OGF.ikdata.materials.Count == ImportedOGF.ikdata.materials.Count);
+            bool CanMergeIkData = (OGF.IsSkeleton() && OGF.ikdata != null && ImportedOGF.ikdata != null && OGF.ikdata.bones.Count == ImportedOGF.ikdata.bones.Count);
 
             TexturesChbx.Enabled = CanMergeTextures;
             MotionRefsChbx.Enabled = CanMergeRefs;

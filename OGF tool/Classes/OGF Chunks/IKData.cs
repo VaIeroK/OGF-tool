@@ -3,65 +3,111 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace OGF_tool
 {
+    public class IK_Bone
+    {
+        public string material;
+        public float mass;
+        public uint version;
+        public float[] center_mass;
+        public float[] position;
+        public float[] rotation;
+        public byte[] kinematic_data;
+
+        public IK_Bone()
+        {
+            version = 0;
+            mass = 0.0f;
+        }
+    }
+
     public class IK_Data
     {
         public long pos;
         public int old_size;
-
-        public List<string> materials;
-        public List<float> mass;
-        public List<uint> version;
-        public List<float[]> center_mass;
-        public List<float[]> position;
-        public List<float[]> rotation;
-        public List<List<byte[]>> bytes_1;
         public byte chunk_version;
+
+        public List<IK_Bone> bones;
 
         public IK_Data()
         {
-            this.pos = 0;
-            this.old_size = 0;
-            this.materials = new List<string>();
-            this.mass = new List<float>();
-            this.version = new List<uint>();
-            this.center_mass = new List<float[]>();
-            this.position = new List<float[]>();
-            this.rotation = new List<float[]>();
-            this.bytes_1 = new List<List<byte[]>>();
-            this.chunk_version = 0;
+            pos = 0;
+            old_size = 0;
+            chunk_version = 0;
+            bones = new List<IK_Bone>();
+        }
+
+        public void RemoveBone(int bone)
+        {
+            bones.RemoveAt(bone);
+        }
+
+        public void Load(XRayLoader xr_loader, int bones_count, byte chunk_ver)
+        {
+            for (int i = 0; i < bones_count; i++)
+            {
+                IK_Bone bone = new IK_Bone();
+
+                List<byte> kinematic_data = new List<byte>();
+
+                byte[] temp_byte;
+
+                if (chunk_ver == 4)
+                    bone.version = xr_loader.ReadUInt32();
+
+                bone.material = xr_loader.read_stringZ();
+
+                temp_byte = xr_loader.ReadBytes(112);   // struct SBoneShape
+                kinematic_data.AddRange(temp_byte);
+
+                int ImportBytes = ((chunk_ver == 4) ? 76 : ((chunk_ver == 3) ? 72 : 60));
+                temp_byte = xr_loader.ReadBytes(ImportBytes); // Import
+                kinematic_data.AddRange(temp_byte);
+
+                bone.kinematic_data = kinematic_data.ToArray();
+
+                bone.rotation = xr_loader.ReadVector();
+                bone.position = xr_loader.ReadVector();
+
+                bone.mass = xr_loader.ReadFloat();
+                bone.center_mass = xr_loader.ReadVector();
+
+                bones.Add(bone);
+            }
+
+            old_size = data().Length;
         }
 
         public byte[] data()
         {
             List<byte> temp = new List<byte>();
 
-            for (int i = 0; i < materials.Count; i++)
+            for (int i = 0; i < bones.Count; i++)
             {
                 if (chunk_version == 4)
-                    temp.AddRange(BitConverter.GetBytes(version[i]));
+                    temp.AddRange(BitConverter.GetBytes(bones[i].version));
 
-                temp.AddRange(Encoding.Default.GetBytes(materials[i]));
+                temp.AddRange(Encoding.Default.GetBytes(bones[i].material));
                 temp.Add(0);
 
-                for (int j = 0; j < bytes_1[i].Count; j++)
-                    temp.AddRange(bytes_1[i][j]);
+                temp.AddRange(bones[i].kinematic_data);
 
-                temp.AddRange(BitConverter.GetBytes(rotation[i][0]));
-                temp.AddRange(BitConverter.GetBytes(rotation[i][1]));
-                temp.AddRange(BitConverter.GetBytes(rotation[i][2]));
+                temp.AddRange(BitConverter.GetBytes(bones[i].rotation[0]));
+                temp.AddRange(BitConverter.GetBytes(bones[i].rotation[1]));
+                temp.AddRange(BitConverter.GetBytes(bones[i].rotation[2]));
 
-                temp.AddRange(BitConverter.GetBytes(position[i][0]));
-                temp.AddRange(BitConverter.GetBytes(position[i][1]));
-                temp.AddRange(BitConverter.GetBytes(position[i][2]));
+                temp.AddRange(BitConverter.GetBytes(bones[i].position[0]));
+                temp.AddRange(BitConverter.GetBytes(bones[i].position[1]));
+                temp.AddRange(BitConverter.GetBytes(bones[i].position[2]));
 
-                temp.AddRange(BitConverter.GetBytes(mass[i]));
+                temp.AddRange(BitConverter.GetBytes(bones[i].mass));
 
-                temp.AddRange(BitConverter.GetBytes(center_mass[i][0]));
-                temp.AddRange(BitConverter.GetBytes(center_mass[i][1]));
-                temp.AddRange(BitConverter.GetBytes(center_mass[i][2]));
+                temp.AddRange(BitConverter.GetBytes(bones[i].center_mass[0]));
+                temp.AddRange(BitConverter.GetBytes(bones[i].center_mass[1]));
+                temp.AddRange(BitConverter.GetBytes(bones[i].center_mass[2]));
             }
 
             return temp.ToArray();

@@ -138,14 +138,47 @@
     <value>17, 56</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="AddMeshesMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="AddMeshesMenuItem.Text" xml:space="preserve">
+    <value>Add meshes</value>
+  </data>
+  <data name="LodMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="LodMenuItem.Text" xml:space="preserve">
+    <value>Change lod factor</value>
+  </data>
   <data name="TextureContextStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 48</value>
+    <value>181, 70</value>
   </data>
   <data name="&gt;&gt;TextureContextStrip.Name" xml:space="preserve">
     <value>TextureContextStrip</value>
   </data>
   <data name="&gt;&gt;TextureContextStrip.Type" xml:space="preserve">
     <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="LodLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="LodLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="LodLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>314, 104</value>
+  </data>
+  <data name="LodLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 13</value>
+  </data>
+  <data name="LodLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="LodLabel.Text" xml:space="preserve">
+    <value>Lods: </value>
+  </data>
+  <data name="LodLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
   </data>
   <data name="&gt;&gt;LodLabel.Name" xml:space="preserve">
     <value>LodLabel</value>
@@ -159,6 +192,27 @@
   <data name="&gt;&gt;LodLabel.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="LinksLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="LinksLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="LinksLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>354, 104</value>
+  </data>
+  <data name="LinksLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>38, 13</value>
+  </data>
+  <data name="LinksLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="LinksLabel.Text" xml:space="preserve">
+    <value>Links: </value>
+  </data>
+  <data name="LinksLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
   <data name="&gt;&gt;LinksLabel.Name" xml:space="preserve">
     <value>LinksLabel</value>
   </data>
@@ -170,6 +224,18 @@
   </data>
   <data name="&gt;&gt;LinksLabel.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="DeleteMesh.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 99</value>
+  </data>
+  <data name="DeleteMesh.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 23</value>
+  </data>
+  <data name="DeleteMesh.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="DeleteMesh.Text" xml:space="preserve">
+    <value>Delete Mesh</value>
   </data>
   <data name="&gt;&gt;DeleteMesh.Name" xml:space="preserve">
     <value>DeleteMesh</value>
@@ -183,6 +249,27 @@
   <data name="&gt;&gt;DeleteMesh.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="VertsLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="VertsLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="VertsLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>395, 104</value>
+  </data>
+  <data name="VertsLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 13</value>
+  </data>
+  <data name="VertsLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="VertsLabel.Text" xml:space="preserve">
+    <value>Verts: </value>
+  </data>
+  <data name="VertsLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
   <data name="&gt;&gt;VertsLabel.Name" xml:space="preserve">
     <value>VertsLabel</value>
   </data>
@@ -194,6 +281,27 @@
   </data>
   <data name="&gt;&gt;VertsLabel.ZOrder" xml:space="preserve">
     <value>3</value>
+  </data>
+  <data name="FaceLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="FaceLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="FaceLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>434, 104</value>
+  </data>
+  <data name="FaceLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>42, 13</value>
+  </data>
+  <data name="FaceLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="FaceLabel.Text" xml:space="preserve">
+    <value>Faces: </value>
+  </data>
+  <data name="FaceLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
   </data>
   <data name="&gt;&gt;FaceLabel.Name" xml:space="preserve">
     <value>FaceLabel</value>
@@ -207,6 +315,21 @@
   <data name="&gt;&gt;FaceLabel.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="ShaderNameLabelEx.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ShaderNameLabelEx.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 60</value>
+  </data>
+  <data name="ShaderNameLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 13</value>
+  </data>
+  <data name="ShaderNameLabelEx.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="ShaderNameLabelEx.Text" xml:space="preserve">
+    <value>Shader Name:</value>
+  </data>
   <data name="&gt;&gt;ShaderNameLabelEx.Name" xml:space="preserve">
     <value>ShaderNameLabelEx</value>
   </data>
@@ -218,6 +341,21 @@
   </data>
   <data name="&gt;&gt;ShaderNameLabelEx.ZOrder" xml:space="preserve">
     <value>5</value>
+  </data>
+  <data name="TexturesPathLabelEx.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="TexturesPathLabelEx.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 17</value>
+  </data>
+  <data name="TexturesPathLabelEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>76, 13</value>
+  </data>
+  <data name="TexturesPathLabelEx.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="TexturesPathLabelEx.Text" xml:space="preserve">
+    <value>Textures Path:</value>
   </data>
   <data name="&gt;&gt;TexturesPathLabelEx.Name" xml:space="preserve">
     <value>TexturesPathLabelEx</value>
@@ -231,6 +369,18 @@
   <data name="&gt;&gt;TexturesPathLabelEx.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
+  <data name="ShaderTextBoxEx.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="ShaderTextBoxEx.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 76</value>
+  </data>
+  <data name="ShaderTextBoxEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>476, 20</value>
+  </data>
+  <data name="ShaderTextBoxEx.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
   <data name="&gt;&gt;ShaderTextBoxEx.Name" xml:space="preserve">
     <value>ShaderTextBoxEx</value>
   </data>
@@ -242,6 +392,18 @@
   </data>
   <data name="&gt;&gt;ShaderTextBoxEx.ZOrder" xml:space="preserve">
     <value>7</value>
+  </data>
+  <data name="TexturesTextBoxEx.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="TexturesTextBoxEx.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 33</value>
+  </data>
+  <data name="TexturesTextBoxEx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>476, 20</value>
+  </data>
+  <data name="TexturesTextBoxEx.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;TexturesTextBoxEx.Name" xml:space="preserve">
     <value>TexturesTextBoxEx</value>
@@ -309,6 +471,21 @@
   <data name="&gt;&gt;TexturesPage.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="CreateUserdataButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="CreateUserdataButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="CreateUserdataButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="CreateUserdataButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="CreateUserdataButton.Text" xml:space="preserve">
+    <value>Create UserData</value>
+  </data>
   <data name="&gt;&gt;CreateUserdataButton.Name" xml:space="preserve">
     <value>CreateUserdataButton</value>
   </data>
@@ -320,6 +497,21 @@
   </data>
   <data name="&gt;&gt;CreateUserdataButton.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="UserDataBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="UserDataBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="UserDataBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="UserDataBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="UserDataBox.Text" xml:space="preserve">
+    <value />
   </data>
   <data name="&gt;&gt;UserDataBox.Name" xml:space="preserve">
     <value>UserDataBox</value>
@@ -360,6 +552,21 @@
   <data name="&gt;&gt;UserDataPage.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="CreateMotionRefsButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="CreateMotionRefsButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="CreateMotionRefsButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="CreateMotionRefsButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="CreateMotionRefsButton.Text" xml:space="preserve">
+    <value>Create Motion Refs</value>
+  </data>
   <data name="&gt;&gt;CreateMotionRefsButton.Name" xml:space="preserve">
     <value>CreateMotionRefsButton</value>
   </data>
@@ -371,6 +578,24 @@
   </data>
   <data name="&gt;&gt;CreateMotionRefsButton.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="MotionRefsBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="MotionRefsBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="MotionRefsBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="MotionRefsBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="MotionRefsBox.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MotionRefsBox.WordWrap" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="&gt;&gt;MotionRefsBox.Name" xml:space="preserve">
     <value>MotionRefsBox</value>
@@ -411,6 +636,21 @@
   <data name="&gt;&gt;MotionRefsPage.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="AppendOMFButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="AppendOMFButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="AppendOMFButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="AppendOMFButton.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="AppendOMFButton.Text" xml:space="preserve">
+    <value>Append OMF</value>
+  </data>
   <data name="&gt;&gt;AppendOMFButton.Name" xml:space="preserve">
     <value>AppendOMFButton</value>
   </data>
@@ -422,6 +662,51 @@
   </data>
   <data name="&gt;&gt;AppendOMFButton.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <metadata name="MotionsContextStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="EditToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 22</value>
+  </data>
+  <data name="EditToolStrip.Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="LoadToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 22</value>
+  </data>
+  <data name="LoadToolStrip.Text" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="DeleteToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 22</value>
+  </data>
+  <data name="DeleteToolStrip.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="MotionsContextStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 70</value>
+  </data>
+  <data name="&gt;&gt;MotionsContextStrip.Name" xml:space="preserve">
+    <value>MotionsContextStrip</value>
+  </data>
+  <data name="&gt;&gt;MotionsContextStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="MotionBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="MotionBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="MotionBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="MotionBox.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="MotionBox.Text" xml:space="preserve">
+    <value />
   </data>
   <data name="&gt;&gt;MotionBox.Name" xml:space="preserve">
     <value>MotionBox</value>
@@ -461,6 +746,24 @@
   </data>
   <data name="&gt;&gt;MotionPage.ZOrder" xml:space="preserve">
     <value>3</value>
+  </data>
+  <data name="BoneNamesBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="BoneNamesBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="BoneNamesBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="BoneNamesBox.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="BoneNamesBox.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="BoneNamesBox.WordWrap" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="&gt;&gt;BoneNamesBox.Name" xml:space="preserve">
     <value>BoneNamesBox</value>
@@ -1092,6 +1395,21 @@
   <data name="&gt;&gt;BoneParamsPage.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
+  <data name="CreateLodButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="CreateLodButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="CreateLodButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>488, 281</value>
+  </data>
+  <data name="CreateLodButton.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="CreateLodButton.Text" xml:space="preserve">
+    <value>Create Lod</value>
+  </data>
   <data name="&gt;&gt;CreateLodButton.Name" xml:space="preserve">
     <value>CreateLodButton</value>
   </data>
@@ -1104,6 +1422,18 @@
   <data name="&gt;&gt;CreateLodButton.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="LodPathBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="LodPathBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 23</value>
+  </data>
+  <data name="LodPathBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>482, 20</value>
+  </data>
+  <data name="LodPathBox.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
   <data name="&gt;&gt;LodPathBox.Name" xml:space="preserve">
     <value>LodPathBox</value>
   </data>
@@ -1115,6 +1445,21 @@
   </data>
   <data name="&gt;&gt;LodPathBox.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 7</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 13</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Lod path:</value>
   </data>
   <data name="&gt;&gt;label1.Name" xml:space="preserve">
     <value>label1</value>
@@ -1203,611 +1548,11 @@
   <data name="&gt;&gt;TabControl.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
-  <data name="AddMeshesMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>169, 22</value>
-  </data>
-  <data name="AddMeshesMenuItem.Text" xml:space="preserve">
-    <value>Add meshes</value>
-  </data>
-  <data name="LodMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>169, 22</value>
-  </data>
-  <data name="LodMenuItem.Text" xml:space="preserve">
-    <value>Change lod factor</value>
-  </data>
-  <data name="LodLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Right</value>
-  </data>
-  <data name="LodLabel.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="LodLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>314, 104</value>
-  </data>
-  <data name="LodLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>36, 13</value>
-  </data>
-  <data name="LodLabel.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="LodLabel.Text" xml:space="preserve">
-    <value>Lods: </value>
-  </data>
-  <data name="LodLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleRight</value>
-  </data>
-  <data name="&gt;&gt;LodLabel.Name" xml:space="preserve">
-    <value>LodLabel</value>
-  </data>
-  <data name="&gt;&gt;LodLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;LodLabel.Parent" xml:space="preserve">
-    <value>TexturesGropuBox</value>
-  </data>
-  <data name="&gt;&gt;LodLabel.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="LinksLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Right</value>
-  </data>
-  <data name="LinksLabel.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="LinksLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>354, 104</value>
-  </data>
-  <data name="LinksLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>38, 13</value>
-  </data>
-  <data name="LinksLabel.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="LinksLabel.Text" xml:space="preserve">
-    <value>Links: </value>
-  </data>
-  <data name="LinksLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleRight</value>
-  </data>
-  <data name="&gt;&gt;LinksLabel.Name" xml:space="preserve">
-    <value>LinksLabel</value>
-  </data>
-  <data name="&gt;&gt;LinksLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;LinksLabel.Parent" xml:space="preserve">
-    <value>TexturesGropuBox</value>
-  </data>
-  <data name="&gt;&gt;LinksLabel.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="DeleteMesh.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 99</value>
-  </data>
-  <data name="DeleteMesh.Size" type="System.Drawing.Size, System.Drawing">
-    <value>82, 23</value>
-  </data>
-  <data name="DeleteMesh.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="DeleteMesh.Text" xml:space="preserve">
-    <value>Delete Mesh</value>
-  </data>
-  <data name="&gt;&gt;DeleteMesh.Name" xml:space="preserve">
-    <value>DeleteMesh</value>
-  </data>
-  <data name="&gt;&gt;DeleteMesh.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;DeleteMesh.Parent" xml:space="preserve">
-    <value>TexturesGropuBox</value>
-  </data>
-  <data name="&gt;&gt;DeleteMesh.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="VertsLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Right</value>
-  </data>
-  <data name="VertsLabel.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="VertsLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>395, 104</value>
-  </data>
-  <data name="VertsLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 13</value>
-  </data>
-  <data name="VertsLabel.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="VertsLabel.Text" xml:space="preserve">
-    <value>Verts: </value>
-  </data>
-  <data name="VertsLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleRight</value>
-  </data>
-  <data name="&gt;&gt;VertsLabel.Name" xml:space="preserve">
-    <value>VertsLabel</value>
-  </data>
-  <data name="&gt;&gt;VertsLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;VertsLabel.Parent" xml:space="preserve">
-    <value>TexturesGropuBox</value>
-  </data>
-  <data name="&gt;&gt;VertsLabel.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="FaceLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Right</value>
-  </data>
-  <data name="FaceLabel.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="FaceLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>434, 104</value>
-  </data>
-  <data name="FaceLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>42, 13</value>
-  </data>
-  <data name="FaceLabel.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="FaceLabel.Text" xml:space="preserve">
-    <value>Faces: </value>
-  </data>
-  <data name="FaceLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleRight</value>
-  </data>
-  <data name="&gt;&gt;FaceLabel.Name" xml:space="preserve">
-    <value>FaceLabel</value>
-  </data>
-  <data name="&gt;&gt;FaceLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;FaceLabel.Parent" xml:space="preserve">
-    <value>TexturesGropuBox</value>
-  </data>
-  <data name="&gt;&gt;FaceLabel.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="ShaderNameLabelEx.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="ShaderNameLabelEx.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 60</value>
-  </data>
-  <data name="ShaderNameLabelEx.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 13</value>
-  </data>
-  <data name="ShaderNameLabelEx.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="ShaderNameLabelEx.Text" xml:space="preserve">
-    <value>Shader Name:</value>
-  </data>
-  <data name="&gt;&gt;ShaderNameLabelEx.Name" xml:space="preserve">
-    <value>ShaderNameLabelEx</value>
-  </data>
-  <data name="&gt;&gt;ShaderNameLabelEx.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ShaderNameLabelEx.Parent" xml:space="preserve">
-    <value>TexturesGropuBox</value>
-  </data>
-  <data name="&gt;&gt;ShaderNameLabelEx.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="TexturesPathLabelEx.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="TexturesPathLabelEx.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 17</value>
-  </data>
-  <data name="TexturesPathLabelEx.Size" type="System.Drawing.Size, System.Drawing">
-    <value>76, 13</value>
-  </data>
-  <data name="TexturesPathLabelEx.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="TexturesPathLabelEx.Text" xml:space="preserve">
-    <value>Textures Path:</value>
-  </data>
-  <data name="&gt;&gt;TexturesPathLabelEx.Name" xml:space="preserve">
-    <value>TexturesPathLabelEx</value>
-  </data>
-  <data name="&gt;&gt;TexturesPathLabelEx.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;TexturesPathLabelEx.Parent" xml:space="preserve">
-    <value>TexturesGropuBox</value>
-  </data>
-  <data name="&gt;&gt;TexturesPathLabelEx.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="ShaderTextBoxEx.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Left, Right</value>
-  </data>
-  <data name="ShaderTextBoxEx.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 76</value>
-  </data>
-  <data name="ShaderTextBoxEx.Size" type="System.Drawing.Size, System.Drawing">
-    <value>476, 20</value>
-  </data>
-  <data name="ShaderTextBoxEx.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;ShaderTextBoxEx.Name" xml:space="preserve">
-    <value>ShaderTextBoxEx</value>
-  </data>
-  <data name="&gt;&gt;ShaderTextBoxEx.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ShaderTextBoxEx.Parent" xml:space="preserve">
-    <value>TexturesGropuBox</value>
-  </data>
-  <data name="&gt;&gt;ShaderTextBoxEx.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="TexturesTextBoxEx.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Left, Right</value>
-  </data>
-  <data name="TexturesTextBoxEx.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 33</value>
-  </data>
-  <data name="TexturesTextBoxEx.Size" type="System.Drawing.Size, System.Drawing">
-    <value>476, 20</value>
-  </data>
-  <data name="TexturesTextBoxEx.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;TexturesTextBoxEx.Name" xml:space="preserve">
-    <value>TexturesTextBoxEx</value>
-  </data>
-  <data name="&gt;&gt;TexturesTextBoxEx.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;TexturesTextBoxEx.Parent" xml:space="preserve">
-    <value>TexturesGropuBox</value>
-  </data>
-  <data name="&gt;&gt;TexturesTextBoxEx.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="CreateUserdataButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="CreateUserdataButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="CreateUserdataButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="CreateUserdataButton.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="CreateUserdataButton.Text" xml:space="preserve">
-    <value>Create UserData</value>
-  </data>
-  <data name="&gt;&gt;CreateUserdataButton.Name" xml:space="preserve">
-    <value>CreateUserdataButton</value>
-  </data>
-  <data name="&gt;&gt;CreateUserdataButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;CreateUserdataButton.Parent" xml:space="preserve">
-    <value>UserDataPage</value>
-  </data>
-  <data name="&gt;&gt;CreateUserdataButton.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="UserDataBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="UserDataBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="UserDataBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="UserDataBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="UserDataBox.Text" xml:space="preserve">
-    <value />
-  </data>
-  <data name="&gt;&gt;UserDataBox.Name" xml:space="preserve">
-    <value>UserDataBox</value>
-  </data>
-  <data name="&gt;&gt;UserDataBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;UserDataBox.Parent" xml:space="preserve">
-    <value>UserDataPage</value>
-  </data>
-  <data name="&gt;&gt;UserDataBox.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="CreateMotionRefsButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="CreateMotionRefsButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="CreateMotionRefsButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="CreateMotionRefsButton.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="CreateMotionRefsButton.Text" xml:space="preserve">
-    <value>Create Motion Refs</value>
-  </data>
-  <data name="&gt;&gt;CreateMotionRefsButton.Name" xml:space="preserve">
-    <value>CreateMotionRefsButton</value>
-  </data>
-  <data name="&gt;&gt;CreateMotionRefsButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;CreateMotionRefsButton.Parent" xml:space="preserve">
-    <value>MotionRefsPage</value>
-  </data>
-  <data name="&gt;&gt;CreateMotionRefsButton.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="MotionRefsBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="MotionRefsBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="MotionRefsBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="MotionRefsBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="MotionRefsBox.Text" xml:space="preserve">
-    <value />
-  </data>
-  <data name="MotionRefsBox.WordWrap" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;MotionRefsBox.Name" xml:space="preserve">
-    <value>MotionRefsBox</value>
-  </data>
-  <data name="&gt;&gt;MotionRefsBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;MotionRefsBox.Parent" xml:space="preserve">
-    <value>MotionRefsPage</value>
-  </data>
-  <data name="&gt;&gt;MotionRefsBox.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="AppendOMFButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="AppendOMFButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="AppendOMFButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="AppendOMFButton.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="AppendOMFButton.Text" xml:space="preserve">
-    <value>Append OMF</value>
-  </data>
-  <data name="&gt;&gt;AppendOMFButton.Name" xml:space="preserve">
-    <value>AppendOMFButton</value>
-  </data>
-  <data name="&gt;&gt;AppendOMFButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;AppendOMFButton.Parent" xml:space="preserve">
-    <value>MotionPage</value>
-  </data>
-  <data name="&gt;&gt;AppendOMFButton.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <metadata name="MotionsContextStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="MotionsContextStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 70</value>
-  </data>
-  <data name="&gt;&gt;MotionsContextStrip.Name" xml:space="preserve">
-    <value>MotionsContextStrip</value>
-  </data>
-  <data name="&gt;&gt;MotionsContextStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="MotionBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="MotionBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="MotionBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="MotionBox.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="MotionBox.Text" xml:space="preserve">
-    <value />
-  </data>
-  <data name="&gt;&gt;MotionBox.Name" xml:space="preserve">
-    <value>MotionBox</value>
-  </data>
-  <data name="&gt;&gt;MotionBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;MotionBox.Parent" xml:space="preserve">
-    <value>MotionPage</value>
-  </data>
-  <data name="&gt;&gt;MotionBox.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="EditToolStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>107, 22</value>
-  </data>
-  <data name="EditToolStrip.Text" xml:space="preserve">
-    <value>Edit</value>
-  </data>
-  <data name="LoadToolStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>107, 22</value>
-  </data>
-  <data name="LoadToolStrip.Text" xml:space="preserve">
-    <value>Load</value>
-  </data>
-  <data name="DeleteToolStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>107, 22</value>
-  </data>
-  <data name="DeleteToolStrip.Text" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="BoneNamesBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="BoneNamesBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="BoneNamesBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="BoneNamesBox.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="BoneNamesBox.Text" xml:space="preserve">
-    <value />
-  </data>
-  <data name="BoneNamesBox.WordWrap" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;BoneNamesBox.Name" xml:space="preserve">
-    <value>BoneNamesBox</value>
-  </data>
-  <data name="&gt;&gt;BoneNamesBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;BoneNamesBox.Parent" xml:space="preserve">
-    <value>BoneNamesPage</value>
-  </data>
-  <data name="&gt;&gt;BoneNamesBox.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="CreateLodButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="CreateLodButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="CreateLodButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>488, 281</value>
-  </data>
-  <data name="CreateLodButton.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="CreateLodButton.Text" xml:space="preserve">
-    <value>Create Lod</value>
-  </data>
-  <data name="&gt;&gt;CreateLodButton.Name" xml:space="preserve">
-    <value>CreateLodButton</value>
-  </data>
-  <data name="&gt;&gt;CreateLodButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;CreateLodButton.Parent" xml:space="preserve">
-    <value>LodPage</value>
-  </data>
-  <data name="&gt;&gt;CreateLodButton.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="LodPathBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Left, Right</value>
-  </data>
-  <data name="LodPathBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 23</value>
-  </data>
-  <data name="LodPathBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>482, 20</value>
-  </data>
-  <data name="LodPathBox.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;LodPathBox.Name" xml:space="preserve">
-    <value>LodPathBox</value>
-  </data>
-  <data name="&gt;&gt;LodPathBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;LodPathBox.Parent" xml:space="preserve">
-    <value>LodPage</value>
-  </data>
-  <data name="&gt;&gt;LodPathBox.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 7</value>
-  </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>52, 13</value>
-  </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Lod path:</value>
-  </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
-  </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>LodPage</value>
-  </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <metadata name="MenuPanel.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>322, 17</value>
   </metadata>
   <data name="MenuPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>None</value>
-  </data>
-  <data name="MenuPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 2</value>
-  </data>
-  <data name="MenuPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>413, 24</value>
-  </data>
-  <data name="MenuPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;MenuPanel.Name" xml:space="preserve">
-    <value>MenuPanel</value>
-  </data>
-  <data name="&gt;&gt;MenuPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;MenuPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;MenuPanel.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="FileMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 20</value>
-  </data>
-  <data name="FileMenuItem.Text" xml:space="preserve">
-    <value>File</value>
   </data>
   <data name="LoadMenuParam.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>F4</value>
@@ -1835,12 +1580,6 @@
   </data>
   <data name="saveAsToolStripMenuItem.Text" xml:space="preserve">
     <value>Save as...</value>
-  </data>
-  <data name="exportToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
-  </data>
-  <data name="exportToolStripMenuItem.Text" xml:space="preserve">
-    <value>Export</value>
   </data>
   <data name="objectToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>109, 22</value>
@@ -1878,6 +1617,12 @@
   <data name="sklsToolStripMenuItem.Text" xml:space="preserve">
     <value>Skls</value>
   </data>
+  <data name="exportToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 22</value>
+  </data>
+  <data name="exportToolStripMenuItem.Text" xml:space="preserve">
+    <value>Export</value>
+  </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
     <value>137, 6</value>
   </data>
@@ -1896,11 +1641,11 @@
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>Exit</value>
   </data>
-  <data name="ToolsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>46, 20</value>
+  <data name="FileMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 20</value>
   </data>
-  <data name="ToolsMenuItem.Text" xml:space="preserve">
-    <value>Tools</value>
+  <data name="FileMenuItem.Text" xml:space="preserve">
+    <value>File</value>
   </data>
   <data name="OpenInObjectEditor.Size" type="System.Drawing.Size, System.Drawing">
     <value>188, 22</value>
@@ -1914,12 +1659,6 @@
   <data name="importDataFromModelToolStripMenuItem.Text" xml:space="preserve">
     <value>Import OGF Params</value>
   </data>
-  <data name="converterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 22</value>
-  </data>
-  <data name="converterToolStripMenuItem.Text" xml:space="preserve">
-    <value>Converter</value>
-  </data>
   <data name="nPCCoPToSoCToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>161, 22</value>
   </data>
@@ -1931,6 +1670,18 @@
   </data>
   <data name="nPCSoCToCoPToolStripMenuItem.Text" xml:space="preserve">
     <value>NPC SoC to CoP</value>
+  </data>
+  <data name="converterToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 22</value>
+  </data>
+  <data name="converterToolStripMenuItem.Text" xml:space="preserve">
+    <value>Converter</value>
+  </data>
+  <data name="ToolsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>46, 20</value>
+  </data>
+  <data name="ToolsMenuItem.Text" xml:space="preserve">
+    <value>Tools</value>
   </data>
   <data name="OgfInfo.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 20</value>
@@ -1950,12 +1701,6 @@
   <data name="CurrentFormat.Text" xml:space="preserve">
     <value>Model Format: None</value>
   </data>
-  <data name="viewPortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>66, 20</value>
-  </data>
-  <data name="viewPortToolStripMenuItem.Text" xml:space="preserve">
-    <value>ViewPort</value>
-  </data>
   <data name="reloadToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
     <value>173, 22</value>
   </data>
@@ -1973,6 +1718,33 @@
   </data>
   <data name="openImageFolderToolStripMenuItem.Text" xml:space="preserve">
     <value>Open image folder</value>
+  </data>
+  <data name="viewPortToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>66, 20</value>
+  </data>
+  <data name="viewPortToolStripMenuItem.Text" xml:space="preserve">
+    <value>ViewPort</value>
+  </data>
+  <data name="MenuPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 2</value>
+  </data>
+  <data name="MenuPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>413, 24</value>
+  </data>
+  <data name="MenuPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;MenuPanel.Name" xml:space="preserve">
+    <value>MenuPanel</value>
+  </data>
+  <data name="&gt;&gt;MenuPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MenuPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;MenuPanel.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="FileLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>28, 17</value>

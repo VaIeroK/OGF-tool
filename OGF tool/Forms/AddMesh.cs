@@ -57,7 +57,7 @@ namespace OGF_tool
             var newLbl7 = Copy.Label(Reassign1_Label);
 
             var newCombo1 = FillComboBox(Copy.ComboBox(Bone1_ComboBox), child);
-            int bone_id = OGF.bones.GetBoneID(LoadedOGF.bones.bone_names[(int)child.Vertices[0].bones_id[0]]);
+            int bone_id = OGF.bonedata.GetBoneID(LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[0]].name);
             if (bone_id != -1)
                 newCombo1.SelectedIndex = bone_id;
 
@@ -67,7 +67,7 @@ namespace OGF_tool
             newTextbox2.Text = child.m_shader;
 
             var newTextbox3 = Copy.TextBox(OldBone1_Textbox);
-            newTextbox3.Text = LoadedOGF.bones.bone_names[(int)child.Vertices[0].bones_id[0]];
+            newTextbox3.Text = LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[0]].name;
 
             var newButton = Copy.Button(AddMeshButton);
             newButton.Click += new System.EventHandler(this.AddMeshButton_Click);
@@ -93,11 +93,11 @@ namespace OGF_tool
                 var newCombo2 = FillComboBox(Copy.ComboBox(Bone2_ComboBox), child);
                 var newTextbox4 = Copy.TextBox(OldBone2_Textbox);
 
-                bone_id = OGF.bones.GetBoneID(LoadedOGF.bones.bone_names[(int)child.Vertices[0].bones_id[1]]);
+                bone_id = OGF.bonedata.GetBoneID(LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[1]].name);
                 if (bone_id != -1)
                     newCombo2.SelectedIndex = bone_id;
 
-                newTextbox4.Text = LoadedOGF.bones.bone_names[(int)child.Vertices[0].bones_id[1]];
+                newTextbox4.Text = LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[1]].name;
 
                 box.Controls.Add(newLbl4);
                 box.Controls.Add(newLbl8);
@@ -112,11 +112,11 @@ namespace OGF_tool
                 var newCombo3 = FillComboBox(Copy.ComboBox(Bone3_ComboBox), child);
                 var newTextbox5 = Copy.TextBox(OldBone3_Textbox);
 
-                bone_id = OGF.bones.GetBoneID(LoadedOGF.bones.bone_names[(int)child.Vertices[0].bones_id[2]]);
+                bone_id = OGF.bonedata.GetBoneID(LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[2]].name);
                 if (bone_id != -1)
                     newCombo3.SelectedIndex = bone_id;
 
-                newTextbox5.Text = LoadedOGF.bones.bone_names[(int)child.Vertices[0].bones_id[2]];
+                newTextbox5.Text = LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[2]].name;
 
                 box.Controls.Add(newLbl5);
                 box.Controls.Add(newLbl9);
@@ -131,11 +131,11 @@ namespace OGF_tool
                 var newCombo4 = FillComboBox(Copy.ComboBox(Bone4_ComboBox), child);
                 var newTextbox6 = Copy.TextBox(OldBone4_Textbox);
 
-                bone_id = OGF.bones.GetBoneID(LoadedOGF.bones.bone_names[(int)child.Vertices[0].bones_id[3]]);
+                bone_id = OGF.bonedata.GetBoneID(LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[3]].name);
                 if (bone_id != -1)
                     newCombo4.SelectedIndex = bone_id;
 
-                newTextbox6.Text = LoadedOGF.bones.bone_names[(int)child.Vertices[0].bones_id[3]];
+                newTextbox6.Text = LoadedOGF.bonedata.bones[(int)child.Vertices[0].bones_id[3]].name;
 
                 box.Controls.Add(newLbl6);
                 box.Controls.Add(newLbl10);
@@ -165,8 +165,8 @@ namespace OGF_tool
 
         public ComboBox FillComboBox(ComboBox box, OGF_Child child)
         {
-            for (int i = 0; i < OGF.bones.bone_names.Count; i++)
-                box.Items.Add(OGF.bones.bone_names[i]);
+            for (int i = 0; i < OGF.bonedata.bones.Count; i++)
+                box.Items.Add(OGF.bonedata.bones[i].name);
 
             return box;
         }

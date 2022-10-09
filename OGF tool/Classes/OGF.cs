@@ -189,7 +189,7 @@ namespace OGF_tool
         public OGF_Header Header;
         public Description description;
         public List<OGF_Child> childs;
-        public BoneData bones;
+        public BoneData bonedata;
         public IK_Data ikdata;
         public UserData userdata;
         public Lod lod;
@@ -208,7 +208,7 @@ namespace OGF_tool
             IsDM = false;
             description = null;
             childs = new List<OGF_Child>();
-            bones = null;
+            bonedata = null;
             ikdata = null;
             userdata = null;
             lod = null;

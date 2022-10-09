@@ -282,17 +282,17 @@ namespace OGF_tool
 				}
 
 				// Bones
-				if (OGF_V.bones != null)
+				if (OGF_V.bonedata != null)
 				{
 					BoneNamesBox.Clear();
 					TabControl.Controls.Add(BoneNamesPage);
 
-					BoneNamesBox.Text += $"Bones count : {OGF_V.bones.bone_names.Count}\n\n";
-					for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
+					BoneNamesBox.Text += $"Bones count : {OGF_V.bonedata.bones.Count}\n\n";
+					for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
 					{
-						BoneNamesBox.Text += $"{i + 1}. {OGF_V.bones.bone_names[i]}";
+						BoneNamesBox.Text += $"{i + 1}. {OGF_V.bonedata.bones[i].name}";
 
-						if (i != OGF_V.bones.bone_names.Count - 1)
+						if (i != OGF_V.bonedata.bones.Count - 1)
 							BoneNamesBox.Text += "\n";
 					}
 
@@ -302,9 +302,9 @@ namespace OGF_tool
 					{
 						TabControl.Controls.Add(BoneParamsPage);
 
-						for (int i = OGF_V.bones.bone_names.Count - 1; i >= 0; i--)
+						for (int i = OGF_V.bonedata.bones.Count - 1; i >= 0; i--)
 						{
-							CreateBoneGroupBox(i, OGF_V.bones.bone_names[i], OGF_V.bones.parent_bone_names[i], OGF_V.ikdata.materials[i], OGF_V.ikdata.mass[i], OGF_V.ikdata.center_mass[i], OGF_V.ikdata.position[i], OGF_V.ikdata.rotation[i]);
+							CreateBoneGroupBox(i, OGF_V.bonedata.bones[i].name, OGF_V.bonedata.bones[i].parent_name, OGF_V.ikdata.bones[i].material, OGF_V.ikdata.bones[i].mass, OGF_V.ikdata.bones[i].center_mass, OGF_V.ikdata.bones[i].position, OGF_V.ikdata.bones[i].rotation);
 						}
 					}
 				}
@@ -511,19 +511,19 @@ namespace OGF_tool
 
 				if (OGF_V.IsSkeleton())
                 {
-					if (OGF_V.bones != null)
+					if (OGF_V.bonedata != null)
 					{
-						if (OGF_V.BrokenType == 0 && OGF_V.bones.pos > 0 && (OGF_V.bones.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
+						if (OGF_V.BrokenType == 0 && OGF_V.bonedata.pos > 0 && (OGF_V.bonedata.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
 						{
-							temp = fileStream.ReadBytes((int)(OGF_V.bones.pos - fileStream.BaseStream.Position));
+							temp = fileStream.ReadBytes((int)(OGF_V.bonedata.pos - fileStream.BaseStream.Position));
 							file_bytes.AddRange(temp);
 						}
 
 						file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF_S_BONE_NAMES));
-						file_bytes.AddRange(BitConverter.GetBytes(OGF_V.bones.data(false).Length));
-						file_bytes.AddRange(OGF_V.bones.data(false));
+						file_bytes.AddRange(BitConverter.GetBytes(OGF_V.bonedata.data(OGF_V.BrokenType == 2).Length));
+						file_bytes.AddRange(OGF_V.bonedata.data(OGF_V.BrokenType == 2));
 
-						fileStream.ReadBytes(OGF_V.bones.old_size + 8);
+						fileStream.ReadBytes(OGF_V.bonedata.old_size + 8);
 					}
 
 					if (OGF_V.ikdata != null)
@@ -767,39 +767,11 @@ namespace OGF_tool
 					}
 					else
 					{
-						OGF_C.bones = new BoneData();
-						OGF_C.bones.pos = xr_loader.chunk_pos;
-
 						if (xr_loader.chunk_pos < OGF_C.pos)
 							OGF_C.BrokenType = 2;
 
-						uint count = xr_loader.ReadUInt32();
-						OGF_C.bones.old_size += 4;
-
-						for (; count != 0; count--)
-						{
-							string bone_name = xr_loader.read_stringZ();
-							string parent_name = xr_loader.read_stringZ();
-							byte[] obb = xr_loader.ReadBytes(60);    // Fobb
-							OGF_C.bones.bone_names.Add(bone_name);
-							OGF_C.bones.parent_bone_names.Add(parent_name);
-							OGF_C.bones.fobb.Add(obb);
-
-							OGF_C.bones.old_size += bone_name.Length + 1 + parent_name.Length + 1 + 60;
-						}
-
-						for (int i = 0; i < OGF_C.bones.bone_names.Count; i++)
-						{
-							List<int> childs = new List<int>();
-							for (int j = 0; j < OGF_C.bones.parent_bone_names.Count; j++)
-							{
-								if (OGF_C.bones.parent_bone_names[j] == OGF_C.bones.bone_names[i])
-								{
-									childs.Add(j);
-								}
-							}
-							OGF_C.bones.bone_childs.Add(childs);
-						}
+                        OGF_C.bonedata = new BoneData();
+						OGF_C.bonedata.Load(xr_loader);
 					}
 
 					// Ik Data
@@ -809,88 +781,35 @@ namespace OGF_tool
 					bool IKDataChunkFind = xr_loader.find_chunk(IKDataChunkRelease, false, true);
 
 					if (IKDataChunkFind) // Load Release chunk
-					{
 						IKDataVers = 4;
-						goto load_ik_data;
-					}
-
-					IKDataChunkFind = OGF_C.Header.format_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA, false, true);
-
-					if (IKDataChunkFind) // Load Pre Release chunk
+					else
 					{
-						IKDataVers = 3;
-						goto load_ik_data;
-					}
+						IKDataChunkFind = OGF_C.Header.format_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA, false, true);
 
-					IKDataChunkFind = OGF_C.Header.format_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA_0, false, true);
-
-					if (IKDataChunkFind) // Load Builds chunk
-					{
-						IKDataVers = 2;
-						goto load_ik_data;
-					}
-
-					goto skip_ik_data;
-
-load_ik_data:
-					OGF_C.ikdata = new IK_Data();
-					OGF_C.ikdata.pos = xr_loader.chunk_pos;
-					OGF_C.ikdata.chunk_version = IKDataVers;
-
-					for (int i = 0; i < OGF_C.bones.bone_names.Count; i++)
-					{
-						List<byte[]> bytes_1 = new List<byte[]>();
-
-						byte[] temp_byte;
-						uint version = 0;
-
-						if (IKDataVers == 4)
+						if (IKDataChunkFind) // Load Pre Release chunk
+							IKDataVers = 3;
+						else
 						{
-							version = xr_loader.ReadUInt32();
-							OGF_C.ikdata.old_size += 4;
+							IKDataChunkFind = OGF_C.Header.format_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA_0, false, true);
+
+							if (IKDataChunkFind) // Load Builds chunk
+								IKDataVers = 2;
 						}
-
-						string gmtl_name = xr_loader.read_stringZ();
-
-						temp_byte = xr_loader.ReadBytes(112);   // struct SBoneShape
-						bytes_1.Add(temp_byte);
-						OGF_C.ikdata.old_size += gmtl_name.Length + 1 + 112;
-
-						int ImportBytes = ((IKDataVers == 4) ? 76 : ((IKDataVers == 3) ? 72 : 60));
-
-						temp_byte = xr_loader.ReadBytes(ImportBytes); // Import
-						bytes_1.Add(temp_byte);
-						OGF_C.ikdata.old_size += ImportBytes;
-
-						float[] rotation = new float[3];
-						rotation = xr_loader.ReadVector();
-
-						float[] position = new float[3];
-						position = xr_loader.ReadVector();
-
-						float mass = xr_loader.ReadFloat();
-
-						float[] center = new float[3];
-						center = xr_loader.ReadVector();
-
-						OGF_C.ikdata.old_size += 12 + 12 + 4 + 12;
-
-						OGF_C.ikdata.materials.Add(gmtl_name);
-						OGF_C.ikdata.mass.Add(mass);
-						OGF_C.ikdata.version.Add(version);
-						OGF_C.ikdata.center_mass.Add(center);
-						OGF_C.ikdata.bytes_1.Add(bytes_1);
-						OGF_C.ikdata.position.Add(position);
-						OGF_C.ikdata.rotation.Add(rotation);
 					}
 
-skip_ik_data:
-
-					if (IKDataVers == 0 && OGF_C.Header.format_version == 4) // Chunk not find, exit if Release OGF
+					if (IKDataVers != 0)
 					{
-						MessageBox.Show("Unsupported OGF format! Can't find ik data chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						return false;
-					}
+                        OGF_C.ikdata = new IK_Data();
+                        OGF_C.ikdata.pos = xr_loader.chunk_pos;
+                        OGF_C.ikdata.chunk_version = IKDataVers;
+
+                        OGF_C.ikdata.Load(xr_loader, OGF_C.bonedata.bones.Count, IKDataVers);
+                    }
+                    else if (OGF_C.Header.format_version == 4) // Chunk not find, exit if Release OGF
+                    {
+                        MessageBox.Show("Unsupported OGF format! Can't find ik data chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
 
 					// Userdata
 					int UserDataChunk = (OGF_C.Header.format_version == 4 ? (int)OGF.OGF4_S_USERDATA : (int)OGF.OGF3_S_USERDATA);
@@ -1079,85 +998,63 @@ skip_ik_data:
 			return vec[0].ToString("0.000000") + " " + vec[1].ToString("0.000000") + " " + vec[2].ToString("0.000000");
         }
 
-		private void AddBone(string bone, string parent_bone, int pos)
+		private void AddBone(string name, string parent_bone, int pos)
 		{
 			if (OGF_V != null && OGF_V.IsSkeleton())
 			{
-				OGF_V.bones.bone_names.Insert(pos, bone);
-				OGF_V.bones.parent_bone_names.Insert(pos, parent_bone);
+                // Create null OBB
+                List<byte> obb = new List<byte>();
+                for (int i = 0; i < 60; i++)
+                    obb.Add(0);
 
-				// Create null OBB
-				List<byte> obb = new List<byte>();
-				for (int i = 0; i < 60; i++)
-					obb.Add(0);
+                Bone bone = new Bone();
+                bone.name = name;
+                bone.parent_name = parent_bone;
+                bone.fobb = obb.ToArray();
 
-				OGF_V.bones.fobb.Insert(pos, obb.ToArray());
+				OGF_V.bonedata.bones.Insert(pos, bone);
 
-				// Create null Bone Shape
-				List<byte[]> shape = new List<byte[]>();
-				for (int i = 0; i < 112 + 76; i++)
+                if (OGF_V.ikdata != null)
 				{
-					byte[] one = { 0 };
-					shape.Add(one);
-				}
+                    IK_Bone ikbone = new IK_Bone();
+                    int ImportBytes = ((OGF_V.ikdata.chunk_version == 4) ? 76 : ((OGF_V.ikdata.chunk_version == 3) ? 72 : 60));
 
-                OGF_V.ikdata.materials.Insert(pos, "default_object");
-                OGF_V.ikdata.mass.Insert(pos, 10.0f);
-                OGF_V.ikdata.version.Insert(pos, 1);
-                OGF_V.ikdata.center_mass.Insert(pos, new float[3]);
+                    // Create null Bone Shape
+                    List<byte> shape = new List<byte>();
+                    for (int i = 0; i < 112 + ImportBytes; i++)
+                        shape.Add(0);
 
-                OGF_V.ikdata.bytes_1.Insert(pos, shape);
-                OGF_V.ikdata.position.Insert(pos, new float[3]);
-                OGF_V.ikdata.rotation.Insert(pos, new float[3]);
+                    if (OGF_V.ikdata.chunk_version == 4)
+                        ikbone.version = 1;
+
+                    ikbone.material = "default_object";
+                    ikbone.kinematic_data = shape.ToArray();
+                    ikbone.rotation = new float[3];
+                    ikbone.position = new float[3];
+                    ikbone.mass = 10.0f;
+                    ikbone.center_mass = new float[3];
+
+                    OGF_V.ikdata.bones.Insert(pos, ikbone);
+                }
             }
 		}
 
-		private void WriteIkData(string filename)
-		{
-			if (OGF_V != null && OGF_V.IsSkeleton() && OGF_V.ikdata != null)
-			{
-                List<byte> data = new List<byte>();
-
-                data.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_IKDATA));
-                data.AddRange(BitConverter.GetBytes(4 * 6 * OGF_V.ikdata.position.Count));
-
-                for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
-				{
-					data.AddRange(BitConverter.GetBytes(OGF_V.ikdata.rotation[i][0]));
-					data.AddRange(BitConverter.GetBytes(OGF_V.ikdata.rotation[i][1]));
-					data.AddRange(BitConverter.GetBytes(OGF_V.ikdata.rotation[i][2]));
-
-					data.AddRange(BitConverter.GetBytes(OGF_V.ikdata.position[i][0]));
-					data.AddRange(BitConverter.GetBytes(OGF_V.ikdata.position[i][1]));
-					data.AddRange(BitConverter.GetBytes(OGF_V.ikdata.position[i][2]));
-				}
-
-                WriteFile(filename, data.ToArray());
-            }
-        }
-
         private void RemoveBone(string bone)
         {
-			if (OGF_V != null && OGF_V.IsSkeleton() && OGF_V.bones != null)
-				RemoveBone(OGF_V.bones.GetBoneID(bone));
+			if (OGF_V != null && OGF_V.IsSkeleton() && OGF_V.bonedata != null)
+			{
+				RemoveBone(OGF_V.bonedata.GetBoneID(bone));
+			}
         }
 
         private void RemoveBone(int bone)
         {
             if (OGF_V != null && OGF_V.IsSkeleton())
             {
-                OGF_V.bones.bone_names.RemoveAt(bone);
-                OGF_V.bones.parent_bone_names.RemoveAt(bone);
-                OGF_V.bones.fobb.RemoveAt(bone);
+				OGF_V.bonedata.RemoveBone(bone);
 
-                OGF_V.ikdata.materials.RemoveAt(bone);
-                OGF_V.ikdata.mass.RemoveAt(bone);
-                OGF_V.ikdata.version.RemoveAt(bone);
-                OGF_V.ikdata.center_mass.RemoveAt(bone);
-
-                OGF_V.ikdata.bytes_1.RemoveAt(bone);
-                OGF_V.ikdata.position.RemoveAt(bone);
-                OGF_V.ikdata.rotation.RemoveAt(bone);
+				if (OGF_V.ikdata != null)
+					OGF_V.ikdata.RemoveBone(bone);
             }
         }
 
@@ -1165,10 +1062,10 @@ skip_ik_data:
         {
             if (OGF_V != null && OGF_V.IsSkeleton())
             {
-                for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
+                for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
 				{
-                    if (OGF_V.bones.parent_bone_names[i] == old)
-						OGF_V.bones.parent_bone_names[i] = _new;
+                    if (OGF_V.bonedata.bones[i].parent_name == old)
+						OGF_V.bonedata.bones[i].parent_name = _new;
                 }
             }
         }
@@ -1247,16 +1144,16 @@ skip_ik_data:
 							{
 								switch (currentField)
 								{
-									case "MassBox": curControl.Text = OGF_V.ikdata.mass[idx].ToString(); break;
-									case "CenterBoxX": curControl.Text = OGF_V.ikdata.center_mass[idx][0].ToString(); break;
-									case "CenterBoxY": curControl.Text = OGF_V.ikdata.center_mass[idx][1].ToString(); break;
-									case "CenterBoxZ": curControl.Text = OGF_V.ikdata.center_mass[idx][2].ToString(); break;
-									case "PositionX": curControl.Text = OGF_V.ikdata.position[idx][0].ToString(); break;
-									case "PositionY": curControl.Text = OGF_V.ikdata.position[idx][1].ToString(); break;
-									case "PositionZ": curControl.Text = OGF_V.ikdata.position[idx][2].ToString(); break;
-									case "RotationX": curControl.Text = OGF_V.ikdata.rotation[idx][0].ToString(); break;
-									case "RotationY": curControl.Text = OGF_V.ikdata.rotation[idx][1].ToString(); break;
-									case "RotationZ": curControl.Text = OGF_V.ikdata.rotation[idx][2].ToString(); break;
+									case "MassBox": curControl.Text = OGF_V.ikdata.bones[idx].mass.ToString(); break;
+									case "CenterBoxX": curControl.Text = OGF_V.ikdata.bones[idx].center_mass[0].ToString(); break;
+									case "CenterBoxY": curControl.Text = OGF_V.ikdata.bones[idx].center_mass[1].ToString(); break;
+									case "CenterBoxZ": curControl.Text = OGF_V.ikdata.bones[idx].center_mass[2].ToString(); break;
+									case "PositionX": curControl.Text = OGF_V.ikdata.bones[idx].position[0].ToString(); break;
+									case "PositionY": curControl.Text = OGF_V.ikdata.bones[idx].position[1].ToString(); break;
+									case "PositionZ": curControl.Text = OGF_V.ikdata.bones[idx].position[2].ToString(); break;
+									case "RotationX": curControl.Text = OGF_V.ikdata.bones[idx].rotation[0].ToString(); break;
+									case "RotationY": curControl.Text = OGF_V.ikdata.bones[idx].rotation[1].ToString(); break;
+									case "RotationZ": curControl.Text = OGF_V.ikdata.bones[idx].rotation[2].ToString(); break;
 								}
 
 								if (curBox.SelectionStart < 1)
@@ -1273,38 +1170,38 @@ skip_ik_data:
 			{
 				case "boneBox":
 					{
-						OGF_V.bones.bone_names[idx] = curControl.Text;
+						OGF_V.bonedata.bones[idx].name = curControl.Text;
 
-						for (int j = 0; j < OGF_V.bones.bone_childs[idx].Count; j++)
+						for (int j = 0; j < OGF_V.bonedata.bones[idx].childs_id.Count; j++)
                         {
-							int child_id = OGF_V.bones.bone_childs[idx][j];
+							int child_id = OGF_V.bonedata.bones[idx].childs_id[j];
 							var MainGroup = BoneParamsPage.Controls["BoneGrpBox_" + child_id.ToString()];
-							OGF_V.bones.parent_bone_names[child_id] = curControl.Text;
-                            MainGroup.Controls["ParentboneBox_" + child_id.ToString()].Text = OGF_V.bones.parent_bone_names[child_id];
+							OGF_V.bonedata.bones[child_id].parent_name = curControl.Text;
+                            MainGroup.Controls["ParentboneBox_" + child_id.ToString()].Text = OGF_V.bonedata.bones[child_id].parent_name;
 						}
 
 						BoneNamesBox.Clear();
-						BoneNamesBox.Text += $"Bones count : {OGF_V.bones.bone_names.Count}\n\n";
+						BoneNamesBox.Text += $"Bones count : {OGF_V.bonedata.bones.Count}\n\n";
 
-						for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
+						for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
 						{
-							BoneNamesBox.Text += $"{i + 1}. {OGF_V.bones.bone_names[i]}";
-							if (i != OGF_V.bones.bone_names.Count - 1)
+							BoneNamesBox.Text += $"{i + 1}. {OGF_V.bonedata.bones[i].name}";
+							if (i != OGF_V.bonedata.bones.Count - 1)
 								BoneNamesBox.Text += "\n";
 						}
 					}
 					break;
-				case "MaterialBox": OGF_V.ikdata.materials[idx] = curControl.Text; break;
-				case "MassBox": OGF_V.ikdata.mass[idx] = Convert.ToSingle(curControl.Text); break;
-				case "CenterBoxX": OGF_V.ikdata.center_mass[idx][0] = Convert.ToSingle(curControl.Text); break;
-				case "CenterBoxY": OGF_V.ikdata.center_mass[idx][1] = Convert.ToSingle(curControl.Text); break;
-				case "CenterBoxZ": OGF_V.ikdata.center_mass[idx][2] = Convert.ToSingle(curControl.Text); break;
-				case "PositionX": OGF_V.ikdata.position[idx][0] = Convert.ToSingle(curControl.Text); break;
-				case "PositionY": OGF_V.ikdata.position[idx][1] = Convert.ToSingle(curControl.Text); break;
-				case "PositionZ": OGF_V.ikdata.position[idx][2] = Convert.ToSingle(curControl.Text); break;
-				case "RotationX": OGF_V.ikdata.rotation[idx][0] = Convert.ToSingle(curControl.Text); break;
-				case "RotationY": OGF_V.ikdata.rotation[idx][1] = Convert.ToSingle(curControl.Text); break;
-				case "RotationZ": OGF_V.ikdata.rotation[idx][2] = Convert.ToSingle(curControl.Text); break;
+				case "MaterialBox": OGF_V.ikdata.bones[idx].material = curControl.Text; break;
+				case "MassBox": OGF_V.ikdata.bones[idx].mass = Convert.ToSingle(curControl.Text); break;
+				case "CenterBoxX": OGF_V.ikdata.bones[idx].center_mass[0] = Convert.ToSingle(curControl.Text); break;
+				case "CenterBoxY": OGF_V.ikdata.bones[idx].center_mass[1] = Convert.ToSingle(curControl.Text); break;
+				case "CenterBoxZ": OGF_V.ikdata.bones[idx].center_mass[2] = Convert.ToSingle(curControl.Text); break;
+				case "PositionX": OGF_V.ikdata.bones[idx].position[0] = Convert.ToSingle(curControl.Text); break;
+				case "PositionY": OGF_V.ikdata.bones[idx].position[1] = Convert.ToSingle(curControl.Text); break;
+				case "PositionZ": OGF_V.ikdata.bones[idx].position[2] = Convert.ToSingle(curControl.Text); break;
+				case "RotationX": OGF_V.ikdata.bones[idx].rotation[0] = Convert.ToSingle(curControl.Text); break;
+				case "RotationY": OGF_V.ikdata.bones[idx].rotation[1] = Convert.ToSingle(curControl.Text); break;
+				case "RotationZ": OGF_V.ikdata.bones[idx].rotation[2] = Convert.ToSingle(curControl.Text); break;
 			}
 
 			bKeyIsDown = false;
@@ -1778,10 +1675,10 @@ skip_ik_data:
 
                 if (Params.Materials)
 				{
-					for (int i = 0; i < OGF_V.ikdata.materials.Count; i++)
+					for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
 					{
-						OGF_V.ikdata.materials[i] = SecondOgf.ikdata.materials[i];
-						OGF_V.ikdata.mass[i] = SecondOgf.ikdata.mass[i];
+						OGF_V.ikdata.bones[i].material = SecondOgf.ikdata.bones[i].material;
+                        OGF_V.ikdata.bones[i].mass = SecondOgf.ikdata.bones[i].mass;
 					}
 
                     Update = true;
@@ -1876,7 +1773,7 @@ skip_ik_data:
         {
 			if (OGF_V == null) return;
 
-			if (OGF_V.bones == null)
+			if (OGF_V.bonedata == null)
 				OGF_V.Header.type = OGF_V.Static();
 			else if (OGF_V.motions.data() == null && !IsTextCorrect(MotionRefsBox.Text))
                 OGF_V.Header.type = OGF_V.Skeleton();
@@ -2034,12 +1931,12 @@ skip_ik_data:
 		{
 			game_materials = GameMtlParser(filename);
 
-			if (OGF_V != null && OGF_V.bones != null)
+			if (OGF_V != null && OGF_V.bonedata != null)
 			{
 				BoneParamsPage.Controls.Clear();
-				for (int i = 0; i < OGF_V.bones.bone_names.Count; i++)
+				for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
 				{
-					CreateBoneGroupBox(i, OGF_V.bones.bone_names[i], OGF_V.bones.parent_bone_names[i], OGF_V.ikdata.materials[i], OGF_V.ikdata.mass[i], OGF_V.ikdata.center_mass[i], OGF_V.ikdata.position[i], OGF_V.ikdata.rotation[i]);
+					CreateBoneGroupBox(i, OGF_V.bonedata.bones[i].name, OGF_V.bonedata.bones[i].parent_name, OGF_V.ikdata.bones[i].material, OGF_V.ikdata.bones[i].mass, OGF_V.ikdata.bones[i].center_mass, OGF_V.ikdata.bones[i].position, OGF_V.ikdata.bones[i].rotation);
 				}
 			}
 		}
@@ -2248,13 +2145,14 @@ skip_ik_data:
 				ChangeParent("root_stalker", "bip01_pelvis");
 				ChangeParent("bip01", "bip01_pelvis");
 
-				OGF_V.bones.parent_bone_names[0] = "";
+				OGF_V.bonedata.bones[0].parent_name = "";
+                OGF_V.bonedata.RecalcChilds();
 
-				for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
+                for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
 				{
-					OGF_V.ikdata.position[i] = Resources.SoCSkeleton.Pos(i, skel_data);
-					OGF_V.ikdata.rotation[i] = Resources.SoCSkeleton.Rot(i, skel_data);
-					OGF_V.ikdata.center_mass[i] = RotateZ(OGF_V.ikdata.center_mass[i]);
+					OGF_V.ikdata.bones[i].position = Resources.SoCSkeleton.Pos(i, skel_data);
+					OGF_V.ikdata.bones[i].rotation = Resources.SoCSkeleton.Rot(i, skel_data);
+					OGF_V.ikdata.bones[i].center_mass = RotateZ(OGF_V.ikdata.bones[i].center_mass);
 				}
 
                 foreach (var ch in OGF_V.childs)
@@ -2293,13 +2191,14 @@ skip_ik_data:
 
                 AddBone("root_stalker", "", 0);
                 AddBone("bip01", "root_stalker", 1);
-				OGF_V.bones.parent_bone_names[2] = "bip01";
+                OGF_V.bonedata.bones[2].parent_name = "";
+                OGF_V.bonedata.RecalcChilds();
 
-                for (int i = 0; i < OGF_V.ikdata.position.Count; i++)
+                for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
                 {
-                    OGF_V.ikdata.position[i] = Resources.CoPSkeleton.Pos(i, skel_data);
-                    OGF_V.ikdata.rotation[i] = Resources.CoPSkeleton.Rot(i, skel_data);
-                    OGF_V.ikdata.center_mass[i] = RotateZ(OGF_V.ikdata.center_mass[i]);
+                    OGF_V.ikdata.bones[i].position = Resources.CoPSkeleton.Pos(i, skel_data);
+                    OGF_V.ikdata.bones[i].rotation = Resources.CoPSkeleton.Rot(i, skel_data);
+                    OGF_V.ikdata.bones[i].center_mass = RotateZ(OGF_V.ikdata.bones[i].center_mass);
                 }
 
                 foreach (var ch in OGF_V.childs)
@@ -2327,7 +2226,7 @@ skip_ik_data:
             {
                 if (OGF_V != null && OGF_V.IsSkeleton())
                 {
-                    if (OGF_V.ikdata.position.Count == 47 && OGF_V.bones.bone_names.Contains("root_stalker"))
+                    if (OGF_V.bonedata.bones.Count == 47 && OGF_V.bonedata.GetBoneID("root_stalker") != -1)
                         return true;
                 }
             }
@@ -2335,7 +2234,7 @@ skip_ik_data:
             {
                 if (OGF_V != null && OGF_V.IsSkeleton())
                 {
-                    if (OGF_V.ikdata.position.Count == 45 && OGF_V.bones.bone_names.Contains("bip01_pelvis") && !OGF_V.bones.bone_names.Contains("root_stalker"))
+                    if (OGF_V.bonedata.bones.Count == 45 && OGF_V.bonedata.GetBoneID("bip01_pelvis") != -1 && OGF_V.bonedata.GetBoneID("root_stalker") == -1)
                         return true;
                 }
             }
