@@ -15,7 +15,6 @@ using System.Diagnostics;
 using System.Security.Policy;
 using System.Runtime.InteropServices.ComTypes;
 
-
 namespace OGF_tool
 {
 	public partial class OGF_Editor : Form
@@ -2035,15 +2034,33 @@ namespace OGF_tool
 
         private void recalcNormalsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (OGF_V != null && MessageBox.Show("This is an experimental function and it may have bugs. Continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (OGF_V != null && MessageBox.Show("This is an experimental function and it may have visual bugs. Continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                for (int i = 0; i < OGF_V.childs.Count; i++)
-                {
-                    OGF_V.childs[i].MeshNormalize();
-                }
+				SelectMeshes selectMeshes = new SelectMeshes(OGF_V);
+				selectMeshes.ShowDialog();
 
-				if (ViewerWorking && ViewerProcess != null)
-					InitViewPort(true, false, true);
+				if (selectMeshes.MeshChecked.Count == OGF_V.childs.Count)
+				{
+                    bool Reloaded = false;
+
+                    for (int i = 0; i < OGF_V.childs.Count; i++)
+                    {
+						if (selectMeshes.MeshChecked[i])
+						{
+							Reloaded = true;
+                            OGF_V.childs[i].MeshNormalize();
+						}
+                    }
+
+					if (Reloaded)
+					{
+                        AutoClosingMessageBox.Show("Mesh normals recalculated!", "", 1000, MessageBoxIcon.Information);
+                        if (ViewerWorking && ViewerProcess != null)
+							InitViewPort(true, false, true);
+					}
+					else
+                        AutoClosingMessageBox.Show("Mesh normals don't changed!", "", 1000, MessageBoxIcon.Warning);
+                }
             }
         }
 

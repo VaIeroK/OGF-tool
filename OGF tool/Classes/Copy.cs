@@ -69,6 +69,21 @@ namespace OGF_tool
             return newBox;
         }
 
+        public static CheckBox CheckBox(CheckBox box)
+        {
+            var newBox = new CheckBox();
+            newBox.Name = box.Name;
+            newBox.Text = box.Text;
+            newBox.Size = box.Size;
+            newBox.Location = box.Location;
+            newBox.Anchor = box.Anchor;
+            newBox.Dock = box.Dock;
+            newBox.Tag = box.Tag;
+            newBox.Checked = box.Checked;
+
+            return newBox;
+        }
+
         public static TableLayoutPanel TableLayoutPanel(TableLayoutPanel box)
         {
             var newBox = new TableLayoutPanel();

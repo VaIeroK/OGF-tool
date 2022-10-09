@@ -21,26 +21,16 @@ namespace OGF_tool
 
         public void Load(XRayLoader xr_loader)
         {
-            min[0] = xr_loader.ReadFloat();
-            min[1] = xr_loader.ReadFloat();
-            min[2] = xr_loader.ReadFloat();
-
-            max[0] = xr_loader.ReadFloat();
-            max[1] = xr_loader.ReadFloat();
-            max[2] = xr_loader.ReadFloat();
+            min = xr_loader.ReadVector();
+            max = xr_loader.ReadVector();
         }
 
         public byte[] data()
         {
             List<byte> temp = new List<byte>();
 
-            temp.AddRange(BitConverter.GetBytes(min[0]));
-            temp.AddRange(BitConverter.GetBytes(min[1]));
-            temp.AddRange(BitConverter.GetBytes(min[2]));
-
-            temp.AddRange(BitConverter.GetBytes(max[0]));
-            temp.AddRange(BitConverter.GetBytes(max[1]));
-            temp.AddRange(BitConverter.GetBytes(max[2]));
+            temp.AddRange(OGF_Editor.GetVec3Bytes(min));
+            temp.AddRange(OGF_Editor.GetVec3Bytes(max));
 
             return temp.ToArray();
         }
@@ -59,9 +49,7 @@ namespace OGF_tool
 
         public void Load(XRayLoader xr_loader)
         {
-            c[0] = xr_loader.ReadFloat();
-            c[1] = xr_loader.ReadFloat();
-            c[2] = xr_loader.ReadFloat();
+            c = xr_loader.ReadVector();
             r = xr_loader.ReadFloat();
         }
 
@@ -69,9 +57,7 @@ namespace OGF_tool
         {
             List<byte> temp = new List<byte>();
 
-            temp.AddRange(BitConverter.GetBytes(c[0]));
-            temp.AddRange(BitConverter.GetBytes(c[1]));
-            temp.AddRange(BitConverter.GetBytes(c[2]));
+            temp.AddRange(OGF_Editor.GetVec3Bytes(c));
             temp.AddRange(BitConverter.GetBytes(r));
 
             return temp.ToArray();
@@ -213,18 +199,22 @@ namespace OGF_tool
 
                 float[] dv1 = FVec.Sub(Vertices[ia].offs, Vertices[ib].offs);
                 float[] dv2 = FVec.Sub(Vertices[ic].offs, Vertices[ib].offs);
-                float[] no = FVec.CrossProduct(dv1, dv2);
-
                 float[] duv1 = FVec2.Sub(Vertices[ia].uv, Vertices[ib].uv);
                 float[] duv2 = FVec2.Sub(Vertices[ic].uv, Vertices[ib].uv);
 
-                Vertices[ia].norm = FVec.Add(Vertices[ia].norm, no);
-                Vertices[ib].norm = FVec.Add(Vertices[ib].norm, no);
-                Vertices[ic].norm = FVec.Add(Vertices[ic].norm, no);
-
                 float r = 1.0f / (duv1[0] * duv2[1] - duv1[1] * duv2[0]);
+                float[] normal = FVec.CrossProduct(dv1, dv2);
                 float[] tangent = FVec.Mul(FVec.Sub(FVec.Mul(dv1, duv2[1]), FVec.Mul(dv2, duv1[1])), r);
                 float[] binormal = FVec.Mul(FVec.Sub(FVec.Mul(dv2, duv1[0]), FVec.Mul(dv1, duv2[0])), r);
+
+                normal = FVec.Normalize(normal);
+                tangent = FVec.Normalize(tangent);
+                binormal = FVec.Normalize(binormal);
+                normal = FVec.Mul(normal, -1.0f);
+
+                Vertices[ia].norm = FVec.Add(Vertices[ia].norm, normal);
+                Vertices[ib].norm = FVec.Add(Vertices[ib].norm, normal);
+                Vertices[ic].norm = FVec.Add(Vertices[ic].norm, normal);
 
                 Vertices[ia].tang = FVec.Add(Vertices[ia].tang, tangent);
                 Vertices[ib].tang = FVec.Add(Vertices[ib].tang, tangent);
@@ -233,15 +223,6 @@ namespace OGF_tool
                 Vertices[ia].binorm = FVec.Add(Vertices[ia].binorm, binormal);
                 Vertices[ib].binorm = FVec.Add(Vertices[ib].binorm, binormal);
                 Vertices[ic].binorm = FVec.Add(Vertices[ic].binorm, binormal);
-            }
-
-            for (int i = 0; i < Vertices.Count; i++)
-            {
-                Vertices[i].norm = FVec.Normalize(Vertices[i].norm);
-                Vertices[i].tang = FVec.Normalize(Vertices[i].tang);
-                Vertices[i].binorm = FVec.Normalize(Vertices[i].binorm);
-
-                Vertices[i].norm = FVec.Mul(Vertices[i].norm, -1.0f);
             }
         }
 

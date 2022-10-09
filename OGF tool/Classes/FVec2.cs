@@ -30,12 +30,12 @@ namespace OGF_tool
             return rtnvector;
         }
 
-        static public float[] Mul(float[] v1, float v2)
+        static public float[] Mul(float[] v1, float val)
         {
             float x, y;
 
-            x = v1[0] * v2;
-            y = v1[1] * v2;
+            x = v1[0] * val;
+            y = v1[1] * val;
 
             var rtnvector = new float[2] { x, y };
             return rtnvector;
