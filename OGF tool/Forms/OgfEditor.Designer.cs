@@ -132,6 +132,7 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
+            this.recalcNormalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -659,6 +660,7 @@ namespace OGF_tool
             this.ToolsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OpenInObjectEditor,
             this.importDataFromModelToolStripMenuItem,
+            this.recalcNormalsToolStripMenuItem,
             this.converterToolStripMenuItem});
             this.ToolsMenuItem.Name = "ToolsMenuItem";
             resources.ApplyResources(this.ToolsMenuItem, "ToolsMenuItem");
@@ -806,6 +808,12 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
             // 
+            // recalcNormalsToolStripMenuItem
+            // 
+            this.recalcNormalsToolStripMenuItem.Name = "recalcNormalsToolStripMenuItem";
+            resources.ApplyResources(this.recalcNormalsToolStripMenuItem, "recalcNormalsToolStripMenuItem");
+            this.recalcNormalsToolStripMenuItem.Click += new System.EventHandler(this.recalcNormalsToolStripMenuItem_Click);
+            // 
             // OGF_Editor
             // 
             this.AllowDrop = true;
@@ -950,6 +958,7 @@ namespace OGF_tool
         private System.Windows.Forms.ContextMenuStrip TextureContextStrip;
         private System.Windows.Forms.ToolStripMenuItem LodMenuItem;
         private System.Windows.Forms.ToolStripMenuItem AddMeshesMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recalcNormalsToolStripMenuItem;
     }
 }
 

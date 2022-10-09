@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Classes\Copy.cs" />
     <Compile Include="Classes\FVec.cs" />
+    <Compile Include="Classes\FVec2.cs" />
     <Compile Include="Forms\AddMesh.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -2033,6 +2033,20 @@ namespace OGF_tool
             }
         }
 
+        private void recalcNormalsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (OGF_V != null && MessageBox.Show("This is an experimental function and it may have bugs. Continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                for (int i = 0; i < OGF_V.childs.Count; i++)
+                {
+                    OGF_V.childs[i].MeshNormalize();
+                }
+
+				if (ViewerWorking && ViewerProcess != null)
+					InitViewPort(true, false, true);
+            }
+        }
+
         private float[] RotateZ(float[] vec)
         {
             float[] dest = new float[3];
