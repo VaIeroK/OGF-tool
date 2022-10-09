@@ -300,6 +300,7 @@ namespace OGF_tool
                         Vert.offs = xr_loader.ReadVector();
                         Vert.norm = xr_loader.ReadVector();
                         Vert.uv = xr_loader.ReadVector2();
+                        links = 0;
                         break;
                 }
                 Vertices.Add(Vert);

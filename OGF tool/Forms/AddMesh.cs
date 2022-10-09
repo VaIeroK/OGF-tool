@@ -55,7 +55,6 @@ namespace OGF_tool
         public void CreateMeshElements(int idx, GroupBox box)
         {
             OGF_Child child = LoadedOGF.childs[idx];
-            int links = (int)child.LinksCount();
 
             var newLbl1 = Copy.Label(Texture_Label);
             var newLbl2 = Copy.Label(Shader_Label);
