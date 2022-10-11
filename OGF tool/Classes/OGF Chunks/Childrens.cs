@@ -207,11 +207,6 @@ namespace OGF_tool
                 float[] tangent = FVec.Mul(FVec.Sub(FVec.Mul(dv1, duv2[1]), FVec.Mul(dv2, duv1[1])), r);
                 float[] binormal = FVec.Mul(FVec.Sub(FVec.Mul(dv2, duv1[0]), FVec.Mul(dv1, duv2[0])), r);
 
-                normal = FVec.Normalize(normal);
-                tangent = FVec.Normalize(tangent);
-                binormal = FVec.Normalize(binormal);
-                normal = FVec.Mul(normal, -1.0f);
-
                 Vertices[ia].norm = FVec.Add(Vertices[ia].norm, normal);
                 Vertices[ib].norm = FVec.Add(Vertices[ib].norm, normal);
                 Vertices[ic].norm = FVec.Add(Vertices[ic].norm, normal);
@@ -223,6 +218,14 @@ namespace OGF_tool
                 Vertices[ia].binorm = FVec.Add(Vertices[ia].binorm, binormal);
                 Vertices[ib].binorm = FVec.Add(Vertices[ib].binorm, binormal);
                 Vertices[ic].binorm = FVec.Add(Vertices[ic].binorm, binormal);
+            }
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                Vertices[i].norm = FVec.Normalize(Vertices[i].norm);
+                Vertices[i].norm = FVec.Mul(Vertices[i].norm, -1.0f);
+                Vertices[i].tang = FVec.Normalize(Vertices[i].tang);
+                Vertices[i].binorm = FVec.Normalize(Vertices[i].binorm);
             }
         }
 
