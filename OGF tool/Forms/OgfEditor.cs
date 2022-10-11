@@ -2281,7 +2281,7 @@ namespace OGF_tool
 				foreach (var ch in OGF_V.childs)
 					OldChildTextures.Add(ch.m_texture);
 
-				if (pConvertTextures.Count > 0)
+				if (pConvertTextures.Count > 0 && ViewPortTextures)
 				{
 					string ConverterArgs = "";
 					ConverterArgs += $"{(ViewPortAlpha ? 1 : 0)}";
