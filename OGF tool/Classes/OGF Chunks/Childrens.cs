@@ -182,11 +182,12 @@ namespace OGF_tool
                 links = count;
         }
 
-        public void MeshNormalize()
+        public void MeshNormalize(bool generate_normal = true)
         {
             for (int i = 0; i < Vertices.Count; i++)
             {
-                Vertices[i].norm = new float[3] { 0.0f, 0.0f, 0.0f };
+                if (generate_normal)
+                    Vertices[i].norm = new float[3] { 0.0f, 0.0f, 0.0f };
                 Vertices[i].tang = new float[3] { 0.0f, 0.0f, 0.0f };
                 Vertices[i].binorm = new float[3] { 0.0f, 0.0f, 0.0f };
             }
@@ -203,13 +204,16 @@ namespace OGF_tool
                 float[] duv2 = FVec2.Sub(Vertices[ic].uv, Vertices[ib].uv);
 
                 float r = 1.0f / (duv1[0] * duv2[1] - duv1[1] * duv2[0]);
-                float[] normal = FVec.CrossProduct(dv1, dv2);
                 float[] tangent = FVec.Mul(FVec.Sub(FVec.Mul(dv1, duv2[1]), FVec.Mul(dv2, duv1[1])), r);
                 float[] binormal = FVec.Mul(FVec.Sub(FVec.Mul(dv2, duv1[0]), FVec.Mul(dv1, duv2[0])), r);
 
-                Vertices[ia].norm = FVec.Add(Vertices[ia].norm, normal);
-                Vertices[ib].norm = FVec.Add(Vertices[ib].norm, normal);
-                Vertices[ic].norm = FVec.Add(Vertices[ic].norm, normal);
+                if (generate_normal)
+                {
+                    float[] normal = FVec.CrossProduct(dv1, dv2);
+                    Vertices[ia].norm = FVec.Add(Vertices[ia].norm, normal);
+                    Vertices[ib].norm = FVec.Add(Vertices[ib].norm, normal);
+                    Vertices[ic].norm = FVec.Add(Vertices[ic].norm, normal);
+                }
 
                 Vertices[ia].tang = FVec.Add(Vertices[ia].tang, tangent);
                 Vertices[ib].tang = FVec.Add(Vertices[ib].tang, tangent);
@@ -222,8 +226,11 @@ namespace OGF_tool
 
             for (int i = 0; i < Vertices.Count; i++)
             {
-                Vertices[i].norm = FVec.Normalize(Vertices[i].norm);
-                Vertices[i].norm = FVec.Mul(Vertices[i].norm, -1.0f);
+                if (generate_normal)
+                {
+                    Vertices[i].norm = FVec.Normalize(Vertices[i].norm);
+                    Vertices[i].norm = FVec.Mul(Vertices[i].norm, -1.0f);
+                }
                 Vertices[i].tang = FVec.Normalize(Vertices[i].tang);
                 Vertices[i].binorm = FVec.Normalize(Vertices[i].binorm);
             }
@@ -383,10 +390,14 @@ namespace OGF_tool
                     }
                 }
             }
+            // SWR end
+
+            // Fix Tangent Basis
+            if (links == 0 || links == 1 && Header.format_version != 4)
+                MeshNormalize(false);
 
             old_size = data().Length;
 
-            // SWR end
             return true;
         }
 
