@@ -892,7 +892,7 @@ namespace OGF_tool
 			}
 		}
 
-		private void SaveMtl(string filename, bool with_texture = true)
+		private void SaveMtl(string filename)
         {
 			using (StreamWriter writer = File.CreateText(filename))
 			{
@@ -904,7 +904,7 @@ namespace OGF_tool
 					writer.WriteLine("Ka  0 0 0");
 					writer.WriteLine("Kd  1 1 1");
 					writer.WriteLine("Ks  0 0 0");
-					if (with_texture)
+					if (ViewPortTextures)
 						writer.WriteLine("map_Kd " + Path.GetFileName(ch.m_texture) + ".png\n");
 				}
 				writer.Close();
@@ -2396,7 +2396,7 @@ namespace OGF_tool
             ViewPortTextures = !ViewPortTextures;
 
             string mtl_name = TempFolder() + "\\" + Path.GetFileName(Path.ChangeExtension(FILE_NAME, ".mtl"));
-            SaveMtl(mtl_name, ViewPortTextures);
+            SaveMtl(mtl_name);
 
             if (!ViewPortTextures)
 				DisableTexturesMenuItem.Text = "Enable Textures";
