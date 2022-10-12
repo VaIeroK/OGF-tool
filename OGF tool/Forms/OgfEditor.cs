@@ -2243,66 +2243,69 @@ namespace OGF_tool
 					ConverterWorking = false;
 				}
 
-				string Textures = "";
-				pSettings.LoadText("TexturesPath", ref Textures);
-
-				List<string> pTextures = new List<string>();
-				List<string> pConvertTextures = new List<string>();
-
-				for (int i = 0; i < OGF_V.childs.Count; i++)
+				if (ViewPortTextures)
 				{
-					string texture_main = Textures + "\\" + OGF_V.childs[i].m_texture + ".dds";
-					string texture_temp = TempFolder() + "\\" + Path.GetFileName(OGF_V.childs[i].m_texture + ".png");
+					string Textures = "";
+					pSettings.LoadText("TexturesPath", ref Textures);
 
-					pTextures.Add(texture_main);
-					pTextures.Add(texture_temp);
-				}
+					List<string> pTextures = new List<string>();
+					List<string> pConvertTextures = new List<string>();
 
-				int chld = 0;
-				for (int i = 0; i < pTextures.Count; i++)
-				{
-					if (File.Exists(pTextures[i]) && (!File.Exists(pTextures[i + 1]) || force_texture_reload))
+					for (int i = 0; i < OGF_V.childs.Count; i++)
 					{
-						if (OGF_V.childs[chld].to_delete)
-							continue;
+						string texture_main = Textures + "\\" + OGF_V.childs[i].m_texture + ".dds";
+						string texture_temp = TempFolder() + "\\" + Path.GetFileName(OGF_V.childs[i].m_texture + ".png");
 
-						pConvertTextures.Add(pTextures[i]);
-						pConvertTextures.Add(pTextures[i + 1]);
-					}
-					i++;
-					chld++;
-				}
-
-				OldChildVisible.Clear();
-				foreach (var ch in OGF_V.childs)
-					OldChildVisible.Add(ch.to_delete);
-
-				OldChildTextures.Clear();
-				foreach (var ch in OGF_V.childs)
-					OldChildTextures.Add(ch.m_texture);
-
-				if (pConvertTextures.Count > 0 && ViewPortTextures)
-				{
-					string ConverterArgs = "";
-					ConverterArgs += $"{(ViewPortAlpha ? 1 : 0)}";
-					ConverterArgs += $" {pConvertTextures.Count}";
-
-					for (int i = 0; i < pConvertTextures.Count; i++)
-					{
-						ConverterArgs += $" \"{pConvertTextures[i]}\"";
+						pTextures.Add(texture_main);
+						pTextures.Add(texture_temp);
 					}
 
-					ConverterWorking = true;
-					ConverterProcess = new Process();
-					ProcessStartInfo psi = new ProcessStartInfo();
-					psi.CreateNoWindow = true;
-					psi.UseShellExecute = false;
-					psi.FileName = AppPath() + "\\TextureConverter.exe";
-					psi.Arguments = ConverterArgs;
-					ConverterProcess.StartInfo = psi;
-					ConverterProcess.Start();
-					ConverterProcess.WaitForExit();
-					ConverterWorking = false;
+					int chld = 0;
+					for (int i = 0; i < pTextures.Count; i++)
+					{
+						if (File.Exists(pTextures[i]) && (!File.Exists(pTextures[i + 1]) || force_texture_reload))
+						{
+							if (OGF_V.childs[chld].to_delete)
+								continue;
+
+							pConvertTextures.Add(pTextures[i]);
+							pConvertTextures.Add(pTextures[i + 1]);
+						}
+						i++;
+						chld++;
+					}
+
+					OldChildVisible.Clear();
+					foreach (var ch in OGF_V.childs)
+						OldChildVisible.Add(ch.to_delete);
+
+					OldChildTextures.Clear();
+					foreach (var ch in OGF_V.childs)
+						OldChildTextures.Add(ch.m_texture);
+
+					if (pConvertTextures.Count > 0)
+					{
+						string ConverterArgs = "";
+						ConverterArgs += $"{(ViewPortAlpha ? 1 : 0)}";
+						ConverterArgs += $" {pConvertTextures.Count}";
+
+						for (int i = 0; i < pConvertTextures.Count; i++)
+						{
+							ConverterArgs += $" \"{pConvertTextures[i]}\"";
+						}
+
+						ConverterWorking = true;
+						ConverterProcess = new Process();
+						ProcessStartInfo psi = new ProcessStartInfo();
+						psi.CreateNoWindow = true;
+						psi.UseShellExecute = false;
+						psi.FileName = AppPath() + "\\TextureConverter.exe";
+						psi.Arguments = ConverterArgs;
+						ConverterProcess.StartInfo = psi;
+						ConverterProcess.Start();
+						ConverterProcess.WaitForExit();
+						ConverterWorking = false;
+					}
 				}
 
 				string image_path = "";

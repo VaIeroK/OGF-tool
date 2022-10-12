@@ -371,7 +371,7 @@ namespace OGF_tool
             // SWR start
             if (Header.format_version == 4)
             {
-                if (xr_loader.find_chunk((int)OGF.OGF4_SWIDATA, false, true))
+                if (xr_loader.find_chunk((int)OGF.OGF4_SWIDATA))
                 {
                     xr_loader.ReadUInt32();
                     xr_loader.ReadUInt32();
