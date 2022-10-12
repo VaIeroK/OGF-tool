@@ -371,7 +371,7 @@ namespace OGF_tool
             // SWR start
             if (Header.format_version == 4)
             {
-                if (xr_loader.find_chunk((int)OGF.OGF4_SWIDATA))
+                if (xr_loader.find_chunk((int)OGF.OGF4_SWIDATA, false, true))
                 {
                     xr_loader.ReadUInt32();
                     xr_loader.ReadUInt32();
@@ -380,13 +380,16 @@ namespace OGF_tool
 
                     uint swi_size = xr_loader.ReadUInt32();
 
-                    for (uint i = 0; i < swi_size; i++)
+                    if (xr_loader.reader.BaseStream.Position + swi_size * 8 <= xr_loader.reader.BaseStream.Length)
                     {
-                        VIPM_SWR SWR = new VIPM_SWR();
-                        SWR.offset = xr_loader.ReadUInt32();
-                        SWR.num_tris = (ushort)xr_loader.ReadUInt16();
-                        SWR.num_verts = (ushort)xr_loader.ReadUInt16();
-                        SWI.Add(SWR);
+                        for (uint i = 0; i < swi_size; i++)
+                        {
+                            VIPM_SWR SWR = new VIPM_SWR();
+                            SWR.offset = xr_loader.ReadUInt32();
+                            SWR.num_tris = (ushort)xr_loader.ReadUInt16();
+                            SWR.num_verts = (ushort)xr_loader.ReadUInt16();
+                            SWI.Add(SWR);
+                        }
                     }
                 }
             }
