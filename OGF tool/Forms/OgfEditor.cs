@@ -2047,7 +2047,7 @@ namespace OGF_tool
 
         private void recalcNormalsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (OGF_V != null && MessageBox.Show("This is an experimental function and it may have visual bugs. Continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (OGF_V != null)
             {
 				SelectMeshes selectMeshes = new SelectMeshes(OGF_V);
 				selectMeshes.ShowDialog();
