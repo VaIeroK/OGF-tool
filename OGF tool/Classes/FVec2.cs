@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OGF_tool
 {
@@ -45,6 +41,14 @@ namespace OGF_tool
         {
             v = Mul(v, (1.0f / (float)Math.Sqrt(v[0]*v[0] + v[1]*v[1])));
             return v;
+        }
+
+        static public string vPUSH(float[] vec, string format = null)
+        {
+            if (format != null)
+                return vec[0].ToString(format) + " " + vec[1].ToString(format);
+            else
+                return vec[0].ToString() + " " + vec[1].ToString();
         }
     }
 }

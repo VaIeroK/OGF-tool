@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Diagnostics;
-using System.Security.Policy;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace OGF_tool
 {
@@ -539,24 +535,9 @@ namespace OGF_tool
 							file_bytes.AddRange(temp);
 						}
 
-						uint IKDataChunk = 0;
-
-						switch (OGF_V.ikdata.chunk_version)
-						{
-							case 4:
-								IKDataChunk = (OGF_V.Header.format_version == 4 ? (uint)OGF.OGF4_S_IKDATA : (uint)OGF.OGF3_S_IKDATA_2);
-								break;
-							case 3:
-								IKDataChunk = (uint)OGF.OGF3_S_IKDATA;
-								break;
-							case 2:
-								IKDataChunk = (uint)OGF.OGF3_S_IKDATA_0;
-								break;
-						}
-
 						byte[] IKDataData = OGF_V.ikdata.data();
 
-                        file_bytes.AddRange(BitConverter.GetBytes(IKDataChunk));
+                        file_bytes.AddRange(BitConverter.GetBytes(OGF_V.ikdata.ChunkID(OGF_V.Header.format_version)));
 						file_bytes.AddRange(BitConverter.GetBytes(IKDataData.Length));
 						file_bytes.AddRange(IKDataData);
 
@@ -853,7 +834,7 @@ namespace OGF_tool
 
 						for (int i = 0; i < ch.Vertices.Count; i++)
 						{
-							ObjWriter.WriteLine($"v {vPUSH(MirrorZ_transform(ch.Vertices[i].offs))}");
+							ObjWriter.WriteLine($"v {FVec.vPUSH(FVec.MirrorZ(ch.Vertices[i].offs), "0.000000")}");
 						}
 
 						for (int i = 0; i < ch.Vertices.Count; i++)
@@ -865,17 +846,17 @@ namespace OGF_tool
 
 						for (int i = 0; i < ch.Vertices.Count; i++)
 						{
-							ObjWriter.WriteLine($"vn {vPUSH(MirrorZ_transform(ch.Vertices[i].norm))}");
+							ObjWriter.WriteLine($"vn {FVec.vPUSH(FVec.MirrorZ(ch.Vertices[i].norm), "0.000000")}");
 						}
 
 						for (int i = 0; i < ch.Vertices.Count; i++)
 						{
-							ObjWriter.WriteLine($"vg {vPUSH(MirrorZ_transform(ch.Vertices[i].tang))}");
+							ObjWriter.WriteLine($"vg {FVec.vPUSH(FVec.MirrorZ(ch.Vertices[i].tang), "0.000000")}");
 						}
 
 						for (int i = 0; i < ch.Vertices.Count; i++)
 						{
-							ObjWriter.WriteLine($"vb {vPUSH(MirrorZ_transform(ch.Vertices[i].binorm))}");
+							ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(ch.Vertices[i].binorm), "0.000000")}");
 						}
 
 						foreach (var f_it in ch.Faces_SWI(lod))
@@ -910,20 +891,6 @@ namespace OGF_tool
 				writer.Close();
 			}
 		}
-
-		private float[] MirrorZ_transform(float[] vec)
-        {
-			float[] dest = new float[3];
-			dest[0] = vec[0];
-			dest[1] = vec[1];
-			dest[2] = -vec[2];
-			return dest;
-		}
-
-        private string vPUSH(float[] vec)
-        {
-			return vec[0].ToString("0.000000") + " " + vec[1].ToString("0.000000") + " " + vec[2].ToString("0.000000");
-        }
 
 		private void AddBone(string name, string parent_bone, int pos)
 		{
@@ -2077,15 +2044,6 @@ namespace OGF_tool
             }
         }
 
-        private float[] RotateZ(float[] vec)
-        {
-            float[] dest = new float[3];
-            dest[0] = -vec[0];
-            dest[1] = vec[1];
-            dest[2] = -vec[2];
-            return dest;
-        }
-
         private void NPC_ToSoC(object sender, EventArgs e)
         {
 			if (CheckNPC(true))
@@ -2103,7 +2061,7 @@ namespace OGF_tool
 				{
 					OGF_V.ikdata.bones[i].position = Resources.SoCSkeleton.Pos(i);
 					OGF_V.ikdata.bones[i].rotation = Resources.SoCSkeleton.Rot(i);
-                    OGF_V.ikdata.bones[i].center_mass = RotateZ(OGF_V.ikdata.bones[i].center_mass);
+                    OGF_V.ikdata.bones[i].center_mass = FVec.RotateZ(OGF_V.ikdata.bones[i].center_mass);
 				}
 
                 foreach (var ch in OGF_V.childs)
@@ -2115,10 +2073,10 @@ namespace OGF_tool
 						for (int j = 0; j < links; j++)
 							ch.Vertices[i].bones_id[j] = (ch.Vertices[i].bones_id[j] >= 2 ? ch.Vertices[i].bones_id[j] - 2 : 0);
 
-						ch.Vertices[i].offs = RotateZ(ch.Vertices[i].offs);
-						ch.Vertices[i].norm = RotateZ(ch.Vertices[i].norm);
-						ch.Vertices[i].tang = RotateZ(ch.Vertices[i].tang);
-						ch.Vertices[i].binorm = RotateZ(ch.Vertices[i].binorm);
+						ch.Vertices[i].offs = FVec.RotateZ(ch.Vertices[i].offs);
+						ch.Vertices[i].norm = FVec.RotateZ(ch.Vertices[i].norm);
+						ch.Vertices[i].tang = FVec.RotateZ(ch.Vertices[i].tang);
+						ch.Vertices[i].binorm = FVec.RotateZ(ch.Vertices[i].binorm);
 					}
 				}
 				AutoClosingMessageBox.Show("Successful!", "", 700, MessageBoxIcon.Information);
@@ -2141,7 +2099,7 @@ namespace OGF_tool
                 {
 					OGF_V.ikdata.bones[i].position = Resources.CoPSkeleton.Pos(i);
 					OGF_V.ikdata.bones[i].rotation = Resources.CoPSkeleton.Rot(i);
-					OGF_V.ikdata.bones[i].center_mass = RotateZ(OGF_V.ikdata.bones[i].center_mass);
+					OGF_V.ikdata.bones[i].center_mass = FVec.RotateZ(OGF_V.ikdata.bones[i].center_mass);
                 }
 
                 foreach (var ch in OGF_V.childs)
@@ -2151,10 +2109,10 @@ namespace OGF_tool
                         for (int j = 0; j < ch.LinksCount(); j++)
                             ch.Vertices[i].bones_id[j] = ch.Vertices[i].bones_id[j] + 2;
 
-                        ch.Vertices[i].offs = RotateZ(ch.Vertices[i].offs);
-                        ch.Vertices[i].norm = RotateZ(ch.Vertices[i].norm);
-                        ch.Vertices[i].tang = RotateZ(ch.Vertices[i].tang);
-                        ch.Vertices[i].binorm = RotateZ(ch.Vertices[i].binorm);
+                        ch.Vertices[i].offs = FVec.RotateZ(ch.Vertices[i].offs);
+                        ch.Vertices[i].norm = FVec.RotateZ(ch.Vertices[i].norm);
+                        ch.Vertices[i].tang = FVec.RotateZ(ch.Vertices[i].tang);
+                        ch.Vertices[i].binorm = FVec.RotateZ(ch.Vertices[i].binorm);
                     }
                 }
                 AutoClosingMessageBox.Show("Successful!", "", 700, MessageBoxIcon.Information);

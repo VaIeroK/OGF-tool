@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace OGF_tool
 {
@@ -82,6 +79,21 @@ namespace OGF_tool
             }
 
             old_size = data().Length;
+        }
+
+        public uint ChunkID(byte vers)
+        {
+            switch (chunk_version)
+            {
+                case 4:
+                    return (vers == 4 ? (uint)OGF.OGF4_S_IKDATA : (uint)OGF.OGF3_S_IKDATA_2);
+                case 3:
+                    return (uint)OGF.OGF3_S_IKDATA;
+                case 2:
+                    return (uint)OGF.OGF3_S_IKDATA_0;
+            }
+
+            return 4;
         }
 
         public byte[] data()
