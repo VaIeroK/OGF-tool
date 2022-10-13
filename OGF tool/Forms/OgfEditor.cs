@@ -834,7 +834,7 @@ namespace OGF_tool
 
 						for (int i = 0; i < ch.Vertices.Count; i++)
 						{
-							ObjWriter.WriteLine($"v {FVec.vPUSH(FVec.MirrorZ(ch.Vertices[i].offs), "0.000000")}");
+							ObjWriter.WriteLine($"v {FVec.vPUSH(FVec.MirrorZ(SetupObjOffset(ch.Vertices[i])), "0.000000")}");
 						}
 
 						for (int i = 0; i < ch.Vertices.Count; i++)
@@ -871,6 +871,22 @@ namespace OGF_tool
 				}
 				catch(Exception) { }
 			}
+		}
+
+		// Некорректно, но лучше чем ничего
+        private float[] SetupObjOffset(SSkelVert vert)
+		{
+            float[] vec = vert.offs;
+
+            if (OGF_V.Header.format_version == 3 && OGF_V.ikdata != null)
+			{
+				float[] bone_pos = OGF_V.ikdata.bones[(int)vert.bones_id[0]].position;
+				bone_pos = FVec.Mul(bone_pos, -1.0f);
+				bone_pos[1] = -bone_pos[1];
+				vec = FVec.Add(vec, bone_pos);
+			}
+
+            return vec;
 		}
 
 		private void SaveMtl(string filename)

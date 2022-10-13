@@ -37,6 +37,28 @@ namespace OGF_tool
             return rtnvector;
         }
 
+        static public float[] Mul(float[] v1, float[] v2)
+        {
+            var vec = new float[2]
+            {
+                v1[0] * v2[0],
+                v1[1] * v2[1],
+            };
+
+            return vec;
+        }
+
+        static public float[] Div(float[] v1, float val)
+        {
+            var vec = new float[2]
+            {
+                v1[0] / val,
+                v1[1] / val,
+            };
+
+            return vec;
+        }
+
         static public float[] Normalize(float[] v)
         {
             v = Mul(v, (1.0f / (float)Math.Sqrt(v[0]*v[0] + v[1]*v[1])));
