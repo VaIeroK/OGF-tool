@@ -20,6 +20,8 @@ namespace OGF_tool
         public bool Materials = false;
         public bool Remove = false;
 
+        public bool res = false;
+
         public ImportParams(OGF_Children OGF, OGF_Children ImportedOGF)
         {
             InitializeComponent();
@@ -42,8 +44,11 @@ namespace OGF_tool
             LodPathChbx.Enabled = CanMergeLod;
             IKdataChbx.Enabled = CanMergeIkData;
         }
-        private void ClosingForm(object sender, FormClosingEventArgs e)
+
+        private void ApplyButton_Click(object sender, EventArgs e)
         {
+            res = true;
+
             Textures = TexturesChbx.Checked;
             MotionRefs = MotionRefsChbx.Checked;
             Motions = MotionsChbx.Checked;
@@ -52,6 +57,8 @@ namespace OGF_tool
             Materials = IKdataChbx.Checked;
 
             Remove = RemoveChbx.Checked;
+
+            Close();
         }
     }
 }

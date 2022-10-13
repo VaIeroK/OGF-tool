@@ -878,7 +878,7 @@ namespace OGF_tool
 		{
             float[] vec = vert.offs;
 
-            if (OGF_V.Header.format_version == 3 && OGF_V.ikdata != null)
+            if (!OGF_V.IsStaticSingle() && OGF_V.Header.format_version == 3 && OGF_V.ikdata != null)
 			{
 				float[] bone_pos = OGF_V.ikdata.bones[(int)vert.bones_id[0]].position;
 				bone_pos = FVec.Mul(bone_pos, -1.0f);
@@ -1508,103 +1508,111 @@ namespace OGF_tool
 				byte[] SecondOgfByte = null;
 				OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
 
-				ImportParams Params = new ImportParams(OGF_V, SecondOgf);
-
-                Params.ShowDialog();
-
-                if (Params.Textures)
+				if (SecondOgf.IsSkeleton())
 				{
-					for (int i = 0; i < OGF_V.childs.Count; i++)
+					ImportParams Params = new ImportParams(OGF_V, SecondOgf);
+
+					Params.ShowDialog();
+
+					if (Params.res)
 					{
-						OGF_V.childs[i].m_texture = SecondOgf.childs[i].m_texture;
-						OGF_V.childs[i].m_shader = SecondOgf.childs[i].m_shader;
+						if (Params.Textures)
+						{
+							for (int i = 0; i < OGF_V.childs.Count; i++)
+							{
+								OGF_V.childs[i].m_texture = SecondOgf.childs[i].m_texture;
+								OGF_V.childs[i].m_shader = SecondOgf.childs[i].m_shader;
+							}
+
+							Update = true;
+						}
+
+						if (Params.Userdata)
+						{
+							if (OGF_V.userdata == null)
+								OGF_V.userdata = new UserData();
+
+							OGF_V.userdata.userdata = SecondOgf.userdata.userdata;
+
+							Update = true;
+						}
+						else if (Params.Remove && OGF_V.userdata != null)
+						{
+							OGF_V.userdata.userdata = "";
+							Update = true;
+						}
+
+						if (Params.Lod)
+						{
+							if (OGF_V.lod == null)
+								OGF_V.lod = new Lod();
+
+							OGF_V.lod.lod_path = SecondOgf.lod.lod_path;
+
+							Update = true;
+						}
+						else if (Params.Remove && OGF_V.lod != null)
+						{
+							OGF_V.lod.lod_path = "";
+							Update = true;
+						}
+
+						if (Params.MotionRefs)
+						{
+							if (OGF_V.motion_refs == null)
+								OGF_V.motion_refs = new MotionRefs();
+
+							OGF_V.motion_refs.refs = SecondOgf.motion_refs.refs;
+
+							Update = true;
+						}
+						else if (Params.Remove && OGF_V.motion_refs != null)
+						{
+							OGF_V.motion_refs.refs.Clear();
+							Update = true;
+						}
+
+						if (Params.Motions)
+						{
+							OGF_V.motions.SetData(SecondOgf.motions.data());
+
+							if (OGF_V.motion_refs != null)
+								OGF_V.motion_refs.refs.Clear();
+
+							Update = true;
+						}
+						else if (Params.Remove)
+						{
+							OGF_V.motions.SetData(null);
+							Update = true;
+						}
+
+						if (Params.Materials)
+						{
+							for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
+							{
+								OGF_V.ikdata.bones[i].material = SecondOgf.ikdata.bones[i].material;
+								OGF_V.ikdata.bones[i].mass = SecondOgf.ikdata.bones[i].mass;
+							}
+
+							Update = true;
+						}
+
+						if (Update)
+						{
+							Clear(true);
+							AfterLoad(false);
+							AutoClosingMessageBox.Show("OGF Params changed!", "", 1000, MessageBoxIcon.Information);
+						}
+						else
+						{
+							AutoClosingMessageBox.Show("OGF Params don't changed!", "", 1000, MessageBoxIcon.Warning);
+						}
 					}
-
-					Update = true;
-                }
-
-				if (Params.Userdata)
-				{
-					if (OGF_V.userdata == null)
-						OGF_V.userdata = new UserData();
-
-					OGF_V.userdata.userdata = SecondOgf.userdata.userdata;
-
-					Update = true;
-				}
-				else if (Params.Remove && OGF_V.userdata != null)
-				{
-					OGF_V.userdata.userdata = "";
-                    Update = true;
-                }
-
-				if (Params.Lod)
-				{
-					if (OGF_V.lod == null)
-						OGF_V.lod = new Lod();
-
-					OGF_V.lod.lod_path = SecondOgf.lod.lod_path;
-
-					Update = true;
-				}
-				else if (Params.Remove && OGF_V.lod != null)
-				{
-					OGF_V.lod.lod_path = "";
-                    Update = true;
-                }
-
-				if (Params.MotionRefs)
-				{
-					if (OGF_V.motion_refs == null)
-						OGF_V.motion_refs = new MotionRefs();
-
-					OGF_V.motion_refs.refs = SecondOgf.motion_refs.refs;
-
-					Update = true;
-				}
-				else if (Params.Remove && OGF_V.motion_refs != null)
-				{
-					OGF_V.motion_refs.refs.Clear();
-					Update = true;
-				}
-
-				if (Params.Motions)
-				{
-					OGF_V.motions.SetData(SecondOgf.motions.data());
-
-					if (OGF_V.motion_refs != null)
-						OGF_V.motion_refs.refs.Clear();
-
-					Update = true;
-				}
-				else if (Params.Remove)
-				{
-					OGF_V.motions.SetData(null);
-                    Update = true;
-                }
-
-                if (Params.Materials)
-				{
-					for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
-					{
-						OGF_V.ikdata.bones[i].material = SecondOgf.ikdata.bones[i].material;
-                        OGF_V.ikdata.bones[i].mass = SecondOgf.ikdata.bones[i].mass;
-					}
-
-                    Update = true;
-                }
-
-				if (Update)
-				{
-                    Clear(true);
-					AfterLoad(false);
-					AutoClosingMessageBox.Show("OGF Params changed!", "", 1000, MessageBoxIcon.Information);
 				}
 				else
-                {
-					AutoClosingMessageBox.Show("OGF Params don't changed!", "", 1000, MessageBoxIcon.Warning);
-				}
-			}
+                    AutoClosingMessageBox.Show("Can't load params from non skeleton model!", "", 1000, MessageBoxIcon.Warning);
+            }
 		}
 
 		private void ChangeModelFormat(object sender, EventArgs e)
@@ -2008,23 +2016,28 @@ namespace OGF_tool
 
                 OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
 
-				int old_childs_count = OGF_V.childs.Count;
-
-                AddMesh addMeshDialog = new AddMesh(ref OGF_V, SecondOgf);
-				addMeshDialog.ShowDialog();
-
-				if (old_childs_count != OGF_V.childs.Count)
+				if (SecondOgf.IsSkeleton())
 				{
-					TexturesPage.Controls.Clear();
-					for (int i = OGF_V.childs.Count - 1; i >= 0; i--)
-					{
-						CreateTextureGroupBox(i);
+					int old_childs_count = OGF_V.childs.Count;
 
-						var TextureGroupBox = TexturesPage.Controls["TextureGrpBox_" + i.ToString()];
-						TextureGroupBox.Controls["textureBox_" + i.ToString()].Text = OGF_V.childs[i].m_texture; ;
-						TextureGroupBox.Controls["shaderBox_" + i.ToString()].Text = OGF_V.childs[i].m_shader;
+					AddMesh addMeshDialog = new AddMesh(ref OGF_V, SecondOgf);
+					addMeshDialog.ShowDialog();
+
+					if (addMeshDialog.res && old_childs_count != OGF_V.childs.Count)
+					{
+						TexturesPage.Controls.Clear();
+						for (int i = OGF_V.childs.Count - 1; i >= 0; i--)
+						{
+							CreateTextureGroupBox(i);
+
+							var TextureGroupBox = TexturesPage.Controls["TextureGrpBox_" + i.ToString()];
+							TextureGroupBox.Controls["textureBox_" + i.ToString()].Text = OGF_V.childs[i].m_texture; ;
+							TextureGroupBox.Controls["shaderBox_" + i.ToString()].Text = OGF_V.childs[i].m_shader;
+						}
 					}
 				}
+				else
+                    AutoClosingMessageBox.Show("Can't merge non skeleton model!", "", 1000, MessageBoxIcon.Warning);
             }
         }
 
@@ -2035,7 +2048,7 @@ namespace OGF_tool
 				SelectMeshes selectMeshes = new SelectMeshes(OGF_V);
 				selectMeshes.ShowDialog();
 
-				if (selectMeshes.MeshChecked.Count == OGF_V.childs.Count)
+				if (selectMeshes.res && selectMeshes.MeshChecked.Count == OGF_V.childs.Count)
 				{
                     bool Reloaded = false;
 

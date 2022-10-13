@@ -36,6 +36,7 @@
             this.MotionsChbx = new System.Windows.Forms.CheckBox();
             this.IKdataChbx = new System.Windows.Forms.CheckBox();
             this.RemoveChbx = new System.Windows.Forms.CheckBox();
+            this.ApplyButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // TexturesChbx
@@ -114,11 +115,23 @@
             this.RemoveChbx.Text = "Remove disabled params";
             this.RemoveChbx.UseVisualStyleBackColor = true;
             // 
+            // ApplyButton
+            // 
+            this.ApplyButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ApplyButton.Location = new System.Drawing.Point(0, 186);
+            this.ApplyButton.Name = "ApplyButton";
+            this.ApplyButton.Size = new System.Drawing.Size(277, 25);
+            this.ApplyButton.TabIndex = 7;
+            this.ApplyButton.Text = "Apply";
+            this.ApplyButton.UseVisualStyleBackColor = true;
+            this.ApplyButton.Click += new System.EventHandler(this.ApplyButton_Click);
+            // 
             // ImportParams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(277, 188);
+            this.ClientSize = new System.Drawing.Size(277, 211);
+            this.Controls.Add(this.ApplyButton);
             this.Controls.Add(this.RemoveChbx);
             this.Controls.Add(this.IKdataChbx);
             this.Controls.Add(this.MotionsChbx);
@@ -131,7 +144,6 @@
             this.Name = "ImportParams";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Params to import";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ClosingForm);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -146,5 +158,6 @@
         private System.Windows.Forms.CheckBox MotionsChbx;
         private System.Windows.Forms.CheckBox IKdataChbx;
         private System.Windows.Forms.CheckBox RemoveChbx;
+        private System.Windows.Forms.Button ApplyButton;
     }
 }

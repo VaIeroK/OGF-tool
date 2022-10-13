@@ -8,6 +8,7 @@ namespace OGF_tool
     public partial class SelectMeshes : Form
     {
         public List<bool> MeshChecked = new List<bool>();
+        public bool res = false;
 
         public SelectMeshes(OGF_Children OGF)
         {
@@ -31,8 +32,10 @@ namespace OGF_tool
             }
         }
 
-        private void ClosingCallback(object sender, FormClosingEventArgs e)
+        private void AppyButton_Click(object sender, EventArgs e)
         {
+            res = true;
+
             for (int i = 0; i < MeshPanel.Controls.Count; i++)
             {
                 if (MeshPanel.Controls[i] is CheckBox)
@@ -43,6 +46,8 @@ namespace OGF_tool
                     MeshChecked[idx] = curBox.Checked;
                 }
             }
+
+            Close();
         }
     }
 }

@@ -40,6 +40,7 @@
             this.Bone_ComboBox = new System.Windows.Forms.ComboBox();
             this.Bone_Label = new System.Windows.Forms.Label();
             this.Texture_Label = new System.Windows.Forms.Label();
+            this.ApplyButton = new System.Windows.Forms.Button();
             this.MeshPanel.SuspendLayout();
             this.MeshGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -48,7 +49,7 @@
             // 
             this.MeshPanel.AutoScroll = true;
             this.MeshPanel.Controls.Add(this.MeshGroupBox);
-            this.MeshPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MeshPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.MeshPanel.Location = new System.Drawing.Point(3, 3);
             this.MeshPanel.Name = "MeshPanel";
             this.MeshPanel.Padding = new System.Windows.Forms.Padding(3);
@@ -163,12 +164,24 @@
             this.Texture_Label.TabIndex = 0;
             this.Texture_Label.Text = "Texture:";
             // 
+            // ApplyButton
+            // 
+            this.ApplyButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ApplyButton.Location = new System.Drawing.Point(3, 316);
+            this.ApplyButton.Name = "ApplyButton";
+            this.ApplyButton.Size = new System.Drawing.Size(442, 28);
+            this.ApplyButton.TabIndex = 1;
+            this.ApplyButton.Text = "Apply";
+            this.ApplyButton.UseVisualStyleBackColor = true;
+            this.ApplyButton.Click += new System.EventHandler(this.ApplyButton_Click);
+            // 
             // AddMesh
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(448, 313);
+            this.ClientSize = new System.Drawing.Size(448, 347);
+            this.Controls.Add(this.ApplyButton);
             this.Controls.Add(this.MeshPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -176,7 +189,6 @@
             this.Padding = new System.Windows.Forms.Padding(3);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Mesh selector";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ClosingCallback);
             this.MeshPanel.ResumeLayout(false);
             this.MeshGroupBox.ResumeLayout(false);
             this.MeshGroupBox.PerformLayout();
@@ -197,5 +209,6 @@
         private System.Windows.Forms.TextBox Texture_Textbox;
         private System.Windows.Forms.Label Reassign_Label;
         private System.Windows.Forms.TextBox OldBone_Textbox;
+        private System.Windows.Forms.Button ApplyButton;
     }
 }

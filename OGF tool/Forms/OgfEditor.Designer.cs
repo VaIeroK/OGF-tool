@@ -117,9 +117,9 @@ namespace OGF_tool
             this.CurrentFormat = new System.Windows.Forms.ToolStripMenuItem();
             this.viewPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.DisableTexturesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DisableTexturesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusFile = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusPanel = new System.Windows.Forms.StatusStrip();
@@ -134,6 +134,7 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
+            this.MoveMeshButton = new System.Windows.Forms.Button();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -202,6 +203,7 @@ namespace OGF_tool
             // 
             // TexturesGropuBox
             // 
+            this.TexturesGropuBox.Controls.Add(this.MoveMeshButton);
             this.TexturesGropuBox.Controls.Add(this.LodLabel);
             this.TexturesGropuBox.Controls.Add(this.LinksLabel);
             this.TexturesGropuBox.Controls.Add(this.DeleteMesh);
@@ -738,6 +740,12 @@ namespace OGF_tool
             resources.ApplyResources(this.reloadToolStripMenuItem1, "reloadToolStripMenuItem1");
             this.reloadToolStripMenuItem1.Click += new System.EventHandler(this.reloadToolStripMenuItem1_Click);
             // 
+            // DisableTexturesMenuItem
+            // 
+            this.DisableTexturesMenuItem.Name = "DisableTexturesMenuItem";
+            resources.ApplyResources(this.DisableTexturesMenuItem, "DisableTexturesMenuItem");
+            this.DisableTexturesMenuItem.Click += new System.EventHandler(this.DisableTexturesMenuItem_Click);
+            // 
             // disableAlphaToolStripMenuItem
             // 
             this.disableAlphaToolStripMenuItem.Name = "disableAlphaToolStripMenuItem";
@@ -749,12 +757,6 @@ namespace OGF_tool
             this.openImageFolderToolStripMenuItem.Name = "openImageFolderToolStripMenuItem";
             resources.ApplyResources(this.openImageFolderToolStripMenuItem, "openImageFolderToolStripMenuItem");
             this.openImageFolderToolStripMenuItem.Click += new System.EventHandler(this.openImageFolderToolStripMenuItem_Click);
-            // 
-            // DisableTexturesMenuItem
-            // 
-            this.DisableTexturesMenuItem.Name = "DisableTexturesMenuItem";
-            resources.ApplyResources(this.DisableTexturesMenuItem, "DisableTexturesMenuItem");
-            this.DisableTexturesMenuItem.Click += new System.EventHandler(this.DisableTexturesMenuItem_Click);
             // 
             // FileLabel
             // 
@@ -821,6 +823,12 @@ namespace OGF_tool
             // SaveObjDialog
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
+            // 
+            // MoveMeshButton
+            // 
+            resources.ApplyResources(this.MoveMeshButton, "MoveMeshButton");
+            this.MoveMeshButton.Name = "MoveMeshButton";
+            this.MoveMeshButton.UseVisualStyleBackColor = true;
             // 
             // OGF_Editor
             // 
@@ -968,6 +976,7 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem AddMeshesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem recalcNormalsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DisableTexturesMenuItem;
+        private System.Windows.Forms.Button MoveMeshButton;
     }
 }
 

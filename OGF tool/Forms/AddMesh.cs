@@ -20,8 +20,9 @@ namespace OGF_tool
         }
 
         private OGF_Children OGF, LoadedOGF;
-        int last_height = 0;
-        List<bool> mesh_to_add_list = new List<bool>();
+        private int last_height = 0;
+        private List<bool> mesh_to_add_list = new List<bool>();
+        public bool res = false;
 
         public AddMesh(ref OGF_Children Main_OGF, OGF_Children Loaded_OGF)
         {
@@ -172,6 +173,8 @@ namespace OGF_tool
                     curBox.BackColor = SystemColors.Control;
                 }
             }
+            else
+                AutoClosingMessageBox.Show("Please, reassign bones to add mesh!", "", 1300, MessageBoxIcon.Warning);
         }
 
         private void ComboBoxIndexChanged(object sender, EventArgs e)
@@ -189,8 +192,10 @@ namespace OGF_tool
                 groupBox.Controls["ReassignBone_" + i].ForeColor = Color.FromArgb(255, 255, 0, 0);
         }
 
-        private void ClosingCallback(object sender, FormClosingEventArgs e)
+        private void ApplyButton_Click(object sender, EventArgs e)
         {
+            res = true;
+
             for (int i = 0; i < mesh_to_add_list.Count; i++)
             {
                 if (mesh_to_add_list[i])
@@ -234,6 +239,8 @@ namespace OGF_tool
                     OGF.childs.Add(old_child);
                 }
             }
+
+            Close();
         }
     }
 }
