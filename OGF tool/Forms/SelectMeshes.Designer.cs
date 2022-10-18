@@ -30,20 +30,30 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SelectMeshes));
             this.MeshPanel = new System.Windows.Forms.Panel();
-            this.MeshCheckBox = new System.Windows.Forms.CheckBox();
             this.AppyButton = new System.Windows.Forms.Button();
+            this.MeshCheckBox = new System.Windows.Forms.CheckBox();
             this.MeshPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // MeshPanel
             // 
-            this.MeshPanel.Controls.Add(this.AppyButton);
             this.MeshPanel.Controls.Add(this.MeshCheckBox);
-            this.MeshPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MeshPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.MeshPanel.Location = new System.Drawing.Point(0, 0);
             this.MeshPanel.Name = "MeshPanel";
-            this.MeshPanel.Size = new System.Drawing.Size(539, 69);
+            this.MeshPanel.Size = new System.Drawing.Size(539, 44);
             this.MeshPanel.TabIndex = 0;
+            // 
+            // AppyButton
+            // 
+            this.AppyButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.AppyButton.Location = new System.Drawing.Point(0, 39);
+            this.AppyButton.Name = "AppyButton";
+            this.AppyButton.Size = new System.Drawing.Size(539, 30);
+            this.AppyButton.TabIndex = 1;
+            this.AppyButton.Text = "Apply";
+            this.AppyButton.UseVisualStyleBackColor = true;
+            this.AppyButton.Click += new System.EventHandler(this.AppyButton_Click);
             // 
             // MeshCheckBox
             // 
@@ -57,22 +67,12 @@
             this.MeshCheckBox.Text = "Mesh:";
             this.MeshCheckBox.UseVisualStyleBackColor = true;
             // 
-            // AppyButton
-            // 
-            this.AppyButton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.AppyButton.Location = new System.Drawing.Point(0, 36);
-            this.AppyButton.Name = "AppyButton";
-            this.AppyButton.Size = new System.Drawing.Size(539, 33);
-            this.AppyButton.TabIndex = 1;
-            this.AppyButton.Text = "Apply";
-            this.AppyButton.UseVisualStyleBackColor = true;
-            this.AppyButton.Click += new System.EventHandler(this.AppyButton_Click);
-            // 
             // SelectMeshes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(539, 69);
+            this.Controls.Add(this.AppyButton);
             this.Controls.Add(this.MeshPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

@@ -25,7 +25,10 @@ namespace OGF_tool
                 MeshCbx.Size = new Size(1000, MeshCbx.Size.Height);
 
                 if (i != OGF.childs.Count - 1)
+                {
                     Size = new Size(Size.Width, Size.Height + 27);
+                    MeshPanel.Size = new Size(Size.Width, Size.Height + 27);
+                }
 
                 MeshPanel.Controls.Add(MeshCbx);
                 MeshChecked.Add(MeshCbx.Checked);
