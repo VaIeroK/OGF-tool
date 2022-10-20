@@ -2178,23 +2178,6 @@ namespace OGF_tool
 			MessageBox.Show(text);
         }
 
-        static public byte[] GetVec3Bytes(float[] vec)
-        {
-            List<byte> bytes = new List<byte>();
-            bytes.AddRange(BitConverter.GetBytes(vec[0]));
-            bytes.AddRange(BitConverter.GetBytes(vec[1]));
-            bytes.AddRange(BitConverter.GetBytes(vec[2]));
-            return bytes.ToArray();
-        }
-
-        static public byte[] GetVec2Bytes(float[] vec)
-        {
-            List<byte> bytes = new List<byte>();
-            bytes.AddRange(BitConverter.GetBytes(vec[0]));
-            bytes.AddRange(BitConverter.GetBytes(vec[1]));
-            return bytes.ToArray();
-        }
-
         // Interface
         private void InitViewPort(bool create_model = true, bool force_texture_reload = false, bool force_reload = false)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OGF_tool
 {
@@ -60,9 +61,7 @@ namespace OGF_tool
 
         static public float[] Normalize(float[] v)
         {
-            var vec = new float[2];
-            vec = Mul(v, (1.0f / (float)Math.Sqrt(v[0]*v[0] + v[1]*v[1])));
-            return vec;
+            return Mul(v, 1.0f / (float)Math.Sqrt(v[0]*v[0] + v[1]*v[1]));
         }
 
         static public string vPUSH(float[] vec, string format = null)
@@ -71,6 +70,14 @@ namespace OGF_tool
                 return vec[0].ToString(format) + " " + vec[1].ToString(format);
             else
                 return vec[0].ToString() + " " + vec[1].ToString();
+        }
+
+        static public byte[] GetBytes(float[] vec)
+        {
+            List<byte> bytes = new List<byte>();
+            bytes.AddRange(BitConverter.GetBytes(vec[0]));
+            bytes.AddRange(BitConverter.GetBytes(vec[1]));
+            return bytes.ToArray();
         }
     }
 }

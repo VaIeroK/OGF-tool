@@ -25,8 +25,8 @@ namespace OGF_tool
         {
             List<byte> temp = new List<byte>();
 
-            temp.AddRange(OGF_Editor.GetVec3Bytes(min));
-            temp.AddRange(OGF_Editor.GetVec3Bytes(max));
+            temp.AddRange(FVec.GetBytes(min));
+            temp.AddRange(FVec.GetBytes(max));
 
             return temp.ToArray();
         }
@@ -53,7 +53,7 @@ namespace OGF_tool
         {
             List<byte> temp = new List<byte>();
 
-            temp.AddRange(OGF_Editor.GetVec3Bytes(c));
+            temp.AddRange(FVec.GetBytes(c));
             temp.AddRange(BitConverter.GetBytes(r));
 
             return temp.ToArray();
@@ -482,51 +482,51 @@ namespace OGF_tool
                 switch (LinksCount())
                 {
                     case 1:
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.offs));
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.norm));
+                        temp.AddRange(FVec.GetBytes(vert.offs));
+                        temp.AddRange(FVec.GetBytes(vert.norm));
 
                         if (Header.format_version == 4)
                         {
-                            temp.AddRange(OGF_Editor.GetVec3Bytes(vert.tang));
-                            temp.AddRange(OGF_Editor.GetVec3Bytes(vert.binorm));
+                            temp.AddRange(FVec.GetBytes(vert.tang));
+                            temp.AddRange(FVec.GetBytes(vert.binorm));
                         }
 
-                        temp.AddRange(OGF_Editor.GetVec2Bytes(vert.uv));
+                        temp.AddRange(FVec2.GetBytes(vert.uv));
                         temp.AddRange(BitConverter.GetBytes(vert.bones_id[0]));
                         break;
                     case 2:
                         temp.AddRange(BitConverter.GetBytes((short)vert.bones_id[0]));
                         temp.AddRange(BitConverter.GetBytes((short)vert.bones_id[1]));
 
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.offs));
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.norm));
+                        temp.AddRange(FVec.GetBytes(vert.offs));
+                        temp.AddRange(FVec.GetBytes(vert.norm));
 
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.tang));
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.binorm));
+                        temp.AddRange(FVec.GetBytes(vert.tang));
+                        temp.AddRange(FVec.GetBytes(vert.binorm));
 
                         temp.AddRange(BitConverter.GetBytes(vert.bones_infl[0]));
-                        temp.AddRange(OGF_Editor.GetVec2Bytes(vert.uv));
+                        temp.AddRange(FVec2.GetBytes(vert.uv));
                         break;
                     case 3:
                     case 4:
                         for (int j = 0; j < LinksCount(); j++)
                             temp.AddRange(BitConverter.GetBytes((short)vert.bones_id[j]));
 
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.offs));
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.norm));
+                        temp.AddRange(FVec.GetBytes(vert.offs));
+                        temp.AddRange(FVec.GetBytes(vert.norm));
 
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.tang));
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.binorm));
+                        temp.AddRange(FVec.GetBytes(vert.tang));
+                        temp.AddRange(FVec.GetBytes(vert.binorm));
 
                         for (int j = 0; j < LinksCount() - 1; j++)
                             temp.AddRange(BitConverter.GetBytes(vert.bones_infl[j]));
 
-                        temp.AddRange(OGF_Editor.GetVec2Bytes(vert.uv));
+                        temp.AddRange(FVec2.GetBytes(vert.uv));
                         break;
                     default: // Static
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.offs));
-                        temp.AddRange(OGF_Editor.GetVec3Bytes(vert.norm));
-                        temp.AddRange(OGF_Editor.GetVec2Bytes(vert.uv));
+                        temp.AddRange(FVec.GetBytes(vert.offs));
+                        temp.AddRange(FVec.GetBytes(vert.norm));
+                        temp.AddRange(FVec2.GetBytes(vert.uv));
                         break;
                 }
             }

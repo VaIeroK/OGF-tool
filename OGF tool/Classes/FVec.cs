@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OGF_tool
 {
@@ -78,29 +79,29 @@ namespace OGF_tool
 
         static public float[] Normalize(float[] v)
         {
-            var vec = new float[3];
-            vec = Mul(v, (1.0f / (float)Math.Sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2])));
-            return vec;
+            return Mul(v, 1.0f / (float)Math.Sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]));
         }
 
         static public float[] MirrorZ(float[] v)
         {
-            var vec = new float[3];
-
-            vec[0] = v[0];
-            vec[1] = v[1];
-            vec[2] = -v[2];
+            var vec = new float[3]
+            {
+                v[0],
+                v[1],
+               -v[2]
+            };
 
             return vec;
         }
 
         static public float[] RotateZ(float[] v)
         {
-            var vec = new float[3];
-
-            vec[0] = -v[0];
-            vec[1] = v[1];
-            vec[2] = -v[2];
+            var vec = new float[3]
+            {
+                -v[0],
+                 v[1],
+                -v[2]
+            };
 
             return vec;
         }
@@ -111,6 +112,15 @@ namespace OGF_tool
                 return vec[0].ToString(format) + " " + vec[1].ToString(format) + " " + vec[2].ToString(format);
             else
                 return vec[0].ToString() + " " + vec[1].ToString() + " " + vec[2].ToString();
+        }
+
+        static public byte[] GetBytes(float[] vec)
+        {
+            List<byte> bytes = new List<byte>();
+            bytes.AddRange(BitConverter.GetBytes(vec[0]));
+            bytes.AddRange(BitConverter.GetBytes(vec[1]));
+            bytes.AddRange(BitConverter.GetBytes(vec[2]));
+            return bytes.ToArray();
         }
     }
 }
