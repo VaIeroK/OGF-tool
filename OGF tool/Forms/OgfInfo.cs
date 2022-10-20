@@ -94,7 +94,7 @@ namespace OGF_tool
             if (OGF.description != null)
             {
                 ByteLabel.Text = OGF.description.four_byte ? "4 byte" : "8 byte";
-                RepairTimersButton.Enabled = OGF.description.four_byte;
+                RepairTimersButton.Enabled = !OGF.description.four_byte;
 
                 SourceTextBox.Text = OGF.description.m_source;
                 ConverterTextBox.Text = OGF.description.m_export_tool;
@@ -122,9 +122,16 @@ namespace OGF_tool
             ModifedTimeDate.Enabled = OGF.description != null;
         }
 
-        private void CloseForm(object sender, FormClosingEventArgs e)
+        private void RepairTimersButton_Click(object sender, EventArgs e)
         {
-            descr.m_source = SourceTextBox.Text;
+            descr.four_byte = false;
+            RepairTimersButton.Enabled = false;
+            ByteLabel.Text = "4 byte";
+        }
+
+        private void ApplyButton_Click(object sender, EventArgs e)
+        {
+            res = true;
 
             descr.m_source = SourceTextBox.Text;
             descr.m_export_tool = ConverterTextBox.Text;
@@ -134,14 +141,8 @@ namespace OGF_tool
             descr.m_export_time = Convert.ToUInt32(ExportTimeDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
             descr.m_creation_time = Convert.ToUInt32(CreationTimeDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
             descr.m_modified_time = Convert.ToUInt32(ModifedTimeDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
-            res = true;
-        }
 
-        private void RepairTimersButton_Click(object sender, EventArgs e)
-        {
-            descr.four_byte = false;
-            RepairTimersButton.Enabled = false;
-            ByteLabel.Text = "8 byte";
+            Close();
         }
     }
 }

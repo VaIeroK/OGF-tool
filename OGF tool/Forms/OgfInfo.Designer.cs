@@ -60,6 +60,7 @@
             this.VertsTextLabel = new System.Windows.Forms.Label();
             this.FacesLabel = new System.Windows.Forms.Label();
             this.FacesTextLabel = new System.Windows.Forms.Label();
+            this.ApplyButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SourceTextBox
@@ -231,10 +232,18 @@
             resources.ApplyResources(this.FacesTextLabel, "FacesTextLabel");
             this.FacesTextLabel.Name = "FacesTextLabel";
             // 
+            // ApplyButton
+            // 
+            resources.ApplyResources(this.ApplyButton, "ApplyButton");
+            this.ApplyButton.Name = "ApplyButton";
+            this.ApplyButton.UseVisualStyleBackColor = true;
+            this.ApplyButton.Click += new System.EventHandler(this.ApplyButton_Click);
+            // 
             // OgfInfo
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.ApplyButton);
             this.Controls.Add(this.FacesLabel);
             this.Controls.Add(this.FacesTextLabel);
             this.Controls.Add(this.VertsLabel);
@@ -269,7 +278,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MaximizeBox = false;
             this.Name = "OgfInfo";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CloseForm);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -308,5 +316,6 @@
         private System.Windows.Forms.Label VertsTextLabel;
         private System.Windows.Forms.Label FacesLabel;
         private System.Windows.Forms.Label FacesTextLabel;
+        private System.Windows.Forms.Button ApplyButton;
     }
 }
