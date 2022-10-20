@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
@@ -21,7 +16,7 @@ namespace OGF_tool
             pSettings = settings;
         }
 
-        public void SaveParams(object sender, FormClosingEventArgs e)
+        public void SaveParams()
         {
             pSettings.SaveVersion();
             pSettings.Save(GameMtlPath);
@@ -73,16 +68,6 @@ namespace OGF_tool
             }
 
             return null;
-        }
-
-        private bool IsTextCorrect(string text)
-        {
-            foreach (char ch in text)
-            {
-                if (ch > 0x1F && ch != 0x20)
-                    return true;
-            }
-            return false;
         }
 
         private string GetCorrectString(string text)
@@ -205,6 +190,8 @@ namespace OGF_tool
 
         private void FsPathTextChanged(object sender, EventArgs e)
         {
+            BoxTextChanged(sender, e);
+
             if (Path.GetExtension(FSLtxPath.Text) == ".ltx" && File.Exists(FSLtxPath.Text))
             {
                 string FileName = FSLtxPath.Text;
@@ -228,6 +215,69 @@ namespace OGF_tool
                     }
                 }
             }
+        }
+
+        private void BoxTextChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+
+            bool file_or_folder = false;
+
+            switch (textBox.Name)
+            {
+                case "ImagePath":
+                    file_or_folder = false;
+                    break;
+                case "FSLtxPath":
+                    file_or_folder = true;
+                    break;
+                case "TexturesPath":
+                    file_or_folder = false;
+                    break;
+                case "GameMtlPath":
+                    file_or_folder = true;
+                    break;
+                case "OmfEditorPath":
+                    file_or_folder = true;
+                    break;
+                case "ObjectEditorPath":
+                    file_or_folder = true;
+                    break;
+            }
+
+            if (file_or_folder)
+            {
+                if (File.Exists(textBox.Text))
+                    textBox.BackColor = SystemColors.Window;
+                else
+                    textBox.BackColor = Color.FromArgb(255, 255, 128, 128);
+            }
+            else
+            {
+                if (Directory.Exists(textBox.Text))
+                    textBox.BackColor = SystemColors.Window;
+                else
+                    textBox.BackColor = Color.FromArgb(255, 255, 128, 128);
+
+                int temp = textBox.SelectionStart;
+
+                int slash_idx = textBox.Text.LastIndexOf('\\');
+                if (slash_idx == textBox.Text.Count() - 1)
+                {
+                    textBox.Text = textBox.Text.Substring(0, textBox.Text.LastIndexOf('\\'));
+
+                    if (textBox.SelectionStart < 1)
+                        textBox.SelectionStart = textBox.Text.Length;
+
+                    textBox.SelectionStart = temp - 1 >= 0 ? temp - 1 : 0;
+                }
+            }
+        }
+
+        private void ApplyButton_Click(object sender, EventArgs e)
+        {
+            SaveParams();
+            Close();
         }
     }
 }

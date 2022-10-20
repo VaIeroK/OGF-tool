@@ -103,7 +103,7 @@ namespace OGF_tool
 				File.Delete(file_path);
 				Settings settings = new Settings(pSettings);
 				settings.Settings_Load(null, null); // Load defaults
-				settings.SaveParams(null, null); // Save defaults
+				settings.SaveParams(); // Save defaults
 			}
 
 			pSettings.LoadText("GameMtlPath", ref gamemtl);

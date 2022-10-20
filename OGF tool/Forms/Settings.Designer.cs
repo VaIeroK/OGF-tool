@@ -48,6 +48,7 @@
             this.ObjectEditorPath = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.ViewportAlpha = new System.Windows.Forms.CheckBox();
+            this.ApplyButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -59,6 +60,7 @@
             // 
             resources.ApplyResources(this.GameMtlPath, "GameMtlPath");
             this.GameMtlPath.Name = "GameMtlPath";
+            this.GameMtlPath.TextChanged += new System.EventHandler(this.BoxTextChanged);
             // 
             // button1
             // 
@@ -96,6 +98,7 @@
             // 
             resources.ApplyResources(this.TexturesPath, "TexturesPath");
             this.TexturesPath.Name = "TexturesPath";
+            this.TexturesPath.TextChanged += new System.EventHandler(this.BoxTextChanged);
             // 
             // label3
             // 
@@ -111,8 +114,10 @@
             // 
             // ImagePath
             // 
+            this.ImagePath.BackColor = System.Drawing.SystemColors.Window;
             resources.ApplyResources(this.ImagePath, "ImagePath");
             this.ImagePath.Name = "ImagePath";
+            this.ImagePath.TextChanged += new System.EventHandler(this.BoxTextChanged);
             // 
             // label4
             // 
@@ -130,6 +135,7 @@
             // 
             resources.ApplyResources(this.OmfEditorPath, "OmfEditorPath");
             this.OmfEditorPath.Name = "OmfEditorPath";
+            this.OmfEditorPath.TextChanged += new System.EventHandler(this.BoxTextChanged);
             // 
             // label5
             // 
@@ -147,6 +153,7 @@
             // 
             resources.ApplyResources(this.ObjectEditorPath, "ObjectEditorPath");
             this.ObjectEditorPath.Name = "ObjectEditorPath";
+            this.ObjectEditorPath.TextChanged += new System.EventHandler(this.BoxTextChanged);
             // 
             // label6
             // 
@@ -159,10 +166,18 @@
             this.ViewportAlpha.Name = "ViewportAlpha";
             this.ViewportAlpha.UseVisualStyleBackColor = true;
             // 
+            // ApplyButton
+            // 
+            resources.ApplyResources(this.ApplyButton, "ApplyButton");
+            this.ApplyButton.Name = "ApplyButton";
+            this.ApplyButton.UseVisualStyleBackColor = true;
+            this.ApplyButton.Click += new System.EventHandler(this.ApplyButton_Click);
+            // 
             // Settings
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.ApplyButton);
             this.Controls.Add(this.ViewportAlpha);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.ObjectEditorPath);
@@ -184,7 +199,6 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Settings";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SaveParams);
             this.Load += new System.EventHandler(this.Settings_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -211,5 +225,6 @@
         private System.Windows.Forms.TextBox ObjectEditorPath;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox ViewportAlpha;
+        private System.Windows.Forms.Button ApplyButton;
     }
 }
