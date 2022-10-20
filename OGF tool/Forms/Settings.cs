@@ -14,6 +14,13 @@ namespace OGF_tool
         {
             InitializeComponent();
             pSettings = settings;
+
+            BoxTextChanged(GameMtlPath, null);
+            BoxTextChanged(FSLtxPath, null);
+            BoxTextChanged(TexturesPath, null);
+            BoxTextChanged(ImagePath, null);
+            BoxTextChanged(OmfEditorPath, null);
+            BoxTextChanged(ObjectEditorPath, null);
         }
 
         public void SaveParams()
@@ -262,7 +269,7 @@ namespace OGF_tool
                 int temp = textBox.SelectionStart;
 
                 int slash_idx = textBox.Text.LastIndexOf('\\');
-                if (slash_idx == textBox.Text.Count() - 1)
+                if (textBox.Text.Contains("\\") && slash_idx == textBox.Text.Count() - 1)
                 {
                     textBox.Text = textBox.Text.Substring(0, textBox.Text.LastIndexOf('\\'));
 
