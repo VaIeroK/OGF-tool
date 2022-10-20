@@ -1690,13 +1690,13 @@
     <value>Recalc Normals</value>
   </data>
   <data name="nPCCoPToSoCToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>161, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="nPCCoPToSoCToolStripMenuItem.Text" xml:space="preserve">
     <value>NPC CoP to SoC</value>
   </data>
   <data name="nPCSoCToCoPToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>161, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="nPCSoCToCoPToolStripMenuItem.Text" xml:space="preserve">
     <value>NPC SoC to CoP</value>
@@ -2241,7 +2241,7 @@
     <value>CenterScreen</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>OGF/DM Params Editor 3.2</value>
+    <value>OGF/DM Params Editor 3.3</value>
   </data>
   <data name="&gt;&gt;OpenOGFDialog.Name" xml:space="preserve">
     <value>OpenOGFDialog</value>
