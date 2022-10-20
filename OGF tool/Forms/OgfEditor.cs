@@ -341,9 +341,10 @@ namespace OGF_tool
 			}
 
 			UpdateModelFormat();
+            UpdateNPC();
 
-			// View
-			TabControl.Controls.Add(ViewPage);
+            // View
+            TabControl.Controls.Add(ViewPage);
 		}
 
 		private void CopyParams()
@@ -2102,6 +2103,12 @@ namespace OGF_tool
             }
         }
 
+		private void UpdateNPC()
+		{
+			nPCCoPToSoCToolStripMenuItem.Enabled = CheckNPC(true);
+			nPCSoCToCoPToolStripMenuItem.Enabled = CheckNPC(false);
+        }
+
         private void NPC_ToSoC(object sender, EventArgs e)
         {
 			if (CheckNPC(true))
@@ -2143,6 +2150,8 @@ namespace OGF_tool
 			}
 			else
 				AutoClosingMessageBox.Show("This model is not CoP NPC!", "", 2500, MessageBoxIcon.Error);
+
+			UpdateNPC();
         }
 
         private void NPC_ToCoP(object sender, EventArgs e)
@@ -2181,6 +2190,8 @@ namespace OGF_tool
             }
             else
                 AutoClosingMessageBox.Show("This model is not SoC NPC!", "", 2500, MessageBoxIcon.Error);
+
+            UpdateNPC();
         }
 
         private bool CheckNPC(bool cop_npc)
