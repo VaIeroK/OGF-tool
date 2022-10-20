@@ -38,6 +38,7 @@ namespace OGF_tool
             this.AddMeshesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LodMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TexturesGropuBox = new System.Windows.Forms.GroupBox();
+            this.MoveMeshButton = new System.Windows.Forms.Button();
             this.LodLabel = new System.Windows.Forms.Label();
             this.LinksLabel = new System.Windows.Forms.Label();
             this.DeleteMesh = new System.Windows.Forms.Button();
@@ -134,7 +135,6 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.MoveMeshButton = new System.Windows.Forms.Button();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -216,6 +216,12 @@ namespace OGF_tool
             resources.ApplyResources(this.TexturesGropuBox, "TexturesGropuBox");
             this.TexturesGropuBox.Name = "TexturesGropuBox";
             this.TexturesGropuBox.TabStop = false;
+            // 
+            // MoveMeshButton
+            // 
+            resources.ApplyResources(this.MoveMeshButton, "MoveMeshButton");
+            this.MoveMeshButton.Name = "MoveMeshButton";
+            this.MoveMeshButton.UseVisualStyleBackColor = true;
             // 
             // LodLabel
             // 
@@ -823,12 +829,6 @@ namespace OGF_tool
             // SaveObjDialog
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
-            // 
-            // MoveMeshButton
-            // 
-            resources.ApplyResources(this.MoveMeshButton, "MoveMeshButton");
-            this.MoveMeshButton.Name = "MoveMeshButton";
-            this.MoveMeshButton.UseVisualStyleBackColor = true;
             // 
             // OGF_Editor
             // 

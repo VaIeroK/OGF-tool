@@ -859,7 +859,8 @@ namespace OGF_tool
 							ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(ch.Vertices[i].binorm), "0.000000")}");
 						}
 
-						foreach (var f_it in ch.Faces_SWI(lod))
+						List<SSkelFace> Faces = ch.Faces_SWI(lod);
+                        foreach (var f_it in Faces)
 						{
 							string tmp = $"f {v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1} {v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1} {v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}";
 							ObjWriter.WriteLine(tmp);
@@ -2447,10 +2448,16 @@ namespace OGF_tool
 			newButton.Click += new System.EventHandler(this.ButtonFilter);
 			newButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
 
-			box.Controls.Add(newTextBox);
+            var newButton2 = Copy.Button(MoveMeshButton);
+            newButton2.Name = "MoveButton_" + idx;
+            newButton2.Click += new System.EventHandler(this.ButtonFilter);
+            newButton2.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+
+            box.Controls.Add(newTextBox);
 			box.Controls.Add(newTextBox2);
 			box.Controls.Add(newButton);
-		}
+            box.Controls.Add(newButton2);
+        }
 
 		private void CreateTextureLabels(int idx, GroupBox box)
 		{

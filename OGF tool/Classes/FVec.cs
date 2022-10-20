@@ -78,26 +78,31 @@ namespace OGF_tool
 
         static public float[] Normalize(float[] v)
         {
-            v = Mul(v, (1.0f / (float)Math.Sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2])));
-            return v;
+            var vec = new float[3];
+            vec = Mul(v, (1.0f / (float)Math.Sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2])));
+            return vec;
         }
 
         static public float[] MirrorZ(float[] v)
         {
-            v[0] = v[0];
-            v[1] = v[1];
-            v[2] = -v[2];
+            var vec = new float[3];
 
-            return v;
+            vec[0] = v[0];
+            vec[1] = v[1];
+            vec[2] = -v[2];
+
+            return vec;
         }
 
         static public float[] RotateZ(float[] v)
         {
-            v[0] = -v[0];
-            v[1] = v[1];
-            v[2] = -v[2];
+            var vec = new float[3];
 
-            return v;
+            vec[0] = -v[0];
+            vec[1] = v[1];
+            vec[2] = -v[2];
+
+            return vec;
         }
 
         static public string vPUSH(float[] vec, string format = null)
