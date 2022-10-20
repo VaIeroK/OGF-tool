@@ -26,8 +26,8 @@ namespace OGF_tool
 
 		// Input
 		public bool bKeyIsDown = false;
-		string number_mask = "";
-		StreamWriter ObjWriter = null; // for closing
+        string number_mask = @"^-[0-9.]*$";
+        StreamWriter ObjWriter = null; // for closing
 		float CurrentLod = 0.0f;
 
 		Process ViewerProcess = new Process();
@@ -116,8 +116,6 @@ namespace OGF_tool
 			SetAlphaToolStrip(ViewPortAlpha);
 
             // End init settings
-
-            number_mask = @"^-[0-9.]*$";
 
 			OgfInfo.Enabled = false;
 			SaveMenuParam.Enabled = false;
@@ -877,7 +875,7 @@ namespace OGF_tool
 		// Некорректно, но лучше чем ничего
         private float[] SetupObjOffset(SSkelVert vert)
 		{
-            float[] vec = vert.offs;
+            float[] vec = vert.Offset();
 
             if (!OGF_V.IsStaticSingle() && OGF_V.Header.format_version == 3 && OGF_V.ikdata != null)
 			{
@@ -1009,7 +1007,19 @@ namespace OGF_tool
 						curBox.BackColor = SystemColors.Control;
 					}
 					break;
-			}
+                case "MoveButton":
+					float[] old_offs = OGF_V.childs[idx].GetLocalOffset();
+
+                    MoveMesh moveMesh = new MoveMesh(OGF_V.childs[idx].GetLocalOffset());
+					moveMesh.ShowDialog();
+
+					if (moveMesh.res)
+						OGF_V.childs[idx].SetLocalOffset(moveMesh.offset);
+
+					if (!FVec.Similar(old_offs, OGF_V.childs[idx].GetLocalOffset()))
+						ReloadViewPort(true, false, true);
+                    break;
+            }
 		}
 
 		private void TextBoxFilter(object sender, EventArgs e)
@@ -1026,6 +1036,36 @@ namespace OGF_tool
 			}
 		}
 
+		void ReloadControlText(Control control, int cursor_pos)
+		{
+            string currentField = control.Name.ToString().Split('_')[0];
+            int idx = Convert.ToInt32(control.Name.ToString().Split('_')[1]);
+
+            switch (currentField)
+            {
+                case "MassBox": control.Text = ((decimal)OGF_V.ikdata.bones[idx].mass).ToString(); break;
+                case "CenterBoxX": control.Text = ((decimal)OGF_V.ikdata.bones[idx].center_mass[0]).ToString(); break;
+                case "CenterBoxY": control.Text = ((decimal)OGF_V.ikdata.bones[idx].center_mass[1]).ToString(); break;
+                case "CenterBoxZ": control.Text = ((decimal)OGF_V.ikdata.bones[idx].center_mass[2]).ToString(); break;
+                case "PositionX": control.Text = ((decimal)OGF_V.ikdata.bones[idx].position[0]).ToString(); break;
+                case "PositionY": control.Text = ((decimal)OGF_V.ikdata.bones[idx].position[1]).ToString(); break;
+                case "PositionZ": control.Text = ((decimal)OGF_V.ikdata.bones[idx].position[2]).ToString(); break;
+                case "RotationX": control.Text = ((decimal)OGF_V.ikdata.bones[idx].rotation[0]).ToString(); break;
+                case "RotationY": control.Text = ((decimal)OGF_V.ikdata.bones[idx].rotation[1]).ToString(); break;
+                case "RotationZ": control.Text = ((decimal)OGF_V.ikdata.bones[idx].rotation[2]).ToString(); break;
+			}
+
+			if (control is TextBox)
+			{
+                TextBox curBox = control as TextBox;
+
+                if (curBox.SelectionStart < 1)
+					curBox.SelectionStart = control.Text.Length;
+
+				curBox.SelectionStart = cursor_pos - 1;
+			}
+        }
+
 		private void TextBoxBonesFilter(object sender, EventArgs e)
 		{
 			Control curControl = sender as Control;
@@ -1033,86 +1073,76 @@ namespace OGF_tool
 			string currentField = curControl.Name.ToString().Split('_')[0];
 			int idx = Convert.ToInt32(curControl.Name.ToString().Split('_')[1]);
 
-			switch (curControl.Tag.ToString())
+			if (curControl.Text != "-" || currentField == "MassBox")
 			{
-				case "float":
-					{
-						if (bKeyIsDown)
+				switch (curControl.Tag.ToString())
+				{
+					case "float":
 						{
-							TextBox curBox = sender as TextBox;
-
-							if (curControl.Text.Length == 0)
-								return;
-
-							int temp = curBox.SelectionStart;
-							Regex.Match(curControl.Text, number_mask);
-
-                            try
+							if (bKeyIsDown)
 							{
-								Convert.ToSingle(curControl.Text);
-							}
-							catch (Exception)
-							{
-								switch (currentField)
+								TextBox curBox = sender as TextBox;
+
+								if (curControl.Text.Length == 0)
+									return;
+
+								int temp = curBox.SelectionStart;
+
+                                Regex.Match(curControl.Text, number_mask);
+
+                                if (currentField == "MassBox" && curControl.Text.Contains("-"))
+                                    ReloadControlText(curControl, temp);
+
+                                try
 								{
-									case "MassBox": curControl.Text = OGF_V.ikdata.bones[idx].mass.ToString(); break;
-									case "CenterBoxX": curControl.Text = OGF_V.ikdata.bones[idx].center_mass[0].ToString(); break;
-									case "CenterBoxY": curControl.Text = OGF_V.ikdata.bones[idx].center_mass[1].ToString(); break;
-									case "CenterBoxZ": curControl.Text = OGF_V.ikdata.bones[idx].center_mass[2].ToString(); break;
-									case "PositionX": curControl.Text = OGF_V.ikdata.bones[idx].position[0].ToString(); break;
-									case "PositionY": curControl.Text = OGF_V.ikdata.bones[idx].position[1].ToString(); break;
-									case "PositionZ": curControl.Text = OGF_V.ikdata.bones[idx].position[2].ToString(); break;
-									case "RotationX": curControl.Text = OGF_V.ikdata.bones[idx].rotation[0].ToString(); break;
-									case "RotationY": curControl.Text = OGF_V.ikdata.bones[idx].rotation[1].ToString(); break;
-									case "RotationZ": curControl.Text = OGF_V.ikdata.bones[idx].rotation[2].ToString(); break;
+									Convert.ToSingle(curControl.Text);
 								}
+								catch (Exception)
+								{
+									ReloadControlText(curControl, temp);
+								}
+                            }
+						}
+						break;
+				}
 
-								if (curBox.SelectionStart < 1)
-									curBox.SelectionStart = curControl.Text.Length;
+				switch (currentField)
+				{
+					case "boneBox":
+						{
+							OGF_V.bonedata.bones[idx].name = curControl.Text;
 
-								curBox.SelectionStart = temp - 1;
+							for (int j = 0; j < OGF_V.bonedata.bones[idx].childs_id.Count; j++)
+							{
+								int child_id = OGF_V.bonedata.bones[idx].childs_id[j];
+								var MainGroup = BoneParamsPage.Controls["BoneGrpBox_" + child_id.ToString()];
+								OGF_V.bonedata.bones[child_id].parent_name = curControl.Text;
+								MainGroup.Controls["ParentboneBox_" + child_id.ToString()].Text = OGF_V.bonedata.bones[child_id].parent_name;
+							}
+
+							BoneNamesBox.Clear();
+							BoneNamesBox.Text += $"Bones count : {OGF_V.bonedata.bones.Count}\n\n";
+
+							for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
+							{
+								BoneNamesBox.Text += $"{i + 1}. {OGF_V.bonedata.bones[i].name}";
+								if (i != OGF_V.bonedata.bones.Count - 1)
+									BoneNamesBox.Text += "\n";
 							}
 						}
-					}
-					break;
-			}
-
-			switch (currentField)
-			{
-				case "boneBox":
-					{
-						OGF_V.bonedata.bones[idx].name = curControl.Text;
-
-						for (int j = 0; j < OGF_V.bonedata.bones[idx].childs_id.Count; j++)
-                        {
-							int child_id = OGF_V.bonedata.bones[idx].childs_id[j];
-							var MainGroup = BoneParamsPage.Controls["BoneGrpBox_" + child_id.ToString()];
-							OGF_V.bonedata.bones[child_id].parent_name = curControl.Text;
-                            MainGroup.Controls["ParentboneBox_" + child_id.ToString()].Text = OGF_V.bonedata.bones[child_id].parent_name;
-						}
-
-						BoneNamesBox.Clear();
-						BoneNamesBox.Text += $"Bones count : {OGF_V.bonedata.bones.Count}\n\n";
-
-						for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
-						{
-							BoneNamesBox.Text += $"{i + 1}. {OGF_V.bonedata.bones[i].name}";
-							if (i != OGF_V.bonedata.bones.Count - 1)
-								BoneNamesBox.Text += "\n";
-						}
-					}
-					break;
-				case "MaterialBox": OGF_V.ikdata.bones[idx].material = curControl.Text; break;
-				case "MassBox": OGF_V.ikdata.bones[idx].mass = Convert.ToSingle(curControl.Text); break;
-				case "CenterBoxX": OGF_V.ikdata.bones[idx].center_mass[0] = Convert.ToSingle(curControl.Text); break;
-				case "CenterBoxY": OGF_V.ikdata.bones[idx].center_mass[1] = Convert.ToSingle(curControl.Text); break;
-				case "CenterBoxZ": OGF_V.ikdata.bones[idx].center_mass[2] = Convert.ToSingle(curControl.Text); break;
-				case "PositionX": OGF_V.ikdata.bones[idx].position[0] = Convert.ToSingle(curControl.Text); break;
-				case "PositionY": OGF_V.ikdata.bones[idx].position[1] = Convert.ToSingle(curControl.Text); break;
-				case "PositionZ": OGF_V.ikdata.bones[idx].position[2] = Convert.ToSingle(curControl.Text); break;
-				case "RotationX": OGF_V.ikdata.bones[idx].rotation[0] = Convert.ToSingle(curControl.Text); break;
-				case "RotationY": OGF_V.ikdata.bones[idx].rotation[1] = Convert.ToSingle(curControl.Text); break;
-				case "RotationZ": OGF_V.ikdata.bones[idx].rotation[2] = Convert.ToSingle(curControl.Text); break;
+						break;
+					case "MaterialBox": OGF_V.ikdata.bones[idx].material = curControl.Text; break;
+					case "MassBox": OGF_V.ikdata.bones[idx].mass = Convert.ToSingle(curControl.Text); break;
+					case "CenterBoxX": OGF_V.ikdata.bones[idx].center_mass[0] = Convert.ToSingle(curControl.Text); break;
+					case "CenterBoxY": OGF_V.ikdata.bones[idx].center_mass[1] = Convert.ToSingle(curControl.Text); break;
+					case "CenterBoxZ": OGF_V.ikdata.bones[idx].center_mass[2] = Convert.ToSingle(curControl.Text); break;
+					case "PositionX": OGF_V.ikdata.bones[idx].position[0] = Convert.ToSingle(curControl.Text); break;
+					case "PositionY": OGF_V.ikdata.bones[idx].position[1] = Convert.ToSingle(curControl.Text); break;
+					case "PositionZ": OGF_V.ikdata.bones[idx].position[2] = Convert.ToSingle(curControl.Text); break;
+					case "RotationX": OGF_V.ikdata.bones[idx].rotation[0] = Convert.ToSingle(curControl.Text); break;
+					case "RotationY": OGF_V.ikdata.bones[idx].rotation[1] = Convert.ToSingle(curControl.Text); break;
+					case "RotationZ": OGF_V.ikdata.bones[idx].rotation[2] = Convert.ToSingle(curControl.Text); break;
+				}
 			}
 
 			bKeyIsDown = false;
@@ -1797,8 +1827,7 @@ namespace OGF_tool
 
 		private void RecalcLod()
         {
-			if (ViewerWorking)
-				InitViewPort(true, false, true);
+			ReloadViewPort(true, false, true);
 
 			for (int idx = 0; idx < OGF_V.childs.Count; idx++)
             {
@@ -2064,9 +2093,8 @@ namespace OGF_tool
 
 					if (Reloaded)
 					{
+                        ReloadViewPort(true, false, true);
                         AutoClosingMessageBox.Show("Mesh normals recalculated!", "", 1000, MessageBoxIcon.Information);
-                        if (ViewerWorking && ViewerProcess != null)
-							InitViewPort(true, false, true);
 					}
 					else
                         AutoClosingMessageBox.Show("Mesh normals don't changed!", "", 1000, MessageBoxIcon.Warning);
@@ -2104,12 +2132,14 @@ namespace OGF_tool
 							ch.Vertices[i].bones_id[j] = (ch.Vertices[i].bones_id[j] >= 2 ? ch.Vertices[i].bones_id[j] - 2 : 0);
 
 						ch.Vertices[i].offs = FVec.RotateZ(ch.Vertices[i].offs);
-						ch.Vertices[i].norm = FVec.RotateZ(ch.Vertices[i].norm);
+                        ch.Vertices[i].local_offset = FVec.RotateZ(ch.Vertices[i].local_offset);
+                        ch.Vertices[i].norm = FVec.RotateZ(ch.Vertices[i].norm);
 						ch.Vertices[i].tang = FVec.RotateZ(ch.Vertices[i].tang);
 						ch.Vertices[i].binorm = FVec.RotateZ(ch.Vertices[i].binorm);
 					}
 				}
-				AutoClosingMessageBox.Show("Successful!", "", 700, MessageBoxIcon.Information);
+                ReloadViewPort(true, false, true);
+                AutoClosingMessageBox.Show("Successful!", "", 700, MessageBoxIcon.Information);
 			}
 			else
 				AutoClosingMessageBox.Show("This model is not CoP NPC!", "", 2500, MessageBoxIcon.Error);
@@ -2140,11 +2170,13 @@ namespace OGF_tool
                             ch.Vertices[i].bones_id[j] = ch.Vertices[i].bones_id[j] + 2;
 
                         ch.Vertices[i].offs = FVec.RotateZ(ch.Vertices[i].offs);
+                        ch.Vertices[i].local_offset = FVec.RotateZ(ch.Vertices[i].local_offset);
                         ch.Vertices[i].norm = FVec.RotateZ(ch.Vertices[i].norm);
                         ch.Vertices[i].tang = FVec.RotateZ(ch.Vertices[i].tang);
                         ch.Vertices[i].binorm = FVec.RotateZ(ch.Vertices[i].binorm);
                     }
                 }
+                ReloadViewPort(true, false, true);
                 AutoClosingMessageBox.Show("Successful!", "", 700, MessageBoxIcon.Information);
             }
             else
@@ -2179,6 +2211,12 @@ namespace OGF_tool
         }
 
         // Interface
+		private void ReloadViewPort(bool create_model = true, bool force_texture_reload = false, bool force_reload = false)
+		{
+			if (ViewerWorking && ViewerProcess != null)
+				InitViewPort(create_model, force_texture_reload, force_reload);
+        }
+
         private void InitViewPort(bool create_model = true, bool force_texture_reload = false, bool force_reload = false)
         {
 			if (OGF_V == null) return;

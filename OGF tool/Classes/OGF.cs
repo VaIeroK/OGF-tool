@@ -145,6 +145,8 @@ namespace OGF_tool
         public uint[] bones_id;
         public float[] bones_infl;
 
+        public float[] local_offset;
+
         public SSkelVert()
         {
             uv = new float[2];
@@ -154,6 +156,12 @@ namespace OGF_tool
             binorm = new float[3];
             bones_id = new uint[4];
             bones_infl = new float[4];
+            local_offset = new float[3];
+        }
+
+        public float[] Offset()
+        {
+            return FVec.Add(offs, local_offset);
         }
     };
 

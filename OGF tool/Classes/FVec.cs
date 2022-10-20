@@ -10,11 +10,19 @@ namespace OGF_tool
             var vec = new float[3] 
             {
                 v1[1] * v2[2] - v2[1] * v1[2],
-                (v1[0] * v2[2] - v2[0] * v1[2]) * -1,
+                -(v1[0] * v2[2] - v2[0] * v1[2]),
                 v1[0] * v2[1] - v2[0] * v1[1]
             };
 
             return vec;
+        }
+
+        static public float DotProduct(float[] v1, float[] v2)
+        {
+            float product = 0.0f;
+            for (int i = 0; i < 3; i++)
+                product += v1[i] * v2[i];
+            return product;
         }
 
         static public float[] Sub(float[] v1, float[] v2)
@@ -104,6 +112,25 @@ namespace OGF_tool
             };
 
             return vec;
+        }
+
+        static public float[] Rotate(float[] v, float[] k)
+        {
+            float cos_theta = (float)Math.Cos(Math.PI);
+            float sin_theta = (float)Math.Sin(Math.PI);
+            
+            float[] rotated = Add(Mul(v, cos_theta), Add(Mul(CrossProduct(k, v), sin_theta), Mul(k, DotProduct(k, v) * (1 - cos_theta))));
+
+            return rotated;
+        }
+
+        static public bool Similar(float[] v1, float[] v2)
+        {
+            if (v1[0] != v2[0]) return false;
+            if (v1[1] != v2[1]) return false;
+            if (v1[2] != v2[2]) return false;
+
+            return true;
         }
 
         static public string vPUSH(float[] vec, string format = null)

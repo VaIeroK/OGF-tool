@@ -10,7 +10,7 @@ namespace OGF_tool
             var vec = new float[2]
             {
                 v1[0] - v2[0],
-                v1[1] - v2[1],
+                v1[1] - v2[1]
             };
 
             return vec;
@@ -21,7 +21,7 @@ namespace OGF_tool
             var vec = new float[2]
             {
                 v1[0] + v2[0],
-                v1[1] + v2[1],
+                v1[1] + v2[1]
             };
 
             return vec;
@@ -32,7 +32,7 @@ namespace OGF_tool
             var vec = new float[2]
             {
                 v1[0] * val,
-                v1[1] * val,
+                v1[1] * val
             };
             return vec;
         }
@@ -42,7 +42,7 @@ namespace OGF_tool
             var vec = new float[2]
             {
                 v1[0] * v2[0],
-                v1[1] * v2[1],
+                v1[1] * v2[1]
             };
 
             return vec;
@@ -53,10 +53,18 @@ namespace OGF_tool
             var vec = new float[2]
             {
                 v1[0] / val,
-                v1[1] / val,
+                v1[1] / val
             };
 
             return vec;
+        }
+
+        static public bool Similar(float[] v1, float[] v2)
+        {
+            if (v1[0] != v2[0]) return false;
+            if (v1[1] != v2[1]) return false;
+
+            return true;
         }
 
         static public float[] Normalize(float[] v)

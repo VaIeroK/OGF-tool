@@ -138,6 +138,20 @@ namespace OGF_tool
         public List<VIPM_SWR> SWI;
         public OGF_Header Header;
 
+        public float[] GetLocalOffset()
+        {
+            if (Vertices.Count > 0)
+                return Vertices[0].local_offset;
+            else
+                return new float[3];
+        }
+
+        public void SetLocalOffset(float[] offs)
+        {
+            for (int i = 0; i < Vertices.Count; i++)
+                Vertices[i].local_offset = offs;
+        }
+
         private int CalcLod(float lod)
         {
             return (int)Math.Floor(lod * (SWI.Count - 1) + 0.5f);
@@ -194,8 +208,8 @@ namespace OGF_tool
                 int ib = Faces[i].v[1];
                 int ic = Faces[i].v[2];
 
-                float[] dv1 = FVec.Sub(Vertices[ia].offs, Vertices[ib].offs);
-                float[] dv2 = FVec.Sub(Vertices[ic].offs, Vertices[ib].offs);
+                float[] dv1 = FVec.Sub(Vertices[ia].Offset(), Vertices[ib].Offset());
+                float[] dv2 = FVec.Sub(Vertices[ic].Offset(), Vertices[ib].Offset());
                 float[] duv1 = FVec2.Sub(Vertices[ia].uv, Vertices[ib].uv);
                 float[] duv2 = FVec2.Sub(Vertices[ic].uv, Vertices[ib].uv);
 
@@ -424,7 +438,6 @@ namespace OGF_tool
             temp.AddRange(BitConverter.GetBytes((uint)GetVertsChunk().Length));
 
             temp.AddRange(GetVertsChunk());
-
             // Verts end
 
             // Indices start
@@ -482,7 +495,7 @@ namespace OGF_tool
                 switch (LinksCount())
                 {
                     case 1:
-                        temp.AddRange(FVec.GetBytes(vert.offs));
+                        temp.AddRange(FVec.GetBytes(vert.Offset()));
                         temp.AddRange(FVec.GetBytes(vert.norm));
 
                         if (Header.format_version == 4)
@@ -498,7 +511,7 @@ namespace OGF_tool
                         temp.AddRange(BitConverter.GetBytes((short)vert.bones_id[0]));
                         temp.AddRange(BitConverter.GetBytes((short)vert.bones_id[1]));
 
-                        temp.AddRange(FVec.GetBytes(vert.offs));
+                        temp.AddRange(FVec.GetBytes(vert.Offset()));
                         temp.AddRange(FVec.GetBytes(vert.norm));
 
                         temp.AddRange(FVec.GetBytes(vert.tang));
@@ -512,7 +525,7 @@ namespace OGF_tool
                         for (int j = 0; j < LinksCount(); j++)
                             temp.AddRange(BitConverter.GetBytes((short)vert.bones_id[j]));
 
-                        temp.AddRange(FVec.GetBytes(vert.offs));
+                        temp.AddRange(FVec.GetBytes(vert.Offset()));
                         temp.AddRange(FVec.GetBytes(vert.norm));
 
                         temp.AddRange(FVec.GetBytes(vert.tang));
@@ -524,7 +537,7 @@ namespace OGF_tool
                         temp.AddRange(FVec2.GetBytes(vert.uv));
                         break;
                     default: // Static
-                        temp.AddRange(FVec.GetBytes(vert.offs));
+                        temp.AddRange(FVec.GetBytes(vert.Offset()));
                         temp.AddRange(FVec.GetBytes(vert.norm));
                         temp.AddRange(FVec2.GetBytes(vert.uv));
                         break;
