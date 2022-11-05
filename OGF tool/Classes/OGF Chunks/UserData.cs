@@ -8,7 +8,7 @@ namespace OGF_tool
         public long pos;
         public int old_size;
         public string userdata;
-        private bool old_format;
+        public bool old_format;
 
         public UserData()
         {

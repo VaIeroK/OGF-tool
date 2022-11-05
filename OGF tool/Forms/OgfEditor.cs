@@ -222,7 +222,9 @@ namespace OGF_tool
                 SaveObjDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".obj";
 
                 CurrentLod = 0;
-			}
+
+                TryRepairUserdata(OGF_V.userdata);
+            }
 
             omfToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
             sklToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
@@ -1161,7 +1163,7 @@ namespace OGF_tool
 
 			CopyParams();
 			SaveFile(FILE_NAME);
-			AutoClosingMessageBox.Show(OGF_V.BrokenType > 0 ? "Repaired and Saved!" : "Saved!", "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxIcon.Information);
+			AutoClosingMessageBox.Show(NeedRepair() ? "Repaired and Saved!" : "Saved!", "", NeedRepair() ? 700 : 500, MessageBoxIcon.Information);
 		}
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1180,6 +1182,18 @@ namespace OGF_tool
 				}
 			}
 		}
+
+		private bool NeedRepair()
+		{
+			if (OGF_V == null) return false;
+			return OGF_V.BrokenType > 0;
+        }
+
+		private void TryRepairUserdata(UserData data)
+		{
+			if (data != null && data.old_format && MessageBox.Show("Userdata has old format, repair?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				data.old_format = false;
+        }
 
         private void oGFInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1280,8 +1294,8 @@ namespace OGF_tool
                     break;
             }
 
-			string Text = (OGF_V.BrokenType > 0 ? "Repaired and " : "") + (format == ExportFormat.OGF ? "Saved!" : "Exported!");
-            AutoClosingMessageBox.Show(Text, "", OGF_V.BrokenType > 0 ? 700 : 500, MessageBoxIcon.Information);
+			string Text = (NeedRepair() ? "Repaired and " : "") + (format == ExportFormat.OGF ? "Saved!" : "Exported!");
+            AutoClosingMessageBox.Show(Text, "", NeedRepair() ? 700 : 500, MessageBoxIcon.Information);
 		}
 
 		private void objectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1565,8 +1579,10 @@ namespace OGF_tool
 								OGF_V.userdata = new UserData();
 
 							OGF_V.userdata.userdata = SecondOgf.userdata.userdata;
+                            OGF_V.userdata.old_format = SecondOgf.userdata.old_format;
+                            TryRepairUserdata(OGF_V.userdata);
 
-							Update = true;
+                            Update = true;
 						}
 						else if (Params.Remove && OGF_V.userdata != null)
 						{

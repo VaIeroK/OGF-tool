@@ -266,17 +266,15 @@ namespace OGF_tool
                 else
                     textBox.BackColor = Color.FromArgb(255, 255, 128, 128);
 
-                int temp = textBox.SelectionStart;
+                string symbols = "./\\";
 
-                int slash_idx = textBox.Text.LastIndexOf('\\');
-                if (textBox.Text.Contains("\\") && slash_idx == textBox.Text.Count() - 1)
+                for (int i = 0; i < symbols.Length; i++)
                 {
-                    textBox.Text = textBox.Text.Substring(0, textBox.Text.LastIndexOf('\\'));
-
-                    if (textBox.SelectionStart < 1)
-                        textBox.SelectionStart = textBox.Text.Length;
-
-                    textBox.SelectionStart = temp - 1 >= 0 ? temp - 1 : 0;
+                    int symbol_idx = textBox.Text.LastIndexOf(symbols[i]);
+                    if (textBox.Text.Contains(symbols[i]) && symbol_idx == textBox.Text.Count() - 1)
+                    {
+                        textBox.BackColor = Color.FromArgb(255, 255, 128, 128);
+                    }
                 }
             }
         }
