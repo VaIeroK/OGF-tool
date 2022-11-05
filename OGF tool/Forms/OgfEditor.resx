@@ -1582,16 +1582,16 @@
     <value>F4</value>
   </data>
   <data name="LoadMenuParam.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="LoadMenuParam.Text" xml:space="preserve">
     <value>Load</value>
   </data>
   <data name="SaveMenuParam.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+S</value>
+    <value>CTRL+S</value>
   </data>
   <data name="SaveMenuParam.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="SaveMenuParam.Text" xml:space="preserve">
     <value>Save</value>
@@ -1600,7 +1600,7 @@
     <value>F5</value>
   </data>
   <data name="saveAsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="saveAsToolStripMenuItem.Text" xml:space="preserve">
     <value>Save as...</value>
@@ -1642,25 +1642,25 @@
     <value>Skls</value>
   </data>
   <data name="exportToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="exportToolStripMenuItem.Text" xml:space="preserve">
     <value>Export</value>
   </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 6</value>
+    <value>177, 6</value>
   </data>
   <data name="reloadToolStripMenuItem.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>F3</value>
   </data>
   <data name="reloadToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="reloadToolStripMenuItem.Text" xml:space="preserve">
     <value>Reload</value>
   </data>
   <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>140, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>Exit</value>
@@ -1690,13 +1690,13 @@
     <value>Recalc Normals</value>
   </data>
   <data name="nPCCoPToSoCToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>161, 22</value>
   </data>
   <data name="nPCCoPToSoCToolStripMenuItem.Text" xml:space="preserve">
     <value>NPC CoP to SoC</value>
   </data>
   <data name="nPCSoCToCoPToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>161, 22</value>
   </data>
   <data name="nPCSoCToCoPToolStripMenuItem.Text" xml:space="preserve">
     <value>NPC SoC to CoP</value>
@@ -1765,7 +1765,7 @@
     <value>0, 2</value>
   </data>
   <data name="MenuPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>413, 24</value>
+    <value>533, 24</value>
   </data>
   <data name="MenuPanel.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>

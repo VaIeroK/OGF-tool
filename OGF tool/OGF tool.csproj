@@ -158,6 +158,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OgfEditor.resx">
       <DependentUpon>OgfEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OgfEditor.ru.resx">
       <DependentUpon>OgfEditor.cs</DependentUpon>
