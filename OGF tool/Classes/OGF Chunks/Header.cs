@@ -112,7 +112,14 @@ namespace OGF_tool
 
         public void Static(List<OGF_Child> childs)
         {
-            if (childs.Count == 1)
+            int childs_count = 0;
+            foreach (OGF_Child chld in childs)
+            {
+                if (!chld.to_delete)
+                    childs_count++;
+            }
+
+            if (childs_count <= 1)
             {
                 StaticSingle(childs);
                 return;
@@ -126,7 +133,14 @@ namespace OGF_tool
 
         public void StaticSingle(List<OGF_Child> childs)
         {
-            if (childs.Count > 1)
+            int childs_count = 0;
+            foreach (OGF_Child chld in childs)
+            {
+                if (!chld.to_delete)
+                    childs_count++;
+            }
+
+            if (childs_count > 1)
             {
                 Static(childs);
                 return;
