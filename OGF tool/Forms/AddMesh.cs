@@ -19,12 +19,12 @@ namespace OGF_tool
             public int new_bone;
         }
 
-        private OGF_Children OGF, LoadedOGF;
+        private OGF_Model OGF, LoadedOGF;
         private int last_height = 0;
         private List<bool> mesh_to_add_list = new List<bool>();
         public bool res = false;
 
-        public AddMesh(ref OGF_Children Main_OGF, OGF_Children Loaded_OGF)
+        public AddMesh(ref OGF_Model Main_OGF, OGF_Model Loaded_OGF)
         {
             InitializeComponent();
 

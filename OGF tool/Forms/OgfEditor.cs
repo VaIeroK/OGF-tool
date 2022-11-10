@@ -17,7 +17,7 @@ namespace OGF_tool
 	{
 		// File sytem
 		public EditorSettings pSettings = null;
-		public OGF_Children OGF_V = null;
+		public OGF_Model OGF_V = null;
 		public byte[] Current_OGF = null;
 		public List<byte> file_bytes = new List<byte>();
 		public string FILE_NAME = "";
@@ -198,9 +198,9 @@ namespace OGF_tool
 				ToolsMenuItem.Enabled = !OGF_V.IsDM;
 				OpenInObjectEditor.Enabled = true;
 				exportToolStripMenuItem.Enabled = true;
-				bonesToolStripMenuItem.Enabled = OGF_V.IsSkeleton();
-                LodMenuItem.Enabled = OGF_V.IsProgressive();
-                AddMeshesMenuItem.Enabled = OGF_V.IsSkeleton();
+				bonesToolStripMenuItem.Enabled = OGF_V.Header.IsSkeleton();
+                LodMenuItem.Enabled = OGF_V.Header.IsProgressive();
+                AddMeshesMenuItem.Enabled = OGF_V.Header.IsSkeleton();
                 OgfInfo.Enabled = !OGF_V.IsDM;
 
 				OpenOGFDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
@@ -233,7 +233,7 @@ namespace OGF_tool
             // Textures
             TabControl.Controls.Add(TexturesPage);
 
-			if (OGF_V.IsSkeleton())
+			if (OGF_V.Header.IsSkeleton())
 			{
 				//Userdata
 				TabControl.Controls.Add(UserDataPage);
@@ -445,7 +445,7 @@ namespace OGF_tool
 					return;
 				}
 
-				if (!OGF_V.IsStaticSingle())
+				if (!OGF_V.Header.IsStaticSingle())
 				{
 					if (OGF_V.BrokenType == 2)
 					{
@@ -471,7 +471,7 @@ namespace OGF_tool
 					OGF_V.description.four_byte = old_byte; // Восстанавливаем отображение колличества байтов у таймера
 				}
 
-				if (OGF_V.IsStaticSingle()) // Single mesh
+				if (OGF_V.Header.IsStaticSingle()) // Single mesh
 				{
 					file_bytes.AddRange(OGF_V.childs[0].data());
 					fileStream.BaseStream.Position += OGF_V.childs[0].old_size;
@@ -509,7 +509,7 @@ namespace OGF_tool
                     }
 				}
 
-				if (OGF_V.IsSkeleton())
+				if (OGF_V.Header.IsSkeleton())
                 {
 					if (OGF_V.bonedata != null)
 					{
@@ -630,13 +630,13 @@ namespace OGF_tool
 			WriteFile(filename, file_bytes.ToArray());
 		}
 
-		private bool OpenFile(string filename, ref OGF_Children OGF_C, ref byte[] Cur_OGF)
+		private bool OpenFile(string filename, ref OGF_Model OGF_C, ref byte[] Cur_OGF)
 		{
 			var xr_loader = new XRayLoader();
 
 			string format = Path.GetExtension(filename);
 
-			OGF_C = new OGF_Children();
+			OGF_C = new OGF_Model();
 
 			if (format == ".dm")
 				OGF_C.IsDM = true;
@@ -722,7 +722,7 @@ namespace OGF_tool
 					return false;
 				}
 
-				if (OGF_C.IsSkeleton())
+				if (OGF_C.Header.IsSkeleton())
 				{
 					// Bones
 					if (!xr_loader.find_chunk((int)OGF.OGF_S_BONE_NAMES, false, true))
@@ -880,7 +880,7 @@ namespace OGF_tool
 		{
             float[] vec = vert.Offset();
 
-            if (!OGF_V.IsStaticSingle() && OGF_V.Header.format_version == 3 && OGF_V.ikdata != null)
+            if (!OGF_V.Header.IsStaticSingle() && OGF_V.Header.format_version == 3 && OGF_V.ikdata != null)
 			{
 				float[] bone_pos = OGF_V.ikdata.bones[(int)vert.bones_id[0]].position;
 				bone_pos = FVec.Mul(bone_pos, -1.0f);
@@ -912,7 +912,7 @@ namespace OGF_tool
 
 		private void AddBone(string name, string parent_bone, int pos)
 		{
-			if (OGF_V != null && OGF_V.IsSkeleton())
+			if (OGF_V != null && OGF_V.Header.IsSkeleton())
 			{
                 // Create null OBB
                 List<byte> obb = new List<byte>();
@@ -953,7 +953,7 @@ namespace OGF_tool
 
         private void RemoveBone(string bone)
         {
-			if (OGF_V != null && OGF_V.IsSkeleton() && OGF_V.bonedata != null)
+			if (OGF_V != null && OGF_V.Header.IsSkeleton() && OGF_V.bonedata != null)
 			{
 				RemoveBone(OGF_V.bonedata.GetBoneID(bone));
 			}
@@ -961,7 +961,7 @@ namespace OGF_tool
 
         private void RemoveBone(int bone)
         {
-            if (OGF_V != null && OGF_V.IsSkeleton())
+            if (OGF_V != null && OGF_V.Header.IsSkeleton())
             {
 				OGF_V.bonedata.RemoveBone(bone);
 
@@ -972,7 +972,7 @@ namespace OGF_tool
 
         private void ChangeParent(string old, string _new)
         {
-            if (OGF_V != null && OGF_V.IsSkeleton())
+            if (OGF_V != null && OGF_V.Header.IsSkeleton())
             {
                 for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
 				{
@@ -1009,7 +1009,8 @@ namespace OGF_tool
 						curBox.Text = "Delete Mesh";
 						curBox.BackColor = SystemColors.Control;
 					}
-					break;
+					UpdateModelType();
+                    break;
                 case "MoveButton":
 					float[] old_offs = OGF_V.childs[idx].GetLocalOffset();
 
@@ -1550,11 +1551,11 @@ namespace OGF_tool
 			{
 				bool Update = false;
 
-				OGF_Children SecondOgf = null;
+                OGF_Model SecondOgf = null;
 				byte[] SecondOgfByte = null;
 				OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
 
-				if (SecondOgf.IsSkeleton())
+				if (SecondOgf.Header.IsSkeleton())
 				{
 					ImportParams Params = new ImportParams(OGF_V, SecondOgf);
 
@@ -1740,11 +1741,11 @@ namespace OGF_tool
 			if (OGF_V == null) return;
 
 			if (OGF_V.bonedata == null)
-				OGF_V.Header.type = OGF_V.Static();
+				OGF_V.Header.Static(OGF_V.childs);
 			else if (OGF_V.motions.data() == null && !IsTextCorrect(MotionRefsBox.Text))
-                OGF_V.Header.type = OGF_V.Skeleton();
+                OGF_V.Header.Skeleton();
 			else
-                OGF_V.Header.type = OGF_V.Animated();
+                OGF_V.Header.Animated();
 
 			// Апдейтим экспорт аним тут, т.к. при любом изменении омф вызывается эта функция
 			omfToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
@@ -1754,7 +1755,7 @@ namespace OGF_tool
 
 		private void UpdateModelFormat()
 		{
-			CurrentFormat.Enabled = (OGF_V != null && !OGF_V.IsDM && OGF_V.IsSkeleton());
+			CurrentFormat.Enabled = (OGF_V != null && !OGF_V.IsDM && OGF_V.Header.IsSkeleton());
 
 			if (!CurrentFormat.Enabled)
 			{
@@ -2058,12 +2059,12 @@ namespace OGF_tool
         {
 			if (OpenOGFDialog.ShowDialog() == DialogResult.OK)
 			{
-                OGF_Children SecondOgf = null;
+                OGF_Model SecondOgf = null;
                 byte[] SecondOgfByte = null;
 
                 OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
 
-				if (SecondOgf.IsSkeleton())
+				if (SecondOgf.Header.IsSkeleton())
 				{
 					int old_childs_count = OGF_V.childs.Count;
 
@@ -2214,7 +2215,7 @@ namespace OGF_tool
         {
             if (cop_npc)
             {
-                if (OGF_V != null && OGF_V.IsSkeleton())
+                if (OGF_V != null && OGF_V.Header.IsSkeleton())
                 {
                     if (OGF_V.bonedata.bones.Count == 47 && OGF_V.bonedata.GetBoneID("root_stalker") != -1)
                         return true;
@@ -2222,7 +2223,7 @@ namespace OGF_tool
             }
             else
             {
-                if (OGF_V != null && OGF_V.IsSkeleton())
+                if (OGF_V != null && OGF_V.Header.IsSkeleton())
                 {
                     if (OGF_V.bonedata.bones.Count == 45 && OGF_V.bonedata.GetBoneID("bip01_pelvis") != -1 && OGF_V.bonedata.GetBoneID("root_stalker") == -1)
                         return true;
@@ -2544,7 +2545,7 @@ namespace OGF_tool
 			box.Controls.Add(newLbl3);
 			box.Controls.Add(newLbl4);
 
-			if (OGF_V.IsSkeleton())
+			if (OGF_V.Header.IsSkeleton())
 				box.Controls.Add(newLbl5);
 
 			if (OGF_V.childs[idx].SWI.Count > 0)

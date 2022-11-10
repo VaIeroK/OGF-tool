@@ -14,7 +14,7 @@ namespace OGF_tool
     {
         public Description descr = new Description();
         public bool res = false;
-        public OgfInfo(OGF_Children OGF, bool refs_correct, float lod)
+        public OgfInfo(OGF_Model OGF, bool refs_correct, float lod)
         {
             InitializeComponent();
 
@@ -39,8 +39,8 @@ namespace OGF_tool
             }
 
             OgfVersLabel.Text = OGF.Header.format_version.ToString();
-            ModelTypeLabel.Text = (OGF.IsStaticSingle() ? "Single Static" : OGF.IsStatic() ? "Static" : OGF.IsAnimated() ? "Animated" : "Rigid");
-            LinksLabel.Text = OGF.IsSkeleton() ? links.ToString() + ", " + (cop_links ? "CoP" : "SoC") : "None";
+            ModelTypeLabel.Text = (OGF.Header.IsStaticSingle() ? "Single Static" : OGF.Header.IsStatic() ? "Static" : OGF.Header.IsAnimated() ? "Animated" : "Rigid");
+            LinksLabel.Text = OGF.Header.IsSkeleton() ? links.ToString() + ", " + (cop_links ? "CoP" : "SoC") : "None";
             MotionRefsTypeLabel.Text = (OGF.motion_refs == null || !refs_correct) ? "None" : (OGF.motion_refs.soc ? "SoC" : "CoP");
 
             bool bit8 = false;

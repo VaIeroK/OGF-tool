@@ -10,7 +10,7 @@ namespace OGF_tool
         public List<bool> MeshChecked = new List<bool>();
         public bool res = false;
 
-        public SelectMeshes(OGF_Children OGF)
+        public SelectMeshes(OGF_Model OGF)
         {
             InitializeComponent();
 

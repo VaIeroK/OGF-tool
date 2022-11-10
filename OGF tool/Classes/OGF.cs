@@ -188,7 +188,7 @@ namespace OGF_tool
         }
     };
 
-    public class OGF_Children
+    public class OGF_Model
     {
         public bool IsDM;
         public uint BrokenType;
@@ -207,7 +207,7 @@ namespace OGF_tool
         public uint chunk_size;
         public long pos;
 
-        public OGF_Children()
+        public OGF_Model()
         {
             pos = 0;
             chunk_size = 0;
@@ -223,85 +223,6 @@ namespace OGF_tool
             motion_refs = null;
             IsCopModel = false;
             Header = new OGF_Header();
-        }
-
-        public bool IsProgressive()
-        {
-            foreach (OGF_Child child in this.childs)
-            {
-                if (child.SWI.Count > 0) return true;
-            }
-
-            return false;
-        }
-
-        public bool IsSkeleton()
-        {
-            if (Header.format_version == 4)
-                return Header.type == (byte)ModelType.MT4_SKELETON_ANIM || Header.type == (byte)ModelType.MT4_SKELETON_RIGID;
-            else
-                return Header.type == (byte)ModelType.MT3_SKELETON_ANIM || Header.type == (byte)ModelType.MT3_SKELETON_RIGID;
-        }
-
-        public bool IsAnimated()
-        {
-            if (Header.format_version == 4)
-                return Header.type == (byte)ModelType.MT4_SKELETON_ANIM;
-            else
-                return Header.type == (byte)ModelType.MT3_SKELETON_ANIM;
-        }
-
-        public bool IsStatic()
-        {
-            if (Header.format_version == 4)
-                return Header.type == (byte)ModelType.MT4_HIERRARHY;
-            else
-                return Header.type == (byte)ModelType.MT3_HIERRARHY;
-        }
-
-        public bool IsStaticSingle()
-        {
-            if (Header.format_version == 4)
-                return Header.type == (byte)ModelType.MT4_NORMAL || Header.type == (byte)ModelType.MT4_PROGRESSIVE;
-            else
-                return Header.type == (byte)ModelType.MT3_NORMAL || Header.type == (byte)ModelType.MT3_PROGRESSIVE || Header.type == (byte)ModelType.MT3_PROGRESSIVE2;
-        }
-
-        public byte Skeleton()
-        {
-            if (Header.format_version == 4)
-                return (byte)ModelType.MT4_SKELETON_RIGID;
-            else
-                return (byte)ModelType.MT3_SKELETON_RIGID;
-        }
-
-
-        public byte Animated()
-        {
-            if (Header.format_version == 4)
-                return (byte)ModelType.MT4_SKELETON_ANIM;
-            else
-                return (byte)ModelType.MT3_SKELETON_ANIM;
-        }
-
-        public byte Static()
-        {
-            if (childs.Count == 1) return StaticSingle();
-
-            if (Header.format_version == 4)
-                return (byte)ModelType.MT4_HIERRARHY;
-            else
-                return (byte)ModelType.MT3_HIERRARHY;
-        }
-
-        private byte StaticSingle()
-        {
-            if (childs.Count > 1) return Static();
-
-            if (Header.format_version == 4)
-                return (childs[0].SWI.Count > 0) ? (byte)ModelType.MT4_PROGRESSIVE : (byte)ModelType.MT4_NORMAL;
-            else
-                return (childs[0].SWI.Count > 0) ? (byte)ModelType.MT3_PROGRESSIVE : (byte)ModelType.MT3_NORMAL;
         }
     }
 }

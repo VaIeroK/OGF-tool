@@ -4,113 +4,6 @@ using System.Text;
 
 namespace OGF_tool
 {
-    public class BBox
-    {
-        public float[] min;
-        public float[] max;
-
-        public BBox()
-        {
-            min = new float[3];
-            max = new float[3];
-        }
-
-        public void Load(XRayLoader xr_loader)
-        {
-            min = xr_loader.ReadVector();
-            max = xr_loader.ReadVector();
-        }
-
-        public byte[] data()
-        {
-            List<byte> temp = new List<byte>();
-
-            temp.AddRange(FVec.GetBytes(min));
-            temp.AddRange(FVec.GetBytes(max));
-
-            return temp.ToArray();
-        }
-    };
-
-    public class BSphere
-    {
-        public float[] c;
-        public float r;
-
-        public BSphere()
-        {
-            c = new float[3];
-            r = 0.0f;
-        }
-
-        public void Load(XRayLoader xr_loader)
-        {
-            c = xr_loader.ReadVector();
-            r = xr_loader.ReadFloat();
-        }
-
-        public byte[] data()
-        {
-            List<byte> temp = new List<byte>();
-
-            temp.AddRange(FVec.GetBytes(c));
-            temp.AddRange(BitConverter.GetBytes(r));
-
-            return temp.ToArray();
-        }
-    };
-
-    public class OGF_Header
-    {
-        public byte format_version;
-        public byte type;
-        public short shader_id;
-        public BBox bb;
-        public BSphere bs;
-
-        public OGF_Header()
-        {
-            bb = new BBox();
-            bs = new BSphere();
-            format_version = 4;
-            type = 0;
-            shader_id = 0;
-        }
-
-        public void Load(XRayLoader xr_loader)
-        {
-            format_version = xr_loader.ReadByte();
-            type = xr_loader.ReadByte();
-            shader_id = (short)xr_loader.ReadUInt16();
-
-            if (format_version == 4)
-            {
-                bb.Load(xr_loader);
-                bs.Load(xr_loader);
-            }
-        }
-
-        public byte[] data()
-        {
-            List<byte> temp = new List<byte>();
-
-            temp.AddRange(BitConverter.GetBytes((uint)OGF.OGF_HEADER));
-            temp.AddRange(BitConverter.GetBytes((format_version == 4 ? 44 : 4)));
-
-            temp.Add(format_version);
-            temp.Add(type);
-            temp.AddRange(BitConverter.GetBytes(shader_id));
-
-            if (format_version == 4)
-            {
-                temp.AddRange(bb.data());
-                temp.AddRange(bs.data());
-            }
-
-            return temp.ToArray();
-        }
-    };
-
     public class OGF_Child
     {
         public string m_texture;
@@ -306,6 +199,11 @@ namespace OGF_tool
             FVF = links = xr_loader.ReadUInt32();
             uint verts = xr_loader.ReadUInt32();
 
+            if (Header.IsStaticSingle())
+                links = 0;
+            else
+                FVF = 0;
+
             for (int i = 0; i < verts; i++)
             {
                 SSkelVert Vert = new SSkelVert();
@@ -353,7 +251,6 @@ namespace OGF_tool
                         Vert.offs = xr_loader.ReadVector();
                         Vert.norm = xr_loader.ReadVector();
                         Vert.uv = xr_loader.ReadVector2();
-                        links = 0;
                         break;
                 }
                 Vertices.Add(Vert);
@@ -482,10 +379,19 @@ namespace OGF_tool
         {
             List<byte> temp = new List<byte>();
 
-            if (LinksCount() == 0)
+            if (Header.IsStaticSingle())
                 temp.AddRange(BitConverter.GetBytes(FVF));
             else
+            {
+                if (links == 0)
+                {
+                    AutoClosingMessageBox.Show("Error! Links in dynamic model should not be a zero. Set to 1.", "Error", 10000, System.Windows.Forms.MessageBoxIcon.Error);
+                    links = 1;
+                }
+
                 temp.AddRange(BitConverter.GetBytes(links));
+            }
+
             temp.AddRange(BitConverter.GetBytes(Vertices.Count));
 
             for (int i = 0; i < Vertices.Count; i++)

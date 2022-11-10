@@ -74,9 +74,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Collision.cs" />
     <Compile Include="Classes\Copy.cs" />
     <Compile Include="Classes\FVec.cs" />
     <Compile Include="Classes\FVec2.cs" />
+    <Compile Include="Classes\OGF Chunks\Header.cs" />
     <Compile Include="Forms\AddMesh.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,7 +116,7 @@
       <DependentUpon>OgfInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\OGF Chunks\BoneData.cs" />
-    <Compile Include="Classes\OGF Chunks\Childrens.cs" />
+    <Compile Include="Classes\OGF Chunks\Children.cs" />
     <Compile Include="Classes\OGF Chunks\Description.cs" />
     <Compile Include="Classes\OGF Chunks\IKData.cs" />
     <Compile Include="Classes\OGF Chunks\Lod.cs" />
