@@ -163,6 +163,60 @@ namespace OGF_tool
         {
             return FVec.Add(offs, local_offset);
         }
+
+        public static void GenerateNormals(ref List<SSkelVert> Vertices, List<SSkelFace> Faces, bool generate_normal = true)
+        {
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                if (generate_normal)
+                    Vertices[i].norm = new float[3] { 0.0f, 0.0f, 0.0f };
+                Vertices[i].tang = new float[3] { 0.0f, 0.0f, 0.0f };
+                Vertices[i].binorm = new float[3] { 0.0f, 0.0f, 0.0f };
+            }
+
+            for (int i = 0; i < Faces.Count; i++)
+            {
+                int ia = Faces[i].v[0];
+                int ib = Faces[i].v[1];
+                int ic = Faces[i].v[2];
+
+                float[] dv1 = FVec.Sub(Vertices[ia].Offset(), Vertices[ib].Offset());
+                float[] dv2 = FVec.Sub(Vertices[ic].Offset(), Vertices[ib].Offset());
+                float[] duv1 = FVec2.Sub(Vertices[ia].uv, Vertices[ib].uv);
+                float[] duv2 = FVec2.Sub(Vertices[ic].uv, Vertices[ib].uv);
+
+                float r = 1.0f / (duv1[0] * duv2[1] - duv1[1] * duv2[0]);
+                float[] tangent = FVec.Mul(FVec.Sub(FVec.Mul(dv1, duv2[1]), FVec.Mul(dv2, duv1[1])), r);
+                float[] binormal = FVec.Mul(FVec.Sub(FVec.Mul(dv2, duv1[0]), FVec.Mul(dv1, duv2[0])), r);
+
+                if (generate_normal)
+                {
+                    float[] normal = FVec.CrossProduct(dv1, dv2);
+                    Vertices[ia].norm = FVec.Add(Vertices[ia].norm, normal);
+                    Vertices[ib].norm = FVec.Add(Vertices[ib].norm, normal);
+                    Vertices[ic].norm = FVec.Add(Vertices[ic].norm, normal);
+                }
+
+                Vertices[ia].tang = FVec.Add(Vertices[ia].tang, tangent);
+                Vertices[ib].tang = FVec.Add(Vertices[ib].tang, tangent);
+                Vertices[ic].tang = FVec.Add(Vertices[ic].tang, tangent);
+
+                Vertices[ia].binorm = FVec.Add(Vertices[ia].binorm, binormal);
+                Vertices[ib].binorm = FVec.Add(Vertices[ib].binorm, binormal);
+                Vertices[ic].binorm = FVec.Add(Vertices[ic].binorm, binormal);
+            }
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                if (generate_normal)
+                {
+                    Vertices[i].norm = FVec.Normalize(Vertices[i].norm);
+                    Vertices[i].norm = FVec.Mul(Vertices[i].norm, -1.0f);
+                }
+                Vertices[i].tang = FVec.Normalize(Vertices[i].tang);
+                Vertices[i].binorm = FVec.Normalize(Vertices[i].binorm);
+            }
+        }
     };
 
     public class SSkelFace

@@ -1732,25 +1732,31 @@
     <value>Model Format: None</value>
   </data>
   <data name="reloadToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="reloadToolStripMenuItem1.Text" xml:space="preserve">
     <value>Reload</value>
   </data>
   <data name="DisableTexturesMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="DisableTexturesMenuItem.Text" xml:space="preserve">
     <value>Disable Textures</value>
   </data>
   <data name="disableAlphaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="disableAlphaToolStripMenuItem.Text" xml:space="preserve">
     <value>Disable Alpha</value>
   </data>
+  <data name="showBBoxToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="showBBoxToolStripMenuItem.Text" xml:space="preserve">
+    <value>Show BBox</value>
+  </data>
   <data name="openImageFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="openImageFolderToolStripMenuItem.Text" xml:space="preserve">
     <value>Open image folder</value>
@@ -1765,7 +1771,7 @@
     <value>0, 2</value>
   </data>
   <data name="MenuPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>413, 24</value>
+    <value>533, 24</value>
   </data>
   <data name="MenuPanel.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -2518,6 +2524,12 @@
   </data>
   <data name="&gt;&gt;SaveObjDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;showBBoxToolStripMenuItem.Name" xml:space="preserve">
+    <value>showBBoxToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;showBBoxToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>OGF_Editor</value>

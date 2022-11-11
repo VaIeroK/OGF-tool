@@ -135,6 +135,7 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
+            this.showBBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -736,6 +737,7 @@ namespace OGF_tool
             this.reloadToolStripMenuItem1,
             this.DisableTexturesMenuItem,
             this.disableAlphaToolStripMenuItem,
+            this.showBBoxToolStripMenuItem,
             this.openImageFolderToolStripMenuItem});
             this.viewPortToolStripMenuItem.Name = "viewPortToolStripMenuItem";
             resources.ApplyResources(this.viewPortToolStripMenuItem, "viewPortToolStripMenuItem");
@@ -829,6 +831,12 @@ namespace OGF_tool
             // SaveObjDialog
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
+            // 
+            // showBBoxToolStripMenuItem
+            // 
+            this.showBBoxToolStripMenuItem.Name = "showBBoxToolStripMenuItem";
+            resources.ApplyResources(this.showBBoxToolStripMenuItem, "showBBoxToolStripMenuItem");
+            this.showBBoxToolStripMenuItem.Click += new System.EventHandler(this.showBBoxToolStripMenuItem_Click);
             // 
             // OGF_Editor
             // 
@@ -977,6 +985,7 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem recalcNormalsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DisableTexturesMenuItem;
         private System.Windows.Forms.Button MoveMeshButton;
+        private System.Windows.Forms.ToolStripMenuItem showBBoxToolStripMenuItem;
     }
 }
 

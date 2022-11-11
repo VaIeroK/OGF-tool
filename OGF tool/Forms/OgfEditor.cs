@@ -35,6 +35,7 @@ namespace OGF_tool
 		public Thread ViewerThread = null;
 		bool ViewPortAlpha = true;
 		bool ViewPortTextures = true;
+		public bool ViewPortBBox = false;
 		List<bool> OldChildVisible = new List<bool>();
 		List<string> OldChildTextures = new List<string>();
 
@@ -422,6 +423,23 @@ namespace OGF_tool
             return false;
 		}
 
+		private void RecalcBBox()
+		{
+            OGF_V.Header.bb.Invalidate();
+
+            foreach (OGF_Child child in OGF_V.childs)
+            {
+                if (!child.to_delete)
+                {
+                    child.Header.bb.CreateBox(child.Vertices);
+                    child.Header.bs.CreateSphere(child.Header.bb);
+                    OGF_V.Header.bb.Merge(child.Header.bb);
+                }
+            }
+
+            OGF_V.Header.bs.CreateSphere(OGF_V.Header.bb);
+        }
+
 		private void SaveFile(string filename)
 		{
 			file_bytes.Clear();
@@ -448,17 +466,7 @@ namespace OGF_tool
 				if (!OGF_V.Header.IsStaticSingle())
 				{
 					if (OGF_V.BrokenType == 2)
-					{
-						OGF_V.Header.bb.Invalidate();
-
-                        foreach (OGF_Child child in OGF_V.childs)
-                        {
-                            if (!child.to_delete)
-                                OGF_V.Header.bb.Merge(child.Header.bb);
-                        }
-
-						OGF_V.Header.bs.CreateSphere(OGF_V.Header.bb);
-                    }
+						RecalcBBox();
 
                     file_bytes.AddRange(OGF_V.Header.data());
 				}
@@ -840,41 +848,99 @@ namespace OGF_tool
 						ObjWriter.WriteLine($"usemtl {Path.GetFileName(ch.m_texture)}");
 						childs++;
 
-						for (int i = 0; i < ch.Vertices.Count; i++)
+						List<SSkelVert> sSkelVerts = new List<SSkelVert>();
+						sSkelVerts.AddRange(ch.Vertices);
+
+                        for (int i = 0; i < sSkelVerts.Count; i++)
 						{
-							ObjWriter.WriteLine($"v {FVec.vPUSH(FVec.MirrorZ(SetupObjOffset(ch.Vertices[i])), "0.000000")}");
+							ObjWriter.WriteLine($"v {FVec.vPUSH(FVec.MirrorZ(SetupObjOffset(sSkelVerts[i])), "0.000000")}");
 						}
 
-						for (int i = 0; i < ch.Vertices.Count; i++)
+						for (int i = 0; i < sSkelVerts.Count; i++)
 						{
-							float x = ch.Vertices[i].uv[0];
-							float y = Math.Abs(1.0f - ch.Vertices[i].uv[1]);
+							float x = sSkelVerts[i].uv[0];
+							float y = Math.Abs(1.0f - sSkelVerts[i].uv[1]);
 							ObjWriter.WriteLine($"vt {x.ToString("0.000000")} {y.ToString("0.000000")}");
 						}
 
-						for (int i = 0; i < ch.Vertices.Count; i++)
+						for (int i = 0; i < sSkelVerts.Count; i++)
 						{
-							ObjWriter.WriteLine($"vn {FVec.vPUSH(FVec.MirrorZ(ch.Vertices[i].norm), "0.000000")}");
+							ObjWriter.WriteLine($"vn {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].norm), "0.000000")}");
 						}
 
-						for (int i = 0; i < ch.Vertices.Count; i++)
+						for (int i = 0; i < sSkelVerts.Count; i++)
 						{
-							ObjWriter.WriteLine($"vg {FVec.vPUSH(FVec.MirrorZ(ch.Vertices[i].tang), "0.000000")}");
+							ObjWriter.WriteLine($"vg {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].tang), "0.000000")}");
 						}
 
-						for (int i = 0; i < ch.Vertices.Count; i++)
+						for (int i = 0; i < sSkelVerts.Count; i++)
 						{
-							ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(ch.Vertices[i].binorm), "0.000000")}");
+							ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].binorm), "0.000000")}");
 						}
 
-						List<SSkelFace> Faces = ch.Faces_SWI(lod);
+						List<SSkelFace> Faces = new List<SSkelFace>();
+						Faces.AddRange(ch.Faces_SWI(lod));
+
                         foreach (var f_it in Faces)
 						{
 							string tmp = $"f {v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1} {v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1} {v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}";
 							ObjWriter.WriteLine(tmp);
 						}
-						v_offs += (uint)ch.Vertices.Count;
+						v_offs += (uint)sSkelVerts.Count;
 					}
+
+					if (ViewPortBBox)
+					{
+                        foreach (var ch in OGF_V.childs)
+                        {
+                            if (ch.to_delete) continue;
+
+                            ObjWriter.WriteLine($"g {childs}");
+                            ObjWriter.WriteLine($"usemtl ");
+                            childs++;
+
+                            List<SSkelVert> sSkelVerts = new List<SSkelVert>();
+                            sSkelVerts.AddRange(ch.Header.bb.GetVisualVerts());
+
+                            for (int i = 0; i < sSkelVerts.Count; i++)
+                            {
+                                ObjWriter.WriteLine($"v {FVec.vPUSH(FVec.MirrorZ(SetupObjOffset(sSkelVerts[i])), "0.000000")}");
+                            }
+
+                            for (int i = 0; i < sSkelVerts.Count; i++)
+                            {
+                                float x = sSkelVerts[i].uv[0];
+                                float y = Math.Abs(1.0f - sSkelVerts[i].uv[1]);
+                                ObjWriter.WriteLine($"vt {x.ToString("0.000000")} {y.ToString("0.000000")}");
+                            }
+
+                            for (int i = 0; i < sSkelVerts.Count; i++)
+                            {
+                                ObjWriter.WriteLine($"vn {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].norm), "0.000000")}");
+                            }
+
+                            for (int i = 0; i < sSkelVerts.Count; i++)
+                            {
+                                ObjWriter.WriteLine($"vg {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].tang), "0.000000")}");
+                            }
+
+                            for (int i = 0; i < sSkelVerts.Count; i++)
+                            {
+                                ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].binorm), "0.000000")}");
+                            }
+
+                            List<SSkelFace> Faces = new List<SSkelFace>();
+                            Faces.AddRange(ch.Header.bb.GetVisualFaces(sSkelVerts));
+
+                            foreach (var f_it in Faces)
+                            {
+                                string tmp = $"f {v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1} {v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1} {v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}";
+                                ObjWriter.WriteLine(tmp);
+                            }
+                            v_offs += (uint)sSkelVerts.Count;
+                        }
+                    }
+
 					ObjWriter.Close();
 					ObjWriter = null;
 				}
@@ -1017,6 +1083,7 @@ namespace OGF_tool
 						curBox.BackColor = SystemColors.Control;
 					}
 					UpdateModelType();
+                    RecalcBBox();
                     break;
                 case "MoveButton":
 					float[] old_offs = OGF_V.childs[idx].GetLocalOffset();
@@ -1027,7 +1094,9 @@ namespace OGF_tool
 					if (moveMesh.res)
 						OGF_V.childs[idx].SetLocalOffset(moveMesh.offset);
 
-					if (!FVec.Similar(old_offs, OGF_V.childs[idx].GetLocalOffset()))
+                    RecalcBBox();
+
+                    if (!FVec.Similar(old_offs, OGF_V.childs[idx].GetLocalOffset()))
 						ReloadViewPort(true, false, true);
                     break;
             }
@@ -2089,7 +2158,9 @@ namespace OGF_tool
 							TextureGroupBox.Controls["textureBox_" + i.ToString()].Text = OGF_V.childs[i].m_texture; ;
 							TextureGroupBox.Controls["shaderBox_" + i.ToString()].Text = OGF_V.childs[i].m_shader;
 						}
-					}
+
+                        RecalcBBox();
+                    }
 				}
 				else
                     AutoClosingMessageBox.Show("Can't merge non skeleton model!", "", 1000, MessageBoxIcon.Warning);
@@ -2451,6 +2522,18 @@ namespace OGF_tool
                 DisableTexturesMenuItem.Text = "Disable Textures";
 
             InitViewPort(false, false, true);
+        }
+
+        private void showBBoxToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ViewPortBBox = !ViewPortBBox;
+
+            if (!ViewPortBBox)
+                showBBoxToolStripMenuItem.Text = "Show BBox";
+            else
+                showBBoxToolStripMenuItem.Text = "Hide BBox";
+
+            InitViewPort(true, false, true);
         }
 
         private void SetAlphaToolStrip(bool enable)
