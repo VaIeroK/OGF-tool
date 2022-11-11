@@ -283,11 +283,8 @@ namespace OGF_tool
         {
             foreach (var child in childs)
             {
-                if (!child.to_delete)
-                {
-                    if (child.Header.IsProgressive())
-                        return true;
-                }
+                if (child.Header.IsProgressive())
+                    return true;
             }
             return false;
         }
