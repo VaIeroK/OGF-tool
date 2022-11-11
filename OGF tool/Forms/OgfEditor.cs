@@ -1917,16 +1917,16 @@ namespace OGF_tool
 			CurrentLod = swiLod.Lod;
 
 			if (old_lod != CurrentLod)
+			{
 				RecalcLod();
 
-			if (sender != null)
-				ReloadViewPort(true, false, true);
+                if (sender != null)
+                    ReloadViewPort(true, false, true);
+            }
         }
 
 		private void RecalcLod()
         {
-			ReloadViewPort(true, false, true);
-
 			for (int idx = 0; idx < OGF_V.childs.Count; idx++)
             {
 				Control Mesh = TexturesPage.Controls["TextureGrpBox_" + idx.ToString()];
@@ -1937,7 +1937,8 @@ namespace OGF_tool
 
         private void removeProgressiveMeshesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			changeLodToolStripMenuItem_Click(null, null);
+            float old_lod = CurrentLod;
+            changeLodToolStripMenuItem_Click(null, null);
 
 			OGF_V.RemoveProgressive(CurrentLod);
 
@@ -1950,7 +1951,8 @@ namespace OGF_tool
 
             removeProgressiveMeshesToolStripMenuItem.Enabled = LodMenuItem.Enabled = OGF_V.IsProgressive();
 
-            ReloadViewPort(true, false, true);
+            if (old_lod != CurrentLod)
+                ReloadViewPort(true, false, true);
         }
 
         private string[] GameMtlParser(string filename)
