@@ -136,6 +136,7 @@ namespace OGF_tool
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
             this.showBBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeProgressiveMeshesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -671,6 +672,7 @@ namespace OGF_tool
             this.OpenInObjectEditor,
             this.importDataFromModelToolStripMenuItem,
             this.recalcNormalsToolStripMenuItem,
+            this.removeProgressiveMeshesToolStripMenuItem,
             this.converterToolStripMenuItem});
             this.ToolsMenuItem.Name = "ToolsMenuItem";
             resources.ApplyResources(this.ToolsMenuItem, "ToolsMenuItem");
@@ -838,6 +840,12 @@ namespace OGF_tool
             resources.ApplyResources(this.showBBoxToolStripMenuItem, "showBBoxToolStripMenuItem");
             this.showBBoxToolStripMenuItem.Click += new System.EventHandler(this.showBBoxToolStripMenuItem_Click);
             // 
+            // removeProgressiveMeshesToolStripMenuItem
+            // 
+            this.removeProgressiveMeshesToolStripMenuItem.Name = "removeProgressiveMeshesToolStripMenuItem";
+            resources.ApplyResources(this.removeProgressiveMeshesToolStripMenuItem, "removeProgressiveMeshesToolStripMenuItem");
+            this.removeProgressiveMeshesToolStripMenuItem.Click += new System.EventHandler(this.removeProgressiveMeshesToolStripMenuItem_Click);
+            // 
             // OGF_Editor
             // 
             this.AllowDrop = true;
@@ -986,6 +994,7 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem DisableTexturesMenuItem;
         private System.Windows.Forms.Button MoveMeshButton;
         private System.Windows.Forms.ToolStripMenuItem showBBoxToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeProgressiveMeshesToolStripMenuItem;
     }
 }
 

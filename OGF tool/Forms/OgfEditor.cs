@@ -130,6 +130,7 @@ namespace OGF_tool
             reloadToolStripMenuItem.Enabled = false;
             CurrentFormat.Enabled = false;
             AddMeshesMenuItem.Enabled = false;
+			removeProgressiveMeshesToolStripMenuItem.Enabled = false;
 
             SaveSklDialog = new FolderSelectDialog();
 
@@ -200,7 +201,7 @@ namespace OGF_tool
 				OpenInObjectEditor.Enabled = true;
 				exportToolStripMenuItem.Enabled = true;
 				bonesToolStripMenuItem.Enabled = OGF_V.Header.IsSkeleton();
-                LodMenuItem.Enabled = OGF_V.Header.IsProgressive();
+                removeProgressiveMeshesToolStripMenuItem.Enabled = LodMenuItem.Enabled = OGF_V.IsProgressive();
                 AddMeshesMenuItem.Enabled = OGF_V.Header.IsSkeleton();
                 OgfInfo.Enabled = !OGF_V.IsDM;
 
@@ -1931,7 +1932,28 @@ namespace OGF_tool
 			}
         }
 
-		private string[] GameMtlParser(string filename)
+        private void removeProgressiveMeshesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			changeLodToolStripMenuItem_Click(null, null);
+
+            for (int idx = 0; idx < OGF_V.childs.Count; idx++)
+            {
+				if (OGF_V.Header.IsSkeleton())
+                    OGF_V.childs[idx].Header.GeomdefST();
+				else
+                    OGF_V.childs[idx].Header.Normal();
+                OGF_V.childs[idx].Faces = OGF_V.childs[idx].Faces_SWI(CurrentLod);
+                OGF_V.childs[idx].SWI.Clear();
+
+                Control Mesh = TexturesPage.Controls["TextureGrpBox_" + idx.ToString()];
+                Label FaceLbl = (Label)Mesh.Controls["LodsLbl_" + idx.ToString()];
+				FaceLbl.Visible = false;
+            }
+
+            removeProgressiveMeshesToolStripMenuItem.Enabled = LodMenuItem.Enabled = OGF_V.IsProgressive();
+        }
+
+        private string[] GameMtlParser(string filename)
 		{
 			List<string> materials = new List<string>();
 

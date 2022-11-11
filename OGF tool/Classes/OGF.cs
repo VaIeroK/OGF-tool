@@ -278,5 +278,18 @@ namespace OGF_tool
             IsCopModel = false;
             Header = new OGF_Header();
         }
+
+        public bool IsProgressive()
+        {
+            foreach (var child in childs)
+            {
+                if (!child.to_delete)
+                {
+                    if (child.Header.IsProgressive())
+                        return true;
+                }
+            }
+            return false;
+        }
     }
 }

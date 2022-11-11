@@ -110,6 +110,22 @@ namespace OGF_tool
                 type = (byte)ModelType.MT3_SKELETON_ANIM;
         }
 
+        public void GeomdefST()
+        {
+            if (format_version == 4)
+                type = (byte)ModelType.MT4_SKELETON_GEOMDEF_ST;
+            else
+                type = (byte)ModelType.MT3_SKELETON_GEOMDEF_ST;
+        }
+
+        public void Normal()
+        {
+            if (format_version == 4)
+                type = (byte)ModelType.MT4_NORMAL;
+            else
+                type = (byte)ModelType.MT3_NORMAL;
+        }
+
         public void Static(List<OGF_Child> childs)
         {
             int childs_count = 0;
