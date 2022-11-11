@@ -78,7 +78,7 @@ namespace OGF_tool
                 Modify(Vertices[k].Offset());
         }
 
-        public List<SSkelVert> GetVisualVerts()
+        public List<SSkelVert> GetVisualVerts(bool generate_normals = true)
         {
             List<SSkelVert> verts = new List<SSkelVert>();
 
@@ -118,7 +118,8 @@ namespace OGF_tool
             verts.Add(vert7);
             verts.Add(vert8);
 
-            SSkelVert.GenerateNormals(ref verts, GetVisualFaces(verts));
+            if (generate_normals)
+                SSkelVert.GenerateNormals(ref verts, GetVisualFaces(verts));
 
             return verts;
         }
@@ -126,96 +127,36 @@ namespace OGF_tool
         public List<SSkelFace> GetVisualFaces(List<SSkelVert> Verts)
         {
             List<SSkelFace> faces = new List<SSkelFace>();
+ 
+            int VertsCount = GetVisualVerts(false).Count;
+            int[,] VertList = new int[,] 
+            { 
+                { 7, 5, 6 }, // Front
+                { 7, 6, 8 }, // Front
+                { 3, 1, 4 }, // Back
+                { 1, 2, 4 }, // Back
+                { 3, 7, 4 }, // Down
+                { 7, 8, 4 }, // Down
+                { 1, 5, 6 }, // Up
+                { 1, 6, 2 }, // Up
+                { 3, 1, 5 }, // Left
+                { 3, 5, 7 }, // Left
+                { 4, 2, 8 }, // Right
+                { 2, 6, 8 }  // Right
+            };
 
-            /*
-             * 1 face - 8
-             * 2 face - 7
-             * 3 face - 6
-             * 4 face - 5
-             * 5 face - 4
-             * 6 face - 3
-             * 7 face - 2
-             * 8 face - 1
-             */
+            for (int i = 0; i < VertList.Length / 3; i++)
+            {
+                SSkelFace face = new SSkelFace();
 
-            // Front
-            SSkelFace face1 = new SSkelFace();
-            face1.v[0] = (ushort)(Verts.Count - 2); // 7
-            face1.v[1] = (ushort)(Verts.Count - 4); // 5
-            face1.v[2] = (ushort)(Verts.Count - 1); // 8
+                for (int j = 0; j < 3; j++)
+                {
+                    int vert_idx = VertsCount - VertList[i, j] + 1;
+                    face.v[j] = (ushort)(Verts.Count - vert_idx);
+                }
 
-            SSkelFace face2 = new SSkelFace();
-            face2.v[0] = (ushort)(Verts.Count - 4); // 5
-            face2.v[1] = (ushort)(Verts.Count - 3); // 6
-            face2.v[2] = (ushort)(Verts.Count - 1); // 8
-
-            // Back
-            SSkelFace face3 = new SSkelFace();
-            face3.v[0] = (ushort)(Verts.Count - 6); // 3
-            face3.v[1] = (ushort)(Verts.Count - 8); // 1
-            face3.v[2] = (ushort)(Verts.Count - 5); // 4
-
-            SSkelFace face4 = new SSkelFace();
-            face4.v[0] = (ushort)(Verts.Count - 8); // 1
-            face4.v[1] = (ushort)(Verts.Count - 7); // 2
-            face4.v[2] = (ushort)(Verts.Count - 5); // 4
-
-            // Down
-            SSkelFace face5 = new SSkelFace();
-            face5.v[0] = (ushort)(Verts.Count - 6); // 3
-            face5.v[1] = (ushort)(Verts.Count - 2); // 7
-            face5.v[2] = (ushort)(Verts.Count - 5); // 4
-
-            SSkelFace face6 = new SSkelFace();
-            face6.v[0] = (ushort)(Verts.Count - 2); // 7
-            face6.v[1] = (ushort)(Verts.Count - 1); // 8
-            face6.v[2] = (ushort)(Verts.Count - 5); // 4
-
-            // Up
-            SSkelFace face7 = new SSkelFace();
-            face7.v[0] = (ushort)(Verts.Count - 8); // 1
-            face7.v[1] = (ushort)(Verts.Count - 4); // 5
-            face7.v[2] = (ushort)(Verts.Count - 7); // 2
-
-            SSkelFace face8 = new SSkelFace();
-            face8.v[0] = (ushort)(Verts.Count - 4); // 5
-            face8.v[1] = (ushort)(Verts.Count - 3); // 6
-            face8.v[2] = (ushort)(Verts.Count - 7); // 2
-
-            // Left
-            SSkelFace face9 = new SSkelFace();
-            face9.v[0] = (ushort)(Verts.Count - 6); // 3
-            face9.v[1] = (ushort)(Verts.Count - 8); // 1
-            face9.v[2] = (ushort)(Verts.Count - 2); // 7
-
-            SSkelFace face10 = new SSkelFace();
-            face10.v[0] = (ushort)(Verts.Count - 8); // 1
-            face10.v[1] = (ushort)(Verts.Count - 4); // 5
-            face10.v[2] = (ushort)(Verts.Count - 2); // 7
-
-            // Right
-            SSkelFace face11 = new SSkelFace();
-            face11.v[0] = (ushort)(Verts.Count - 5); // 4
-            face11.v[1] = (ushort)(Verts.Count - 7); // 2
-            face11.v[2] = (ushort)(Verts.Count - 1); // 8
-
-            SSkelFace face12 = new SSkelFace();
-            face12.v[0] = (ushort)(Verts.Count - 7); // 2
-            face12.v[1] = (ushort)(Verts.Count - 3); // 6
-            face12.v[2] = (ushort)(Verts.Count - 1); // 8
-
-            faces.Add(face1);
-            faces.Add(face2);
-            faces.Add(face3);
-            faces.Add(face4);
-            faces.Add(face5);
-            faces.Add(face6);
-            faces.Add(face7);
-            faces.Add(face8);
-            faces.Add(face9);
-            faces.Add(face10);
-            faces.Add(face11);
-            faces.Add(face12);
+                faces.Add(face);
+            }
 
             return faces;
         }
@@ -228,10 +169,10 @@ namespace OGF_tool
 
         public BSphere()
         {
-            Invalidate();
+            Identity();
         }
 
-        public void Invalidate()
+        public void Identity()
         {
             c = new float[3];
             r = 0.0f;
