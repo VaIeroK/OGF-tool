@@ -33,6 +33,9 @@ namespace OGF_tool
             OGF = Main_OGF;
             LoadedOGF = Loaded_OGF;
 
+            if (!OGF.IsProgressive())
+                LoadedOGF.RemoveProgressive(0.0f);
+
             for (int i = 0; i < LoadedOGF.childs.Count; i++)
             {
                 mesh_to_add_list.Add(false);
