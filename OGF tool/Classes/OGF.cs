@@ -291,5 +291,18 @@ namespace OGF_tool
             }
             return false;
         }
+
+        public void RemoveProgressive(float lod)
+        {
+            for (int idx = 0; idx < childs.Count; idx++)
+            {
+                if (Header.IsSkeleton())
+                    childs[idx].Header.GeomdefST();
+                else
+                    childs[idx].Header.Normal();
+                childs[idx].Faces = childs[idx].Faces_SWI(lod);
+                childs[idx].SWI.Clear();
+            }
+        }
     }
 }

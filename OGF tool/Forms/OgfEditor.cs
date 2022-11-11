@@ -28,7 +28,7 @@ namespace OGF_tool
 		public bool bKeyIsDown = false;
         string number_mask = @"^-[0-9.]*$";
         StreamWriter ObjWriter = null; // for closing
-		float CurrentLod = 0.0f;
+		float CurrentLod = 0.0f; // 0 - HQ, 1 - LQ
 
 		Process ViewerProcess = new Process();
 		public bool ViewerWorking = false;
@@ -1918,7 +1918,10 @@ namespace OGF_tool
 
 			if (old_lod != CurrentLod)
 				RecalcLod();
-		}
+
+			if (sender != null)
+				ReloadViewPort(true, false, true);
+        }
 
 		private void RecalcLod()
         {
@@ -1936,21 +1939,18 @@ namespace OGF_tool
         {
 			changeLodToolStripMenuItem_Click(null, null);
 
+			OGF_V.RemoveProgressive(CurrentLod);
+
             for (int idx = 0; idx < OGF_V.childs.Count; idx++)
             {
-				if (OGF_V.Header.IsSkeleton())
-                    OGF_V.childs[idx].Header.GeomdefST();
-				else
-                    OGF_V.childs[idx].Header.Normal();
-                OGF_V.childs[idx].Faces = OGF_V.childs[idx].Faces_SWI(CurrentLod);
-                OGF_V.childs[idx].SWI.Clear();
-
                 Control Mesh = TexturesPage.Controls["TextureGrpBox_" + idx.ToString()];
                 Label FaceLbl = (Label)Mesh.Controls["LodsLbl_" + idx.ToString()];
 				FaceLbl.Visible = false;
             }
 
             removeProgressiveMeshesToolStripMenuItem.Enabled = LodMenuItem.Enabled = OGF_V.IsProgressive();
+
+            ReloadViewPort(true, false, true);
         }
 
         private string[] GameMtlParser(string filename)
