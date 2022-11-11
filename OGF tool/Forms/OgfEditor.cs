@@ -449,8 +449,15 @@ namespace OGF_tool
 				{
 					if (OGF_V.BrokenType == 2)
 					{
-						OGF_V.Header.bb = new BBox();
-                        OGF_V.Header.bs = new BSphere();
+						OGF_V.Header.bb.Invalidate();
+
+                        foreach (OGF_Child child in OGF_V.childs)
+                        {
+                            if (!child.to_delete)
+                                OGF_V.Header.bb.Merge(child.Header.bb);
+                        }
+
+						OGF_V.Header.bs.CreateSphere(OGF_V.Header.bb);
                     }
 
                     file_bytes.AddRange(OGF_V.Header.data());

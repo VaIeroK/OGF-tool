@@ -141,6 +141,16 @@ namespace OGF_tool
                 return vec[0].ToString() + " " + vec[1].ToString() + " " + vec[2].ToString();
         }
 
+        static public float DistanceToSqr(float[] from, float[] to)
+        {
+            return (from[0]-to[0])*(from[0]-to[0]) + (from[1]-to[1])*(from[1]-to[1]) + (from[2]-to[2])*(from[2]-to[2]);
+        }
+
+        static public float DistanceTo(float[] from, float[] to)
+        {
+            return (float)Math.Sqrt(DistanceToSqr(from, to));
+        }
+
         static public byte[] GetBytes(float[] vec)
         {
             List<byte> bytes = new List<byte>();
