@@ -36,7 +36,7 @@ namespace OGF_tool
 		public Thread ViewerThread = null;
 		bool ViewPortAlpha = true;
 		bool ViewPortTextures = true;
-		public bool[] ViewPortBBox = new bool[2] {false, false};
+		public bool ViewPortBBox = false;
 		List<bool> OldChildVisible = new List<bool>();
 		List<string> OldChildTextures = new List<string>();
 
@@ -900,7 +900,7 @@ namespace OGF_tool
 
 					if (need_bbox)
 					{
-						if (ViewPortBBox[0])
+						if (ViewPortBBox)
 						{
 							List<SSkelVert> sSkelVerts = new List<SSkelVert>();
 							sSkelVerts.AddRange(OGF_V.Header.bb.GetVisualVerts());
@@ -909,19 +909,16 @@ namespace OGF_tool
 							Faces.AddRange(OGF_V.Header.bb.GetVisualFaces(sSkelVerts));
 
 							Writer(sSkelVerts, Faces, "bbox_main_texture");
-						}
 
-						if (ViewPortBBox[1])
-						{
 							foreach (var ch in OGF_V.childs)
 							{
 								if (ch.to_delete) continue;
 
-								List<SSkelVert> sSkelVerts = new List<SSkelVert>();
-								sSkelVerts.AddRange(ch.Header.bb.GetVisualVerts());
+								sSkelVerts.Clear();
+                                sSkelVerts.AddRange(ch.Header.bb.GetVisualVerts());
 
-								List<SSkelFace> Faces = new List<SSkelFace>();
-								Faces.AddRange(ch.Header.bb.GetVisualFaces(sSkelVerts));
+								Faces.Clear();
+                                Faces.AddRange(ch.Header.bb.GetVisualFaces(sSkelVerts));
 
 								Writer(sSkelVerts, Faces, "bbox_texture");
 							}
@@ -967,17 +964,14 @@ namespace OGF_tool
 						writer.WriteLine("map_Kd " + Path.GetFileName(ch.m_texture) + ".png\n");
 				}
 
-                if (ViewPortBBox[0])
+                if (ViewPortBBox)
                 {
                     writer.WriteLine("newmtl bbox_main_texture");
                     writer.WriteLine("Ka  0 0 0");
                     writer.WriteLine("Kd  1 1 1");
                     writer.WriteLine("Ks  0 0 0");
                     writer.WriteLine("map_Kd bbox_main_texture.png\n");
-                }
 
-                if (ViewPortBBox[1])
-				{
                     writer.WriteLine("newmtl bbox_texture");
                     writer.WriteLine("Ka  0 0 0");
                     writer.WriteLine("Kd  1 1 1");
@@ -2459,7 +2453,7 @@ namespace OGF_tool
 
                 string bbox_texture_main = TempFolder() + "\\bbox_main_texture.png";
                 string bbox_texture = TempFolder() + "\\bbox_texture.png";
-                if (ViewPortBBox[0] && !File.Exists(bbox_texture_main))
+                if (ViewPortBBox && !File.Exists(bbox_texture_main))
 				{
                     using (Bitmap b = new Bitmap(8, 8))
                     {
@@ -2471,7 +2465,7 @@ namespace OGF_tool
                     }
                 }
 
-                if (ViewPortBBox[1] && !File.Exists(bbox_texture))
+                if (ViewPortBBox && !File.Exists(bbox_texture))
                 {
                     using (Bitmap b = new Bitmap(8, 8))
                     {
@@ -2588,25 +2582,12 @@ namespace OGF_tool
         private void showBBoxToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
-            ViewPortBBox[0] = !ViewPortBBox[0];
+            ViewPortBBox = !ViewPortBBox;
 
-            if (!ViewPortBBox[0])
-                item.Text = "Show Main";
+            if (!ViewPortBBox)
+                item.Text = "Show Bounding Box";
             else
-                item.Text = "Hide Main";
-
-            InitViewPort(true, false, true);
-        }
-
-        private void showMeshesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-            ViewPortBBox[1] = !ViewPortBBox[1];
-
-            if (!ViewPortBBox[1])
-                item.Text = "Show Meshes";
-            else
-                item.Text = "Hide Meshes";
+                item.Text = "Hide Bounding Box";
 
             InitViewPort(true, false, true);
         }

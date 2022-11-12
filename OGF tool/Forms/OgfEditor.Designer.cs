@@ -122,8 +122,6 @@ namespace OGF_tool
             this.DisableTexturesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showBBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showMainToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showMeshesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusFile = new System.Windows.Forms.ToolStripStatusLabel();
@@ -772,23 +770,9 @@ namespace OGF_tool
             // 
             // showBBoxToolStripMenuItem
             // 
-            this.showBBoxToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showMainToolStripMenuItem,
-            this.showMeshesToolStripMenuItem});
             this.showBBoxToolStripMenuItem.Name = "showBBoxToolStripMenuItem";
             resources.ApplyResources(this.showBBoxToolStripMenuItem, "showBBoxToolStripMenuItem");
-            // 
-            // showMainToolStripMenuItem
-            // 
-            this.showMainToolStripMenuItem.Name = "showMainToolStripMenuItem";
-            resources.ApplyResources(this.showMainToolStripMenuItem, "showMainToolStripMenuItem");
-            this.showMainToolStripMenuItem.Click += new System.EventHandler(this.showBBoxToolStripMenuItem_Click);
-            // 
-            // showMeshesToolStripMenuItem
-            // 
-            this.showMeshesToolStripMenuItem.Name = "showMeshesToolStripMenuItem";
-            resources.ApplyResources(this.showMeshesToolStripMenuItem, "showMeshesToolStripMenuItem");
-            this.showMeshesToolStripMenuItem.Click += new System.EventHandler(this.showMeshesToolStripMenuItem_Click);
+            this.showBBoxToolStripMenuItem.Click += new System.EventHandler(this.showBBoxToolStripMenuItem_Click);
             // 
             // openImageFolderToolStripMenuItem
             // 
@@ -1011,8 +995,6 @@ namespace OGF_tool
         private System.Windows.Forms.Button MoveMeshButton;
         private System.Windows.Forms.ToolStripMenuItem showBBoxToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeProgressiveMeshesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showMainToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showMeshesToolStripMenuItem;
     }
 }
 
