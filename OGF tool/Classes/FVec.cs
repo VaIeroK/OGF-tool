@@ -133,6 +133,17 @@ namespace OGF_tool
             return true;
         }
 
+        static public bool IsNan(float[] v1)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                if (float.IsNaN(v1[i]))
+                    return true;
+            }
+
+            return false;
+        }
+
         static public string vPUSH(float[] vec, string format = null)
         {
             if (format != null)

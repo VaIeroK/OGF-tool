@@ -82,32 +82,33 @@ namespace OGF_tool
         {
             List<SSkelVert> verts = new List<SSkelVert>();
 
-            float[] _min = min;
-            float[] _max = FVec.Mul(max, 2.0f);
+            float x_diff = max[0]-min[0];
+            float y_diff = max[1]-min[1];
+            float z_diff = max[2]-min[2];
 
             SSkelVert vert1 = new SSkelVert();
-            vert1.offs = new float[3] { _min[0], _min[1], _min[2] };
+            vert1.offs = new float[3] { min[0], min[1], min[2] };
 
             SSkelVert vert2 = new SSkelVert();
-            vert2.offs = new float[3] { _min[0] + _max[0], _min[1], _min[2] };
+            vert2.offs = new float[3] { min[0] + x_diff, min[1], min[2] };
 
             SSkelVert vert3 = new SSkelVert();
-            vert3.offs = new float[3] { _min[0], _min[1] + _max[1], _min[2] };
+            vert3.offs = new float[3] { min[0], min[1] + y_diff, min[2] };
 
             SSkelVert vert4 = new SSkelVert();
-            vert4.offs = new float[3] { _min[0] + _max[0], _min[1] + _max[1], _min[2] };
+            vert4.offs = new float[3] { min[0] + x_diff, min[1] + y_diff, min[2] };
 
             SSkelVert vert5 = new SSkelVert();
-            vert5.offs = new float[3] { _min[0], _min[1], _min[2] + _max[2] };
+            vert5.offs = new float[3] { min[0], min[1], min[2] + z_diff };
 
             SSkelVert vert6 = new SSkelVert();
-            vert6.offs = new float[3] { _min[0] + _max[0], _min[1], _min[2] + _max[2] };
+            vert6.offs = new float[3] { min[0] + x_diff, min[1], min[2] + z_diff };
 
             SSkelVert vert7 = new SSkelVert();
-            vert7.offs = new float[3] { _min[0], _min[1] + _max[1], _min[2] + _max[2] };
+            vert7.offs = new float[3] { min[0], min[1] + y_diff, min[2] + z_diff };
 
             SSkelVert vert8 = new SSkelVert();
-            vert8.offs = new float[3] { _min[0] + _max[0], _min[1] + _max[1], _min[2] + _max[2] };
+            vert8.offs = new float[3] { max[0], max[1], max[2] };
 
             verts.Add(vert1);
             verts.Add(vert2);

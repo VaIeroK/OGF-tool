@@ -149,14 +149,14 @@ namespace OGF_tool
 
         public SSkelVert()
         {
-            uv = new float[2];
-            offs = new float[3];
-            norm = new float[3];
-            tang = new float[3];
-            binorm = new float[3];
-            bones_id = new uint[4];
-            bones_infl = new float[4];
-            local_offset = new float[3];
+            uv = new float[2] { 0.0f, 0.0f };
+            offs = new float[3] { 0.0f, 0.0f, 0.0f };
+            norm = new float[3] { 0.0f, 0.0f, 0.0f };
+            tang = new float[3] { 0.0f, 0.0f, 0.0f };
+            binorm = new float[3] { 0.0f, 0.0f, 0.0f };
+            bones_id = new uint[4] { 0, 0, 0, 0 };
+            bones_infl = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
+            local_offset = new float[3] { 0.0f, 0.0f, 0.0f };
         }
 
         public float[] Offset()
@@ -215,6 +215,12 @@ namespace OGF_tool
                 }
                 Vertices[i].tang = FVec.Normalize(Vertices[i].tang);
                 Vertices[i].binorm = FVec.Normalize(Vertices[i].binorm);
+
+                if (FVec.IsNan(Vertices[i].tang))
+                    Vertices[i].tang = new float[3] { 0.0f, 0.0f, 0.0f };
+
+                if (FVec.IsNan(Vertices[i].binorm))
+                    Vertices[i].binorm = new float[3] { 0.0f, 0.0f, 0.0f };
             }
         }
     };
@@ -224,7 +230,7 @@ namespace OGF_tool
         public ushort[] v;
         public SSkelFace()
         {
-            v = new ushort[3];
+            v = new ushort[3] { 0, 0, 0 };
         }
     };
 

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 
 namespace OGF_tool
 {
@@ -35,7 +36,7 @@ namespace OGF_tool
 		public Thread ViewerThread = null;
 		bool ViewPortAlpha = true;
 		bool ViewPortTextures = true;
-		public bool ViewPortBBox = false;
+		public bool[] ViewPortBBox = new bool[2] {false, false};
 		List<bool> OldChildVisible = new List<bool>();
 		List<string> OldChildTextures = new List<string>();
 
@@ -57,7 +58,7 @@ namespace OGF_tool
 		[DllImport("converter.dll")]
 		private static extern int CSharpStartAgent(string path, string out_path, int mode, int convert_to_mode, string motion_list);
 
-		delegate void TriangleParser(XRayLoader loader, OGF_Child child, bool v3);
+		delegate void WriteObj(List<SSkelVert> Verts, List<SSkelFace> Faces, string texture);
         private int RunConverter(string path, string out_path, int mode, int convert_to_mode)
 		{
 			string dll_path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\converter.dll";
@@ -832,7 +833,7 @@ namespace OGF_tool
 			using (ObjWriter = File.CreateText(filename))
 			{
 				uint v_offs = 0;
-				uint childs = 0;
+				uint model_id = 0;
 
 				string mtl_name = Path.ChangeExtension(filename, ".mtl");
 				SaveMtl(mtl_name);
@@ -841,104 +842,86 @@ namespace OGF_tool
 				{
 					ObjWriter.WriteLine("# This file uses meters as units for non-parametric coordinates.");
 					ObjWriter.WriteLine("mtllib " + Path.GetFileName(mtl_name));
-					foreach (var ch in OGF_V.childs)
+
+                    WriteObj Writer = (Vertices, Faces, Texture) =>
+					{
+                        ObjWriter.WriteLine($"g {model_id}");
+                        ObjWriter.WriteLine($"usemtl {Path.GetFileName(Texture)}");
+                        model_id++;
+
+                        for (int i = 0; i < Vertices.Count; i++)
+                        {
+                            ObjWriter.WriteLine($"v {FVec.vPUSH(FVec.MirrorZ(SetupObjOffset(Vertices[i])), "0.000000")}");
+                        }
+
+                        for (int i = 0; i < Vertices.Count; i++)
+                        {
+                            float x = Vertices[i].uv[0];
+                            float y = Math.Abs(1.0f - Vertices[i].uv[1]);
+                            ObjWriter.WriteLine($"vt {x.ToString("0.000000")} {y.ToString("0.000000")}");
+                        }
+
+                        for (int i = 0; i < Vertices.Count; i++)
+                        {
+                            ObjWriter.WriteLine($"vn {FVec.vPUSH(FVec.MirrorZ(Vertices[i].norm), "0.000000")}");
+                        }
+
+                        for (int i = 0; i < Vertices.Count; i++)
+                        {
+                            ObjWriter.WriteLine($"vg {FVec.vPUSH(FVec.MirrorZ(Vertices[i].tang), "0.000000")}");
+                        }
+
+                        for (int i = 0; i < Vertices.Count; i++)
+                        {
+                            ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(Vertices[i].binorm), "0.000000")}");
+                        }
+
+                        foreach (var f_it in Faces)
+                        {
+                            string tmp = $"f {v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1} {v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1} {v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}";
+                            ObjWriter.WriteLine(tmp);
+                        }
+                        v_offs += (uint)Vertices.Count;
+                    };
+
+
+                    foreach (var ch in OGF_V.childs)
 					{
 						if (ch.to_delete) continue;
-
-						ObjWriter.WriteLine($"g {childs}");
-						ObjWriter.WriteLine($"usemtl {Path.GetFileName(ch.m_texture)}");
-						childs++;
 
 						List<SSkelVert> sSkelVerts = new List<SSkelVert>();
 						sSkelVerts.AddRange(ch.Vertices);
 
-                        for (int i = 0; i < sSkelVerts.Count; i++)
-						{
-							ObjWriter.WriteLine($"v {FVec.vPUSH(FVec.MirrorZ(SetupObjOffset(sSkelVerts[i])), "0.000000")}");
-						}
-
-						for (int i = 0; i < sSkelVerts.Count; i++)
-						{
-							float x = sSkelVerts[i].uv[0];
-							float y = Math.Abs(1.0f - sSkelVerts[i].uv[1]);
-							ObjWriter.WriteLine($"vt {x.ToString("0.000000")} {y.ToString("0.000000")}");
-						}
-
-						for (int i = 0; i < sSkelVerts.Count; i++)
-						{
-							ObjWriter.WriteLine($"vn {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].norm), "0.000000")}");
-						}
-
-						for (int i = 0; i < sSkelVerts.Count; i++)
-						{
-							ObjWriter.WriteLine($"vg {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].tang), "0.000000")}");
-						}
-
-						for (int i = 0; i < sSkelVerts.Count; i++)
-						{
-							ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].binorm), "0.000000")}");
-						}
-
 						List<SSkelFace> Faces = new List<SSkelFace>();
 						Faces.AddRange(ch.Faces_SWI(lod));
 
-                        foreach (var f_it in Faces)
-						{
-							string tmp = $"f {v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1} {v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1} {v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}";
-							ObjWriter.WriteLine(tmp);
-						}
-						v_offs += (uint)sSkelVerts.Count;
-					}
+						Writer(sSkelVerts, Faces, ch.m_texture);
+                    }
 
-					if (ViewPortBBox)
+					if (ViewPortBBox[0])
+					{
+                        List<SSkelVert> sSkelVerts = new List<SSkelVert>();
+                        sSkelVerts.AddRange(OGF_V.Header.bb.GetVisualVerts());
+
+                        List<SSkelFace> Faces = new List<SSkelFace>();
+                        Faces.AddRange(OGF_V.Header.bb.GetVisualFaces(sSkelVerts));
+
+                        Writer(sSkelVerts, Faces, "bbox_texture");
+                    }
+
+                    if (ViewPortBBox[1])
 					{
                         foreach (var ch in OGF_V.childs)
                         {
                             if (ch.to_delete) continue;
 
-                            ObjWriter.WriteLine($"g {childs}");
-                            ObjWriter.WriteLine($"usemtl ");
-                            childs++;
-
                             List<SSkelVert> sSkelVerts = new List<SSkelVert>();
                             sSkelVerts.AddRange(ch.Header.bb.GetVisualVerts());
-
-                            for (int i = 0; i < sSkelVerts.Count; i++)
-                            {
-                                ObjWriter.WriteLine($"v {FVec.vPUSH(FVec.MirrorZ(SetupObjOffset(sSkelVerts[i])), "0.000000")}");
-                            }
-
-                            for (int i = 0; i < sSkelVerts.Count; i++)
-                            {
-                                float x = sSkelVerts[i].uv[0];
-                                float y = Math.Abs(1.0f - sSkelVerts[i].uv[1]);
-                                ObjWriter.WriteLine($"vt {x.ToString("0.000000")} {y.ToString("0.000000")}");
-                            }
-
-                            for (int i = 0; i < sSkelVerts.Count; i++)
-                            {
-                                ObjWriter.WriteLine($"vn {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].norm), "0.000000")}");
-                            }
-
-                            for (int i = 0; i < sSkelVerts.Count; i++)
-                            {
-                                ObjWriter.WriteLine($"vg {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].tang), "0.000000")}");
-                            }
-
-                            for (int i = 0; i < sSkelVerts.Count; i++)
-                            {
-                                ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(sSkelVerts[i].binorm), "0.000000")}");
-                            }
 
                             List<SSkelFace> Faces = new List<SSkelFace>();
                             Faces.AddRange(ch.Header.bb.GetVisualFaces(sSkelVerts));
 
-                            foreach (var f_it in Faces)
-                            {
-                                string tmp = $"f {v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1} {v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1} {v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}";
-                                ObjWriter.WriteLine(tmp);
-                            }
-                            v_offs += (uint)sSkelVerts.Count;
+                            Writer(sSkelVerts, Faces, "bbox_texture");
                         }
                     }
 
@@ -980,7 +963,17 @@ namespace OGF_tool
 					if (ViewPortTextures)
 						writer.WriteLine("map_Kd " + Path.GetFileName(ch.m_texture) + ".png\n");
 				}
-				writer.Close();
+
+				if (ViewPortBBox[0] || ViewPortBBox[1])
+				{
+                    writer.WriteLine("newmtl bbox_texture");
+                    writer.WriteLine("Ka  0 0 0");
+                    writer.WriteLine("Kd  1 1 1");
+                    writer.WriteLine("Ks  0 0 0");
+                    writer.WriteLine("map_Kd bbox_texture.png\n");
+                }
+
+                writer.Close();
 			}
 		}
 
@@ -2356,7 +2349,7 @@ namespace OGF_tool
 			bool old_viewer = ViewerWorking;
 			ViewerWorking = false;
 
-			if (ViewerThread != null && ViewerThread.ThreadState != System.Threading.ThreadState.Stopped)
+            if (ViewerThread != null && ViewerThread.ThreadState != System.Threading.ThreadState.Stopped)
 				ViewerThread.Abort();
 
 			ViewerThread = new Thread(() => {
@@ -2369,7 +2362,12 @@ namespace OGF_tool
 					return;
 				}
 
-				if (old_viewer)
+                this.Invoke((MethodInvoker)delegate ()
+				{
+                    viewPortToolStripMenuItem.Enabled = false;
+                });
+
+                if (old_viewer)
 				{
 					ViewerProcess.Kill();
 					ViewerProcess.Close();
@@ -2447,6 +2445,19 @@ namespace OGF_tool
 					}
 				}
 
+				string bbox_texture = TempFolder() + "\\bbox_texture.png";
+                if ((ViewPortBBox[0] || ViewPortBBox[1]) && !File.Exists(bbox_texture))
+				{
+                    using (Bitmap b = new Bitmap(8, 8))
+                    {
+                        using (Graphics g = Graphics.FromImage(b))
+                        {
+                            g.Clear(Color.Red);
+                        }
+                        b.Save(bbox_texture, ImageFormat.Png);
+                    }
+                }
+
 				string image_path = "";
 				pSettings.Load("ImagePath", ref image_path);
 
@@ -2478,12 +2489,13 @@ namespace OGF_tool
 						style = style & ~WS_CAPTION & ~WS_THICKFRAME;
 						SetWindowLong(ViewerProcess.MainWindowHandle, GWL_STYLE, style);
 						ResizeEmbeddedApp(null, null);
-					});
+                        viewPortToolStripMenuItem.Enabled = true;
+                    });
 				}
 				catch(Exception) { }
-			});
+            });
 			ViewerThread.Start();
-		}
+        }
 
 		private bool CheckViewportModelVers()
         {
@@ -2550,12 +2562,26 @@ namespace OGF_tool
 
         private void showBBoxToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ViewPortBBox = !ViewPortBBox;
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            ViewPortBBox[0] = !ViewPortBBox[0];
 
-            if (!ViewPortBBox)
-                showBBoxToolStripMenuItem.Text = "Show BBox";
+            if (!ViewPortBBox[0])
+                item.Text = "Show Main";
             else
-                showBBoxToolStripMenuItem.Text = "Hide BBox";
+                item.Text = "Hide Main";
+
+            InitViewPort(true, false, true);
+        }
+
+        private void showMeshesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+            ViewPortBBox[1] = !ViewPortBBox[1];
+
+            if (!ViewPortBBox[1])
+                item.Text = "Show Meshes";
+            else
+                item.Text = "Hide Meshes";
 
             InitViewPort(true, false, true);
         }

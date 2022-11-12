@@ -110,6 +110,7 @@ namespace OGF_tool
             this.OpenInObjectEditor = new System.Windows.Forms.ToolStripMenuItem();
             this.importDataFromModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recalcNormalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeProgressiveMeshesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.converterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCCoPToSoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCSoCToCoPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -120,6 +121,9 @@ namespace OGF_tool
             this.reloadToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.DisableTexturesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showBBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showMainToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showMeshesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusFile = new System.Windows.Forms.ToolStripStatusLabel();
@@ -135,8 +139,6 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.showBBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeProgressiveMeshesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -695,6 +697,12 @@ namespace OGF_tool
             resources.ApplyResources(this.recalcNormalsToolStripMenuItem, "recalcNormalsToolStripMenuItem");
             this.recalcNormalsToolStripMenuItem.Click += new System.EventHandler(this.recalcNormalsToolStripMenuItem_Click);
             // 
+            // removeProgressiveMeshesToolStripMenuItem
+            // 
+            this.removeProgressiveMeshesToolStripMenuItem.Name = "removeProgressiveMeshesToolStripMenuItem";
+            resources.ApplyResources(this.removeProgressiveMeshesToolStripMenuItem, "removeProgressiveMeshesToolStripMenuItem");
+            this.removeProgressiveMeshesToolStripMenuItem.Click += new System.EventHandler(this.removeProgressiveMeshesToolStripMenuItem_Click);
+            // 
             // converterToolStripMenuItem
             // 
             this.converterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -761,6 +769,26 @@ namespace OGF_tool
             this.disableAlphaToolStripMenuItem.Name = "disableAlphaToolStripMenuItem";
             resources.ApplyResources(this.disableAlphaToolStripMenuItem, "disableAlphaToolStripMenuItem");
             this.disableAlphaToolStripMenuItem.Click += new System.EventHandler(this.disableAlphaToolStripMenuItem_Click);
+            // 
+            // showBBoxToolStripMenuItem
+            // 
+            this.showBBoxToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showMainToolStripMenuItem,
+            this.showMeshesToolStripMenuItem});
+            this.showBBoxToolStripMenuItem.Name = "showBBoxToolStripMenuItem";
+            resources.ApplyResources(this.showBBoxToolStripMenuItem, "showBBoxToolStripMenuItem");
+            // 
+            // showMainToolStripMenuItem
+            // 
+            this.showMainToolStripMenuItem.Name = "showMainToolStripMenuItem";
+            resources.ApplyResources(this.showMainToolStripMenuItem, "showMainToolStripMenuItem");
+            this.showMainToolStripMenuItem.Click += new System.EventHandler(this.showBBoxToolStripMenuItem_Click);
+            // 
+            // showMeshesToolStripMenuItem
+            // 
+            this.showMeshesToolStripMenuItem.Name = "showMeshesToolStripMenuItem";
+            resources.ApplyResources(this.showMeshesToolStripMenuItem, "showMeshesToolStripMenuItem");
+            this.showMeshesToolStripMenuItem.Click += new System.EventHandler(this.showMeshesToolStripMenuItem_Click);
             // 
             // openImageFolderToolStripMenuItem
             // 
@@ -833,18 +861,6 @@ namespace OGF_tool
             // SaveObjDialog
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
-            // 
-            // showBBoxToolStripMenuItem
-            // 
-            this.showBBoxToolStripMenuItem.Name = "showBBoxToolStripMenuItem";
-            resources.ApplyResources(this.showBBoxToolStripMenuItem, "showBBoxToolStripMenuItem");
-            this.showBBoxToolStripMenuItem.Click += new System.EventHandler(this.showBBoxToolStripMenuItem_Click);
-            // 
-            // removeProgressiveMeshesToolStripMenuItem
-            // 
-            this.removeProgressiveMeshesToolStripMenuItem.Name = "removeProgressiveMeshesToolStripMenuItem";
-            resources.ApplyResources(this.removeProgressiveMeshesToolStripMenuItem, "removeProgressiveMeshesToolStripMenuItem");
-            this.removeProgressiveMeshesToolStripMenuItem.Click += new System.EventHandler(this.removeProgressiveMeshesToolStripMenuItem_Click);
             // 
             // OGF_Editor
             // 
@@ -995,6 +1011,8 @@ namespace OGF_tool
         private System.Windows.Forms.Button MoveMeshButton;
         private System.Windows.Forms.ToolStripMenuItem showBBoxToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeProgressiveMeshesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showMainToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showMeshesToolStripMenuItem;
     }
 }
 
