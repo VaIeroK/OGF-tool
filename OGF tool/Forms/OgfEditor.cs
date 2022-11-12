@@ -828,7 +828,7 @@ namespace OGF_tool
 			return true;
 		}
 
-		private void SaveAsObj(string filename, float lod)
+		private void SaveAsObj(string filename, float lod, bool need_bbox = false)
 		{
 			using (ObjWriter = File.CreateText(filename))
 			{
@@ -898,32 +898,35 @@ namespace OGF_tool
 						Writer(sSkelVerts, Faces, ch.m_texture);
                     }
 
-					if (ViewPortBBox[0])
+					if (need_bbox)
 					{
-                        List<SSkelVert> sSkelVerts = new List<SSkelVert>();
-                        sSkelVerts.AddRange(OGF_V.Header.bb.GetVisualVerts());
+						if (ViewPortBBox[0])
+						{
+							List<SSkelVert> sSkelVerts = new List<SSkelVert>();
+							sSkelVerts.AddRange(OGF_V.Header.bb.GetVisualVerts());
 
-                        List<SSkelFace> Faces = new List<SSkelFace>();
-                        Faces.AddRange(OGF_V.Header.bb.GetVisualFaces(sSkelVerts));
+							List<SSkelFace> Faces = new List<SSkelFace>();
+							Faces.AddRange(OGF_V.Header.bb.GetVisualFaces(sSkelVerts));
 
-                        Writer(sSkelVerts, Faces, "bbox_texture");
-                    }
+							Writer(sSkelVerts, Faces, "bbox_main_texture");
+						}
 
-                    if (ViewPortBBox[1])
-					{
-                        foreach (var ch in OGF_V.childs)
-                        {
-                            if (ch.to_delete) continue;
+						if (ViewPortBBox[1])
+						{
+							foreach (var ch in OGF_V.childs)
+							{
+								if (ch.to_delete) continue;
 
-                            List<SSkelVert> sSkelVerts = new List<SSkelVert>();
-                            sSkelVerts.AddRange(ch.Header.bb.GetVisualVerts());
+								List<SSkelVert> sSkelVerts = new List<SSkelVert>();
+								sSkelVerts.AddRange(ch.Header.bb.GetVisualVerts());
 
-                            List<SSkelFace> Faces = new List<SSkelFace>();
-                            Faces.AddRange(ch.Header.bb.GetVisualFaces(sSkelVerts));
+								List<SSkelFace> Faces = new List<SSkelFace>();
+								Faces.AddRange(ch.Header.bb.GetVisualFaces(sSkelVerts));
 
-                            Writer(sSkelVerts, Faces, "bbox_texture");
-                        }
-                    }
+								Writer(sSkelVerts, Faces, "bbox_texture");
+							}
+						}
+					}
 
 					ObjWriter.Close();
 					ObjWriter = null;
@@ -964,7 +967,16 @@ namespace OGF_tool
 						writer.WriteLine("map_Kd " + Path.GetFileName(ch.m_texture) + ".png\n");
 				}
 
-				if (ViewPortBBox[0] || ViewPortBBox[1])
+                if (ViewPortBBox[0])
+                {
+                    writer.WriteLine("newmtl bbox_main_texture");
+                    writer.WriteLine("Ka  0 0 0");
+                    writer.WriteLine("Kd  1 1 1");
+                    writer.WriteLine("Ks  0 0 0");
+                    writer.WriteLine("map_Kd bbox_main_texture.png\n");
+                }
+
+                if (ViewPortBBox[1])
 				{
                     writer.WriteLine("newmtl bbox_texture");
                     writer.WriteLine("Ka  0 0 0");
@@ -2445,27 +2457,40 @@ namespace OGF_tool
 					}
 				}
 
-				string bbox_texture = TempFolder() + "\\bbox_texture.png";
-                if ((ViewPortBBox[0] || ViewPortBBox[1]) && !File.Exists(bbox_texture))
+                string bbox_texture_main = TempFolder() + "\\bbox_main_texture.png";
+                string bbox_texture = TempFolder() + "\\bbox_texture.png";
+                if (ViewPortBBox[0] && !File.Exists(bbox_texture_main))
 				{
                     using (Bitmap b = new Bitmap(8, 8))
                     {
                         using (Graphics g = Graphics.FromImage(b))
                         {
-                            g.Clear(Color.Red);
+                            g.Clear(Color.FromArgb(127, Color.Green));
+                        }
+                        b.Save(bbox_texture_main, ImageFormat.Png);
+                    }
+                }
+
+                if (ViewPortBBox[1] && !File.Exists(bbox_texture))
+                {
+                    using (Bitmap b = new Bitmap(8, 8))
+                    {
+                        using (Graphics g = Graphics.FromImage(b))
+                        {
+                            g.Clear(Color.FromArgb(127, Color.Red));
                         }
                         b.Save(bbox_texture, ImageFormat.Png);
                     }
                 }
 
-				string image_path = "";
+                string image_path = "";
 				pSettings.Load("ImagePath", ref image_path);
 
 				bool first_load = true;
 				pSettings.Load("FirstLoad", ref first_load, true);
 
 				if (create_model)
-                    SaveAsObj(ObjName, CurrentLod);
+                    SaveAsObj(ObjName, CurrentLod, true);
 
 				ViewerProcess.StartInfo.FileName = exe_path;
 				ViewerProcess.StartInfo.Arguments = $"--input=\"{ObjName}\" --output=\"{image_path}\"" + (first_load ? " --filename" : "");

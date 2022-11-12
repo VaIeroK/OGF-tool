@@ -78,7 +78,7 @@ namespace OGF_tool
                 Modify(Vertices[k].Offset());
         }
 
-        public List<SSkelVert> GetVisualVerts(bool generate_normals = true)
+        public List<SSkelVert> GetVisualVerts()
         {
             List<SSkelVert> verts = new List<SSkelVert>();
 
@@ -86,41 +86,155 @@ namespace OGF_tool
             float y_diff = max[1]-min[1];
             float z_diff = max[2]-min[2];
 
-            SSkelVert vert1 = new SSkelVert();
-            vert1.offs = new float[3] { min[0], min[1], min[2] };
+            // Back start
+            {
+                SSkelVert vert1 = new SSkelVert();
+                vert1.offs = new float[3] { min[0], min[1], min[2] };
+                vert1.norm = new float[3] { 0.0f, 0.0f, -1.0f };
 
-            SSkelVert vert2 = new SSkelVert();
-            vert2.offs = new float[3] { min[0] + x_diff, min[1], min[2] };
+                SSkelVert vert2 = new SSkelVert();
+                vert2.offs = new float[3] { min[0] + x_diff, min[1], min[2] };
+                vert2.norm = new float[3] { 0.0f, 0.0f, -1.0f };
 
-            SSkelVert vert3 = new SSkelVert();
-            vert3.offs = new float[3] { min[0], min[1] + y_diff, min[2] };
+                SSkelVert vert3 = new SSkelVert();
+                vert3.offs = new float[3] { min[0], min[1] + y_diff, min[2] };
+                vert3.norm = new float[3] { 0.0f, 0.0f, -1.0f };
 
-            SSkelVert vert4 = new SSkelVert();
-            vert4.offs = new float[3] { min[0] + x_diff, min[1] + y_diff, min[2] };
+                SSkelVert vert4 = new SSkelVert();
+                vert4.offs = new float[3] { min[0] + x_diff, min[1] + y_diff, min[2] };
+                vert4.norm = new float[3] { 0.0f, 0.0f, -1.0f };
 
-            SSkelVert vert5 = new SSkelVert();
-            vert5.offs = new float[3] { min[0], min[1], min[2] + z_diff };
+                verts.Add(vert1);
+                verts.Add(vert2);
+                verts.Add(vert3);
+                verts.Add(vert4);
+            }
+            // Back end 
 
-            SSkelVert vert6 = new SSkelVert();
-            vert6.offs = new float[3] { min[0] + x_diff, min[1], min[2] + z_diff };
+            // Left start
+            {
+                SSkelVert vert1 = new SSkelVert();
+                vert1.offs = new float[3] { min[0], min[1], min[2] };
+                vert1.norm = new float[3] { -1.0f, 0.0f, 0.0f };
 
-            SSkelVert vert7 = new SSkelVert();
-            vert7.offs = new float[3] { min[0], min[1] + y_diff, min[2] + z_diff };
+                SSkelVert vert2 = new SSkelVert();
+                vert2.offs = new float[3] { min[0], min[1] + y_diff, min[2] };
+                vert2.norm = new float[3] { -1.0f, 0.0f, 0.0f };
 
-            SSkelVert vert8 = new SSkelVert();
-            vert8.offs = new float[3] { max[0], max[1], max[2] };
+                SSkelVert vert3 = new SSkelVert();
+                vert3.offs = new float[3] { min[0], min[1], min[2] + z_diff };
+                vert3.norm = new float[3] { -1.0f, 0.0f, 0.0f };
 
-            verts.Add(vert1);
-            verts.Add(vert2);
-            verts.Add(vert3);
-            verts.Add(vert4);
-            verts.Add(vert5);
-            verts.Add(vert6);
-            verts.Add(vert7);
-            verts.Add(vert8);
+                SSkelVert vert4 = new SSkelVert();
+                vert4.offs = new float[3] { min[0], min[1] + y_diff, min[2] + z_diff };
+                vert4.norm = new float[3] { -1.0f, 0.0f, 0.0f };
 
-            if (generate_normals)
-                SSkelVert.GenerateNormals(ref verts, GetVisualFaces(verts));
+                verts.Add(vert1);
+                verts.Add(vert2);
+                verts.Add(vert3);
+                verts.Add(vert4);
+            }
+            // Left end
+
+            // Right start
+            {
+                SSkelVert vert1 = new SSkelVert();
+                vert1.offs = new float[3] { min[0] + x_diff, min[1], min[2] };
+                vert1.norm = new float[3] { 1.0f, 0.0f, 0.0f };
+
+                SSkelVert vert2 = new SSkelVert();
+                vert2.offs = new float[3] { min[0] + x_diff, min[1], min[2] + z_diff };
+                vert2.norm = new float[3] { 1.0f, 0.0f, 0.0f };
+
+                SSkelVert vert3 = new SSkelVert();
+                vert3.offs = new float[3] { min[0] + x_diff, min[1] + y_diff, min[2] };
+                vert3.norm = new float[3] { 1.0f, 0.0f, 0.0f };
+
+                SSkelVert vert4 = new SSkelVert();
+                vert4.offs = new float[3] { max[0], max[1], max[2] };
+                vert4.norm = new float[3] { 1.0f, 0.0f, 0.0f };
+
+                verts.Add(vert1);
+                verts.Add(vert2);
+                verts.Add(vert3);
+                verts.Add(vert4);
+            }
+            // Right end
+
+            // Front start
+            {
+                SSkelVert vert1 = new SSkelVert();
+                vert1.offs = new float[3] { min[0], min[1], min[2] + z_diff };
+                vert1.norm = new float[3] { 0.0f, 0.0f, 1.0f };
+
+                SSkelVert vert2 = new SSkelVert();
+                vert2.offs = new float[3] { min[0] + x_diff, min[1], min[2] + z_diff };
+                vert2.norm = new float[3] { 0.0f, 0.0f, 1.0f };
+
+                SSkelVert vert3 = new SSkelVert();
+                vert3.offs = new float[3] { min[0], min[1] + y_diff, min[2] + z_diff };
+                vert3.norm = new float[3] { 0.0f, 0.0f, 1.0f };
+
+                SSkelVert vert4 = new SSkelVert();
+                vert4.offs = new float[3] { max[0], max[1], max[2] };
+                vert4.norm = new float[3] { 0.0f, 0.0f, 1.0f };
+
+                verts.Add(vert1);
+                verts.Add(vert2);
+                verts.Add(vert3);
+                verts.Add(vert4);
+            }
+            // Front end 
+
+            // Up start
+            {
+                SSkelVert vert1 = new SSkelVert();
+                vert1.offs = new float[3] { min[0], min[1] + y_diff, min[2] };
+                vert1.norm = new float[3] { 0.0f, 1.0f, 0.0f };
+
+                SSkelVert vert2 = new SSkelVert();
+                vert2.offs = new float[3] { min[0] + x_diff, min[1] + y_diff, min[2] };
+                vert2.norm = new float[3] { 0.0f, 1.0f, 0.0f };
+
+                SSkelVert vert3 = new SSkelVert();
+                vert3.offs = new float[3] { min[0], min[1] + y_diff, min[2] + z_diff };
+                vert3.norm = new float[3] { 0.0f, 1.0f, 0.0f };
+
+                SSkelVert vert4 = new SSkelVert();
+                vert4.offs = new float[3] { max[0], max[1], max[2] };
+                vert4.norm = new float[3] { 0.0f, 1.0f, 0.0f };
+
+                verts.Add(vert1);
+                verts.Add(vert2);
+                verts.Add(vert3);
+                verts.Add(vert4);
+            }
+            // Up end 
+
+            // Down start
+            {
+                SSkelVert vert1 = new SSkelVert();
+                vert1.offs = new float[3] { min[0], min[1], min[2] };
+                vert1.norm = new float[3] { 0.0f, -1.0f, 0.0f };
+
+                SSkelVert vert2 = new SSkelVert();
+                vert2.offs = new float[3] { min[0] + x_diff, min[1], min[2] };
+                vert2.norm = new float[3] { 0.0f, -1.0f, 0.0f };
+
+                SSkelVert vert3 = new SSkelVert();
+                vert3.offs = new float[3] { min[0], min[1], min[2] + z_diff };
+                vert3.norm = new float[3] { 0.0f, -1.0f, 0.0f };
+
+                SSkelVert vert4 = new SSkelVert();
+                vert4.offs = new float[3] { min[0] + x_diff, min[1], min[2] + z_diff };
+                vert4.norm = new float[3] { 0.0f, -1.0f, 0.0f };
+
+                verts.Add(vert1);
+                verts.Add(vert2);
+                verts.Add(vert3);
+                verts.Add(vert4);
+            }
+            // Down end 
 
             return verts;
         }
@@ -129,30 +243,30 @@ namespace OGF_tool
         {
             List<SSkelFace> faces = new List<SSkelFace>();
  
-            int VertsCount = GetVisualVerts(false).Count;
-            int[,] VertList = new int[,] 
-            { 
-                { 7, 5, 6 }, // Front
-                { 7, 6, 8 }, // Front
-                { 3, 1, 4 }, // Back
-                { 1, 2, 4 }, // Back
-                { 3, 7, 4 }, // Down
-                { 7, 8, 4 }, // Down
-                { 1, 5, 6 }, // Up
-                { 1, 6, 2 }, // Up
-                { 3, 1, 5 }, // Left
-                { 3, 5, 7 }, // Left
-                { 4, 2, 8 }, // Right
-                { 2, 6, 8 }  // Right
+            int VertsCount = GetVisualVerts().Count; // 24
+            int[,] FaceVertList = new int[,]
+            {
+                { 1, 3, 4 },
+                { 4, 2, 1 },
+                { 7, 8, 6 },
+                { 6, 5, 7 },
+                { 9, 11, 12 },
+                { 12, 10, 9 },
+                { 16, 15, 13 },
+                { 13, 14, 16 },
+                { 17, 19, 20 },
+                { 20, 18, 17 },
+                { 24, 23, 21 },
+                { 21, 22, 24 }
             };
 
-            for (int i = 0; i < VertList.Length / 3; i++)
+            for (int i = 0; i < FaceVertList.Length / 3; i++)
             {
                 SSkelFace face = new SSkelFace();
 
                 for (int j = 0; j < 3; j++)
                 {
-                    int vert_idx = VertsCount - VertList[i, j] + 1;
+                    int vert_idx = VertsCount - FaceVertList[i, j] + 1;
                     face.v[j] = (ushort)(Verts.Count - vert_idx);
                 }
 
