@@ -37,7 +37,7 @@ namespace OGF_tool
 
         public void Invalidate()
         {
-            min = new float[3] { float.MaxValue, float.MaxValue , float.MaxValue };
+            min = new float[3] { float.MaxValue, float.MaxValue, float.MaxValue };
             max = new float[3] { float.MinValue, float.MinValue, float.MinValue };
         }
 

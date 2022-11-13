@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OGF_tool
@@ -124,7 +117,6 @@ namespace OGF_tool
 
         private void RepairTimersButton_Click(object sender, EventArgs e)
         {
-            descr.four_byte = false;
             RepairTimersButton.Enabled = false;
             ByteLabel.Text = "4 byte";
         }
@@ -141,6 +133,8 @@ namespace OGF_tool
             descr.m_export_time = Convert.ToUInt32(ExportTimeDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
             descr.m_creation_time = Convert.ToUInt32(CreationTimeDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
             descr.m_modified_time = Convert.ToUInt32(ModifedTimeDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+
+            descr.four_byte = !RepairTimersButton.Enabled;
 
             Close();
         }
