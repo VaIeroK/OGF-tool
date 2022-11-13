@@ -427,6 +427,8 @@ namespace OGF_tool
 
 		private void RecalcBBox(bool recalc_childs)
 		{
+			if (OGF_V == null) return;
+
             OGF_V.Header.bb.Invalidate();
 
             foreach (OGF_Child child in OGF_V.childs)
@@ -894,13 +896,16 @@ namespace OGF_tool
 					{
 						if (ViewPortBBox)
 						{
-							List<SSkelVert> sSkelVerts = new List<SSkelVert>();
-							sSkelVerts.AddRange(OGF_V.Header.bb.GetVisualVerts());
+                            List<SSkelVert> sSkelVerts = new List<SSkelVert>();
+                            List<SSkelFace> Faces = new List<SSkelFace>();
 
-							List<SSkelFace> Faces = new List<SSkelFace>();
-							Faces.AddRange(OGF_V.Header.bb.GetVisualFaces(sSkelVerts));
+                            if (!OGF_V.Header.IsStaticSingle())
+							{
+								sSkelVerts.AddRange(OGF_V.Header.bb.GetVisualVerts());
+								Faces.AddRange(OGF_V.Header.bb.GetVisualFaces(sSkelVerts));
 
-							Writer(sSkelVerts, Faces, "bbox_main_texture");
+								Writer(sSkelVerts, Faces, "bbox_main_texture");
+							}
 
 							foreach (var ch in OGF_V.childs)
 							{
@@ -2213,7 +2218,14 @@ namespace OGF_tool
             }
         }
 
-		private void UpdateNPC()
+        private void recalcBoundingBoxToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			RecalcBBox(true);
+            ReloadViewPort(true, false, true);
+            AutoClosingMessageBox.Show("Bounding Box and Sphere recalculated!", "", 1000, MessageBoxIcon.Information);
+        }
+
+        private void UpdateNPC()
 		{
 			nPCCoPToSoCToolStripMenuItem.Enabled = CheckNPC(true);
 			nPCSoCToCoPToolStripMenuItem.Enabled = CheckNPC(false);

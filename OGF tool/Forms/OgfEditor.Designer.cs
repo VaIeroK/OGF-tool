@@ -137,6 +137,7 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
+            this.recalcBoundingBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -672,6 +673,7 @@ namespace OGF_tool
             this.OpenInObjectEditor,
             this.importDataFromModelToolStripMenuItem,
             this.recalcNormalsToolStripMenuItem,
+            this.recalcBoundingBoxToolStripMenuItem,
             this.removeProgressiveMeshesToolStripMenuItem,
             this.converterToolStripMenuItem});
             this.ToolsMenuItem.Name = "ToolsMenuItem";
@@ -846,6 +848,12 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
             // 
+            // recalcBoundingBoxToolStripMenuItem
+            // 
+            this.recalcBoundingBoxToolStripMenuItem.Name = "recalcBoundingBoxToolStripMenuItem";
+            resources.ApplyResources(this.recalcBoundingBoxToolStripMenuItem, "recalcBoundingBoxToolStripMenuItem");
+            this.recalcBoundingBoxToolStripMenuItem.Click += new System.EventHandler(this.recalcBoundingBoxToolStripMenuItem_Click);
+            // 
             // OGF_Editor
             // 
             this.AllowDrop = true;
@@ -995,6 +1003,7 @@ namespace OGF_tool
         private System.Windows.Forms.Button MoveMeshButton;
         private System.Windows.Forms.ToolStripMenuItem showBBoxToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeProgressiveMeshesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recalcBoundingBoxToolStripMenuItem;
     }
 }
 
