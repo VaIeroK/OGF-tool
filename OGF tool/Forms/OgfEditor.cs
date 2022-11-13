@@ -473,17 +473,11 @@ namespace OGF_tool
 
 				if (OGF_V.description != null)
 				{
-					bool old_byte = OGF_V.description.four_byte;
-					if (OGF_V.BrokenType > 0) // Если модель сломана, то восстанавливаем чанк с 8 байтными таймерами
-						OGF_V.description.four_byte = false;
-
 					byte[] DescriptionData = OGF_V.description.data();
 
                     file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_DESC));
 					file_bytes.AddRange(BitConverter.GetBytes(DescriptionData.Length));
 					file_bytes.AddRange(DescriptionData);
-
-					OGF_V.description.four_byte = old_byte; // Восстанавливаем отображение колличества байтов у таймера
 				}
 
 				if (OGF_V.Header.IsStaticSingle()) // Single mesh

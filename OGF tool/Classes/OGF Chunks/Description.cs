@@ -62,7 +62,7 @@ namespace OGF_tool
                 m_modified_time = xr_loader.ReadUInt32();
                 description_end_pos = xr_loader.reader.BaseStream.Position;
 
-                four_byte = true; // Ставим флаг на то что мы прочитали чанк с 4х байтными таймерами, если модель будет сломана то чинить чанк будем в 8 байт
+                four_byte = true; // Ставим флаг на то что мы прочитали чанк с 4х байтными таймерами
 
                 if ((description_end_pos - reader_start_pos) != chunk_size) // Все равно разный размер? Походу модель сломана
                 {
