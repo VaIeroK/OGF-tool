@@ -113,6 +113,8 @@ namespace OGF_tool
             ExportTimeDate.Enabled = OGF.description != null;
             CreationTimeDate.Enabled = OGF.description != null;
             ModifedTimeDate.Enabled = OGF.description != null;
+
+            ActiveControl = OgfVersTextLabel;
         }
 
         private void RepairTimersButton_Click(object sender, EventArgs e)

@@ -17,6 +17,8 @@ namespace OGF_tool
             PositionXTextBox.Text = ((decimal)offset[0]).ToString();
             PositionYTextBox.Text = ((decimal)offset[1]).ToString();
             PositionZTextBox.Text = ((decimal)offset[2]).ToString();
+
+            ActiveControl = PositionLabelEx;
         }
 
         private void ApplyButton_Click(object sender, EventArgs e)

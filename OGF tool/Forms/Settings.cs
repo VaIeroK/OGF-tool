@@ -21,6 +21,8 @@ namespace OGF_tool
             BoxTextChanged(ImagePath, null);
             BoxTextChanged(OmfEditorPath, null);
             BoxTextChanged(ObjectEditorPath, null);
+
+            ActiveControl = label4;
         }
 
         public void SaveParams()

@@ -17,6 +17,8 @@ namespace OGF_tool
         {
             InitializeComponent();
             LodBar.Value = (int)(lod * LodBar.Maximum);
+
+            ActiveControl = label1;
         }
 
         private void LodNum_ValueChanged(object sender, EventArgs e)
