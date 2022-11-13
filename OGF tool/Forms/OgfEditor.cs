@@ -425,7 +425,7 @@ namespace OGF_tool
             return false;
 		}
 
-		private void RecalcBBox()
+		private void RecalcBBox(bool recalc_childs)
 		{
             OGF_V.Header.bb.Invalidate();
 
@@ -433,8 +433,11 @@ namespace OGF_tool
             {
                 if (!child.to_delete)
                 {
-                    child.Header.bb.CreateBox(child.Vertices);
-                    child.Header.bs.CreateSphere(child.Header.bb);
+					if (recalc_childs)
+					{
+						child.Header.bb.CreateBox(child.Vertices);
+						child.Header.bs.CreateSphere(child.Header.bb);
+					}
                     OGF_V.Header.bb.Merge(child.Header.bb);
                 }
             }
@@ -466,12 +469,7 @@ namespace OGF_tool
 				}
 
 				if (!OGF_V.Header.IsStaticSingle())
-				{
-					if (OGF_V.BrokenType == 2)
-						RecalcBBox();
-
                     file_bytes.AddRange(OGF_V.Header.data());
-				}
 
 				if (OGF_V.description != null)
 				{
@@ -1083,7 +1081,7 @@ namespace OGF_tool
 						curBox.BackColor = SystemColors.Control;
 					}
 					UpdateModelType();
-                    RecalcBBox();
+                    RecalcBBox(false);
                     break;
                 case "MoveButton":
 					float[] old_offs = OGF_V.childs[idx].GetLocalOffset();
@@ -1094,7 +1092,7 @@ namespace OGF_tool
 					if (moveMesh.res)
 						OGF_V.childs[idx].SetLocalOffset(moveMesh.offset);
 
-                    RecalcBBox();
+                    RecalcBBox(true);
 
                     if (!FVec.Similar(old_offs, OGF_V.childs[idx].GetLocalOffset()))
 						ReloadViewPort(true, false, true);
@@ -2182,7 +2180,7 @@ namespace OGF_tool
 							TextureGroupBox.Controls["shaderBox_" + i.ToString()].Text = OGF_V.childs[i].m_shader;
 						}
 
-                        RecalcBBox();
+                        RecalcBBox(false);
                     }
 				}
 				else
