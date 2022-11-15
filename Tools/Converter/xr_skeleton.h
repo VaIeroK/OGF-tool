@@ -13,7 +13,7 @@
 namespace xray_re {
 
 enum {
-	MAX_BONES	= 64,
+	MAX_BONES	= 223,
 };
 
 enum s_bone_shape_type {

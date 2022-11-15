@@ -8,6 +8,8 @@
 
 using namespace xray_re;
 
+int exit_code = 0;
+
 void usage()
 {
 	printf("X-Ray game asset converter (A.0.2.0 %s)\n", BUILD_DATE);
@@ -161,8 +163,7 @@ int main(int argc, char* argv[])
 	msg("total time: %.3lfs", (clock() - start) / 1.0 / CLOCKS_PER_SEC);
 
 	delete tools;
-
-	return 0;
+	return exit_code;
 }
 
 void tools_base::check_path(const char* path, bool& status) const

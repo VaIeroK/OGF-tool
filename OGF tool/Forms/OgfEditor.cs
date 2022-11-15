@@ -55,7 +55,7 @@ namespace OGF_tool
 		[DllImport("user32")]
 		private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
 
-		[DllImport("converter.dll")]
+		[DllImport("Converter.dll")]
 		private static extern int CSharpStartAgent(string path, string out_path, int mode, int convert_to_mode, string motion_list);
 
 		delegate void WriteObj(List<SSkelVert> Verts, List<SSkelFace> Faces, string texture);
@@ -63,10 +63,12 @@ namespace OGF_tool
 		{
 			string dll_path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\converter.dll";
 			if (File.Exists(dll_path))
-				return CSharpStartAgent(path, out_path, mode, convert_to_mode, "");
+			{
+                return CSharpStartAgent(path, out_path, mode, convert_to_mode, "");
+			}
 			else
 			{
-				MessageBox.Show("Can't find converter.dll", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("Can't find Converter.dll", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return -1;
 			}
 		}
@@ -1322,6 +1324,8 @@ namespace OGF_tool
             if (File.Exists(filename) && filename != FILE_NAME)
                 File.Delete(filename);
 
+			int exit_code = 0;
+
             switch (format)
 			{
 				case ExportFormat.OGF:
@@ -1345,7 +1349,7 @@ namespace OGF_tool
                     CopyParams();
                     SaveFile(filename + ext);
 
-                    RunConverter(filename + ext, filename, OGF_V.IsDM ? 2 : 0, 0);
+                    exit_code = RunConverter(filename + ext, filename, OGF_V.IsDM ? 2 : 0, 0);
 
                     if (File.Exists(filename + ext))
 						File.Delete(filename + ext);
@@ -1358,19 +1362,24 @@ namespace OGF_tool
                     }
                     break;
                 case ExportFormat.Bones:
-                    RunConverter(FILE_NAME, filename, 0, 1);
+                    exit_code = RunConverter(FILE_NAME, filename, 0, 1);
                     break;
                 case ExportFormat.Skl:
-                    RunConverter(FILE_NAME, filename, 0, 2);
+                    exit_code = RunConverter(FILE_NAME, filename, 0, 2);
                     break;
                 case ExportFormat.Skls:
-                    RunConverter(FILE_NAME, filename, 0, 3);
+                    exit_code = RunConverter(FILE_NAME, filename, 0, 3);
                     break;
             }
 
-			string Text = (NeedRepair() ? "Repaired and " : "") + (format == ExportFormat.OGF ? "Saved!" : "Exported!");
-            AutoClosingMessageBox.Show(Text, "", NeedRepair() ? 700 : 500, MessageBoxIcon.Information);
-		}
+			if (exit_code == 0)
+			{
+				string Text = (NeedRepair() ? "Repaired and " : "") + (format == ExportFormat.OGF ? "Saved!" : "Exported!");
+				AutoClosingMessageBox.Show(Text, "", NeedRepair() ? 700 : 500, MessageBoxIcon.Information);
+			}
+			else
+				AutoClosingMessageBox.Show("Export aborted!", "", 1500, MessageBoxIcon.Error);
+        }
 
 		private void objectToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -1872,13 +1881,18 @@ namespace OGF_tool
 			File.Copy(FILE_NAME, Filename);
 			CopyParams();
 			SaveFile(Filename);
-			RunConverter(Filename, ObjectName, 0, 0);
+			int exit_code = RunConverter(Filename, ObjectName, 0, 0);
 
-            Process proc = new Process();
-            proc.StartInfo.FileName = ObjectEditor;
-            proc.StartInfo.Arguments += $"\"{ObjectName}\" skeleton_only \"{FILE_NAME}\"";
-            proc.Start();
-			proc.WaitForExit();
+			if (exit_code == 0)
+			{
+				Process proc = new Process();
+				proc.StartInfo.FileName = ObjectEditor;
+				proc.StartInfo.Arguments += $"\"{ObjectName}\" skeleton_only \"{FILE_NAME}\"";
+				proc.Start();
+				proc.WaitForExit();
+			}
+			else
+                AutoClosingMessageBox.Show("Can't convert model to object!", "", 1500, MessageBoxIcon.Error);
         }
 
 		private void settingsToolStripMenuItem_Click(object sender, EventArgs e)

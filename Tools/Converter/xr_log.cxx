@@ -7,6 +7,8 @@
 #  include <Windows.h>// OutputDebugString
 #endif
 
+extern int exit_code;
+
 using namespace xray_re;
 
 xr_log::~xr_log()
@@ -76,7 +78,8 @@ void xr_log::fatal(const char* message, const char* file, unsigned line)
 {
 	diagnostic("[bug] %s at %s:%u", message, file, line);
 //	MessageBoxA(NULL, m_buf, "xray_re", MB_OK);
-	std::abort();
+	//std::abort();
+	exit_code = -1;
 }
 
 void xray_re::dbg(const char* format, ...)

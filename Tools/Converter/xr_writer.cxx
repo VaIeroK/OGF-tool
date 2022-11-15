@@ -7,6 +7,7 @@
 #include "xr_guid.h"
 #include "xr_lzhuf.h"
 
+extern int exit_code;
 using namespace xray_re;
 
 void xr_writer::open_chunk(uint32_t id)
@@ -134,23 +135,29 @@ size_t xr_memory_writer::tell()
 
 bool xr_memory_writer::save_to(const char* path, const std::string& name)
 {
-	xr_file_system& fs = xr_file_system::instance();
-	xr_writer* w = fs.w_open(path, name);
-	if (w == 0)
-		return false;
-	w->w_raw(&m_buffer[0], m_buffer.size());
-	fs.w_close(w);
+	if (exit_code == 0)
+	{
+		xr_file_system& fs = xr_file_system::instance();
+		xr_writer* w = fs.w_open(path, name);
+		if (w == 0)
+			return false;
+		w->w_raw(&m_buffer[0], m_buffer.size());
+		fs.w_close(w);
+	}
 	return true;
 }
 
 bool xr_memory_writer::save_to(const char* path)
 {
-	xr_file_system& fs = xr_file_system::instance();
-	xr_writer* w = fs.w_open(path);
-	if (w == 0)
-		return false;
-	w->w_raw(&m_buffer[0], m_buffer.size());
-	fs.w_close(w);
+	if (exit_code == 0)
+	{
+		xr_file_system& fs = xr_file_system::instance();
+		xr_writer* w = fs.w_open(path);
+		if (w == 0)
+			return false;
+		w->w_raw(&m_buffer[0], m_buffer.size());
+		fs.w_close(w);
+	}
 	return true;
 }
 
