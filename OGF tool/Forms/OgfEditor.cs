@@ -1924,15 +1924,16 @@ namespace OGF_tool
 			float old_lod = CurrentLod;
 			SwiLod swiLod = new SwiLod(CurrentLod);
 			swiLod.ShowDialog();
-			CurrentLod = swiLod.Lod;
 
-			if (old_lod != CurrentLod)
+			if (swiLod.res)
 			{
-				RecalcLod();
-
-                if (sender != null)
-                    ReloadViewPort(true, false, true);
-            }
+				CurrentLod = swiLod.Lod;
+				if (old_lod != CurrentLod)
+				{
+					RecalcLod();
+					ReloadViewPort(true, false, true);
+				}
+			}
         }
 
 		private void RecalcLod()
@@ -1948,21 +1949,26 @@ namespace OGF_tool
         private void removeProgressiveMeshesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             float old_lod = CurrentLod;
-            changeLodToolStripMenuItem_Click(null, null);
 
-			OGF_V.RemoveProgressive(CurrentLod);
+            SwiLod swiLod = new SwiLod(CurrentLod);
+            swiLod.ShowDialog();
 
-            for (int idx = 0; idx < OGF_V.childs.Count; idx++)
-            {
-                Control Mesh = TexturesPage.Controls["TextureGrpBox_" + idx.ToString()];
-                Label FaceLbl = (Label)Mesh.Controls["LodsLbl_" + idx.ToString()];
-				FaceLbl.Visible = false;
-            }
+			if (swiLod.res)
+			{
+				OGF_V.RemoveProgressive(CurrentLod);
 
-            removeProgressiveMeshesToolStripMenuItem.Enabled = LodMenuItem.Enabled = OGF_V.IsProgressive();
+				for (int idx = 0; idx < OGF_V.childs.Count; idx++)
+				{
+					Control Mesh = TexturesPage.Controls["TextureGrpBox_" + idx.ToString()];
+					Label FaceLbl = (Label)Mesh.Controls["LodsLbl_" + idx.ToString()];
+					FaceLbl.Visible = false;
+				}
 
-            if (old_lod != CurrentLod)
-                ReloadViewPort(true, false, true);
+				removeProgressiveMeshesToolStripMenuItem.Enabled = LodMenuItem.Enabled = OGF_V.IsProgressive();
+
+				if (old_lod != CurrentLod)
+					ReloadViewPort(true, false, true);
+			}
         }
 
         private string[] GameMtlParser(string filename)

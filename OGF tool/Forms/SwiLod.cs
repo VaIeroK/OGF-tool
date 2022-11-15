@@ -13,10 +13,12 @@ namespace OGF_tool
     public partial class SwiLod : Form
     {
         public float Lod = 0.0f;
+        public bool res = false;
         public SwiLod(float lod)
         {
             InitializeComponent();
             LodBar.Value = (int)(lod * LodBar.Maximum);
+            Lod = lod;
 
             ActiveControl = label1;
         }
@@ -24,6 +26,12 @@ namespace OGF_tool
         private void LodNum_ValueChanged(object sender, EventArgs e)
         {
             Lod = (float)LodBar.Value / (float)LodBar.Maximum;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            res = true;
+            Close();
         }
     }
 }
