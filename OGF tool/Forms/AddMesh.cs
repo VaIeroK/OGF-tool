@@ -33,8 +33,16 @@ namespace OGF_tool
             OGF = Main_OGF;
             LoadedOGF = Loaded_OGF;
 
-            if (!OGF.IsProgressive())
-                LoadedOGF.RemoveProgressive(0.0f);
+            if (!OGF.IsProgressive() && LoadedOGF.IsProgressive() || OGF.IsProgressive() && !LoadedOGF.IsProgressive())
+            {
+                if (MessageBox.Show("One of the two models has progressive meshes, delete progressive to continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    OGF.RemoveProgressive(0.0f);
+                    LoadedOGF.RemoveProgressive(0.0f);
+                }
+                else
+                    Close();
+            }
 
             for (int i = 0; i < LoadedOGF.childs.Count; i++)
             {
