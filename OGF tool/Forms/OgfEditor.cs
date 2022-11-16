@@ -1983,9 +1983,8 @@ namespace OGF_tool
 
             float[] old_offs = OGF_V.local_offset;
             float[] old_rot = OGF_V.local_rotation;
-            bool old_rot_flag = OGF_V.rotation_local;
 
-            MoveMesh moveMesh = new MoveMesh(old_offs, old_rot, old_rot_flag, false);
+            MoveMesh moveMesh = new MoveMesh(old_offs, old_rot, false, false);
             moveMesh.ShowDialog();
 
 			if (moveMesh.res)
@@ -2000,7 +1999,7 @@ namespace OGF_tool
 				}
             }
 
-            if (!FVec.Similar(old_offs, OGF_V.local_offset) || !FVec.Similar(old_rot, OGF_V.local_rotation) || old_rot_flag != OGF_V.rotation_local)
+            if (!FVec.Similar(old_offs, OGF_V.local_offset) || !FVec.Similar(old_rot, OGF_V.local_rotation))
             {
                 RecalcBBox(true);
                 ReloadViewPort(true, false, true);

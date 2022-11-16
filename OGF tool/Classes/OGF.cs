@@ -300,7 +300,6 @@ namespace OGF_tool
 
         public float[] local_offset;
         public float[] local_rotation;
-        public bool rotation_local;
 
         public OGF_Model()
         {
@@ -321,7 +320,6 @@ namespace OGF_tool
 
             local_offset = new float[3];
             local_rotation = new float[3];
-            rotation_local = false;
         }
 
         public bool IsProgressive()
