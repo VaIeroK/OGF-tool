@@ -110,6 +110,7 @@ namespace OGF_tool
             this.OpenInObjectEditor = new System.Windows.Forms.ToolStripMenuItem();
             this.importDataFromModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recalcNormalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recalcBoundingBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeProgressiveMeshesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.converterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCCoPToSoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -137,7 +138,6 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.recalcBoundingBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -697,6 +697,12 @@ namespace OGF_tool
             resources.ApplyResources(this.recalcNormalsToolStripMenuItem, "recalcNormalsToolStripMenuItem");
             this.recalcNormalsToolStripMenuItem.Click += new System.EventHandler(this.recalcNormalsToolStripMenuItem_Click);
             // 
+            // recalcBoundingBoxToolStripMenuItem
+            // 
+            this.recalcBoundingBoxToolStripMenuItem.Name = "recalcBoundingBoxToolStripMenuItem";
+            resources.ApplyResources(this.recalcBoundingBoxToolStripMenuItem, "recalcBoundingBoxToolStripMenuItem");
+            this.recalcBoundingBoxToolStripMenuItem.Click += new System.EventHandler(this.recalcBoundingBoxToolStripMenuItem_Click);
+            // 
             // removeProgressiveMeshesToolStripMenuItem
             // 
             this.removeProgressiveMeshesToolStripMenuItem.Name = "removeProgressiveMeshesToolStripMenuItem";
@@ -847,12 +853,6 @@ namespace OGF_tool
             // SaveObjDialog
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
-            // 
-            // recalcBoundingBoxToolStripMenuItem
-            // 
-            this.recalcBoundingBoxToolStripMenuItem.Name = "recalcBoundingBoxToolStripMenuItem";
-            resources.ApplyResources(this.recalcBoundingBoxToolStripMenuItem, "recalcBoundingBoxToolStripMenuItem");
-            this.recalcBoundingBoxToolStripMenuItem.Click += new System.EventHandler(this.recalcBoundingBoxToolStripMenuItem_Click);
             // 
             // OGF_Editor
             // 

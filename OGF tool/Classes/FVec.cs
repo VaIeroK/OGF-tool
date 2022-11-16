@@ -102,24 +102,56 @@ namespace OGF_tool
             return vec;
         }
 
-        static public float[] RotateZ(float[] v)
+        static public float[] RotateXYZ(float[] v, float x, float y, float z, float[] center)
         {
-            var vec = new float[3]
-            {
-                -v[0],
-                 v[1],
-                -v[2]
-            };
+            float yaw = z * (float)(Math.PI / 180.0f);
+            float pitch = y * (float)(Math.PI / 180.0f);
+            float roll = x * (float)(Math.PI / 180.0f);
 
-            return vec;
+            return RotateYPR(v, yaw, pitch, roll, center);
         }
 
-        static public float[] Rotate(float[] v, float[] k)
+        static public float[] RotateXYZ(float[] v, float x, float y, float z)
         {
-            float cos_theta = (float)Math.Cos(Math.PI);
-            float sin_theta = (float)Math.Sin(Math.PI);
-            
-            float[] rotated = Add(Mul(v, cos_theta), Add(Mul(CrossProduct(k, v), sin_theta), Mul(k, DotProduct(k, v) * (1 - cos_theta))));
+            float yaw = z * (float)(Math.PI / 180.0f);
+            float pitch = y * (float)(Math.PI / 180.0f);
+            float roll = x * (float)(Math.PI / 180.0f);
+
+            return RotateYPR(v, yaw, pitch, roll, new float[3]);
+        }
+
+        static public float[] RotateYPR(float[] v, float yaw, float pitch, float roll, float[] center)
+        {
+            float[] rotated = new float[3];
+
+            double cosa = Math.Cos(yaw);
+            double sina = Math.Sin(yaw);
+
+            double cosb = Math.Cos(pitch);
+            double sinb = Math.Sin(pitch);
+
+            double cosc = Math.Cos(roll);
+            double sinc = Math.Sin(roll);
+
+            double Axx = cosa * cosb;
+            double Axy = cosa * sinb * sinc - sina * cosc;
+            double Axz = cosa * sinb * cosc + sina * sinc;
+
+            double Ayx = sina * cosb;
+            double Ayy = sina * sinb * sinc + cosa * cosc;
+            double Ayz = sina * sinb * cosc - cosa * sinc;
+
+            double Azx = -sinb;
+            double Azy = cosb * sinc;
+            double Azz = cosb * cosc;
+
+            double px = v[0] - center[0];
+            double py = v[1] - center[1];
+            double pz = v[2] - center[2];
+
+            rotated[0] = (float)(Axx * px + Axy * py + Axz * pz) + center[0];
+            rotated[1] = (float)(Ayx * px + Ayy * py + Ayz * pz) + center[1];
+            rotated[2] = (float)(Azx * px + Azy * py + Azz * pz) + center[2];
 
             return rotated;
         }

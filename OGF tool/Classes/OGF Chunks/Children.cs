@@ -39,10 +39,36 @@ namespace OGF_tool
                 return new float[3];
         }
 
+        public float[] GetLocalRotation()
+        {
+            if (Vertices.Count > 0)
+                return Vertices[0].local_rotation;
+            else
+                return new float[3];
+        }
+
+        public bool GetLocalRotationFlag()
+        {
+            if (Vertices.Count > 0)
+                return Vertices[0].rotation_local;
+            else
+                return false;
+        }
+
         public void SetLocalOffset(float[] offs)
         {
             for (int i = 0; i < Vertices.Count; i++)
                 Vertices[i].local_offset = offs;
+        }
+
+        public void SetLocalRotation(float[] rot, float[] center, bool local)
+        {
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                Vertices[i].local_rotation = rot;
+                Vertices[i].center = center;
+                Vertices[i].rotation_local = local;
+            }
         }
 
         private int CalcLod(float lod)
@@ -83,6 +109,18 @@ namespace OGF_tool
                 links = count * 0x12071980;
             else
                 links = count;
+        }
+
+        public void RotateMesh(float x, float y, float z)
+        {
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                Vertices[i].offs = FVec.RotateXYZ(Vertices[i].offs, x, y, z);
+                Vertices[i].local_offset = FVec.RotateXYZ(Vertices[i].local_offset, x, y, z);
+                Vertices[i].norm = FVec.RotateXYZ(Vertices[i].norm, x, y, z);
+                Vertices[i].tang = FVec.RotateXYZ(Vertices[i].tang, x, y, z);
+                Vertices[i].binorm = FVec.RotateXYZ(Vertices[i].binorm, x, y, z);
+            }
         }
 
         public void MeshNormalize(bool generate_normal = true)
@@ -353,12 +391,12 @@ namespace OGF_tool
                 {
                     case 1:
                         temp.AddRange(FVec.GetBytes(vert.Offset()));
-                        temp.AddRange(FVec.GetBytes(vert.norm));
+                        temp.AddRange(FVec.GetBytes(vert.Norm()));
 
                         if (Header.format_version == 4)
                         {
-                            temp.AddRange(FVec.GetBytes(vert.tang));
-                            temp.AddRange(FVec.GetBytes(vert.binorm));
+                            temp.AddRange(FVec.GetBytes(vert.Tang()));
+                            temp.AddRange(FVec.GetBytes(vert.Binorm()));
                         }
 
                         temp.AddRange(FVec2.GetBytes(vert.uv));
@@ -369,10 +407,10 @@ namespace OGF_tool
                         temp.AddRange(BitConverter.GetBytes((short)vert.bones_id[1]));
 
                         temp.AddRange(FVec.GetBytes(vert.Offset()));
-                        temp.AddRange(FVec.GetBytes(vert.norm));
+                        temp.AddRange(FVec.GetBytes(vert.Norm()));
 
-                        temp.AddRange(FVec.GetBytes(vert.tang));
-                        temp.AddRange(FVec.GetBytes(vert.binorm));
+                        temp.AddRange(FVec.GetBytes(vert.Tang()));
+                        temp.AddRange(FVec.GetBytes(vert.Binorm()));
 
                         temp.AddRange(BitConverter.GetBytes(vert.bones_infl[0]));
                         temp.AddRange(FVec2.GetBytes(vert.uv));
@@ -383,10 +421,10 @@ namespace OGF_tool
                             temp.AddRange(BitConverter.GetBytes((short)vert.bones_id[j]));
 
                         temp.AddRange(FVec.GetBytes(vert.Offset()));
-                        temp.AddRange(FVec.GetBytes(vert.norm));
+                        temp.AddRange(FVec.GetBytes(vert.Norm()));
 
-                        temp.AddRange(FVec.GetBytes(vert.tang));
-                        temp.AddRange(FVec.GetBytes(vert.binorm));
+                        temp.AddRange(FVec.GetBytes(vert.Tang()));
+                        temp.AddRange(FVec.GetBytes(vert.Binorm()));
 
                         for (int j = 0; j < LinksCount() - 1; j++)
                             temp.AddRange(BitConverter.GetBytes(vert.bones_infl[j]));
@@ -395,7 +433,7 @@ namespace OGF_tool
                         break;
                     default: // Static
                         temp.AddRange(FVec.GetBytes(vert.Offset()));
-                        temp.AddRange(FVec.GetBytes(vert.norm));
+                        temp.AddRange(FVec.GetBytes(vert.Norm()));
                         temp.AddRange(FVec2.GetBytes(vert.uv));
                         break;
                 }

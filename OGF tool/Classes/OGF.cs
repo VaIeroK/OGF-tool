@@ -146,6 +146,10 @@ namespace OGF_tool
         public float[] bones_infl;
 
         public float[] local_offset;
+        public float[] local_rotation;
+
+        public float[] center;
+        public bool rotation_local;
 
         public SSkelVert()
         {
@@ -157,11 +161,34 @@ namespace OGF_tool
             bones_id = new uint[4] { 0, 0, 0, 0 };
             bones_infl = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
             local_offset = new float[3] { 0.0f, 0.0f, 0.0f };
+            local_rotation = new float[3] { 0.0f, 0.0f, 0.0f };
+            center = new float[3] { 0.0f, 0.0f, 0.0f };
+            rotation_local = false;
+        }
+
+        public float[] OffsetLocal()
+        {
+            return FVec.Add(offs, local_offset);
         }
 
         public float[] Offset()
         {
-            return FVec.Add(offs, local_offset);
+            return FVec.RotateXYZ(OffsetLocal(), local_rotation[0], local_rotation[1], local_rotation[2], rotation_local ? center : new float[3]);
+        }
+
+        public float[] Norm()
+        {
+            return FVec.RotateXYZ(norm, local_rotation[0], local_rotation[1], local_rotation[2]);
+        }
+
+        public float[] Tang()
+        {
+            return FVec.RotateXYZ(tang, local_rotation[0], local_rotation[1], local_rotation[2]);
+        }
+
+        public float[] Binorm()
+        {
+            return FVec.RotateXYZ(binorm, local_rotation[0], local_rotation[1], local_rotation[2]);
         }
 
         public static void GenerateNormals(ref List<SSkelVert> Vertices, List<SSkelFace> Faces, bool generate_normal = true)
@@ -180,8 +207,8 @@ namespace OGF_tool
                 int ib = Faces[i].v[1];
                 int ic = Faces[i].v[2];
 
-                float[] dv1 = FVec.Sub(Vertices[ia].Offset(), Vertices[ib].Offset());
-                float[] dv2 = FVec.Sub(Vertices[ic].Offset(), Vertices[ib].Offset());
+                float[] dv1 = FVec.Sub(Vertices[ia].OffsetLocal(), Vertices[ib].OffsetLocal());
+                float[] dv2 = FVec.Sub(Vertices[ic].OffsetLocal(), Vertices[ib].OffsetLocal());
                 float[] duv1 = FVec2.Sub(Vertices[ia].uv, Vertices[ib].uv);
                 float[] duv2 = FVec2.Sub(Vertices[ic].uv, Vertices[ib].uv);
 

@@ -169,7 +169,7 @@
     <value>9</value>
   </data>
   <data name="MoveMeshButton.Text" xml:space="preserve">
-    <value>Move Mesh</value>
+    <value>Move/Rotate</value>
   </data>
   <data name="&gt;&gt;MoveMeshButton.Name" xml:space="preserve">
     <value>MoveMeshButton</value>
@@ -1783,7 +1783,7 @@
     <value>0, 2</value>
   </data>
   <data name="MenuPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>533, 24</value>
+    <value>413, 24</value>
   </data>
   <data name="MenuPanel.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -2405,6 +2405,12 @@
   <data name="&gt;&gt;recalcNormalsToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;recalcBoundingBoxToolStripMenuItem.Name" xml:space="preserve">
+    <value>recalcBoundingBoxToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;recalcBoundingBoxToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;removeProgressiveMeshesToolStripMenuItem.Name" xml:space="preserve">
     <value>removeProgressiveMeshesToolStripMenuItem</value>
   </data>
@@ -2548,12 +2554,6 @@
   </data>
   <data name="&gt;&gt;SaveObjDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;recalcBoundingBoxToolStripMenuItem.Name" xml:space="preserve">
-    <value>recalcBoundingBoxToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;recalcBoundingBoxToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>OGF_Editor</value>

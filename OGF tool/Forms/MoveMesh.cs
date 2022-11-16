@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace OGF_tool
 {
@@ -8,9 +9,11 @@ namespace OGF_tool
     {
         public bool res = false;
         public float[] offset = new float[3];
+        public float[] rotation = new float[3];
         private bool bKeyIsDown = false;
+        public bool LocalRotation = false;
 
-        public MoveMesh(float[] offset)
+        public MoveMesh(float[] offset, float[] rotation, bool local_rotation)
         {
             InitializeComponent();
 
@@ -18,12 +21,43 @@ namespace OGF_tool
             PositionYTextBox.Text = ((decimal)offset[1]).ToString();
             PositionZTextBox.Text = ((decimal)offset[2]).ToString();
 
+            RotationXTextBox.Text = ((decimal)rotation[0]).ToString();
+            RotationYTextBox.Text = ((decimal)rotation[1]).ToString();
+            RotationZTextBox.Text = ((decimal)rotation[2]).ToString();
+
+            LocalRotationBox.Checked = local_rotation;
             ActiveControl = PositionLabelEx;
         }
 
         private void ApplyButton_Click(object sender, EventArgs e)
         {
             res = true;
+            LocalRotation = LocalRotationBox.Checked;
+
+            if (PositionXTextBox.Text.Length == 0)
+                PositionXTextBox.Text = "0";
+
+            if (PositionYTextBox.Text.Length == 0)
+                PositionYTextBox.Text = "0";
+
+            if (PositionZTextBox.Text.Length == 0)
+                PositionZTextBox.Text = "0";
+
+            if (RotationXTextBox.Text.Length == 0)
+                RotationXTextBox.Text = "0";
+
+            if (RotationYTextBox.Text.Length == 0)
+                RotationYTextBox.Text = "0";
+
+            if (RotationZTextBox.Text.Length == 0)
+                RotationZTextBox.Text = "0";
+
+            offset[0] = Convert.ToSingle(PositionXTextBox.Text);
+            offset[1] = Convert.ToSingle(PositionYTextBox.Text);
+            offset[2] = Convert.ToSingle(PositionZTextBox.Text);
+            rotation[0] = Convert.ToSingle(RotationXTextBox.Text);
+            rotation[1] = Convert.ToSingle(RotationYTextBox.Text);
+            rotation[2] = Convert.ToSingle(RotationZTextBox.Text);
 
             Close();
         }
@@ -55,6 +89,9 @@ namespace OGF_tool
                             case "PositionXTextBox": curBox.Text = offset[0].ToString(); break;
                             case "PositionYTextBox": curBox.Text = offset[1].ToString(); break;
                             case "PositionZTextBox": curBox.Text = offset[2].ToString(); break;
+                            case "RotationXTextBox": curBox.Text = rotation[0].ToString(); break;
+                            case "RotationYTextBox": curBox.Text = rotation[1].ToString(); break;
+                            case "RotationZTextBox": curBox.Text = rotation[2].ToString(); break;
                         }
 
                         if (curBox.SelectionStart < 1)
@@ -68,6 +105,9 @@ namespace OGF_tool
                         case "PositionXTextBox": offset[0] = Convert.ToSingle(curBox.Text); break;
                         case "PositionYTextBox": offset[1] = Convert.ToSingle(curBox.Text); break;
                         case "PositionZTextBox": offset[2] = Convert.ToSingle(curBox.Text); break;
+                        case "RotationXTextBox": rotation[0] = Convert.ToSingle(curBox.Text); break;
+                        case "RotationYTextBox": rotation[1] = Convert.ToSingle(curBox.Text); break;
+                        case "RotationZTextBox": rotation[2] = Convert.ToSingle(curBox.Text); break;
                     }
                 }
 

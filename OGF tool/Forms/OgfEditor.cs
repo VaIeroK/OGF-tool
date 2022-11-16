@@ -859,17 +859,17 @@ namespace OGF_tool
 
                         for (int i = 0; i < Vertices.Count; i++)
                         {
-                            ObjWriter.WriteLine($"vn {FVec.vPUSH(FVec.MirrorZ(Vertices[i].norm), "0.000000")}");
+                            ObjWriter.WriteLine($"vn {FVec.vPUSH(FVec.MirrorZ(Vertices[i].Norm()), "0.000000")}");
                         }
 
                         for (int i = 0; i < Vertices.Count; i++)
                         {
-                            ObjWriter.WriteLine($"vg {FVec.vPUSH(FVec.MirrorZ(Vertices[i].tang), "0.000000")}");
+                            ObjWriter.WriteLine($"vg {FVec.vPUSH(FVec.MirrorZ(Vertices[i].Tang()), "0.000000")}");
                         }
 
                         for (int i = 0; i < Vertices.Count; i++)
                         {
-                            ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(Vertices[i].binorm), "0.000000")}");
+                            ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(Vertices[i].Binorm()), "0.000000")}");
                         }
 
                         foreach (var f_it in Faces)
@@ -1086,17 +1086,23 @@ namespace OGF_tool
                     break;
                 case "MoveButton":
 					float[] old_offs = OGF_V.childs[idx].GetLocalOffset();
+                    float[] old_rot = OGF_V.childs[idx].GetLocalRotation();
+                    bool old_rot_flag = OGF_V.childs[idx].GetLocalRotationFlag();
 
-                    MoveMesh moveMesh = new MoveMesh(OGF_V.childs[idx].GetLocalOffset());
+                    MoveMesh moveMesh = new MoveMesh(old_offs, old_rot, old_rot_flag);
 					moveMesh.ShowDialog();
 
 					if (moveMesh.res)
+					{
 						OGF_V.childs[idx].SetLocalOffset(moveMesh.offset);
+                        OGF_V.childs[idx].SetLocalRotation(moveMesh.rotation, OGF_V.childs[idx].Header.bs.c, moveMesh.LocalRotation);
+                    }
 
-                    RecalcBBox(true);
-
-                    if (!FVec.Similar(old_offs, OGF_V.childs[idx].GetLocalOffset()))
-						ReloadViewPort(true, false, true);
+					if (!FVec.Similar(old_offs, OGF_V.childs[idx].GetLocalOffset()) || !FVec.Similar(old_rot, OGF_V.childs[idx].GetLocalRotation()) || old_rot_flag != OGF_V.childs[idx].GetLocalRotationFlag())
+					{
+                        RecalcBBox(true);
+                        ReloadViewPort(true, false, true);
+					}
                     break;
             }
 		}
@@ -2268,7 +2274,7 @@ namespace OGF_tool
 				{
 					OGF_V.ikdata.bones[i].position = Resources.SoCSkeleton.Pos(i);
 					OGF_V.ikdata.bones[i].rotation = Resources.SoCSkeleton.Rot(i);
-                    OGF_V.ikdata.bones[i].center_mass = FVec.RotateZ(OGF_V.ikdata.bones[i].center_mass);
+                    OGF_V.ikdata.bones[i].center_mass = FVec.RotateXYZ(OGF_V.ikdata.bones[i].center_mass, 0.0f, 180.0f, 0.0f);
 				}
 
                 foreach (var ch in OGF_V.childs)
@@ -2280,11 +2286,11 @@ namespace OGF_tool
 						for (int j = 0; j < links; j++)
 							ch.Vertices[i].bones_id[j] = (ch.Vertices[i].bones_id[j] >= 2 ? ch.Vertices[i].bones_id[j] - 2 : 0);
 
-						ch.Vertices[i].offs = FVec.RotateZ(ch.Vertices[i].offs);
-                        ch.Vertices[i].local_offset = FVec.RotateZ(ch.Vertices[i].local_offset);
-                        ch.Vertices[i].norm = FVec.RotateZ(ch.Vertices[i].norm);
-						ch.Vertices[i].tang = FVec.RotateZ(ch.Vertices[i].tang);
-						ch.Vertices[i].binorm = FVec.RotateZ(ch.Vertices[i].binorm);
+						ch.Vertices[i].offs = FVec.RotateXYZ(ch.Vertices[i].offs, 0.0f, 180.0f, 0.0f);
+                        ch.Vertices[i].local_offset = FVec.RotateXYZ(ch.Vertices[i].local_offset, 0.0f, 180.0f, 0.0f);
+                        ch.Vertices[i].norm = FVec.RotateXYZ(ch.Vertices[i].norm, 0.0f, 180.0f, 0.0f);
+						ch.Vertices[i].tang = FVec.RotateXYZ(ch.Vertices[i].tang, 0.0f, 180.0f, 0.0f);
+						ch.Vertices[i].binorm = FVec.RotateXYZ(ch.Vertices[i].binorm, 0.0f, 180.0f, 0.0f);
 					}
 				}
                 ReloadViewPort(true, false, true);
@@ -2310,7 +2316,7 @@ namespace OGF_tool
                 {
 					OGF_V.ikdata.bones[i].position = Resources.CoPSkeleton.Pos(i);
 					OGF_V.ikdata.bones[i].rotation = Resources.CoPSkeleton.Rot(i);
-					OGF_V.ikdata.bones[i].center_mass = FVec.RotateZ(OGF_V.ikdata.bones[i].center_mass);
+					OGF_V.ikdata.bones[i].center_mass = FVec.RotateXYZ(OGF_V.ikdata.bones[i].center_mass, 0.0f, 180.0f, 0.0f);
                 }
 
                 foreach (var ch in OGF_V.childs)
@@ -2320,11 +2326,11 @@ namespace OGF_tool
                         for (int j = 0; j < ch.LinksCount(); j++)
                             ch.Vertices[i].bones_id[j] = ch.Vertices[i].bones_id[j] + 2;
 
-                        ch.Vertices[i].offs = FVec.RotateZ(ch.Vertices[i].offs);
-                        ch.Vertices[i].local_offset = FVec.RotateZ(ch.Vertices[i].local_offset);
-                        ch.Vertices[i].norm = FVec.RotateZ(ch.Vertices[i].norm);
-                        ch.Vertices[i].tang = FVec.RotateZ(ch.Vertices[i].tang);
-                        ch.Vertices[i].binorm = FVec.RotateZ(ch.Vertices[i].binorm);
+                        ch.Vertices[i].offs = FVec.RotateXYZ(ch.Vertices[i].offs, 0.0f, 180.0f, 0.0f);
+                        ch.Vertices[i].local_offset = FVec.RotateXYZ(ch.Vertices[i].local_offset, 0.0f, 180.0f, 0.0f);
+                        ch.Vertices[i].norm = FVec.RotateXYZ(ch.Vertices[i].norm, 0.0f, 180.0f, 0.0f);
+                        ch.Vertices[i].tang = FVec.RotateXYZ(ch.Vertices[i].tang, 0.0f, 180.0f, 0.0f);
+                        ch.Vertices[i].binorm = FVec.RotateXYZ(ch.Vertices[i].binorm, 0.0f, 180.0f, 0.0f);
                     }
                 }
                 ReloadViewPort(true, false, true);
