@@ -123,18 +123,6 @@ namespace OGF_tool
                 links = count;
         }
 
-        public void RotateMesh(float x, float y, float z)
-        {
-            for (int i = 0; i < Vertices.Count; i++)
-            {
-                Vertices[i].offs = FVec.RotateXYZ(Vertices[i].offs, x, y, z);
-                Vertices[i].local_offset = FVec.RotateXYZ(Vertices[i].local_offset, x, y, z);
-                Vertices[i].norm = FVec.RotateXYZ(Vertices[i].norm, x, y, z);
-                Vertices[i].tang = FVec.RotateXYZ(Vertices[i].tang, x, y, z);
-                Vertices[i].binorm = FVec.RotateXYZ(Vertices[i].binorm, x, y, z);
-            }
-        }
-
         public void MeshNormalize(bool generate_normal = true)
         {
             SSkelVert.GenerateNormals(ref Vertices, Faces, generate_normal);

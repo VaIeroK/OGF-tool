@@ -173,26 +173,26 @@ namespace OGF_tool
         public float[] Offset()
         {
             float[] offset = FVec.Add(offs, local_offset);
-            offset = FVec.RotateXYZ(offset, local_rotation2[0], local_rotation2[1], local_rotation2[2]);
-            return FVec.RotateXYZ(offset, local_rotation[0], local_rotation[1], local_rotation[2], rotation_local ? center : new float[3]);
+            offset = FVec.RotateXYZ(offset, local_rotation2);
+            return FVec.RotateXYZ(offset, local_rotation, rotation_local ? center : new float[3]);
         }
 
         public float[] Norm()
         {
-            float[] vec = FVec.RotateXYZ(norm, local_rotation2[0], local_rotation2[1], local_rotation2[2]);
-            return FVec.RotateXYZ(vec, local_rotation[0], local_rotation[1], local_rotation[2]);
+            float[] vec = FVec.RotateXYZ(norm, local_rotation2);
+            return FVec.RotateXYZ(vec, local_rotation);
         }
 
         public float[] Tang()
         {
-            float[] vec = FVec.RotateXYZ(tang, local_rotation2[0], local_rotation2[1], local_rotation2[2]);
-            return FVec.RotateXYZ(vec, local_rotation[0], local_rotation[1], local_rotation[2]);
+            float[] vec = FVec.RotateXYZ(tang, local_rotation2);
+            return FVec.RotateXYZ(vec, local_rotation);
         }
 
         public float[] Binorm()
         {
-            float[] vec = FVec.RotateXYZ(binorm, local_rotation2[0], local_rotation2[1], local_rotation2[2]);
-            return FVec.RotateXYZ(vec, local_rotation[0], local_rotation[1], local_rotation[2]);
+            float[] vec = FVec.RotateXYZ(binorm, local_rotation2);
+            return FVec.RotateXYZ(vec, local_rotation);
         }
 
         public static void GenerateNormals(ref List<SSkelVert> Vertices, List<SSkelFace> Faces, bool generate_normal = true)

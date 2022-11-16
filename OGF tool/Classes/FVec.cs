@@ -102,6 +102,24 @@ namespace OGF_tool
             return vec;
         }
 
+        static public float[] RotateXYZ(float[] v, float[] rot, float[] center)
+        {
+            float yaw = rot[0] * (float)(Math.PI / 180.0f);
+            float pitch = rot[1] * (float)(Math.PI / 180.0f);
+            float roll = rot[2] * (float)(Math.PI / 180.0f);
+
+            return RotateYPR(v, yaw, pitch, roll, center);
+        }
+
+        static public float[] RotateXYZ(float[] v, float[] rot)
+        {
+            float yaw = rot[0] * (float)(Math.PI / 180.0f);
+            float pitch = rot[1] * (float)(Math.PI / 180.0f);
+            float roll = rot[2] * (float)(Math.PI / 180.0f);
+
+            return RotateYPR(v, yaw, pitch, roll, new float[3]);
+        }
+
         static public float[] RotateXYZ(float[] v, float x, float y, float z, float[] center)
         {
             float yaw = z * (float)(Math.PI / 180.0f);
