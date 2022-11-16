@@ -71,6 +71,18 @@ namespace OGF_tool
             }
         }
 
+        public void SetLocalOffsetMain(float[] offs)
+        {
+            for (int i = 0; i < Vertices.Count; i++)
+                Vertices[i].local_offset2 = offs;
+        }
+
+        public void SetLocalRotationMain(float[] rot)
+        {
+            for (int i = 0; i < Vertices.Count; i++)
+                Vertices[i].local_rotation2 = rot;
+        }
+
         private int CalcLod(float lod)
         {
             return (int)Math.Floor(lod * (SWI.Count - 1) + 0.5f);

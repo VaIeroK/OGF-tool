@@ -1089,7 +1089,7 @@ namespace OGF_tool
                     float[] old_rot = OGF_V.childs[idx].GetLocalRotation();
                     bool old_rot_flag = OGF_V.childs[idx].GetLocalRotationFlag();
 
-                    MoveMesh moveMesh = new MoveMesh(old_offs, old_rot, old_rot_flag);
+                    MoveMesh moveMesh = new MoveMesh(old_offs, old_rot, old_rot_flag, true);
 					moveMesh.ShowDialog();
 
 					if (moveMesh.res)
@@ -1975,6 +1975,36 @@ namespace OGF_tool
 				if (old_lod != CurrentLod)
 					ReloadViewPort(true, false, true);
 			}
+        }
+
+        private void moveRotateModelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			if (OGF_V == null) return;
+
+            float[] old_offs = OGF_V.local_offset;
+            float[] old_rot = OGF_V.local_rotation;
+            bool old_rot_flag = OGF_V.rotation_local;
+
+            MoveMesh moveMesh = new MoveMesh(old_offs, old_rot, old_rot_flag, false);
+            moveMesh.ShowDialog();
+
+			if (moveMesh.res)
+			{
+				OGF_V.local_offset = moveMesh.offset;
+                OGF_V.local_rotation = moveMesh.rotation;
+
+                for (int i = 0; i < OGF_V.childs.Count; i++)
+				{
+					OGF_V.childs[i].SetLocalOffsetMain(OGF_V.local_offset);
+					OGF_V.childs[i].SetLocalRotationMain(OGF_V.local_rotation);
+				}
+            }
+
+            if (!FVec.Similar(old_offs, OGF_V.local_offset) || !FVec.Similar(old_rot, OGF_V.local_rotation) || old_rot_flag != OGF_V.rotation_local)
+            {
+                RecalcBBox(true);
+                ReloadViewPort(true, false, true);
+            }
         }
 
         private string[] GameMtlParser(string filename)

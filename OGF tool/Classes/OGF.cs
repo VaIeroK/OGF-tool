@@ -147,6 +147,8 @@ namespace OGF_tool
 
         public float[] local_offset;
         public float[] local_rotation;
+        public float[] local_offset2;
+        public float[] local_rotation2;
 
         public float[] center;
         public bool rotation_local;
@@ -163,32 +165,34 @@ namespace OGF_tool
             local_offset = new float[3] { 0.0f, 0.0f, 0.0f };
             local_rotation = new float[3] { 0.0f, 0.0f, 0.0f };
             center = new float[3] { 0.0f, 0.0f, 0.0f };
+            local_offset2 = new float[3] { 0.0f, 0.0f, 0.0f };
+            local_rotation2 = new float[3] { 0.0f, 0.0f, 0.0f };
             rotation_local = false;
-        }
-
-        public float[] OffsetLocal()
-        {
-            return FVec.Add(offs, local_offset);
         }
 
         public float[] Offset()
         {
-            return FVec.RotateXYZ(OffsetLocal(), local_rotation[0], local_rotation[1], local_rotation[2], rotation_local ? center : new float[3]);
+            float[] offset = FVec.Add(offs, local_offset);
+            offset = FVec.RotateXYZ(offset, local_rotation2[0], local_rotation2[1], local_rotation2[2]);
+            return FVec.RotateXYZ(offset, local_rotation[0], local_rotation[1], local_rotation[2], rotation_local ? center : new float[3]);
         }
 
         public float[] Norm()
         {
-            return FVec.RotateXYZ(norm, local_rotation[0], local_rotation[1], local_rotation[2]);
+            float[] vec = FVec.RotateXYZ(norm, local_rotation2[0], local_rotation2[1], local_rotation2[2]);
+            return FVec.RotateXYZ(vec, local_rotation[0], local_rotation[1], local_rotation[2]);
         }
 
         public float[] Tang()
         {
-            return FVec.RotateXYZ(tang, local_rotation[0], local_rotation[1], local_rotation[2]);
+            float[] vec = FVec.RotateXYZ(tang, local_rotation2[0], local_rotation2[1], local_rotation2[2]);
+            return FVec.RotateXYZ(vec, local_rotation[0], local_rotation[1], local_rotation[2]);
         }
 
         public float[] Binorm()
         {
-            return FVec.RotateXYZ(binorm, local_rotation[0], local_rotation[1], local_rotation[2]);
+            float[] vec = FVec.RotateXYZ(binorm, local_rotation2[0], local_rotation2[1], local_rotation2[2]);
+            return FVec.RotateXYZ(vec, local_rotation[0], local_rotation[1], local_rotation[2]);
         }
 
         public static void GenerateNormals(ref List<SSkelVert> Vertices, List<SSkelFace> Faces, bool generate_normal = true)
@@ -207,8 +211,8 @@ namespace OGF_tool
                 int ib = Faces[i].v[1];
                 int ic = Faces[i].v[2];
 
-                float[] dv1 = FVec.Sub(Vertices[ia].OffsetLocal(), Vertices[ib].OffsetLocal());
-                float[] dv2 = FVec.Sub(Vertices[ic].OffsetLocal(), Vertices[ib].OffsetLocal());
+                float[] dv1 = FVec.Sub(Vertices[ia].offs, Vertices[ib].offs);
+                float[] dv2 = FVec.Sub(Vertices[ic].offs, Vertices[ib].offs);
                 float[] duv1 = FVec2.Sub(Vertices[ia].uv, Vertices[ib].uv);
                 float[] duv2 = FVec2.Sub(Vertices[ic].uv, Vertices[ib].uv);
 
@@ -294,6 +298,10 @@ namespace OGF_tool
         public uint chunk_size;
         public long pos;
 
+        public float[] local_offset;
+        public float[] local_rotation;
+        public bool rotation_local;
+
         public OGF_Model()
         {
             pos = 0;
@@ -310,6 +318,10 @@ namespace OGF_tool
             motion_refs = null;
             IsCopModel = false;
             Header = new OGF_Header();
+
+            local_offset = new float[3];
+            local_rotation = new float[3];
+            rotation_local = false;
         }
 
         public bool IsProgressive()

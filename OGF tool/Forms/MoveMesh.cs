@@ -13,7 +13,7 @@ namespace OGF_tool
         private bool bKeyIsDown = false;
         public bool LocalRotation = false;
 
-        public MoveMesh(float[] offset, float[] rotation, bool local_rotation)
+        public MoveMesh(float[] offset, float[] rotation, bool local_rotation, bool show_local)
         {
             InitializeComponent();
 
@@ -26,6 +26,13 @@ namespace OGF_tool
             RotationZTextBox.Text = ((decimal)rotation[2]).ToString();
 
             LocalRotationBox.Checked = local_rotation;
+
+            if (!show_local)
+            {
+                LocalRotationBox.Visible = false;
+                Size = new System.Drawing.Size(Width, 136);
+            }
+
             ActiveControl = PositionLabelEx;
         }
 
