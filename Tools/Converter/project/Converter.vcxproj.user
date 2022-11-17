@@ -13,7 +13,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>-ogf H:\progressive.ogf -out H:\progressive.skls</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-ogf H:\progressive.ogf -out H:\progressive.skls -object</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>
