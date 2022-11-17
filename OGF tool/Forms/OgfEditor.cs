@@ -347,6 +347,7 @@ namespace OGF_tool
 				LabelBroken.Visible = OGF_V.BrokenType > 0;
 			}
 
+			UpdateModelType();
 			UpdateModelFormat();
             UpdateNPC();
 
@@ -1830,10 +1831,10 @@ namespace OGF_tool
 
 			if (OGF_V.bonedata == null)
 				OGF_V.Header.Static(OGF_V.childs);
-			else if (OGF_V.motions.data() == null && !IsTextCorrect(MotionRefsBox.Text))
-                OGF_V.Header.Skeleton();
-			else
+			else if (OGF_V.motions.data() != null || IsTextCorrect(MotionRefsBox.Text))
                 OGF_V.Header.Animated();
+			else
+                OGF_V.Header.Skeleton();
 
 			// Апдейтим экспорт аним тут, т.к. при любом изменении омф вызывается эта функция
 			omfToolStripMenuItem.Enabled = OGF_V.motions.data() != null;

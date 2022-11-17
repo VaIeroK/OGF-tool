@@ -93,12 +93,12 @@ namespace OGF_tool
                 return type == (byte)ModelType.MT3_NORMAL || type == (byte)ModelType.MT3_PROGRESSIVE || type == (byte)ModelType.MT3_PROGRESSIVE2;
         }
 
-        public byte Skeleton()
+        public void Skeleton()
         {
             if (format_version == 4)
-                return (byte)ModelType.MT4_SKELETON_RIGID;
+                type = (byte)ModelType.MT4_SKELETON_RIGID;
             else
-                return (byte)ModelType.MT3_SKELETON_RIGID;
+                type = (byte)ModelType.MT3_SKELETON_RIGID;
         }
 
 
