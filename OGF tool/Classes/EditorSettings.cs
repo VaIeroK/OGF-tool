@@ -77,6 +77,11 @@ namespace OGF_tool
             pSettings.Write(key, var.ToString(), sMainSect);
         }
 
+        public void Save(string key, DateTime var)
+        {
+            pSettings.Write(key, var.ToString(), sMainSect);
+        }
+
         public bool Load(CheckBox box, bool def = false)
         {
             if (CheckVers())
@@ -156,6 +161,16 @@ namespace OGF_tool
             else
                 box.LinkVisited = def;
             return box.LinkVisited;
+        }
+
+        public DateTime Load(string param, DateTime def)
+        {
+            DateTime time;
+            if (CheckVers())
+                time = Convert.ToDateTime(pSettings.ReadDef(param, sMainSect, def.ToString()));
+            else
+                time = def;
+            return time;
         }
 
         public bool LoadState(string name, ref bool state, bool def = false)

@@ -214,7 +214,12 @@
   <ItemGroup>
     <Content Include="Ogf_Editor.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="GitHubUpdate\GitHubUpdate.csproj">
+      <Project>{d3121cdd-5bbd-4ef9-a268-8f2c0fdb900a}</Project>
+      <Name>GitHubUpdate</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y /d  "$(SolutionDir)SDK\binaries\f3d.exe" "$(OutDir)..\..\..\$(Configuration)"</PostBuildEvent>

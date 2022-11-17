@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{CF6C1E23
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{7F47EEB3-2988-471A-B903-ECCD97F65ABF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubUpdate", "OGF Tool\GitHubUpdate\GitHubUpdate.csproj", "{D3121CDD-5BBD-4EF9-A268-8F2C0FDB900A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -117,6 +119,14 @@ Global
 		{3333600A-E906-4581-BD0F-81DED38ECE71}.Release|x64.Build.0 = Release|x64
 		{3333600A-E906-4581-BD0F-81DED38ECE71}.Release|x86.ActiveCfg = Release|Win32
 		{3333600A-E906-4581-BD0F-81DED38ECE71}.Release|x86.Build.0 = Release|Win32
+		{D3121CDD-5BBD-4EF9-A268-8F2C0FDB900A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D3121CDD-5BBD-4EF9-A268-8F2C0FDB900A}.Debug|x64.Build.0 = Debug|Any CPU
+		{D3121CDD-5BBD-4EF9-A268-8F2C0FDB900A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D3121CDD-5BBD-4EF9-A268-8F2C0FDB900A}.Debug|x86.Build.0 = Debug|Any CPU
+		{D3121CDD-5BBD-4EF9-A268-8F2C0FDB900A}.Release|x64.ActiveCfg = Release|Any CPU
+		{D3121CDD-5BBD-4EF9-A268-8F2C0FDB900A}.Release|x64.Build.0 = Release|Any CPU
+		{D3121CDD-5BBD-4EF9-A268-8F2C0FDB900A}.Release|x86.ActiveCfg = Release|Any CPU
+		{D3121CDD-5BBD-4EF9-A268-8F2C0FDB900A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

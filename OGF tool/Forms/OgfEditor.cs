@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Diagnostics;
 using System.Drawing.Imaging;
+using GitHubUpdate;
 
 namespace OGF_tool
 {
@@ -24,6 +25,8 @@ namespace OGF_tool
 		public string FILE_NAME = "";
 		FolderSelectDialog SaveSklDialog = null;
 		public string[] game_materials = { };
+
+		public string PROGRAM_VERSION = "3.7";
 
 		// Input
 		public bool bKeyIsDown = false;
@@ -91,6 +94,8 @@ namespace OGF_tool
 
             InitializeComponent();
 
+			Text += " " + PROGRAM_VERSION;
+
             // Start init settings
 
             string file_path = AppPath() + "\\Settings.ini";
@@ -124,8 +129,16 @@ namespace OGF_tool
 			OgfInfo.Enabled = false;
 			SaveMenuParam.Enabled = false;
 			saveAsToolStripMenuItem.Enabled = false;
+
+			// Tools
 			OpenInObjectEditor.Enabled = false;
-			ToolsMenuItem.Enabled = false;
+			importDataFromModelToolStripMenuItem.Enabled = false;
+            recalcNormalsToolStripMenuItem.Enabled = false;
+            recalcBoundingBoxToolStripMenuItem.Enabled = false;
+			removeProgressiveMeshesToolStripMenuItem.Enabled = false;
+			moveRotateModelToolStripMenuItem.Enabled = false;
+			converterToolStripMenuItem.Enabled = false;
+
 			exportToolStripMenuItem.Enabled = false;
 			LabelBroken.Visible = false;
 			viewPortToolStripMenuItem.Visible = false;
@@ -133,7 +146,6 @@ namespace OGF_tool
             reloadToolStripMenuItem.Enabled = false;
             CurrentFormat.Enabled = false;
             AddMeshesMenuItem.Enabled = false;
-			removeProgressiveMeshesToolStripMenuItem.Enabled = false;
 
             SaveSklDialog = new FolderSelectDialog();
 
@@ -153,7 +165,22 @@ namespace OGF_tool
 
 			if (!Directory.Exists(TempFolder()))
 				Directory.CreateDirectory(TempFolder());
+
+			AutoCheckUpdates();
 		}
+
+		public void AutoCheckUpdates()
+		{
+			DateTime current_time = DateTime.Now;
+			DateTime last_update_time = pSettings.Load("LastUpdateTime", new System.DateTime(1970, 1, 1));
+
+			int days_passed = Convert.ToInt32((current_time - last_update_time).TotalDays);
+
+			if (days_passed >= 1)
+				checkUpdatesToolStripMenuItem_Click(checkUpdatesToolStripMenuItem, null);
+
+			pSettings.Save("LastUpdateTime", current_time);
+        }
 
 		public static string AppPath()
 		{
@@ -200,11 +227,17 @@ namespace OGF_tool
                 reloadToolStripMenuItem.Enabled = true;
                 SaveMenuParam.Enabled = true;
 				saveAsToolStripMenuItem.Enabled = true;
-				ToolsMenuItem.Enabled = !OGF_V.IsDM;
-				OpenInObjectEditor.Enabled = true;
-				exportToolStripMenuItem.Enabled = true;
-				bonesToolStripMenuItem.Enabled = OGF_V.Header.IsSkeleton();
+
+                OpenInObjectEditor.Enabled = !OGF_V.IsDM;
+                importDataFromModelToolStripMenuItem.Enabled = !OGF_V.IsDM;
+                recalcNormalsToolStripMenuItem.Enabled = !OGF_V.IsDM;
+                recalcBoundingBoxToolStripMenuItem.Enabled = !OGF_V.IsDM;
+                moveRotateModelToolStripMenuItem.Enabled = !OGF_V.IsDM;
+                converterToolStripMenuItem.Enabled = !OGF_V.IsDM;
                 removeProgressiveMeshesToolStripMenuItem.Enabled = LodMenuItem.Enabled = OGF_V.IsProgressive();
+
+                exportToolStripMenuItem.Enabled = true;
+				bonesToolStripMenuItem.Enabled = OGF_V.Header.IsSkeleton();
                 AddMeshesMenuItem.Enabled = OGF_V.Header.IsSkeleton();
                 OgfInfo.Enabled = !OGF_V.IsDM;
 
@@ -2066,7 +2099,47 @@ namespace OGF_tool
 			return ((decimal)val).ToString();
 		}
 
-		private void RichTextBoxImgDefender(object sender, KeyEventArgs e)
+        private void checkUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string user = "VaIeroK";
+            string repo = "OGF-tool";
+            string vers = PROGRAM_VERSION;
+            string asset = "OGF.Editor.";
+
+			try
+			{
+				UpdateChecker checker;
+				checker = new UpdateChecker(user, repo, vers);
+
+				var button = sender as ToolStripMenuItem;
+				button.Enabled = false;
+				checker.CheckUpdate().ContinueWith((continuation) =>
+				{
+					// if (continuation.Result == UpdateType.None)
+					//    return;
+
+					Invoke(new Action(() => // Go back to the UI thread
+					{
+						button.Enabled = true;
+						if (continuation.Result != UpdateType.None)
+						{
+							var result = new UpdateNotifyDialog(checker).ShowDialog();
+							if (result == DialogResult.Yes)
+							{
+								checker.DownloadAsset(asset);
+							}
+						}
+						else if (e != null)
+						{
+							MessageBox.Show("Up to date!");
+						}
+					}));
+				});
+			}
+			catch(Exception) { }
+        }
+
+        private void RichTextBoxImgDefender(object sender, KeyEventArgs e)
 		{
 			RichTextBox TextBox = sender as RichTextBox;
 			if (e.Control && e.KeyCode == Keys.V)
@@ -2949,5 +3022,5 @@ namespace OGF_tool
 				PrFolder.Start();
 			}
 		}
-	}
+    }
 }

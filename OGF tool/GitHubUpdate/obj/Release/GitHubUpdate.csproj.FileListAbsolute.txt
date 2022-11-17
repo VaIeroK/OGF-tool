@@ -1,0 +1,11 @@
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\bin\Release\GitHubUpdate.dll
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\bin\Release\GitHubUpdate.pdb
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\bin\Release\Octokit.dll
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\bin\Release\Semver.dll
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\obj\Release\GitHubUpdate.csproj.AssemblyReference.cache
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\obj\Release\GitHubUpdate.csproj.CoreCompileInputs.cache
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\obj\Release\GitHubUpdate.csproj.CopyComplete
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\obj\Release\GitHubUpdate.dll
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\obj\Release\GitHubUpdate.pdb
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\obj\Release\GitHubUpdate.UpdateNotifyDialog.resources
+G:\projects\ValeroK\Ogf Editor\OGF Tool\GitHubUpdate\obj\Release\GitHubUpdate.csproj.GenerateResource.cache

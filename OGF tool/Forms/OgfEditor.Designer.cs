@@ -112,9 +112,11 @@ namespace OGF_tool
             this.recalcNormalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recalcBoundingBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeProgressiveMeshesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveRotateModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.converterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCCoPToSoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCSoCToCoPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OgfInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CurrentFormat = new System.Windows.Forms.ToolStripMenuItem();
@@ -138,7 +140,6 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.moveRotateModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -677,7 +678,8 @@ namespace OGF_tool
             this.recalcBoundingBoxToolStripMenuItem,
             this.removeProgressiveMeshesToolStripMenuItem,
             this.moveRotateModelToolStripMenuItem,
-            this.converterToolStripMenuItem});
+            this.converterToolStripMenuItem,
+            this.checkUpdatesToolStripMenuItem});
             this.ToolsMenuItem.Name = "ToolsMenuItem";
             resources.ApplyResources(this.ToolsMenuItem, "ToolsMenuItem");
             // 
@@ -711,6 +713,12 @@ namespace OGF_tool
             resources.ApplyResources(this.removeProgressiveMeshesToolStripMenuItem, "removeProgressiveMeshesToolStripMenuItem");
             this.removeProgressiveMeshesToolStripMenuItem.Click += new System.EventHandler(this.removeProgressiveMeshesToolStripMenuItem_Click);
             // 
+            // moveRotateModelToolStripMenuItem
+            // 
+            this.moveRotateModelToolStripMenuItem.Name = "moveRotateModelToolStripMenuItem";
+            resources.ApplyResources(this.moveRotateModelToolStripMenuItem, "moveRotateModelToolStripMenuItem");
+            this.moveRotateModelToolStripMenuItem.Click += new System.EventHandler(this.moveRotateModelToolStripMenuItem_Click);
+            // 
             // converterToolStripMenuItem
             // 
             this.converterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -730,6 +738,12 @@ namespace OGF_tool
             this.nPCSoCToCoPToolStripMenuItem.Name = "nPCSoCToCoPToolStripMenuItem";
             resources.ApplyResources(this.nPCSoCToCoPToolStripMenuItem, "nPCSoCToCoPToolStripMenuItem");
             this.nPCSoCToCoPToolStripMenuItem.Click += new System.EventHandler(this.NPC_ToCoP);
+            // 
+            // checkUpdatesToolStripMenuItem
+            // 
+            this.checkUpdatesToolStripMenuItem.Name = "checkUpdatesToolStripMenuItem";
+            resources.ApplyResources(this.checkUpdatesToolStripMenuItem, "checkUpdatesToolStripMenuItem");
+            this.checkUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkUpdatesToolStripMenuItem_Click);
             // 
             // OgfInfo
             // 
@@ -855,12 +869,6 @@ namespace OGF_tool
             // SaveObjDialog
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
-            // 
-            // moveRotateModelToolStripMenuItem
-            // 
-            this.moveRotateModelToolStripMenuItem.Name = "moveRotateModelToolStripMenuItem";
-            resources.ApplyResources(this.moveRotateModelToolStripMenuItem, "moveRotateModelToolStripMenuItem");
-            this.moveRotateModelToolStripMenuItem.Click += new System.EventHandler(this.moveRotateModelToolStripMenuItem_Click);
             // 
             // OGF_Editor
             // 
@@ -1013,6 +1021,7 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem removeProgressiveMeshesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem recalcBoundingBoxToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveRotateModelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkUpdatesToolStripMenuItem;
     }
 }
 
