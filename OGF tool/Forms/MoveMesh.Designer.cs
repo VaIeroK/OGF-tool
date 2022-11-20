@@ -161,7 +161,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MoveMesh";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Mesh Offset";
+            this.Text = "Mesh Transform";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -26,7 +26,7 @@ namespace OGF_tool
 		FolderSelectDialog SaveSklDialog = null;
 		public string[] game_materials = { };
 
-		public string PROGRAM_VERSION = "3.7";
+		public string PROGRAM_VERSION = "3.8";
 
 		// Input
 		public bool bKeyIsDown = false;
@@ -177,9 +177,10 @@ namespace OGF_tool
 			int days_passed = Convert.ToInt32((current_time - last_update_time).TotalDays);
 
 			if (days_passed >= 1)
+			{
 				checkUpdatesToolStripMenuItem_Click(checkUpdatesToolStripMenuItem, null);
-
-			pSettings.Save("LastUpdateTime", current_time);
+				pSettings.Save("LastUpdateTime", current_time);
+			}
         }
 
 		public static string AppPath()
