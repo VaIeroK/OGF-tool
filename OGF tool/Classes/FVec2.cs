@@ -59,6 +59,28 @@ namespace OGF_tool
             return vec;
         }
 
+        static public float[] Min(float[] v1, float[] v2)
+        {
+            var vec = new float[2]
+            {
+                Math.Min(v1[0], v2[0]),
+                Math.Min(v1[1], v2[1])
+            };
+
+            return vec;
+        }
+
+        static public float[] Max(float[] v1, float[] v2)
+        {
+            var vec = new float[2]
+            {
+                Math.Max(v1[0], v2[0]),
+                Math.Max(v1[1], v2[1])
+            };
+
+            return vec;
+        }
+
         static public bool Similar(float[] v1, float[] v2)
         {
             if (v1[0] != v2[0]) return false;

@@ -74,7 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Collision.cs" />
+    <Compile Include="Classes\BoundingMesh.cs" />
     <Compile Include="Classes\Copy.cs" />
     <Compile Include="Classes\FVec.cs" />
     <Compile Include="Classes\FVec2.cs" />
@@ -222,6 +222,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y /d  "$(SolutionDir)SDK\binaries\f3d.exe" "$(OutDir)..\..\..\$(Configuration)"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y /d  "$(SolutionDir)SDK\binaries\f3d.exe" "$(OutDir)..\..\..\$(Configuration)"
+xcopy /y /d  "$(SolutionDir)SDK\binaries\PngText.exe" "$(OutDir)..\..\..\$(Configuration)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
