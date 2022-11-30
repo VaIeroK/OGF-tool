@@ -248,6 +248,7 @@ namespace OGF_tool
 				bonesToolStripMenuItem.Enabled = OGF_V.Header.IsSkeleton();
                 AddMeshesMenuItem.Enabled = OGF_V.Header.IsSkeleton();
                 OgfInfo.Enabled = !OGF_V.IsDM;
+				showBonesToolStripMenuItem.Enabled = OGF_V.bonedata != null && OGF_V.ikdata != null;
 
 				OpenOGFDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				OpenOGF_DmDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
@@ -972,7 +973,7 @@ namespace OGF_tool
 						List<SSkelFace> Faces = new List<SSkelFace>();
 						Faces.AddRange(ch.Faces_SWI(lod));
 
-						Writer(sSkelVerts, Faces, ch.m_texture);
+						Writer(sSkelVerts, Faces, ViewPortBones ? "null_texture" : ch.m_texture);
                     }
 
 					if (need_addons)
@@ -1004,7 +1005,7 @@ namespace OGF_tool
 							}
 						}
 
-						if (ViewPortBones && OGF_V.ikdata != null && OGF_V.bonedata != null)
+						if (ViewPortBones)
 						{
                             for (int i = 0; i < OGF_V.ikdata.bones.Count; i++)
                             {
@@ -1054,17 +1055,37 @@ namespace OGF_tool
         {
 			using (StreamWriter writer = File.CreateText(filename))
 			{
-				foreach (var ch in OGF_V.childs)
-				{
-					if (ch.to_delete) continue;
+                if (ViewPortBones)
+                {
+                    writer.WriteLine("newmtl null_texture");
+                    writer.WriteLine("Ka  0 0 0");
+                    writer.WriteLine("Kd  1 1 1");
+                    writer.WriteLine("Ks  0 0 0");
+                    writer.WriteLine("map_Kd null_texture.png\n");
 
-					writer.WriteLine("newmtl " + Path.GetFileName(ch.m_texture));
-					writer.WriteLine("Ka  0 0 0");
-					writer.WriteLine("Kd  1 1 1");
-					writer.WriteLine("Ks  0 0 0");
-					if (ViewPortTextures)
-						writer.WriteLine("map_Kd " + Path.GetFileName(ch.m_texture) + ".png\n");
-				}
+                    for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
+                    {
+                        writer.WriteLine($"newmtl {OGF_V.bonedata.bones[i].name}");
+                        writer.WriteLine("Ka  0 0 0");
+                        writer.WriteLine("Kd  1 1 1");
+                        writer.WriteLine("Ks  0 0 0");
+                        writer.WriteLine($"map_Kd bones\\{OGF_V.bonedata.bones[i].name}.png\n");
+                    }
+                }
+                else
+                {
+                    foreach (var ch in OGF_V.childs)
+                    {
+                        if (ch.to_delete) continue;
+
+                        writer.WriteLine("newmtl " + Path.GetFileName(ch.m_texture));
+                        writer.WriteLine("Ka  0 0 0");
+                        writer.WriteLine("Kd  1 1 1");
+                        writer.WriteLine("Ks  0 0 0");
+                        if (ViewPortTextures)
+                            writer.WriteLine("map_Kd " + Path.GetFileName(ch.m_texture) + ".png\n");
+                    }
+                }
 
                 if (ViewPortBBox)
                 {
@@ -1080,18 +1101,6 @@ namespace OGF_tool
                     writer.WriteLine("Ks  0 0 0");
                     writer.WriteLine("map_Kd bbox_texture.png\n");
                 }
-
-				if (ViewPortBones && OGF_V.ikdata != null && OGF_V.bonedata != null)
-				{
-					for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
-					{
-						writer.WriteLine($"newmtl {OGF_V.bonedata.bones[i].name}");
-						writer.WriteLine("Ka  0 0 0");
-						writer.WriteLine("Kd  1 1 1");
-						writer.WriteLine("Ks  0 0 0");
-						writer.WriteLine($"map_Kd bones\\{OGF_V.bonedata.bones[i].name}.png\n");
-					}
-				}
 
                 writer.Close();
 			}
@@ -2735,6 +2744,7 @@ namespace OGF_tool
 
 				string bbox_texture_main = TempFolder() + "\\bbox_main_texture.png";
                 string bbox_texture = TempFolder() + "\\bbox_texture.png";
+                string null_texture = TempFolder() + "\\null_texture.png";
                 if (ViewPortBBox && !File.Exists(bbox_texture_main))
 				{
                     using (Bitmap b = new Bitmap(8, 8))
@@ -2756,6 +2766,18 @@ namespace OGF_tool
                             g.Clear(Color.FromArgb(127, Color.Red));
                         }
                         b.Save(bbox_texture, ImageFormat.Png);
+                    }
+                }
+
+				if (ViewPortBones && !File.Exists(null_texture))
+				{
+                    using (Bitmap b = new Bitmap(8, 8))
+                    {
+                        using (Graphics g = Graphics.FromImage(b))
+                        {
+                            g.Clear(Color.FromArgb(70, 15, 25, 15));
+                        }
+                        b.Save(null_texture, ImageFormat.Png);
                     }
                 }
 
