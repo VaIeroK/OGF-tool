@@ -140,6 +140,7 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
+            this.showBonesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -770,6 +771,7 @@ namespace OGF_tool
             this.DisableTexturesMenuItem,
             this.disableAlphaToolStripMenuItem,
             this.showBBoxToolStripMenuItem,
+            this.showBonesToolStripMenuItem,
             this.openImageFolderToolStripMenuItem});
             this.viewPortToolStripMenuItem.Name = "viewPortToolStripMenuItem";
             resources.ApplyResources(this.viewPortToolStripMenuItem, "viewPortToolStripMenuItem");
@@ -827,6 +829,7 @@ namespace OGF_tool
             resources.ApplyResources(this.BkpCheckBox, "BkpCheckBox");
             this.BkpCheckBox.Name = "BkpCheckBox";
             this.BkpCheckBox.UseVisualStyleBackColor = true;
+            this.BkpCheckBox.CheckedChanged += new System.EventHandler(this.BkpCheckBox_CheckedChanged);
             // 
             // SaveAsDialog
             // 
@@ -869,6 +872,12 @@ namespace OGF_tool
             // SaveObjDialog
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
+            // 
+            // showBonesToolStripMenuItem
+            // 
+            this.showBonesToolStripMenuItem.Name = "showBonesToolStripMenuItem";
+            resources.ApplyResources(this.showBonesToolStripMenuItem, "showBonesToolStripMenuItem");
+            this.showBonesToolStripMenuItem.Click += new System.EventHandler(this.showBonesToolStripMenuItem_Click);
             // 
             // OGF_Editor
             // 
@@ -1022,6 +1031,7 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem recalcBoundingBoxToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveRotateModelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkUpdatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showBonesToolStripMenuItem;
     }
 }
 

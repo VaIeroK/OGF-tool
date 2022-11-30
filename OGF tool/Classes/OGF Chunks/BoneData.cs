@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace OGF_tool
@@ -111,5 +112,11 @@ namespace OGF_tool
 
             return temp.ToArray();
         }
+    }
+    public struct BoneRenderTransform
+    {
+        public float PosX, PosY, PosZ;
+        public float RotX, RotY, RotZ;
+        public float OutPosX, OutPosY, OutPosZ;
     }
 }

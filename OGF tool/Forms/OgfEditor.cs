@@ -25,6 +25,7 @@ namespace OGF_tool
 		public string FILE_NAME = "";
 		FolderSelectDialog SaveSklDialog = null;
 		public string[] game_materials = { };
+		public bool UseTexturesCache = false;
 
 		public string PROGRAM_VERSION = "3.8";
 
@@ -40,13 +41,14 @@ namespace OGF_tool
 		bool ViewPortAlpha = true;
 		bool ViewPortTextures = true;
 		public bool ViewPortBBox = false;
-		List<bool> OldChildVisible = new List<bool>();
+        public bool ViewPortBones = false;
+        List<bool> OldChildVisible = new List<bool>();
 		List<string> OldChildTextures = new List<string>();
 
-		Process ConverterProcess = new Process();
-		public bool ConverterWorking = false;
+        public Process[] ConverterProcess = new Process[2] { new Process(), new Process() };
+		public bool[] ConverterWorking = new bool[2] { false, false };
 
-		[DllImport("user32.dll")]
+        [DllImport("user32.dll")]
 		private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
 		[DllImport("user32.dll", SetLastError = true)]
@@ -61,7 +63,10 @@ namespace OGF_tool
 		[DllImport("Converter.dll")]
 		private static extern int CSharpStartAgent(string path, string out_path, int mode, int convert_to_mode, string motion_list);
 
-		delegate void WriteObj(List<SSkelVert> Verts, List<SSkelFace> Faces, string texture);
+        [DllImport("Converter.dll")]
+        private static extern void CalcBones([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.Struct, SizeParamIndex = 1)] ref BoneRenderTransform[] bones, int length, string child_list);
+
+        delegate void WriteObj(List<SSkelVert> Verts, List<SSkelFace> Faces, string texture);
         private int RunConverter(string path, string out_path, int mode, int convert_to_mode)
 		{
 			string dll_path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\converter.dll";
@@ -124,9 +129,11 @@ namespace OGF_tool
 			pSettings.Load("ViewportAlpha", ref ViewPortAlpha);
 			SetAlphaToolStrip(ViewPortAlpha);
 
+            pSettings.Load(BkpCheckBox);
+
             // End init settings
 
-			OgfInfo.Enabled = false;
+            OgfInfo.Enabled = false;
 			SaveMenuParam.Enabled = false;
 			saveAsToolStripMenuItem.Enabled = false;
 
@@ -219,9 +226,9 @@ namespace OGF_tool
 			LodPathBox.Clear();
 		}
 
-		private void AfterLoad(bool main_file)
+        private void AfterLoad(bool main_file)
 		{
-			if (main_file)
+            if (main_file)
 			{
 				StatusFile.Text = FILE_NAME.Substring(FILE_NAME.LastIndexOf('\\') + 1);
 
@@ -331,9 +338,8 @@ namespace OGF_tool
 							BoneNamesBox.Text += "\n";
 					}
 
-
-					// Ik Data
-					if (OGF_V.ikdata != null)
+                    // Ik Data
+                    if (OGF_V.ikdata != null)
 					{
 						TabControl.Controls.Add(BoneParamsPage);
 
@@ -341,7 +347,9 @@ namespace OGF_tool
 						{
 							CreateBoneGroupBox(i, OGF_V.bonedata.bones[i].name, OGF_V.bonedata.bones[i].parent_name, OGF_V.ikdata.bones[i].material, OGF_V.ikdata.bones[i].mass, OGF_V.ikdata.bones[i].center_mass, OGF_V.ikdata.bones[i].position, OGF_V.ikdata.bones[i].rotation);
 						}
-					}
+
+                        CalcBonesTransform(ref OGF_V);
+                    }
 				}
 
 				// Lod
@@ -387,7 +395,7 @@ namespace OGF_tool
 
             // View
             TabControl.Controls.Add(ViewPage);
-		}
+        }
 
 		private void CopyParams()
 		{
@@ -484,7 +492,45 @@ namespace OGF_tool
             OGF_V.Header.bs.CreateSphere(OGF_V.Header.bb);
         }
 
-		private void SaveFile(string filename)
+        private void CalcBonesTransform(ref OGF_Model OGF_C)
+        {
+            BoneRenderTransform[] transforms = new BoneRenderTransform[OGF_V.bonedata.bones.Count];
+            string child_list = "";
+
+            for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
+            {
+                transforms[i].PosX = OGF_V.ikdata.bones[i].position[0];
+                transforms[i].PosY = OGF_V.ikdata.bones[i].position[1];
+                transforms[i].PosZ = OGF_V.ikdata.bones[i].position[2];
+
+                transforms[i].RotX = OGF_V.ikdata.bones[i].rotation[0];
+                transforms[i].RotY = OGF_V.ikdata.bones[i].rotation[1];
+                transforms[i].RotZ = OGF_V.ikdata.bones[i].rotation[2];
+
+                if (i != 0)
+                    child_list += "-";
+
+                for (int j = 0; j < OGF_V.bonedata.bones[i].childs_id.Count; j++)
+                {
+                    child_list += $"{OGF_V.bonedata.bones[i].childs_id[j]}";
+                    if (j != OGF_V.bonedata.bones[i].childs_id.Count - 1)
+                        child_list += ",";
+                }
+            }
+
+            child_list += "-";
+
+            CalcBones(ref transforms, transforms.Length, child_list);
+
+            for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
+			{
+				OGF_V.ikdata.bones[i].render_transform[0] = transforms[i].OutPosX;
+                OGF_V.ikdata.bones[i].render_transform[1] = transforms[i].OutPosY;
+                OGF_V.ikdata.bones[i].render_transform[2] = transforms[i].OutPosZ;
+            }
+        }
+
+        private void SaveFile(string filename)
 		{
 			file_bytes.Clear();
 
@@ -859,7 +905,7 @@ namespace OGF_tool
 			return true;
 		}
 
-		private void SaveAsObj(string filename, float lod, bool need_bbox = false)
+		private void SaveAsObj(string filename, float lod, bool need_addons = false)
 		{
 			using (ObjWriter = File.CreateText(filename))
 			{
@@ -929,7 +975,7 @@ namespace OGF_tool
 						Writer(sSkelVerts, Faces, ch.m_texture);
                     }
 
-					if (need_bbox)
+					if (need_addons)
 					{
 						if (ViewPortBBox)
 						{
@@ -957,9 +1003,31 @@ namespace OGF_tool
 								Writer(sSkelVerts, Faces, "bbox_texture");
 							}
 						}
+
+						if (ViewPortBones && OGF_V.ikdata != null && OGF_V.bonedata != null)
+						{
+                            for (int i = 0; i < OGF_V.ikdata.bones.Count; i++)
+                            {
+                                List<SSkelVert> sSkelVerts = new List<SSkelVert>();
+                                List<SSkelFace> Faces = new List<SSkelFace>();
+
+                                float bbox_size = 0.024f;
+                                BBox bone_box = new BBox();
+                                bone_box.min = new float[3] { -bbox_size / 2, -bbox_size / 2, -bbox_size / 2 };
+                                bone_box.max = new float[3] { bbox_size / 2, bbox_size / 2, bbox_size / 2 };
+
+                                bone_box.min = FVec.Add(bone_box.min, OGF_V.ikdata.bones[i].render_transform);
+                                bone_box.max = FVec.Add(bone_box.max, OGF_V.ikdata.bones[i].render_transform);
+
+                                sSkelVerts.AddRange(bone_box.GetVisualVerts());
+                                Faces.AddRange(bone_box.GetVisualFaces(sSkelVerts));
+
+                                Writer(sSkelVerts, Faces, OGF_V.bonedata.bones[i].name);
+                            }
+                        }
 					}
 
-					ObjWriter.Close();
+                    ObjWriter.Close();
 					ObjWriter = null;
 				}
 				catch(Exception) { }
@@ -1012,6 +1080,18 @@ namespace OGF_tool
                     writer.WriteLine("Ks  0 0 0");
                     writer.WriteLine("map_Kd bbox_texture.png\n");
                 }
+
+				if (ViewPortBones && OGF_V.ikdata != null && OGF_V.bonedata != null)
+				{
+					for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
+					{
+						writer.WriteLine($"newmtl {OGF_V.bonedata.bones[i].name}");
+						writer.WriteLine("Ka  0 0 0");
+						writer.WriteLine("Kd  1 1 1");
+						writer.WriteLine("Ks  0 0 0");
+						writer.WriteLine($"map_Kd bones\\{OGF_V.bonedata.bones[i].name}.png\n");
+					}
+				}
 
                 writer.Close();
 			}
@@ -1086,8 +1166,8 @@ namespace OGF_tool
                     if (OGF_V.bonedata.bones[i].parent_name == old)
 						OGF_V.bonedata.bones[i].parent_name = _new;
                 }
-            }
-        }
+			}
+		}
 
         private void TextBoxKeyDown(object sender, KeyEventArgs e)
 		{
@@ -2220,20 +2300,23 @@ namespace OGF_tool
 			}
 			catch (Exception) { }
 
-			try
+			for (int i = 0; i < 2; i++)
 			{
-				if (ConverterWorking)
-                {
-					ConverterProcess.Kill();
-					ConverterProcess.Close();
-					ConverterWorking = false;
+				try
+				{
+					if (ConverterWorking[i])
+					{
+						ConverterProcess[i].Kill();
+						ConverterProcess[i].Close();
+						ConverterWorking[i] = false;
+					}
 				}
+				catch (Exception) { }
 			}
-			catch (Exception) { }
 
 			try
 			{
-				if (Directory.Exists(TempFolder(false)))
+				if (!UseTexturesCache && Directory.Exists(TempFolder(false)))
 					Directory.Delete(TempFolder(false), true);
 			}
 			catch (Exception) { }
@@ -2346,6 +2429,29 @@ namespace OGF_tool
                         AutoClosingMessageBox.Show("Mesh normals don't changed!", "", 1000, MessageBoxIcon.Warning);
                 }
             }
+        }
+
+        private void openImageFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string image_path = "";
+            pSettings.Load("ImagePath", ref image_path);
+
+            if (image_path != "" && Directory.Exists(image_path))
+            {
+                Process PrFolder = new Process();
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.CreateNoWindow = true;
+                psi.WindowStyle = ProcessWindowStyle.Normal;
+                psi.FileName = "explorer";
+                psi.Arguments = image_path;
+                PrFolder.StartInfo = psi;
+                PrFolder.Start();
+            }
+        }
+
+        private void BkpCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            pSettings.Save(BkpCheckBox);
         }
 
         private void recalcBoundingBoxToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2513,11 +2619,14 @@ namespace OGF_tool
 					ViewerProcess.Close();
 				}
 
-				if (ConverterWorking)
+				for (int i = 0; i < 2; i++)
 				{
-					ConverterProcess.Kill();
-					ConverterProcess.Close();
-					ConverterWorking = false;
+					if (ConverterWorking[i])
+					{
+						ConverterProcess[i].Kill();
+						ConverterProcess[i].Close();
+						ConverterWorking[i] = false;
+					}
 				}
 
 				if (ViewPortTextures)
@@ -2532,6 +2641,9 @@ namespace OGF_tool
 					{
 						string texture_main = Textures + "\\" + OGF_V.childs[i].m_texture + ".dds";
 						string texture_temp = TempFolder() + "\\" + Path.GetFileName(OGF_V.childs[i].m_texture + ".png");
+
+						if (File.Exists(texture_temp))
+							continue;
 
 						pTextures.Add(texture_main);
 						pTextures.Add(texture_temp);
@@ -2571,21 +2683,57 @@ namespace OGF_tool
 							ConverterArgs += $" \"{pConvertTextures[i]}\"";
 						}
 
-						ConverterWorking = true;
-						ConverterProcess = new Process();
+						ConverterWorking[0] = true;
+						ConverterProcess[0] = new Process();
 						ProcessStartInfo psi = new ProcessStartInfo();
 						psi.CreateNoWindow = true;
 						psi.UseShellExecute = false;
 						psi.FileName = AppPath() + "\\TextureConverter.exe";
 						psi.Arguments = ConverterArgs;
-						ConverterProcess.StartInfo = psi;
-						ConverterProcess.Start();
-						ConverterProcess.WaitForExit();
-						ConverterWorking = false;
+						ConverterProcess[0].StartInfo = psi;
+						ConverterProcess[0].Start();
 					}
 				}
 
-                string bbox_texture_main = TempFolder() + "\\bbox_main_texture.png";
+				if (OGF_V.ikdata != null && OGF_V.bonedata != null)
+				{
+					if (!Directory.Exists(TempFolder() + "\\bones"))
+						Directory.CreateDirectory(TempFolder() + "\\bones");
+
+                    string ConverterArgs = "";
+					int TexturesCount = 0;
+
+					for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
+					{
+						if (File.Exists($"{TempFolder()}\\bones\\{OGF_V.bonedata.bones[i].name}.png"))
+							continue;
+						ConverterArgs += $" \"{OGF_V.bonedata.bones[i].name}\" \"{TempFolder()}\\bones\\{OGF_V.bonedata.bones[i].name}.png\"";
+						TexturesCount++;
+                    }
+					
+					ConverterWorking[1] = true;
+					ConverterProcess[1] = new Process();
+					ProcessStartInfo psi = new ProcessStartInfo();
+					psi.CreateNoWindow = true;
+					psi.UseShellExecute = false;
+					psi.FileName = AppPath() + "\\TextToPng.exe";
+					psi.Arguments = $"{TexturesCount}{ConverterArgs}";
+					psi.WorkingDirectory = AppPath();
+                    ConverterProcess[1].StartInfo = psi;
+					ConverterProcess[1].Start();
+				}
+
+
+                for (int i = 0; i < 2; i++)
+				{
+					if (ConverterWorking[i])
+					{
+						ConverterProcess[i].WaitForExit();
+						ConverterWorking[i] = false;
+                    }
+                }
+
+				string bbox_texture_main = TempFolder() + "\\bbox_main_texture.png";
                 string bbox_texture = TempFolder() + "\\bbox_texture.png";
                 if (ViewPortBBox && !File.Exists(bbox_texture_main))
 				{
@@ -2722,6 +2870,19 @@ namespace OGF_tool
                 item.Text = "Show Bounding Box";
             else
                 item.Text = "Hide Bounding Box";
+
+            InitViewPort(true, false, true);
+        }
+
+        private void showBonesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            ViewPortBones = !ViewPortBones;
+
+            if (!ViewPortBones)
+                item.Text = "Show Bones";
+            else
+                item.Text = "Hide Bones";
 
             InitViewPort(true, false, true);
         }
@@ -3004,24 +3165,6 @@ namespace OGF_tool
 			box.Controls.Add(CenterMassLabel);
 			box.Controls.Add(PositionLabel);
 			box.Controls.Add(RotationLabel);
-		}
-
-        private void openImageFolderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-			string image_path = "";
-			pSettings.Load("ImagePath", ref image_path);
-
-			if (image_path != "" && Directory.Exists(image_path))
-			{
-				Process PrFolder = new Process();
-				ProcessStartInfo psi = new ProcessStartInfo();
-				psi.CreateNoWindow = true;
-				psi.WindowStyle = ProcessWindowStyle.Normal;
-				psi.FileName = "explorer";
-				psi.Arguments = image_path;
-				PrFolder.StartInfo = psi;
-				PrFolder.Start();
-			}
 		}
     }
 }

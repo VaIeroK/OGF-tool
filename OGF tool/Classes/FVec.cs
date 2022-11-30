@@ -126,6 +126,42 @@ namespace OGF_tool
             return vec;
         }
 
+        static public float[] RotateXYZRad(float[] v, float[] rot, float[] center)
+        {
+            float yaw = rot[0];
+            float pitch = rot[1];
+            float roll = rot[2];
+
+            return RotateYPR(v, yaw, pitch, roll, center);
+        }
+
+        static public float[] RotateXYZRad(float[] v, float[] rot)
+        {
+            float yaw = rot[0];
+            float pitch = rot[1];
+            float roll = rot[2];
+
+            return RotateYPR(v, yaw, pitch, roll, new float[3]);
+        }
+
+        static public float[] RotateXYZRad(float[] v, float x, float y, float z, float[] center)
+        {
+            float yaw = z;
+            float pitch = y;
+            float roll = x;
+
+            return RotateYPR(v, yaw, pitch, roll, center);
+        }
+
+        static public float[] RotateXYZRad(float[] v, float x, float y, float z)
+        {
+            float yaw = z;
+            float pitch = y;
+            float roll = x;
+
+            return RotateYPR(v, yaw, pitch, roll, new float[3]);
+        }
+
         static public float[] RotateXYZ(float[] v, float[] rot, float[] center)
         {
             float yaw = rot[0] * (float)(Math.PI / 180.0f);
@@ -196,6 +232,16 @@ namespace OGF_tool
             rotated[2] = (float)(Azx * px + Azy * py + Azz * pz) + center[2];
 
             return rotated;
+        }
+
+        static public float[] RotateYPR(float[] v, float[] ypr, float[] center)
+        {
+            return RotateYPR(v, ypr[0], ypr[1], ypr[2], center);
+        }
+
+        static public float[] RotateYPR(float[] v, float[] ypr)
+        {
+            return RotateYPR(v, ypr[0], ypr[1], ypr[2], new float[3]);
         }
 
         static public bool Similar(float[] v1, float[] v2)

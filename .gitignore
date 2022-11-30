@@ -10,3 +10,4 @@ Bin/
 Lib/Win32/
 Lib/x64/
 *.htm
+Tools/TextToPng/__pycache__/

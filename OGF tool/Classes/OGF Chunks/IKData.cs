@@ -13,11 +13,13 @@ namespace OGF_tool
         public float[] position;
         public float[] rotation;
         public byte[] kinematic_data;
+        public float[] render_transform;
 
         public IK_Bone()
         {
             version = 0;
             mass = 0.0f;
+            render_transform = new float[3];
         }
     }
 

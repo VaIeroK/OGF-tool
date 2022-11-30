@@ -223,6 +223,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y /d  "$(SolutionDir)SDK\binaries\f3d.exe" "$(OutDir)..\..\..\$(Configuration)"
-xcopy /y /d  "$(SolutionDir)SDK\binaries\PngText.exe" "$(OutDir)..\..\..\$(Configuration)"</PostBuildEvent>
+xcopy /y /d  "$(SolutionDir)SDK\binaries\TextToPng.exe" "$(OutDir)..\..\..\$(Configuration)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

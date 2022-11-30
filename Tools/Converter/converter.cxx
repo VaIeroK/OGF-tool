@@ -175,6 +175,43 @@ void tools_base::check_path(const char* path, bool& status) const
 	}
 }
 
+struct BoneRenderTransform
+{
+	float PosX, PosY, PosZ;
+	float RotX, RotY, RotZ;
+	float OutPosX, OutPosY, OutPosZ;
+};
+
+struct BonesList
+{
+	BoneRenderTransform* trans;
+	std::vector<int> childs;
+};
+
+#include "xr_matrix.h"
+void CalculateBind(const fmatrix& parent_xform, std::vector<BonesList*> BoneArr, int idx)
+{
+	fmatrix m_bind_xform;
+	fvector3 offset, rotate;
+	offset.x = BoneArr[idx]->trans->PosX;
+	offset.y = BoneArr[idx]->trans->PosY;
+	offset.z = BoneArr[idx]->trans->PosZ;
+	rotate.x = BoneArr[idx]->trans->RotX;
+	rotate.y = BoneArr[idx]->trans->RotY;
+	rotate.z = BoneArr[idx]->trans->RotZ;
+
+	m_bind_xform.set_xyz_i(rotate);
+	m_bind_xform.c.set(offset);
+	m_bind_xform.mul_a_43(parent_xform);
+
+	BoneArr[idx]->trans->OutPosX = m_bind_xform.c.x;
+	BoneArr[idx]->trans->OutPosY = m_bind_xform.c.y;
+	BoneArr[idx]->trans->OutPosZ = m_bind_xform.c.z;
+
+	for (int i = 0; i < BoneArr[idx]->childs.size(); i++)
+		CalculateBind(m_bind_xform, BoneArr, BoneArr[idx]->childs[i]);
+}
+
 extern "C"
 {
 	_declspec(dllexport) int CSharpStartAgent(char* path, char* out_path, int mode, int convert_to_mode, const char* motions)
@@ -254,5 +291,57 @@ extern "C"
 			vmotions.push_back(temp_motion);
 
 		return main(ret_size, args);
+	}
+
+	_declspec(dllexport) void CalcBones(BoneRenderTransform** bones, int len, char* childs_list)
+	{
+		std::vector<BonesList*> Bones;
+
+		std::vector<int> bone_childs;
+		int bone_counter = 0;
+		std::string s_bone = "";
+		std::string child_list = childs_list;
+		for (int i = 0; i < child_list.size(); i++)
+		{
+			if (child_list[i] == '-') // Next bone
+			{
+				BonesList* Bone = new BonesList();
+
+				if (s_bone != "")
+				{
+					bone_childs.push_back(atoi(s_bone.c_str()));
+					s_bone = "";
+				}
+
+				// Get childs
+				Bone->trans = &(*bones)[bone_counter];
+				Bone->childs = bone_childs;
+				Bones.push_back(Bone);
+
+				bone_counter++;
+				bone_childs.clear();
+			}
+			else if (child_list[i] != ',') // int
+			{
+				s_bone += child_list[i];
+			}
+			else // , - next val
+			{
+				bone_childs.push_back(atoi(s_bone.c_str()));
+				s_bone = "";
+			}
+		}
+
+		if (!Bones.empty())
+		{
+			CalculateBind(fmatrix().identity(), Bones, 0);
+
+			for (int i = 0; i < Bones.size(); i++)
+			{
+				(*bones)[i].OutPosX = Bones[i]->trans->OutPosX;
+				(*bones)[i].OutPosY = Bones[i]->trans->OutPosY;
+				(*bones)[i].OutPosZ = Bones[i]->trans->OutPosZ;
+			}
+		}
 	}
 }
