@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
+using GitHubUpdate;
 
 namespace OGF_tool
 {
@@ -285,6 +286,48 @@ namespace OGF_tool
         {
             SaveParams();
             Close();
+        }
+
+        private void CheckUpdBnt_Click(object sender, EventArgs e)
+        {
+            string user = "VaIeroK";
+            string repo = "OGF-tool";
+            string vers = OGF_Editor.PROGRAM_VERSION;
+            string asset = "OGF.Editor.";
+
+            try
+            {
+                UpdateChecker checker;
+                checker = new UpdateChecker(user, repo, vers);
+
+                Button button = null;
+                if (sender != null)
+                {
+                    button = sender as Button;
+                    button.Enabled = false;
+                }
+                checker.CheckUpdate().ContinueWith((continuation) =>
+                {
+                    Invoke(new Action(() => // Go back to the UI thread
+                    {
+                        if (button != null)
+                            button.Enabled = true;
+                        if (continuation.Result != UpdateType.None)
+                        {
+                            var result = new UpdateNotifyDialog(checker).ShowDialog();
+                            if (result == DialogResult.Yes)
+                            {
+                                checker.DownloadAsset(asset);
+                            }
+                        }
+                        else if (e != null)
+                        {
+                            AutoClosingMessageBox.Show("Up to date!", "OGF Editor", 4000, MessageBoxIcon.Information);
+                        }
+                    }));
+                });
+            }
+            catch (Exception) { }
         }
     }
 }

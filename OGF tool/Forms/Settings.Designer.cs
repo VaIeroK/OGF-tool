@@ -49,6 +49,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.ViewportAlpha = new System.Windows.Forms.CheckBox();
             this.ApplyButton = new System.Windows.Forms.Button();
+            this.CheckUpdBnt = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -173,10 +174,18 @@
             this.ApplyButton.UseVisualStyleBackColor = true;
             this.ApplyButton.Click += new System.EventHandler(this.ApplyButton_Click);
             // 
+            // CheckUpdBnt
+            // 
+            resources.ApplyResources(this.CheckUpdBnt, "CheckUpdBnt");
+            this.CheckUpdBnt.Name = "CheckUpdBnt";
+            this.CheckUpdBnt.UseVisualStyleBackColor = true;
+            this.CheckUpdBnt.Click += new System.EventHandler(this.CheckUpdBnt_Click);
+            // 
             // Settings
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.CheckUpdBnt);
             this.Controls.Add(this.ApplyButton);
             this.Controls.Add(this.ViewportAlpha);
             this.Controls.Add(this.button6);
@@ -226,5 +235,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox ViewportAlpha;
         private System.Windows.Forms.Button ApplyButton;
+        private System.Windows.Forms.Button CheckUpdBnt;
     }
 }

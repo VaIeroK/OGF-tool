@@ -27,7 +27,7 @@ namespace OGF_tool
 		public string[] game_materials = { };
 		public bool UseTexturesCache = false;
 
-		public string PROGRAM_VERSION = "3.8";
+		static public string PROGRAM_VERSION = "3.8";
 
 		// Input
 		public bool bKeyIsDown = false;
@@ -99,7 +99,10 @@ namespace OGF_tool
 
             InitializeComponent();
 
-			Text += " " + PROGRAM_VERSION;
+            if (!Directory.Exists(TempFolder()))
+                Directory.CreateDirectory(TempFolder());
+
+            Text += " " + PROGRAM_VERSION;
 
             // Start init settings
 
@@ -125,9 +128,26 @@ namespace OGF_tool
 			if (File.Exists(gamemtl))
 				game_materials = GameMtlParser(gamemtl);
 
-			bool ViewPortAlpha = false;
-			pSettings.Load("ViewportAlpha", ref ViewPortAlpha);
-			SetAlphaToolStrip(ViewPortAlpha);
+            bool BBoxEnabled = false;
+            pSettings.Load("BBoxEnabled", ref BBoxEnabled);
+			if (BBoxEnabled)
+				showBBoxToolStripMenuItem_Click(showBBoxToolStripMenuItem, null);
+
+            bool BonesEnabled = false;
+            pSettings.Load("BonesEnabled", ref BonesEnabled);
+            if (BonesEnabled)
+                showBonesToolStripMenuItem_Click(showBonesToolStripMenuItem, null);
+
+            bool DisableTextures = false;
+            pSettings.Load("DisableTextures", ref DisableTextures, true);
+			if (!DisableTextures)
+				DisableTexturesMenuItem_Click(null, null);
+
+            bool DisableAlpha = false;
+            pSettings.Load("DisableAlpha", ref DisableAlpha, true);
+
+            if (!DisableAlpha)
+                disableAlphaToolStripMenuItem_Click(null, null);
 
             pSettings.Load(BkpCheckBox);
 
@@ -170,9 +190,6 @@ namespace OGF_tool
 				TabControl.Controls.Clear();
 			}
 
-			if (!Directory.Exists(TempFolder()))
-				Directory.CreateDirectory(TempFolder());
-
 			AutoCheckUpdates();
 		}
 
@@ -185,8 +202,32 @@ namespace OGF_tool
 
 			if (days_passed >= 1)
 			{
-				checkUpdatesToolStripMenuItem_Click(checkUpdatesToolStripMenuItem, null);
-				pSettings.Save("LastUpdateTime", current_time);
+                string user = "VaIeroK";
+                string repo = "OGF-tool";
+                string vers = OGF_Editor.PROGRAM_VERSION;
+                string asset = "OGF.Editor.";
+
+                try
+                {
+                    UpdateChecker checker;
+                    checker = new UpdateChecker(user, repo, vers);
+                    checker.CheckUpdate().ContinueWith((continuation) =>
+                    {
+                        Invoke(new Action(() => // Go back to the UI thread
+                        {
+                            if (continuation.Result != UpdateType.None)
+                            {
+                                var result = new UpdateNotifyDialog(checker).ShowDialog();
+                                if (result == DialogResult.Yes)
+                                {
+                                    checker.DownloadAsset(asset);
+                                }
+                            }
+                        }));
+                    });
+                }
+                catch (Exception) { }
+                pSettings.Save("LastUpdateTime", current_time);
 			}
         }
 
@@ -249,6 +290,9 @@ namespace OGF_tool
                 AddMeshesMenuItem.Enabled = OGF_V.Header.IsSkeleton();
                 OgfInfo.Enabled = !OGF_V.IsDM;
 				showBonesToolStripMenuItem.Enabled = OGF_V.bonedata != null && OGF_V.ikdata != null;
+
+				if (!showBonesToolStripMenuItem.Enabled && ViewPortBones)
+					showBonesToolStripMenuItem_Click(showBonesToolStripMenuItem, null);
 
 				OpenOGFDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				OpenOGF_DmDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
@@ -2189,46 +2233,6 @@ namespace OGF_tool
 			return ((decimal)val).ToString();
 		}
 
-        private void checkUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string user = "VaIeroK";
-            string repo = "OGF-tool";
-            string vers = PROGRAM_VERSION;
-            string asset = "OGF.Editor.";
-
-			try
-			{
-				UpdateChecker checker;
-				checker = new UpdateChecker(user, repo, vers);
-
-				var button = sender as ToolStripMenuItem;
-				button.Enabled = false;
-				checker.CheckUpdate().ContinueWith((continuation) =>
-				{
-					// if (continuation.Result == UpdateType.None)
-					//    return;
-
-					Invoke(new Action(() => // Go back to the UI thread
-					{
-						button.Enabled = true;
-						if (continuation.Result != UpdateType.None)
-						{
-							var result = new UpdateNotifyDialog(checker).ShowDialog();
-							if (result == DialogResult.Yes)
-							{
-								checker.DownloadAsset(asset);
-							}
-						}
-						else if (e != null)
-						{
-							MessageBox.Show("Up to date!");
-						}
-					}));
-				});
-			}
-			catch(Exception) { }
-        }
-
         private void RichTextBoxImgDefender(object sender, KeyEventArgs e)
 		{
 			RichTextBox TextBox = sender as RichTextBox;
@@ -2651,7 +2655,7 @@ namespace OGF_tool
 						string texture_main = Textures + "\\" + OGF_V.childs[i].m_texture + ".dds";
 						string texture_temp = TempFolder() + "\\" + Path.GetFileName(OGF_V.childs[i].m_texture + ".png");
 
-						if (File.Exists(texture_temp))
+						if (File.Exists(texture_temp) && !force_texture_reload)
 							continue;
 
 						pTextures.Add(texture_main);
@@ -2859,21 +2863,27 @@ namespace OGF_tool
 
 		private void disableAlphaToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (ViewerProcess == null || !ViewerWorking)
-				return;
-
 			ViewPortAlpha = !ViewPortAlpha;
-			SetAlphaToolStrip(ViewPortAlpha);
+            pSettings.Save("DisableAlpha", ViewPortAlpha);
 
-			InitViewPort(false, true, true);
+            if (ViewPortAlpha)
+                disableAlphaToolStripMenuItem.Text = "Disable Alpha";
+            else
+                disableAlphaToolStripMenuItem.Text = "Enable Alpha";
+
+            InitViewPort(false, true, true);
 		}
 
         private void DisableTexturesMenuItem_Click(object sender, EventArgs e)
         {
             ViewPortTextures = !ViewPortTextures;
+            pSettings.Save("DisableTextures", ViewPortTextures);
 
-            string mtl_name = TempFolder() + "\\" + Path.GetFileName(Path.ChangeExtension(FILE_NAME, ".mtl"));
-            SaveMtl(mtl_name);
+			if (OGF_V != null)
+			{
+				string mtl_name = TempFolder() + "\\" + Path.GetFileName(Path.ChangeExtension(FILE_NAME, ".mtl"));
+				SaveMtl(mtl_name);
+			}
 
             if (!ViewPortTextures)
 				DisableTexturesMenuItem.Text = "Enable Textures";
@@ -2888,6 +2898,8 @@ namespace OGF_tool
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             ViewPortBBox = !ViewPortBBox;
 
+            pSettings.Save("BBoxEnabled", ViewPortBBox);
+
             if (!ViewPortBBox)
                 item.Text = "Show Bounding Box";
             else
@@ -2901,21 +2913,14 @@ namespace OGF_tool
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             ViewPortBones = !ViewPortBones;
 
+            pSettings.Save("BonesEnabled", ViewPortBones);
+
             if (!ViewPortBones)
                 item.Text = "Show Bones";
             else
                 item.Text = "Hide Bones";
 
             InitViewPort(true, false, true);
-        }
-
-        private void SetAlphaToolStrip(bool enable)
-		{
-            ViewPortAlpha = enable;
-            if (ViewPortAlpha)
-                disableAlphaToolStripMenuItem.Text = "Disable Alpha";
-            else
-                disableAlphaToolStripMenuItem.Text = "Enable Alpha";
         }
 
 		private void ResizeEmbeddedApp(object sender, EventArgs e)

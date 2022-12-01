@@ -116,7 +116,6 @@ namespace OGF_tool
             this.converterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCCoPToSoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCSoCToCoPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OgfInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CurrentFormat = new System.Windows.Forms.ToolStripMenuItem();
@@ -125,6 +124,7 @@ namespace OGF_tool
             this.DisableTexturesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showBBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showBonesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openImageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusFile = new System.Windows.Forms.ToolStripStatusLabel();
@@ -140,7 +140,6 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.showBonesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -679,8 +678,7 @@ namespace OGF_tool
             this.recalcBoundingBoxToolStripMenuItem,
             this.removeProgressiveMeshesToolStripMenuItem,
             this.moveRotateModelToolStripMenuItem,
-            this.converterToolStripMenuItem,
-            this.checkUpdatesToolStripMenuItem});
+            this.converterToolStripMenuItem});
             this.ToolsMenuItem.Name = "ToolsMenuItem";
             resources.ApplyResources(this.ToolsMenuItem, "ToolsMenuItem");
             // 
@@ -740,12 +738,6 @@ namespace OGF_tool
             resources.ApplyResources(this.nPCSoCToCoPToolStripMenuItem, "nPCSoCToCoPToolStripMenuItem");
             this.nPCSoCToCoPToolStripMenuItem.Click += new System.EventHandler(this.NPC_ToCoP);
             // 
-            // checkUpdatesToolStripMenuItem
-            // 
-            this.checkUpdatesToolStripMenuItem.Name = "checkUpdatesToolStripMenuItem";
-            resources.ApplyResources(this.checkUpdatesToolStripMenuItem, "checkUpdatesToolStripMenuItem");
-            this.checkUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkUpdatesToolStripMenuItem_Click);
-            // 
             // OgfInfo
             // 
             this.OgfInfo.Name = "OgfInfo";
@@ -799,6 +791,12 @@ namespace OGF_tool
             this.showBBoxToolStripMenuItem.Name = "showBBoxToolStripMenuItem";
             resources.ApplyResources(this.showBBoxToolStripMenuItem, "showBBoxToolStripMenuItem");
             this.showBBoxToolStripMenuItem.Click += new System.EventHandler(this.showBBoxToolStripMenuItem_Click);
+            // 
+            // showBonesToolStripMenuItem
+            // 
+            this.showBonesToolStripMenuItem.Name = "showBonesToolStripMenuItem";
+            resources.ApplyResources(this.showBonesToolStripMenuItem, "showBonesToolStripMenuItem");
+            this.showBonesToolStripMenuItem.Click += new System.EventHandler(this.showBonesToolStripMenuItem_Click);
             // 
             // openImageFolderToolStripMenuItem
             // 
@@ -872,12 +870,6 @@ namespace OGF_tool
             // SaveObjDialog
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
-            // 
-            // showBonesToolStripMenuItem
-            // 
-            this.showBonesToolStripMenuItem.Name = "showBonesToolStripMenuItem";
-            resources.ApplyResources(this.showBonesToolStripMenuItem, "showBonesToolStripMenuItem");
-            this.showBonesToolStripMenuItem.Click += new System.EventHandler(this.showBonesToolStripMenuItem_Click);
             // 
             // OGF_Editor
             // 
@@ -1030,7 +1022,6 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem removeProgressiveMeshesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem recalcBoundingBoxToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveRotateModelToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem checkUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showBonesToolStripMenuItem;
     }
 }
