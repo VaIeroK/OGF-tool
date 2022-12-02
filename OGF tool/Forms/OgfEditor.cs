@@ -291,9 +291,6 @@ namespace OGF_tool
                 OgfInfo.Enabled = !OGF_V.IsDM;
 				showBonesToolStripMenuItem.Enabled = OGF_V.bonedata != null && OGF_V.ikdata != null;
 
-				if (!showBonesToolStripMenuItem.Enabled && ViewPortBones)
-					showBonesToolStripMenuItem_Click(showBonesToolStripMenuItem, null);
-
 				OpenOGFDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				OpenOGF_DmDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				SaveAsDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
@@ -1017,7 +1014,7 @@ namespace OGF_tool
 						List<SSkelFace> Faces = new List<SSkelFace>();
 						Faces.AddRange(ch.Faces_SWI(lod));
 
-						Writer(sSkelVerts, Faces, ViewPortBones ? "null_texture" : ch.m_texture);
+						Writer(sSkelVerts, Faces, ViewPortBones && showBonesToolStripMenuItem.Enabled ? "null_texture" : ch.m_texture);
                     }
 
 					if (need_addons)
@@ -1049,7 +1046,7 @@ namespace OGF_tool
 							}
 						}
 
-						if (ViewPortBones)
+						if (ViewPortBones && showBonesToolStripMenuItem.Enabled)
 						{
                             for (int i = 0; i < OGF_V.ikdata.bones.Count; i++)
                             {
@@ -1099,7 +1096,7 @@ namespace OGF_tool
         {
 			using (StreamWriter writer = File.CreateText(filename))
 			{
-                if (ViewPortBones)
+                if (ViewPortBones && showBonesToolStripMenuItem.Enabled)
                 {
                     writer.WriteLine("newmtl null_texture");
                     writer.WriteLine("Ka  0 0 0");
@@ -2773,7 +2770,7 @@ namespace OGF_tool
                     }
                 }
 
-				if (ViewPortBones && !File.Exists(null_texture))
+				if (ViewPortBones && showBonesToolStripMenuItem.Enabled && !File.Exists(null_texture))
 				{
                     using (Bitmap b = new Bitmap(8, 8))
                     {
@@ -2855,10 +2852,7 @@ namespace OGF_tool
 
 		private void reloadToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
-			if (ViewerProcess == null || !ViewerWorking)
-				return;
-
-			InitViewPort(true, true, true);
+            ReloadViewPort(true, true, true);
 		}
 
 		private void disableAlphaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2871,7 +2865,7 @@ namespace OGF_tool
             else
                 disableAlphaToolStripMenuItem.Text = "Enable Alpha";
 
-            InitViewPort(false, true, true);
+            ReloadViewPort(false, true, true);
 		}
 
         private void DisableTexturesMenuItem_Click(object sender, EventArgs e)
@@ -2890,7 +2884,7 @@ namespace OGF_tool
 			else
                 DisableTexturesMenuItem.Text = "Disable Textures";
 
-            InitViewPort(false, false, true);
+            ReloadViewPort(false, false, true);
         }
 
         private void showBBoxToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2905,7 +2899,7 @@ namespace OGF_tool
             else
                 item.Text = "Hide Bounding Box";
 
-            InitViewPort(true, false, true);
+            ReloadViewPort(true, false, true);
         }
 
         private void showBonesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2913,14 +2907,15 @@ namespace OGF_tool
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             ViewPortBones = !ViewPortBones;
 
-            pSettings.Save("BonesEnabled", ViewPortBones);
+			if (e != null)
+				pSettings.Save("BonesEnabled", ViewPortBones);
 
             if (!ViewPortBones)
                 item.Text = "Show Bones";
             else
                 item.Text = "Hide Bones";
 
-            InitViewPort(true, false, true);
+            ReloadViewPort(true, false, true);
         }
 
 		private void ResizeEmbeddedApp(object sender, EventArgs e)
