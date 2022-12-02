@@ -5,6 +5,8 @@
 #include "xr_file_system.h"
 #include "xr_log.h"
 #include <time.h>
+#include "xr_limits.h"
+#include "xr_matrix.h"
 
 using namespace xray_re;
 
@@ -180,36 +182,124 @@ struct BoneRenderTransform
 	float PosX, PosY, PosZ;
 	float RotX, RotY, RotZ;
 	float OutPosX, OutPosY, OutPosZ;
+	float OutRotX, OutRotY, OutRotZ;
+
+	fvector3 Pos()
+	{
+		fvector3 vec;
+		vec.x = PosX;
+		vec.y = PosY;
+		vec.z = PosZ;
+		return vec;
+	}
+
+	fvector3 Rot()
+	{
+		fvector3 vec;
+		vec.x = RotX;
+		vec.y = RotY;
+		vec.z = RotZ;
+		return vec;
+	}
 };
 
 struct BonesList
 {
 	BoneRenderTransform* trans;
 	std::vector<int> childs;
+	int parent;
+	fmatrix bind_xform;
 };
 
-#include "xr_matrix.h"
+void LoadBones(std::vector<BonesList*>& Bones, BoneRenderTransform** bones, char* childs_list)
+{
+	std::vector<int> bone_childs;
+	int bone_counter = 0;
+	std::string s_bone = "";
+	std::string child_list = childs_list;
+	for (int i = 0; i < child_list.size(); i++)
+	{
+		if (child_list[i] == '-') // Next bone
+		{
+			BonesList* Bone = new BonesList();
+
+			if (s_bone != "")
+			{
+				bone_childs.push_back(atoi(s_bone.c_str()));
+				s_bone = "";
+			}
+
+			// Get childs
+			if (!bone_childs.empty())
+			{
+				Bone->parent = bone_childs.back();
+				bone_childs.pop_back();
+
+				if (Bone->parent == 9999)
+					Bone->parent = -1;
+			}
+			else
+				Bone->parent = -1;
+
+			Bone->trans = &(*bones)[bone_counter];
+			Bone->childs = bone_childs;
+			Bones.push_back(Bone);
+
+			bone_counter++;
+			bone_childs.clear();
+		}
+		else if (child_list[i] != ',') // int
+		{
+			s_bone += child_list[i];
+		}
+		else // , - next val
+		{
+			bone_childs.push_back(atoi(s_bone.c_str()));
+			s_bone = "";
+		}
+	}
+}
+
 void CalculateBind(const fmatrix& parent_xform, std::vector<BonesList*> BoneArr, int idx)
 {
-	fmatrix m_bind_xform;
-	fvector3 offset, rotate;
-	offset.x = BoneArr[idx]->trans->PosX;
-	offset.y = BoneArr[idx]->trans->PosY;
-	offset.z = BoneArr[idx]->trans->PosZ;
-	rotate.x = BoneArr[idx]->trans->RotX;
-	rotate.y = BoneArr[idx]->trans->RotY;
-	rotate.z = BoneArr[idx]->trans->RotZ;
+	BoneArr[idx]->bind_xform.set_xyz_i(BoneArr[idx]->trans->Rot());
+	BoneArr[idx]->bind_xform.c.set(BoneArr[idx]->trans->Pos());
+	BoneArr[idx]->bind_xform.mul_a_43(parent_xform);
 
-	m_bind_xform.set_xyz_i(rotate);
-	m_bind_xform.c.set(offset);
-	m_bind_xform.mul_a_43(parent_xform);
-
-	BoneArr[idx]->trans->OutPosX = m_bind_xform.c.x;
-	BoneArr[idx]->trans->OutPosY = m_bind_xform.c.y;
-	BoneArr[idx]->trans->OutPosZ = m_bind_xform.c.z;
+	BoneArr[idx]->trans->OutPosX = BoneArr[idx]->bind_xform.c.x;
+	BoneArr[idx]->trans->OutPosY = BoneArr[idx]->bind_xform.c.y;
+	BoneArr[idx]->trans->OutPosZ = BoneArr[idx]->bind_xform.c.z;
 
 	for (int i = 0; i < BoneArr[idx]->childs.size(); i++)
-		CalculateBind(m_bind_xform, BoneArr, BoneArr[idx]->childs[i]);
+		CalculateBind(BoneArr[idx]->bind_xform, BoneArr, BoneArr[idx]->childs[i]);
+}
+
+void FixBind(std::vector<BonesList*> BoneArr, int idx)
+{
+	for (int i = 0; i < BoneArr[idx]->childs.size(); i++)
+		FixBind(BoneArr, BoneArr[idx]->childs[i]);
+
+	if (BoneArr[idx]->parent != -1)
+	{
+		fmatrix total, parent, local, parent_i, total_i, local_i;
+		total.set_xyz_i(BoneArr[idx]->trans->Rot());
+		total.c.set(BoneArr[idx]->trans->Pos());
+		parent.set_xyz_i(BoneArr[BoneArr[idx]->parent]->trans->Rot());
+		parent.c.set(BoneArr[BoneArr[idx]->parent]->trans->Pos());
+		parent_i.invert_43(parent);
+		total_i.invert_43(total);
+		local.mul_43(total_i, parent);
+		local_i.invert_43(local);
+
+		BoneArr[idx]->trans->OutPosX = BoneArr[idx]->trans->PosX = local_i.c.x;
+		BoneArr[idx]->trans->OutPosY = BoneArr[idx]->trans->PosY = local_i.c.y;
+		BoneArr[idx]->trans->OutPosZ = BoneArr[idx]->trans->PosZ = local_i.c.z;
+		fvector3 rotate;
+		local_i.get_xyz_i(rotate);
+		BoneArr[idx]->trans->OutRotX = BoneArr[idx]->trans->RotX = rotate.x;
+		BoneArr[idx]->trans->OutRotY = BoneArr[idx]->trans->RotY = rotate.y;
+		BoneArr[idx]->trans->OutRotZ = BoneArr[idx]->trans->RotZ = rotate.z;
+	}
 }
 
 extern "C"
@@ -296,41 +386,7 @@ extern "C"
 	_declspec(dllexport) void CalcBones(BoneRenderTransform** bones, int len, char* childs_list)
 	{
 		std::vector<BonesList*> Bones;
-
-		std::vector<int> bone_childs;
-		int bone_counter = 0;
-		std::string s_bone = "";
-		std::string child_list = childs_list;
-		for (int i = 0; i < child_list.size(); i++)
-		{
-			if (child_list[i] == '-') // Next bone
-			{
-				BonesList* Bone = new BonesList();
-
-				if (s_bone != "")
-				{
-					bone_childs.push_back(atoi(s_bone.c_str()));
-					s_bone = "";
-				}
-
-				// Get childs
-				Bone->trans = &(*bones)[bone_counter];
-				Bone->childs = bone_childs;
-				Bones.push_back(Bone);
-
-				bone_counter++;
-				bone_childs.clear();
-			}
-			else if (child_list[i] != ',') // int
-			{
-				s_bone += child_list[i];
-			}
-			else // , - next val
-			{
-				bone_childs.push_back(atoi(s_bone.c_str()));
-				s_bone = "";
-			}
-		}
+		LoadBones(Bones, bones, childs_list);
 
 		if (!Bones.empty())
 		{
@@ -342,6 +398,53 @@ extern "C"
 				(*bones)[i].OutPosY = Bones[i]->trans->OutPosY;
 				(*bones)[i].OutPosZ = Bones[i]->trans->OutPosZ;
 			}
+		}
+	}
+
+	_declspec(dllexport) void FixBonesBind(BoneRenderTransform** bones, int len, char* childs_list)
+	{
+		std::vector<BonesList*> Bones;
+		LoadBones(Bones, bones, childs_list);
+
+		if (!Bones.empty())
+		{
+			FixBind(Bones, 0);
+
+			for (int i = 0; i < Bones.size(); i++)
+			{
+				(*bones)[i].OutPosX = Bones[i]->trans->OutPosX;
+				(*bones)[i].OutPosY = Bones[i]->trans->OutPosY;
+				(*bones)[i].OutPosZ = Bones[i]->trans->OutPosZ;
+				(*bones)[i].OutRotX = Bones[i]->trans->OutRotX;
+				(*bones)[i].OutRotY = Bones[i]->trans->OutRotY;
+				(*bones)[i].OutRotZ = Bones[i]->trans->OutRotZ;
+			}
+		}
+	}
+
+	_declspec(dllexport) void FixVertexOffset(BoneRenderTransform** bones, int len, char* childs_list, int bone_0, float x, float y, float z)
+	{
+		std::vector<BonesList*> Bones;
+		LoadBones(Bones, bones, childs_list);
+
+		if (!Bones.empty())
+		{
+			CalculateBind(fmatrix().identity(), Bones, 0);
+
+			fvector3 pos;
+			pos.x = x;
+			pos.y = y;
+			pos.z = z;
+
+			fvector3* pv = &pos;
+			const fmatrix& xform = Bones[bone_0]->bind_xform;
+			fvector3 temp;
+			temp.transform(*pv, xform);
+			*pv = temp;
+
+			(*bones)[0].OutPosX = pv->x;
+			(*bones)[0].OutPosY = pv->y;
+			(*bones)[0].OutPosZ = pv->z;
 		}
 	}
 }

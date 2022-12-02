@@ -38,10 +38,11 @@ namespace OGF_tool
 		Process ViewerProcess = new Process();
 		public bool ViewerWorking = false;
 		public Thread ViewerThread = null;
-		bool ViewPortAlpha = true;
-		bool ViewPortTextures = true;
+		public bool ViewPortAlpha = true;
+        public bool ViewPortTextures = true;
 		public bool ViewPortBBox = false;
         public bool ViewPortBones = false;
+		public bool ViewPortNeedReload = false;
         List<bool> OldChildVisible = new List<bool>();
 		List<string> OldChildTextures = new List<string>();
 
@@ -65,6 +66,12 @@ namespace OGF_tool
 
         [DllImport("Converter.dll")]
         private static extern void CalcBones([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.Struct, SizeParamIndex = 1)] ref BoneRenderTransform[] bones, int length, string child_list);
+
+        [DllImport("Converter.dll")]
+        private static extern void FixBonesBind([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.Struct, SizeParamIndex = 1)] ref BoneRenderTransform[] bones, int length, string child_list);
+
+        [DllImport("Converter.dll")]
+        private static extern void FixVertexOffset([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.Struct, SizeParamIndex = 1)] ref BoneRenderTransform[] bones, int length, string child_list, int bone_0, float x, float y, float z);
 
         delegate void WriteObj(List<SSkelVert> Verts, List<SSkelFace> Faces, string texture);
         private int RunConverter(string path, string out_path, int mode, int convert_to_mode)
@@ -389,8 +396,6 @@ namespace OGF_tool
 						{
 							CreateBoneGroupBox(i, OGF_V.bonedata.bones[i].name, OGF_V.bonedata.bones[i].parent_name, OGF_V.ikdata.bones[i].material, OGF_V.ikdata.bones[i].mass, OGF_V.ikdata.bones[i].center_mass, OGF_V.ikdata.bones[i].position, OGF_V.ikdata.bones[i].rotation);
 						}
-
-                        CalcBonesTransform(ref OGF_V);
                     }
 				}
 
@@ -536,40 +541,47 @@ namespace OGF_tool
 
         private void CalcBonesTransform(ref OGF_Model OGF_C)
         {
-            BoneRenderTransform[] transforms = new BoneRenderTransform[OGF_V.bonedata.bones.Count];
-            string child_list = "";
-
-            for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
-            {
-                transforms[i].PosX = OGF_V.ikdata.bones[i].position[0];
-                transforms[i].PosY = OGF_V.ikdata.bones[i].position[1];
-                transforms[i].PosZ = OGF_V.ikdata.bones[i].position[2];
-
-                transforms[i].RotX = OGF_V.ikdata.bones[i].rotation[0];
-                transforms[i].RotY = OGF_V.ikdata.bones[i].rotation[1];
-                transforms[i].RotZ = OGF_V.ikdata.bones[i].rotation[2];
-
-                if (i != 0)
-                    child_list += "-";
-
-                for (int j = 0; j < OGF_V.bonedata.bones[i].childs_id.Count; j++)
-                {
-                    child_list += $"{OGF_V.bonedata.bones[i].childs_id[j]}";
-                    if (j != OGF_V.bonedata.bones[i].childs_id.Count - 1)
-                        child_list += ",";
-                }
-            }
-
-            child_list += "-";
-
-            CalcBones(ref transforms, transforms.Length, child_list);
-
-            for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
+			if (OGF_C.bonedata != null && OGF_C.ikdata != null)
 			{
-				OGF_V.ikdata.bones[i].render_transform[0] = transforms[i].OutPosX;
-                OGF_V.ikdata.bones[i].render_transform[1] = transforms[i].OutPosY;
-                OGF_V.ikdata.bones[i].render_transform[2] = transforms[i].OutPosZ;
-            }
+				string child_list;
+				BoneRenderTransform[] transforms = BoneRenderTransform.Setup(OGF_C, out child_list);
+
+				CalcBones(ref transforms, transforms.Length, child_list);
+
+				for (int i = 0; i < OGF_C.bonedata.bones.Count; i++)
+				{
+					OGF_C.ikdata.bones[i].render_transform = transforms[i].OutPos();
+				}
+			}
+        }
+
+        private void FixOldBonesBind(ref OGF_Model OGF_C)
+        {
+			if (OGF_C.bonedata != null && OGF_C.ikdata != null && OGF_C.ikdata.chunk_version == 2)
+			{
+				string child_list;
+				byte old_ver = OGF_C.ikdata.chunk_version;
+				OGF_C.ikdata.chunk_version = 0;
+				BoneRenderTransform[] transforms = BoneRenderTransform.Setup(OGF_C, out child_list);
+				OGF_C.ikdata.chunk_version = old_ver;
+
+				FixBonesBind(ref transforms, transforms.Length, child_list);
+
+				for (int i = 0; i < OGF_C.bonedata.bones.Count; i++)
+				{
+					OGF_C.ikdata.bones[i].fixed_position = transforms[i].OutPos();
+					OGF_C.ikdata.bones[i].fixed_rotation = transforms[i].OutRot();
+				}
+			}
+        }
+
+        private float[] FixOldVertexOffset(SSkelVert vert)
+        {
+            string child_list;
+            BoneRenderTransform[] transforms = BoneRenderTransform.Setup(OGF_V, out child_list);
+            FixVertexOffset(ref transforms, transforms.Length, child_list, (int)vert.bones_id[0], vert.Offset()[0], vert.Offset()[1], vert.Offset()[2]);
+
+			return new float[3] { transforms[0].OutPosX, transforms[0].OutPosY, transforms[0].OutPosZ };
         }
 
         private void SaveFile(string filename)
@@ -902,6 +914,9 @@ namespace OGF_tool
 					{
                         OGF_C.ikdata = new IK_Data();
                         OGF_C.ikdata.Load(xr_loader, OGF_C.bonedata.bones.Count, IKDataVers);
+
+                        FixOldBonesBind(ref OGF_C);
+						CalcBonesTransform(ref OGF_C);
                     }
                     else if (OGF_C.Header.format_version == 4) // Chunk not find, exit if Release OGF
                     {
@@ -1076,20 +1091,12 @@ namespace OGF_tool
 			}
 		}
 
-		// Некорректно, но лучше чем ничего
         private float[] SetupObjOffset(SSkelVert vert)
 		{
-            float[] vec = vert.Offset();
+			if (!OGF_V.Header.IsStaticSingle() && OGF_V.ikdata != null && OGF_V.ikdata.chunk_version == 2)
+				return FixOldVertexOffset(vert);
 
-            if (!OGF_V.Header.IsStaticSingle() && OGF_V.Header.format_version == 3 && OGF_V.ikdata != null)
-			{
-				float[] bone_pos = OGF_V.ikdata.bones[(int)vert.bones_id[0]].position;
-				bone_pos = FVec.Mul(bone_pos, -1.0f);
-				bone_pos[1] = -bone_pos[1];
-				vec = FVec.Add(vec, bone_pos);
-			}
-
-            return vec;
+			return vert.Offset();
 		}
 
 		private void SaveMtl(string filename)
@@ -1356,6 +1363,8 @@ namespace OGF_tool
 						break;
 				}
 
+				bool need_recalc_bones = false;
+
 				switch (currentField)
 				{
 					case "boneBox":
@@ -1386,14 +1395,21 @@ namespace OGF_tool
 					case "CenterBoxX": OGF_V.ikdata.bones[idx].center_mass[0] = Convert.ToSingle(curControl.Text); break;
 					case "CenterBoxY": OGF_V.ikdata.bones[idx].center_mass[1] = Convert.ToSingle(curControl.Text); break;
 					case "CenterBoxZ": OGF_V.ikdata.bones[idx].center_mass[2] = Convert.ToSingle(curControl.Text); break;
-					case "PositionX": OGF_V.ikdata.bones[idx].position[0] = Convert.ToSingle(curControl.Text); break;
-					case "PositionY": OGF_V.ikdata.bones[idx].position[1] = Convert.ToSingle(curControl.Text); break;
-					case "PositionZ": OGF_V.ikdata.bones[idx].position[2] = Convert.ToSingle(curControl.Text); break;
-					case "RotationX": OGF_V.ikdata.bones[idx].rotation[0] = Convert.ToSingle(curControl.Text); break;
-					case "RotationY": OGF_V.ikdata.bones[idx].rotation[1] = Convert.ToSingle(curControl.Text); break;
-					case "RotationZ": OGF_V.ikdata.bones[idx].rotation[2] = Convert.ToSingle(curControl.Text); break;
+					case "PositionX": OGF_V.ikdata.bones[idx].position[0] = Convert.ToSingle(curControl.Text); need_recalc_bones = true; break;
+					case "PositionY": OGF_V.ikdata.bones[idx].position[1] = Convert.ToSingle(curControl.Text); need_recalc_bones = true; break;
+					case "PositionZ": OGF_V.ikdata.bones[idx].position[2] = Convert.ToSingle(curControl.Text); need_recalc_bones = true; break;
+					case "RotationX": OGF_V.ikdata.bones[idx].rotation[0] = Convert.ToSingle(curControl.Text); need_recalc_bones = true; break;
+					case "RotationY": OGF_V.ikdata.bones[idx].rotation[1] = Convert.ToSingle(curControl.Text); need_recalc_bones = true; break;
+					case "RotationZ": OGF_V.ikdata.bones[idx].rotation[2] = Convert.ToSingle(curControl.Text); need_recalc_bones = true; break;
 				}
-			}
+
+				if (need_recalc_bones)
+				{
+					FixOldBonesBind(ref OGF_V);
+					CalcBonesTransform(ref OGF_V);
+					ViewPortNeedReload = true;
+                }
+            }
 
 			bKeyIsDown = false;
 		}
@@ -1704,7 +1720,7 @@ namespace OGF_tool
 					}
 				case "ViewPage":
 					{
-						InitViewPort();
+						InitViewPort(true, false, ViewPortNeedReload);
 						ViewPortItemVisible = true;
 						break;
 					}
@@ -2593,7 +2609,9 @@ namespace OGF_tool
 		private void ReloadViewPort(bool create_model = true, bool force_texture_reload = false, bool force_reload = false)
 		{
 			if (ViewerWorking && ViewerProcess != null)
-				InitViewPort(create_model, force_texture_reload, force_reload);
+			{
+                InitViewPort(create_model, force_texture_reload, force_reload);
+			}
         }
 
         private void InitViewPort(bool create_model = true, bool force_texture_reload = false, bool force_reload = false)
@@ -2604,6 +2622,7 @@ namespace OGF_tool
 
 			bool old_viewer = ViewerWorking;
 			ViewerWorking = false;
+            ViewPortNeedReload = false;
 
             if (ViewerThread != null && ViewerThread.ThreadState != System.Threading.ThreadState.Stopped)
 				ViewerThread.Abort();
@@ -2823,7 +2842,7 @@ namespace OGF_tool
 
 		private bool CheckViewportModelVers()
         {
-			if (OldChildTextures.Count != OGF_V.childs.Count || OldChildVisible.Count != OGF_V.childs.Count) return false;
+            if (OldChildTextures.Count != OGF_V.childs.Count || OldChildVisible.Count != OGF_V.childs.Count) return false;
 
 			if (OldChildTextures.Count != 0)
             {

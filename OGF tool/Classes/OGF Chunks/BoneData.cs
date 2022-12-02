@@ -118,5 +118,61 @@ namespace OGF_tool
         public float PosX, PosY, PosZ;
         public float RotX, RotY, RotZ;
         public float OutPosX, OutPosY, OutPosZ;
+        public float OutRotX, OutRotY, OutRotZ;
+
+        public float[] OutPos()
+        {
+            return new float[3] { OutPosX, OutPosY, OutPosZ };
+        }
+
+        public float[] OutRot()
+        {
+            return new float[3] { OutRotX, OutRotY, OutRotZ };
+        }
+
+        public static BoneRenderTransform[] Setup(OGF_Model OGF_V, out string child_list)
+        {
+            BoneRenderTransform[] transforms = new BoneRenderTransform[OGF_V.bonedata.bones.Count];
+            child_list = "";
+
+            for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
+            {
+                float[] pos, rot; 
+
+                if (OGF_V.ikdata.chunk_version == 2)
+                {
+                    pos = OGF_V.ikdata.bones[i].fixed_position;
+                    rot = OGF_V.ikdata.bones[i].fixed_rotation;
+                }
+                else
+                {
+                    pos = OGF_V.ikdata.bones[i].position;
+                    rot = OGF_V.ikdata.bones[i].rotation;
+                }
+
+                transforms[i].PosX = pos[0];
+                transforms[i].PosY = pos[1];
+                transforms[i].PosZ = pos[2];
+
+                transforms[i].RotX = rot[0];
+                transforms[i].RotY = rot[1];
+                transforms[i].RotZ = rot[2];
+
+                if (i != 0)
+                    child_list += "-";
+
+                for (int j = 0; j < OGF_V.bonedata.bones[i].childs_id.Count; j++)
+                    child_list += $"{OGF_V.bonedata.bones[i].childs_id[j]},";
+
+                if (OGF_V.bonedata.bones[i].parent_name != "")
+                    child_list += $"{OGF_V.bonedata.GetBoneID(OGF_V.bonedata.bones[i].parent_name)}";
+                else
+                    child_list += "9999";
+            }
+
+            child_list += "-";
+
+            return transforms;
+        }
     }
 }

@@ -11,6 +11,8 @@ namespace OGF_tool
         public uint version;
         public float[] center_mass;
         public float[] position;
+        public float[] fixed_position;
+        public float[] fixed_rotation;
         public float[] rotation;
         public byte[] kinematic_data;
         public float[] render_transform;
@@ -20,6 +22,8 @@ namespace OGF_tool
             version = 0;
             mass = 0.0f;
             render_transform = new float[3];
+            fixed_position = new float[3];
+            fixed_rotation = new float[3];
         }
     }
 
