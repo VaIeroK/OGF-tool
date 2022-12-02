@@ -17,6 +17,14 @@ namespace OGF_tool
         {
             childs_id = new List<int>();
         }
+
+        public string GetNotNullName()
+        {
+            if (name == "")
+                return "noname_bone";
+            else
+                return name;
+        }
     }
 
     public class BoneData

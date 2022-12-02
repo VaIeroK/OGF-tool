@@ -4,18 +4,22 @@ from sys import argv
 # Compile:
 # python -m auto_py_to_exe
 
-def create_texture(Text, OutPath):
+def create_texture(Text: str, OutPath: str):
+
+    ImageW, ImageH = (8, 8)
+    TextW, TextH = (8, 8)
     Font = ImageFont.truetype("cour.ttf", 32, encoding = 'UTF-8')
 
-    TempImg = Image.new("RGBA", (8, 8), "blue")
-    TempDraw = ImageDraw.Draw(TempImg)
-    TextW, TextH = TempDraw.textsize(Text, font = Font)
-
-    ImageW, ImageH = (TextW, TextW)
+    if Text != "":
+        TempImg = Image.new("RGBA", (ImageW, ImageH), "blue")
+        TempDraw = ImageDraw.Draw(TempImg)
+        TextW, TextH = TempDraw.textsize(Text, font = Font)
+        ImageW, ImageH = (TextW, TextW)
 
     Texture = Image.new("RGBA", (ImageW, ImageH), "blue")
-    TextDraw = ImageDraw.Draw(Texture)
-    TextDraw.text(((ImageW - TextW) / 2, (ImageH - TextH) / 2), Text, fill = "black", font = Font)
+    if Text != "":
+        TextDraw = ImageDraw.Draw(Texture)
+        TextDraw.text(((ImageW - TextW) / 2, (ImageH - TextH) / 2), Text, fill = "black", font = Font)
     Texture.save(OutPath)
 
 if __name__ == '__main__':
@@ -23,5 +27,5 @@ if __name__ == '__main__':
     ArgReader = 2
 
     for i in range(0, TexturesCount):
-        create_texture(argv[ArgReader], argv[ArgReader + 1])
+        create_texture(str(argv[ArgReader]), str(argv[ArgReader + 1]))
         ArgReader = ArgReader + 2

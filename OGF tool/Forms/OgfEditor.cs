@@ -980,7 +980,7 @@ namespace OGF_tool
                     WriteObj Writer = (Vertices, Faces, Texture) =>
 					{
                         ObjWriter.WriteLine($"g {model_id}");
-                        ObjWriter.WriteLine($"usemtl {Path.GetFileName(Texture)}");
+                        ObjWriter.WriteLine($"usemtl \"{Path.GetFileName(Texture)}\"");
                         model_id++;
 
                         for (int i = 0; i < Vertices.Count; i++)
@@ -1105,7 +1105,7 @@ namespace OGF_tool
 			{
                 if (ViewPortBones && showBonesToolStripMenuItem.Enabled)
                 {
-                    writer.WriteLine("newmtl null_texture");
+                    writer.WriteLine("newmtl \"null_texture\"");
                     writer.WriteLine("Ka  0 0 0");
                     writer.WriteLine("Kd  1 1 1");
                     writer.WriteLine("Ks  0 0 0");
@@ -1113,11 +1113,11 @@ namespace OGF_tool
 
                     for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
                     {
-                        writer.WriteLine($"newmtl {OGF_V.bonedata.bones[i].name}");
+                        writer.WriteLine($"newmtl \"{OGF_V.bonedata.bones[i].name}\"");
                         writer.WriteLine("Ka  0 0 0");
                         writer.WriteLine("Kd  1 1 1");
                         writer.WriteLine("Ks  0 0 0");
-                        writer.WriteLine($"map_Kd bones\\{OGF_V.bonedata.bones[i].name}.png\n");
+                        writer.WriteLine($"map_Kd bones\\{OGF_V.bonedata.bones[i].GetNotNullName()}.png\n");
                     }
                 }
                 else
@@ -1126,7 +1126,7 @@ namespace OGF_tool
                     {
                         if (ch.to_delete) continue;
 
-                        writer.WriteLine("newmtl " + Path.GetFileName(ch.m_texture));
+                        writer.WriteLine("newmtl \"" + Path.GetFileName(ch.m_texture) + "\"");
                         writer.WriteLine("Ka  0 0 0");
                         writer.WriteLine("Kd  1 1 1");
                         writer.WriteLine("Ks  0 0 0");
@@ -1137,7 +1137,7 @@ namespace OGF_tool
 
                 if (ViewPortBBox)
                 {
-                    writer.WriteLine("newmtl bbox_main_texture");
+                    writer.WriteLine("newmtl \"bbox_main_texture\"");
                     writer.WriteLine("Ka  0 0 0");
                     writer.WriteLine("Kd  1 1 1");
                     writer.WriteLine("Ks  0 0 0");
@@ -1388,7 +1388,8 @@ namespace OGF_tool
 								if (i != OGF_V.bonedata.bones.Count - 1)
 									BoneNamesBox.Text += "\n";
 							}
-						}
+							ViewPortNeedReload = true;
+                        }
 						break;
 					case "MaterialBox": OGF_V.ikdata.bones[idx].material = curControl.Text; break;
 					case "MassBox": OGF_V.ikdata.bones[idx].mass = Convert.ToSingle(curControl.Text); break;
@@ -1724,7 +1725,30 @@ namespace OGF_tool
 						ViewPortItemVisible = true;
 						break;
 					}
-			}
+				case "BoneParamsPage":
+					{
+                        for (int i = 0; i < BoneParamsPage.Controls.Count; i++)
+						{
+							if (OGF_V.ikdata == null || OGF_V.ikdata.bones.Count <= i)
+								break;
+
+							GroupBox box = BoneParamsPage.Controls["BoneGrpBox_" + i.ToString()] as GroupBox;
+							TableLayoutPanel layoutPanel = box.Controls["LayoutPanel_" + i.ToString()] as TableLayoutPanel;
+							(layoutPanel.Controls["PositionX_" + i.ToString()] as TextBox).Text = ((decimal)OGF_V.ikdata.bones[i].position[0]).ToString();
+							(layoutPanel.Controls["PositionY_" + i.ToString()] as TextBox).Text = ((decimal)OGF_V.ikdata.bones[i].position[1]).ToString();
+							(layoutPanel.Controls["PositionZ_" + i.ToString()] as TextBox).Text = ((decimal)OGF_V.ikdata.bones[i].position[2]).ToString();
+							(layoutPanel.Controls["RotationX_" + i.ToString()] as TextBox).Text = ((decimal)OGF_V.ikdata.bones[i].rotation[0]).ToString();
+							(layoutPanel.Controls["RotationY_" + i.ToString()] as TextBox).Text = ((decimal)OGF_V.ikdata.bones[i].rotation[1]).ToString();
+							(layoutPanel.Controls["RotationZ_" + i.ToString()] as TextBox).Text = ((decimal)OGF_V.ikdata.bones[i].rotation[2]).ToString();
+                            (layoutPanel.Controls["CenterBoxX_" + i.ToString()] as TextBox).Text = ((decimal)OGF_V.ikdata.bones[i].center_mass[0]).ToString();
+                            (layoutPanel.Controls["CenterBoxY_" + i.ToString()] as TextBox).Text = ((decimal)OGF_V.ikdata.bones[i].center_mass[1]).ToString();
+                            (layoutPanel.Controls["CenterBoxZ_" + i.ToString()] as TextBox).Text = ((decimal)OGF_V.ikdata.bones[i].center_mass[2]).ToString();
+                            (layoutPanel.Controls["MassBox_" + i.ToString()] as TextBox).Text = ((decimal)OGF_V.ikdata.bones[i].mass).ToString();
+						}
+						break;
+					}
+
+            }
 			viewPortToolStripMenuItem.Visible = ViewPortItemVisible;
 		}
 
@@ -2724,7 +2748,7 @@ namespace OGF_tool
 					}
 				}
 
-				if (OGF_V.ikdata != null && OGF_V.bonedata != null)
+				if (ViewPortBones && showBonesToolStripMenuItem.Enabled)
 				{
 					if (!Directory.Exists(TempFolder() + "\\bones"))
 						Directory.CreateDirectory(TempFolder() + "\\bones");
@@ -2734,9 +2758,9 @@ namespace OGF_tool
 
 					for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
 					{
-						if (File.Exists($"{TempFolder()}\\bones\\{OGF_V.bonedata.bones[i].name}.png"))
+                        if (File.Exists($"{TempFolder()}\\bones\\{OGF_V.bonedata.bones[i].GetNotNullName()}.png"))
 							continue;
-						ConverterArgs += $" \"{OGF_V.bonedata.bones[i].name}\" \"{TempFolder()}\\bones\\{OGF_V.bonedata.bones[i].name}.png\"";
+						ConverterArgs += $" \"{OGF_V.bonedata.bones[i].name}\" \"{TempFolder()}\\bones\\{OGF_V.bonedata.bones[i].GetNotNullName()}.png\"";
 						TexturesCount++;
                     }
 					
