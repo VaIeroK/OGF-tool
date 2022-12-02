@@ -1388,7 +1388,8 @@ namespace OGF_tool
 								if (i != OGF_V.bonedata.bones.Count - 1)
 									BoneNamesBox.Text += "\n";
 							}
-							ViewPortNeedReload = true;
+                            if (ViewPortBones)
+								ViewPortNeedReload = true;
                         }
 						break;
 					case "MaterialBox": OGF_V.ikdata.bones[idx].material = curControl.Text; break;
@@ -1404,12 +1405,8 @@ namespace OGF_tool
 					case "RotationZ": OGF_V.ikdata.bones[idx].rotation[2] = Convert.ToSingle(curControl.Text); need_recalc_bones = true; break;
 				}
 
-				if (need_recalc_bones)
-				{
-					FixOldBonesBind(ref OGF_V);
-					CalcBonesTransform(ref OGF_V);
+				if (need_recalc_bones && (ViewPortBones || OGF_V.ikdata != null && OGF_V.ikdata.chunk_version == 2)) // Если показываем кости или загружен старый меш зависящий от костей
 					ViewPortNeedReload = true;
-                }
             }
 
 			bKeyIsDown = false;
@@ -2647,6 +2644,9 @@ namespace OGF_tool
 			bool old_viewer = ViewerWorking;
 			ViewerWorking = false;
             ViewPortNeedReload = false;
+
+            FixOldBonesBind(ref OGF_V);
+            CalcBonesTransform(ref OGF_V);
 
             if (ViewerThread != null && ViewerThread.ThreadState != System.Threading.ThreadState.Stopped)
 				ViewerThread.Abort();
