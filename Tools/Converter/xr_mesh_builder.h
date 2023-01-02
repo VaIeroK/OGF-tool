@@ -57,12 +57,14 @@ public:
 				uint32_t	n[3];
 				uint32_t	tc[3];
 				uint32_t	link[3];
+				fvector3	source_n[3];
 			};
 			struct {
 				uint32_t	v0, v1, v2;
 				uint32_t	n0, n1, n2;
 				uint32_t	tc0, tc1, tc2;
 				uint32_t	link0, link1, link2;
+				fvector3	source_n1, source_n2, source_n3;
 			};
 			uint32_t		__refs[12];
 		};

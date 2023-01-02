@@ -148,13 +148,13 @@ void xr_mesh_builder::__push(const xr_vbuf& vb, const xr_ibuf& ib, const fmatrix
 				continue;
 		}
 
-		m_source_normals.push_back(vb.n(v0));
-		m_source_normals.push_back(vb.n(v1));
-		m_source_normals.push_back(vb.n(v2));
-
 		m_faces.push_back(face.set(signature, vb_offset + v0, vb_offset + v1, vb_offset + v2));
+		m_faces.back().source_n1 = vb.n(v0);
+		m_faces.back().source_n2 = vb.n(v1);
+		m_faces.back().source_n3 = vb.n(v2);
 		++num_new_faces;
 	}
+
 	if (num_new_faces) {
 		for (size_t i = vb.size(); i != 0; --i, ++vb_offset)
 			m_refs.push_back(b_proxy(vb_offset));
@@ -558,6 +558,9 @@ void xr_mesh_builder::create_mappings(lw_face_vec& faces, lw_vmref_vec& vmrefs, 
 				vmrefs.push_back(vmref);
 			}
 			faces[face_idx].ref[local_idx] = vmref_idx;
+			faces[face_idx].source_normals1 = m_faces[face_idx].source_n1;
+			faces[face_idx].source_normals2 = m_faces[face_idx].source_n2;
+			faces[face_idx].source_normals3 = m_faces[face_idx].source_n3;
 			face_idx = face.link[local_idx];
 		}
 	}
@@ -638,6 +641,15 @@ void xr_mesh_builder::commit(xr_object& object)
 	b_face_vec().swap(m_faces);
 
 	calculate_bbox();
+
+	m_source_normals.clear();
+
+	for (int i = 0; i < xr_mesh::m_faces.size(); i++)
+	{
+		m_source_normals.push_back(xr_mesh::m_faces[i].source_normals1);
+		m_source_normals.push_back(xr_mesh::m_faces[i].source_normals2);
+		m_source_normals.push_back(xr_mesh::m_faces[i].source_normals3);
+	}
 
 	object.meshes().push_back(this);
 }

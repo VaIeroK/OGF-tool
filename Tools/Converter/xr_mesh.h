@@ -132,10 +132,12 @@ struct lw_face {
 		struct {
 			uint32_t	v[3];
 			uint32_t	ref[3];
+			fvector3	source_normals[3];
 		};
 		struct {
 			uint32_t	v0, v1, v2;
 			uint32_t	ref0, ref1, ref2;
+			fvector3	source_normals1, source_normals2, source_normals3;
 		};
 	};
 };
