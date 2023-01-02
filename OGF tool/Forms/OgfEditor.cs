@@ -317,8 +317,6 @@ namespace OGF_tool
                 SaveObjDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".obj";
 
                 CurrentLod = 0;
-
-                TryRepairUserdata(OGF_V.userdata);
             }
 
             omfToolStripMenuItem.Enabled = OGF_V.motions.data() != null;
@@ -590,7 +588,8 @@ namespace OGF_tool
 
 			if (Current_OGF == null) return;
 
-			using (var fileStream = new BinaryReader(new MemoryStream(Current_OGF)))
+            TryRepairUserdata(OGF_V.userdata);
+            using (var fileStream = new BinaryReader(new MemoryStream(Current_OGF)))
 			{
 				byte[] temp;
 
@@ -1452,7 +1451,7 @@ namespace OGF_tool
 
 		private void TryRepairUserdata(UserData data)
 		{
-			if (data != null && data.old_format && MessageBox.Show("Userdata has old format, repair?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+			if (OGF_V != null && OGF_V.Header.format_version == 4 && data != null && data.old_format && MessageBox.Show("Userdata has old format, update?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 				data.old_format = false;
         }
 
@@ -1871,7 +1870,6 @@ namespace OGF_tool
 
 							OGF_V.userdata.userdata = SecondOgf.userdata.userdata;
                             OGF_V.userdata.old_format = SecondOgf.userdata.old_format;
-                            TryRepairUserdata(OGF_V.userdata);
 
                             Update = true;
 						}
