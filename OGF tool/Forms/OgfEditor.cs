@@ -27,7 +27,7 @@ namespace OGF_tool
 		public string[] game_materials = { };
 		public bool UseTexturesCache = false;
 
-		static public string PROGRAM_VERSION = "3.8";
+		static public string PROGRAM_VERSION = "3.9";
 
 		// Input
 		public bool bKeyIsDown = false;
