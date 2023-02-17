@@ -79,6 +79,7 @@ namespace OGF_tool
 		{
 			OGF,
 			Object,
+			DM,
             Obj,
             Bones,
 			OMF,
@@ -297,6 +298,8 @@ namespace OGF_tool
 				SaveObjectDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".object";
                 SaveObjDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
                 SaveObjDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".obj";
+                SaveDMDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
+                SaveDMDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".dm";
 
                 CurrentLod = 0;
             }
@@ -668,13 +671,13 @@ namespace OGF_tool
 
 			if (!CheckMeshes())
 			{
-                AutoClosingMessageBox.Show("Can't save model without meshes!", "", 1500, MessageBoxIcon.Error);
+                AutoClosingMessageBox.Show("Can't save model without meshes!", "Error", 1500, MessageBoxIcon.Error);
 				return;
             }
 
 			ApplyParams();
             Model.SaveFile(Model.FileName, BkpCheckBox.Checked);
-			AutoClosingMessageBox.Show(Model.NeedRepair() ? "Repaired and Saved!" : "Saved!", "", Model.NeedRepair() ? 700 : 500, MessageBoxIcon.Information);
+			AutoClosingMessageBox.Show(Model.NeedRepair() ? "Repaired and Saved!" : "Saved!", "Info", Model.NeedRepair() ? 700 : 500, MessageBoxIcon.Information);
 		}
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -720,7 +723,7 @@ namespace OGF_tool
         {
             if (!CheckMeshes())
             {
-                AutoClosingMessageBox.Show("Can't save file without meshes!", "", 1500, MessageBoxIcon.Error);
+                AutoClosingMessageBox.Show("Can't save file without meshes!", "Error", 1500, MessageBoxIcon.Error);
                 return;
             }
 
@@ -742,7 +745,7 @@ namespace OGF_tool
 		{
             if (!CheckMeshes())
             {
-                AutoClosingMessageBox.Show("Can't save file without meshes!", "", 1500, MessageBoxIcon.Error);
+                AutoClosingMessageBox.Show("Can't save file without meshes!", "Error", 1500, MessageBoxIcon.Error);
                 return;
             }
 
@@ -760,8 +763,36 @@ namespace OGF_tool
                     ApplyParams();
                     Model.SaveFile(filename, BkpCheckBox.Checked);
                     break;
-				case ExportFormat.Obj:
-                    Model.SaveFileObj(filename, CurrentLod);
+                case ExportFormat.DM:
+					int cnt = 0, idx = 0;
+					for (int i = 0; i < Model.childs.Count; i++)
+					{
+						if (!Model.childs[i].to_delete)
+						{
+							cnt++;
+							idx = i;
+						}
+					}
+
+					if (cnt > 1)
+					{
+                        AutoClosingMessageBox.Show("DM file may have only one mesh!", "Error", 1500, MessageBoxIcon.Error);
+						return;
+                    }
+
+                    if (filename != Model.FileName)
+                        File.Copy(Model.FileName, filename);
+
+                    ApplyParams();
+					DmData dmData = new DmData();
+					dmData.ShowDialog();
+					Model.childs[idx].min_scale = dmData.fMinScale;
+					Model.childs[idx].max_scale = dmData.fMaxScale;
+					Model.childs[idx].m_flags = dmData.iFlags;
+                    Model.SaveFileAsDM(filename, idx, BkpCheckBox.Checked);
+                    break;
+                case ExportFormat.Obj:
+                    Model.SaveFileAsObj(filename, CurrentLod);
                     break;
                 case ExportFormat.Object:
                     string ext = Model.IsDM ? ".dm" : ".ogf";
@@ -800,10 +831,10 @@ namespace OGF_tool
 			if (exit_code == 0)
 			{
 				string Text = (Model.NeedRepair() ? "Repaired and " : "") + (format == ExportFormat.OGF ? "Saved!" : "Exported!");
-				AutoClosingMessageBox.Show(Text, "", Model.NeedRepair() ? 700 : 500, MessageBoxIcon.Information);
+				AutoClosingMessageBox.Show(Text, "Info", Model.NeedRepair() ? 700 : 500, MessageBoxIcon.Information);
 			}
 			else
-				AutoClosingMessageBox.Show("Export aborted!", "", 1500, MessageBoxIcon.Error);
+				AutoClosingMessageBox.Show("Export aborted!", "Error", 1500, MessageBoxIcon.Error);
         }
 
 		private void objectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -815,7 +846,16 @@ namespace OGF_tool
 			}
 		}
 
-		private void bonesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void dMToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (SaveDMDialog.ShowDialog() == DialogResult.OK)
+            {
+                SaveTools(SaveDMDialog.FileName, ExportFormat.DM);
+                SaveDMDialog.InitialDirectory = "";
+            }
+        }
+
+        private void bonesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (SaveBonesDialog.ShowDialog() == DialogResult.OK)
 			{
@@ -1183,16 +1223,16 @@ namespace OGF_tool
 						{
 							Clear();
 							AfterLoad(false);
-							AutoClosingMessageBox.Show("OGF Params changed!", "", 1000, MessageBoxIcon.Information);
+							AutoClosingMessageBox.Show("OGF Params changed!", "Info", 1000, MessageBoxIcon.Information);
 						}
 						else
 						{
-							AutoClosingMessageBox.Show("OGF Params don't changed!", "", 1000, MessageBoxIcon.Warning);
+							AutoClosingMessageBox.Show("OGF Params don't changed!", "Warning", 1000, MessageBoxIcon.Warning);
 						}
 					}
 				}
 				else
-                    AutoClosingMessageBox.Show("Can't load params from non skeleton model!", "", 1000, MessageBoxIcon.Warning);
+                    AutoClosingMessageBox.Show("Can't load params from non skeleton model!", "Warning", 1000, MessageBoxIcon.Warning);
             }
 		}
 
@@ -1252,7 +1292,7 @@ namespace OGF_tool
 		{
             if (!CheckMeshes())
             {
-                AutoClosingMessageBox.Show("Can't open model without meshes!", "", 1500, MessageBoxIcon.Error);
+                AutoClosingMessageBox.Show("Can't open model without meshes!", "Error", 1500, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1285,7 +1325,7 @@ namespace OGF_tool
 				proc.WaitForExit();
 			}
 			else
-                AutoClosingMessageBox.Show("Can't convert model to object!", "", 1500, MessageBoxIcon.Error);
+                AutoClosingMessageBox.Show("Can't convert model to object!", "Error", 1500, MessageBoxIcon.Error);
         }
 
 		private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1621,7 +1661,7 @@ namespace OGF_tool
                     }
 				}
 				else
-                    AutoClosingMessageBox.Show("Can't merge non skeleton model!", "", 1000, MessageBoxIcon.Warning);
+                    AutoClosingMessageBox.Show("Can't merge non skeleton model!", "Warning", 1000, MessageBoxIcon.Warning);
             }
         }
 
@@ -1648,10 +1688,10 @@ namespace OGF_tool
 					if (Reloaded)
 					{
                         ReloadViewPort(true, false, true);
-                        AutoClosingMessageBox.Show("Mesh normals recalculated!", "", 1000, MessageBoxIcon.Information);
+                        AutoClosingMessageBox.Show("Mesh normals recalculated!", "Info", 1000, MessageBoxIcon.Information);
 					}
 					else
-                        AutoClosingMessageBox.Show("Mesh normals don't changed!", "", 1000, MessageBoxIcon.Warning);
+                        AutoClosingMessageBox.Show("Mesh normals don't changed!", "Warning", 1000, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -1683,7 +1723,7 @@ namespace OGF_tool
         {
             Model.RecalcBBox(true);
             ReloadViewPort(true, false, true);
-            AutoClosingMessageBox.Show("Bounding Box and Sphere recalculated!", "", 1000, MessageBoxIcon.Information);
+            AutoClosingMessageBox.Show("Bounding Box and Sphere recalculated!", "Info", 1000, MessageBoxIcon.Information);
         }
 
         private void UpdateNPC()
@@ -1729,10 +1769,10 @@ namespace OGF_tool
 					}
 				}
                 ReloadViewPort(true, false, true);
-                AutoClosingMessageBox.Show("Successful!", "", 700, MessageBoxIcon.Information);
+                AutoClosingMessageBox.Show("Successful!", "Info", 700, MessageBoxIcon.Information);
 			}
 			else
-				AutoClosingMessageBox.Show("This model is not CoP NPC!", "", 2500, MessageBoxIcon.Error);
+				AutoClosingMessageBox.Show("This model is not CoP NPC!", "Error", 2500, MessageBoxIcon.Error);
 
 			UpdateNPC();
         }
@@ -1769,10 +1809,10 @@ namespace OGF_tool
                     }
                 }
                 ReloadViewPort(true, false, true);
-                AutoClosingMessageBox.Show("Successful!", "", 700, MessageBoxIcon.Information);
+                AutoClosingMessageBox.Show("Successful!", "Info", 700, MessageBoxIcon.Information);
             }
             else
-                AutoClosingMessageBox.Show("This model is not SoC NPC!", "", 2500, MessageBoxIcon.Error);
+                AutoClosingMessageBox.Show("This model is not SoC NPC!", "Error", 2500, MessageBoxIcon.Error);
 
             UpdateNPC();
         }
@@ -2013,7 +2053,7 @@ namespace OGF_tool
 				pSettings.Load("FirstLoad", ref first_load, true);
 
 				if (create_model)
-                    Model.SaveFileObj(ObjName, CurrentLod, ViewPortBones && showBonesToolStripMenuItem.Enabled, ViewPortBBox, ViewPortTextures);
+                    Model.SaveFileAsObj(ObjName, CurrentLod, ViewPortBones && showBonesToolStripMenuItem.Enabled, ViewPortBBox, ViewPortTextures);
 
 				ViewerProcess.StartInfo.FileName = exe_path;
 				ViewerProcess.StartInfo.Arguments = $"--input=\"{ObjName}\" --output=\"{image_path}\"" + (first_load ? " --filename" : "");

@@ -141,6 +141,8 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
+            this.dMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveDMDialog = new System.Windows.Forms.SaveFileDialog();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -609,6 +611,7 @@ namespace OGF_tool
             // 
             this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.objectToolStripMenuItem,
+            this.dMToolStripMenuItem,
             this.bonesToolStripMenuItem,
             this.objToolStripMenuItem,
             this.omfToolStripMenuItem,
@@ -879,6 +882,16 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
             // 
+            // dMToolStripMenuItem
+            // 
+            this.dMToolStripMenuItem.Name = "dMToolStripMenuItem";
+            resources.ApplyResources(this.dMToolStripMenuItem, "dMToolStripMenuItem");
+            this.dMToolStripMenuItem.Click += new System.EventHandler(this.dMToolStripMenuItem_Click);
+            // 
+            // SaveDMDialog
+            // 
+            resources.ApplyResources(this.SaveDMDialog, "SaveDMDialog");
+            // 
             // OGF_Editor
             // 
             this.AllowDrop = true;
@@ -1032,6 +1045,8 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem moveRotateModelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showBonesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchToolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dMToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog SaveDMDialog;
     }
 }
 

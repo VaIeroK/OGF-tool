@@ -22,6 +22,9 @@ namespace OGF_tool
             links = 0;
             to_delete = false;
             FVF = 0;
+            min_scale = 1.0f;
+            max_scale = 1.0f;
+            m_flags = 0;
         }
 
         public int old_size;

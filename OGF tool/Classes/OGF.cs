@@ -717,9 +717,7 @@ namespace OGF_tool
 
                 if (IsDM)
                 {
-                    byte[] dm_data = childs[0].dm_data();
-                    file_bytes.AddRange(dm_data);
-                    WriteFile(filename, file_bytes.ToArray(), backup);
+                    SaveFileAsDM(filename, 0, backup);
                     return;
                 }
 
@@ -913,7 +911,16 @@ namespace OGF_tool
             }
         }
 
-        public void SaveFileObj(string filename, float lod = 0.0f, bool viewport_bones = false, bool viewport_bbox = false, bool viewport_textures = false)
+        public void SaveFileAsDM(string filename, int child, bool bkp = false)
+        {
+            List<byte> file_bytes = new List<byte>();
+
+            byte[] dm_data = childs[child].dm_data();
+            file_bytes.AddRange(dm_data);
+            WriteFile(filename, file_bytes.ToArray(), bkp);
+        }
+
+        public void SaveFileAsObj(string filename, float lod = 0.0f, bool viewport_bones = false, bool viewport_bbox = false, bool viewport_textures = false)
         {
             using (ObjWriter = File.CreateText(filename))
             {
