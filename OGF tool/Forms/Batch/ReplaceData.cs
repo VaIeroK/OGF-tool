@@ -37,13 +37,12 @@ namespace OGF_tool
 
                 for (int i = 0; i < files.Length; i++)
                 {
-                    OGF_Model OGF;
-                    byte[] OGF_data;
-                    if (Editor.OpenFile(files[i], out OGF, out OGF_data, true))
+                    XRay_Model Model = new XRay_Model();
+                    if (Model.OpenFile(files[i]))
                     {
-                        if (Batch.ProcessReplace(OGF, Chunk, ReplacerTextBox.Text, NewTextBox.Text, ref LinesCount))
+                        if (Batch.ProcessReplace(Model, Chunk, ReplacerTextBox.Text, NewTextBox.Text, ref LinesCount))
                         {
-                            Editor.SaveFile(files[i], OGF, OGF_data);
+                            Model.SaveFile(files[i]);
                             FilesCount++;
                         }
                     }

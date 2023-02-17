@@ -22,20 +22,20 @@ namespace OGF_tool
 
         public bool res = false;
 
-        public ImportParams(OGF_Model OGF, OGF_Model ImportedOGF)
+        public ImportParams(XRay_Model Model, XRay_Model ImportedModel)
         {
             InitializeComponent();
-            ConstructUI(OGF, ImportedOGF);
+            ConstructUI(Model, ImportedModel);
         }
 
-        public void ConstructUI(OGF_Model OGF, OGF_Model ImportedOGF)
+        public void ConstructUI(XRay_Model Model, XRay_Model ImportedModel)
         {
-            bool CanMergeTextures = (OGF.childs.Count == ImportedOGF.childs.Count);
-            bool CanMergeRefs = (OGF.Header.IsSkeleton() && ImportedOGF.motion_refs != null);
-            bool CanMergeOMF = (OGF.Header.IsSkeleton() && ImportedOGF.motions.data() != null);
-            bool CanMergeUserdata = (OGF.Header.IsSkeleton() && ImportedOGF.userdata != null);
-            bool CanMergeLod = (OGF.Header.IsSkeleton() && ImportedOGF.lod != null);
-            bool CanMergeIkData = (OGF.Header.IsSkeleton() && OGF.ikdata != null && ImportedOGF.ikdata != null && OGF.ikdata.bones.Count == ImportedOGF.ikdata.bones.Count);
+            bool CanMergeTextures = (Model.childs.Count == ImportedModel.childs.Count);
+            bool CanMergeRefs = (Model.Header.IsSkeleton() && ImportedModel.motion_refs != null);
+            bool CanMergeOMF = (Model.Header.IsSkeleton() && ImportedModel.motions.data() != null);
+            bool CanMergeUserdata = (Model.Header.IsSkeleton() && ImportedModel.userdata != null);
+            bool CanMergeLod = (Model.Header.IsSkeleton() && ImportedModel.lod != null);
+            bool CanMergeIkData = (Model.Header.IsSkeleton() && Model.ikdata != null && ImportedModel.ikdata != null && Model.ikdata.bones.Count == ImportedModel.ikdata.bones.Count);
 
             TexturesChbx.Enabled = CanMergeTextures;
             MotionRefsChbx.Enabled = CanMergeRefs;

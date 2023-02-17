@@ -46,13 +46,13 @@ namespace OGF_tool
             return false;
         }
 
-        static public bool ProcessReplace(OGF_Model OGF, BatchChunks chunk, string replacer, string new_val, ref uint lines_counter)
+        static public bool ProcessReplace(XRay_Model Model, BatchChunks chunk, string replacer, string new_val, ref uint lines_counter)
         {
             bool ret = false;
             switch (chunk)
             {
                 case BatchChunks.Texture:
-                    foreach (var ch in OGF.childs)
+                    foreach (var ch in Model.childs)
                     {
                         if (ch.m_texture == replacer)
                         {
@@ -63,7 +63,7 @@ namespace OGF_tool
                     }
                     break;
                 case BatchChunks.Shader:
-                    foreach (var ch in OGF.childs)
+                    foreach (var ch in Model.childs)
                     {
                         if (ch.m_shader == replacer)
                         {
@@ -74,9 +74,9 @@ namespace OGF_tool
                     }
                     break;
                 case BatchChunks.UserData:
-                    if (OGF.userdata != null)
+                    if (Model.userdata != null)
                     {
-                        string[] Lines = StringToStringArray(OGF.userdata.userdata);
+                        string[] Lines = StringToStringArray(Model.userdata.userdata);
                         string userdata = "";
                         foreach (string line in Lines)
                         {
@@ -90,31 +90,31 @@ namespace OGF_tool
                                 userdata += RemoveNewLines(line) + "\r\n";
                         }
                         if (ret)
-                            OGF.userdata.userdata = userdata.TrimEnd(new char[] { '\r', '\n' });
+                            Model.userdata.userdata = userdata.TrimEnd(new char[] { '\r', '\n' });
                     }
                     break;
                 case BatchChunks.MotionRefs:
-                    if (OGF.motion_refs != null)
+                    if (Model.motion_refs != null)
                     {
-                        string[] Lines = OGF.motion_refs.refs.ToArray();
-                        OGF.motion_refs.refs.Clear();
+                        string[] Lines = Model.motion_refs.refs.ToArray();
+                        Model.motion_refs.refs.Clear();
                         foreach (string line in Lines)
                         {
                             if (RemoveSpacesAndNewLines(line) == RemoveSpacesAndNewLines(replacer))
                             {
-                                OGF.motion_refs.refs.Add(new_val);
+                                Model.motion_refs.refs.Add(new_val);
                                 ret = true;
                                 lines_counter++;
                             }
                             else
-                                OGF.motion_refs.refs.Add(line);
+                                Model.motion_refs.refs.Add(line);
                         }
                     }
                     break;
                 case BatchChunks.Lod:
-                    if (OGF.lod != null && RemoveSpacesAndNewLines(OGF.lod.lod_path) == RemoveSpacesAndNewLines(replacer))
+                    if (Model.lod != null && RemoveSpacesAndNewLines(Model.lod.lod_path) == RemoveSpacesAndNewLines(replacer))
                     {
-                        OGF.lod.lod_path = new_val;
+                        Model.lod.lod_path = new_val;
                         ret = true;
                         lines_counter++;
                     }
@@ -124,47 +124,47 @@ namespace OGF_tool
             return ret;
         }
 
-        static public bool ProcessAdd(OGF_Model OGF, BatchChunks chunk, string new_line, ref uint lines_counter, bool create_chunks)
+        static public bool ProcessAdd(XRay_Model Model, BatchChunks chunk, string new_line, ref uint lines_counter, bool create_chunks)
         {
             bool ret = false;
             switch (chunk)
             {
                 case BatchChunks.UserData:
-                    if (OGF.userdata == null || !SafeCheckLineExist(StringToStringArray(OGF.userdata.userdata), new_line))
+                    if (Model.userdata == null || !SafeCheckLineExist(StringToStringArray(Model.userdata.userdata), new_line))
                     {
-                        if (OGF.userdata != null)
-                            OGF.userdata.userdata += "\r\n";
+                        if (Model.userdata != null)
+                            Model.userdata.userdata += "\r\n";
 
-                        if (create_chunks && OGF.userdata == null)
-                            OGF.userdata = new UserData();
+                        if (create_chunks && Model.userdata == null)
+                            Model.userdata = new UserData();
 
-                        if (OGF.userdata != null)
+                        if (Model.userdata != null)
                         {
-                            OGF.userdata.userdata += new_line;
+                            Model.userdata.userdata += new_line;
                             ret = true;
                             lines_counter++;
                         }
                     }
                     break;
                 case BatchChunks.MotionRefs:
-                    if (OGF.motion_refs == null || !SafeCheckLineExist(OGF.motion_refs.refs.ToArray(), new_line))
+                    if (Model.motion_refs == null || !SafeCheckLineExist(Model.motion_refs.refs.ToArray(), new_line))
                     {
-                        if (create_chunks && OGF.motion_refs == null)
-                            OGF.motion_refs = new MotionRefs();
+                        if (create_chunks && Model.motion_refs == null)
+                            Model.motion_refs = new MotionRefs();
 
-                        if (OGF.motion_refs != null && !OGF.motion_refs.refs.Contains(new_line))
+                        if (Model.motion_refs != null && !Model.motion_refs.refs.Contains(new_line))
                         {
-                            OGF.motion_refs.refs.Add(new_line);
+                            Model.motion_refs.refs.Add(new_line);
                             ret = true;
                             lines_counter++;
                         }
                     }
                     break;
                 case BatchChunks.Lod:
-                    if (OGF.lod == null && create_chunks)
+                    if (Model.lod == null && create_chunks)
                     {
-                        OGF.lod = new Lod();
-                        OGF.lod.lod_path = new_line;
+                        Model.lod = new Lod();
+                        Model.lod.lod_path = new_line;
                         ret = true;
                         lines_counter++;
                     }
@@ -174,7 +174,7 @@ namespace OGF_tool
             return ret;
         }
 
-        static public bool ProcessDelete(OGF_Model OGF, BatchChunks chunk, string delete_line, ref uint lines_counter)
+        static public bool ProcessDelete(XRay_Model Model, BatchChunks chunk, string delete_line, ref uint lines_counter)
         {
             bool ret = false;
             string clear_del_line = RemoveSpacesAndNewLines(delete_line);
@@ -182,13 +182,13 @@ namespace OGF_tool
             switch (chunk)
             {
                 case BatchChunks.UserData:
-                    if (OGF.userdata != null)
+                    if (Model.userdata != null)
                     {
-                        string[] Lines = StringToStringArray(OGF.userdata.userdata);
+                        string[] Lines = StringToStringArray(Model.userdata.userdata);
                         if (delete_line == "$all")
                         {
                             lines_counter += (uint)Lines.Length;
-                            OGF.userdata.userdata = "";
+                            Model.userdata.userdata = "";
                             ret = true;
                         }
                         else
@@ -205,26 +205,26 @@ namespace OGF_tool
                                     userdata += RemoveNewLines(line) + "\r\n";
                             }
                             if (ret)
-                                OGF.userdata.userdata = userdata.TrimEnd(new char[] { '\r', '\n' });
+                                Model.userdata.userdata = userdata.TrimEnd(new char[] { '\r', '\n' });
                         }
                     }
                     break;
                 case BatchChunks.MotionRefs:
-                    if (OGF.motion_refs != null)
+                    if (Model.motion_refs != null)
                     {
                         if (delete_line == "$all")
                         {
-                            lines_counter += (uint)OGF.motion_refs.refs.Count;
-                            OGF.motion_refs.refs.Clear();
+                            lines_counter += (uint)Model.motion_refs.refs.Count;
+                            Model.motion_refs.refs.Clear();
                             ret = true;
                         }
                         else
                         {
-                            foreach (string line in OGF.motion_refs.refs)
+                            foreach (string line in Model.motion_refs.refs)
                             {
                                 if (RemoveSpacesAndNewLines(line) == clear_del_line)
                                 {
-                                    OGF.motion_refs.refs.Remove(line);
+                                    Model.motion_refs.refs.Remove(line);
                                     ret = true;
                                     lines_counter++;
                                 }
@@ -233,10 +233,10 @@ namespace OGF_tool
                     }
                     break;
                 case BatchChunks.Lod:
-                    if (OGF.lod != null)
+                    if (Model.lod != null)
                     {
-                        if (RemoveSpacesAndNewLines(OGF.lod.lod_path) == clear_del_line || delete_line == "$all")
-                            OGF.lod.lod_path = "";
+                        if (RemoveSpacesAndNewLines(Model.lod.lod_path) == clear_del_line || delete_line == "$all")
+                            Model.lod.lod_path = "";
                         ret = true;
                         lines_counter++;
                     }

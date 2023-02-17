@@ -7,7 +7,7 @@ namespace OGF_tool
     {
         public Description descr = new Description();
         public bool res = false;
-        public OgfInfo(OGF_Model OGF, bool refs_correct, float lod)
+        public OgfInfo(XRay_Model OGF, bool refs_correct, float lod)
         {
             InitializeComponent();
 

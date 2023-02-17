@@ -10,21 +10,21 @@ namespace OGF_tool
         public List<bool> MeshChecked = new List<bool>();
         public bool res = false;
 
-        public SelectMeshes(OGF_Model OGF)
+        public SelectMeshes(XRay_Model Model)
         {
             InitializeComponent();
 
             MeshPanel.Controls.Clear();
 
-            for (int i = 0; i < OGF.childs.Count; i++)
+            for (int i = 0; i < Model.childs.Count; i++)
             {
                 var MeshCbx = Copy.CheckBox(MeshCheckBox);
                 MeshCbx.Name = "MeshCheckBox_" + i;
-                MeshCbx.Text += $" [{OGF.childs[i].m_texture}] | [{OGF.childs[i].m_shader}]";
+                MeshCbx.Text += $" [{Model.childs[i].m_texture}] | [{Model.childs[i].m_shader}]";
                 MeshCbx.Location = new Point(MeshCbx.Location.X, MeshCbx.Location.Y + 27 * i);
                 MeshCbx.Size = new Size(1000, MeshCbx.Size.Height);
 
-                if (i != OGF.childs.Count - 1)
+                if (i != Model.childs.Count - 1)
                 {
                     Size = new Size(Size.Width, Size.Height + 27);
                     MeshPanel.Size = new Size(Size.Width, Size.Height + 27);

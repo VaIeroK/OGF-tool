@@ -49,20 +49,19 @@ namespace OGF_tool
 
                 for (int i = 0; i < files.Length; i++)
                 {
-                    OGF_Model OGF;
-                    byte[] OGF_data;
+                    XRay_Model Model = new XRay_Model();
                     bool save = false;
-                    if (Editor.OpenFile(files[i], out OGF, out OGF_data, true))
+                    if (Model.OpenFile(files[i], true))
                     {
                         foreach (string line in DataTextBox.Lines)
                         {
-                            if ((delete ? Batch.ProcessDelete(OGF, Chunk, line, ref LinesCount)  : Batch.ProcessAdd(OGF, Chunk, line, ref LinesCount, CreateChunkChbx.Checked)))
+                            if ((delete ? Batch.ProcessDelete(Model, Chunk, line, ref LinesCount)  : Batch.ProcessAdd(Model, Chunk, line, ref LinesCount, CreateChunkChbx.Checked)))
                                 save = true;
                         }
 
                         if (save)
                         {
-                            Editor.SaveFile(files[i], OGF, OGF_data);
+                            Model.SaveFile(files[i]);
                             FilesCount++;
                         }
                     }

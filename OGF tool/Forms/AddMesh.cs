@@ -19,32 +19,32 @@ namespace OGF_tool
             public int new_bone;
         }
 
-        private OGF_Model OGF, LoadedOGF;
+        private XRay_Model Model, LoadedModel;
         private int last_height = 0;
         private List<bool> mesh_to_add_list = new List<bool>();
         public bool res = false;
 
-        public AddMesh(ref OGF_Model Main_OGF, OGF_Model Loaded_OGF)
+        public AddMesh(ref XRay_Model Main_Model, XRay_Model Loaded_Model)
         {
             InitializeComponent();
 
             MeshPanel.Controls.Clear();
 
-            OGF = Main_OGF;
-            LoadedOGF = Loaded_OGF;
+            Model = Main_Model;
+            LoadedModel = Loaded_Model;
 
-            if (!OGF.IsProgressive() && LoadedOGF.IsProgressive() || OGF.IsProgressive() && !LoadedOGF.IsProgressive())
+            if (!Model.IsProgressive() && LoadedModel.IsProgressive() || Model.IsProgressive() && !LoadedModel.IsProgressive())
             {
                 if (MessageBox.Show("One of the two models has progressive meshes, delete progressive to continue?", "OGF Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    OGF.RemoveProgressive(0.0f);
-                    LoadedOGF.RemoveProgressive(0.0f);
+                    Model.RemoveProgressive(0.0f);
+                    LoadedModel.RemoveProgressive(0.0f);
                 }
                 else
                     Close();
             }
 
-            for (int i = 0; i < LoadedOGF.childs.Count; i++)
+            for (int i = 0; i < LoadedModel.childs.Count; i++)
             {
                 mesh_to_add_list.Add(false);
                 CreateMeshGroupBox(i);
@@ -66,7 +66,7 @@ namespace OGF_tool
 
         public void CreateMeshElements(int idx, GroupBox box)
         {
-            OGF_Child child = LoadedOGF.childs[idx];
+            OGF_Child child = LoadedModel.childs[idx];
 
             var newLbl1 = Copy.Label(Texture_Label);
             var newLbl2 = Copy.Label(Shader_Label);
@@ -121,7 +121,7 @@ namespace OGF_tool
                 if (i != BonesList.Count - 1)
                     box.Size = new Size(box.Size.Width, box.Size.Height + 27);
 
-                int bone_id = OGF.bonedata.GetBoneID(LoadedOGF.bonedata.bones[(int)BonesList[i]].name);
+                int bone_id = Model.bonedata.GetBoneID(LoadedModel.bonedata.bones[(int)BonesList[i]].name);
                 if (bone_id != -1)
                     newCombo1.SelectedIndex = bone_id;
                 else
@@ -130,7 +130,7 @@ namespace OGF_tool
                 newCombo1.SelectedIndexChanged += new System.EventHandler(this.ComboBoxIndexChanged);
                 newCombo1.Name = "BoneComboBox_" + idx + "_" + i;
 
-                newTextbox3.Text = LoadedOGF.bonedata.bones[(int)BonesList[i]].name;
+                newTextbox3.Text = LoadedModel.bonedata.bones[(int)BonesList[i]].name;
 
                 box.Controls.Add(newLbl3);
                 box.Controls.Add(newLbl4);
@@ -143,8 +143,8 @@ namespace OGF_tool
 
         public ComboBox FillComboBox(ComboBox box, OGF_Child child)
         {
-            for (int i = 0; i < OGF.bonedata.bones.Count; i++)
-                box.Items.Add(OGF.bonedata.bones[i].name);
+            for (int i = 0; i < Model.bonedata.bones.Count; i++)
+                box.Items.Add(Model.bonedata.bones[i].name);
 
             return box;
         }
@@ -211,7 +211,7 @@ namespace OGF_tool
             {
                 if (mesh_to_add_list[i])
                 {
-                    OGF_Child old_child = LoadedOGF.childs[i];
+                    OGF_Child old_child = LoadedModel.childs[i];
                     GroupBox groupBox = MeshPanel.Controls["MeshGrpBox_" + i.ToString()] as GroupBox;
 
                     List<Reassign> reassigns = new List<Reassign>();
@@ -228,7 +228,7 @@ namespace OGF_tool
                                 int idx = Convert.ToInt32(cmb.Name.ToString().Split('_')[2]); // id ряда с настройками
                                 TextBox OldBoneBox = groupBox.Controls["OldBone_" + idx] as TextBox; // Хранит текстовое название кости к которой привязаны вертексы
 
-                                reassign.old_bone = LoadedOGF.bonedata.GetBoneID(OldBoneBox.Text); // Получили id кости ряда
+                                reassign.old_bone = LoadedModel.bonedata.GetBoneID(OldBoneBox.Text); // Получили id кости ряда
                                 reassign.new_bone = cmb.SelectedIndex; // Меняем старую кость на выбранный индекс
                                 reassigns.Add(reassign);
                             }
@@ -247,7 +247,7 @@ namespace OGF_tool
                         }
                     }
 
-                    OGF.childs.Add(old_child);
+                    Model.childs.Add(old_child);
                 }
             }
 

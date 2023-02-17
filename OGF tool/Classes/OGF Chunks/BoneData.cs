@@ -138,24 +138,24 @@ namespace OGF_tool
             return new float[3] { OutRotX, OutRotY, OutRotZ };
         }
 
-        public static BoneRenderTransform[] Setup(OGF_Model OGF_V, out string child_list)
+        public static BoneRenderTransform[] Setup(XRay_Model Model, out string child_list)
         {
-            BoneRenderTransform[] transforms = new BoneRenderTransform[OGF_V.bonedata.bones.Count];
+            BoneRenderTransform[] transforms = new BoneRenderTransform[Model.bonedata.bones.Count];
             child_list = "";
 
-            for (int i = 0; i < OGF_V.bonedata.bones.Count; i++)
+            for (int i = 0; i < Model.bonedata.bones.Count; i++)
             {
                 float[] pos, rot; 
 
-                if (OGF_V.ikdata.chunk_version == 2)
+                if (Model.ikdata.chunk_version == 2)
                 {
-                    pos = OGF_V.ikdata.bones[i].fixed_position;
-                    rot = OGF_V.ikdata.bones[i].fixed_rotation;
+                    pos = Model.ikdata.bones[i].fixed_position;
+                    rot = Model.ikdata.bones[i].fixed_rotation;
                 }
                 else
                 {
-                    pos = OGF_V.ikdata.bones[i].position;
-                    rot = OGF_V.ikdata.bones[i].rotation;
+                    pos = Model.ikdata.bones[i].position;
+                    rot = Model.ikdata.bones[i].rotation;
                 }
 
                 transforms[i].PosX = pos[0];
@@ -169,11 +169,11 @@ namespace OGF_tool
                 if (i != 0)
                     child_list += "-";
 
-                for (int j = 0; j < OGF_V.bonedata.bones[i].childs_id.Count; j++)
-                    child_list += $"{OGF_V.bonedata.bones[i].childs_id[j]},";
+                for (int j = 0; j < Model.bonedata.bones[i].childs_id.Count; j++)
+                    child_list += $"{Model.bonedata.bones[i].childs_id[j]},";
 
-                if (OGF_V.bonedata.bones[i].parent_name != "")
-                    child_list += $"{OGF_V.bonedata.GetBoneID(OGF_V.bonedata.bones[i].parent_name)}";
+                if (Model.bonedata.bones[i].parent_name != "")
+                    child_list += $"{Model.bonedata.GetBoneID(Model.bonedata.bones[i].parent_name)}";
                 else
                     child_list += "9999";
             }
