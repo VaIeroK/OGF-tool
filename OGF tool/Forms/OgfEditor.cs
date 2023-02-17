@@ -21,7 +21,6 @@ namespace OGF_tool
 		public EditorSettings pSettings = null;
 		public OGF_Model OGF_V = null;
 		public byte[] Current_OGF = null;
-		public List<byte> file_bytes = new List<byte>();
 		public string FILE_NAME = "";
 		FolderSelectDialog SaveSklDialog = null;
 		public string[] game_materials = { };
@@ -186,7 +185,7 @@ namespace OGF_tool
 			if (Environment.GetCommandLineArgs().Length > 1)
 			{
 				Clear(false);
-				if (OpenFile(Environment.GetCommandLineArgs()[1], ref OGF_V, ref Current_OGF))
+				if (OpenFile(Environment.GetCommandLineArgs()[1], out OGF_V, out Current_OGF))
 				{
 					FILE_NAME = Environment.GetCommandLineArgs()[1];
 					AfterLoad(true);
@@ -262,7 +261,6 @@ namespace OGF_tool
 			{
 				FILE_NAME = "";
 				OGF_V = null;
-				file_bytes.Clear();
 			}
 			TexturesPage.Controls.Clear();
 			BoneParamsPage.Controls.Clear();
@@ -297,8 +295,9 @@ namespace OGF_tool
                 AddMeshesMenuItem.Enabled = OGF_V.Header.IsSkeleton();
                 OgfInfo.Enabled = !OGF_V.IsDM;
 				showBonesToolStripMenuItem.Enabled = OGF_V.bonedata != null && OGF_V.ikdata != null;
+				objectToolStripMenuItem.Enabled = !OGF_V.IsDetails;
 
-				OpenOGFDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
+                OpenOGFDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				OpenOGF_DmDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				SaveAsDialog.InitialDirectory = FILE_NAME.Substring(0, FILE_NAME.LastIndexOf('\\'));
 				SaveAsDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.'));
@@ -582,68 +581,97 @@ namespace OGF_tool
 			return new float[3] { transforms[0].OutPosX, transforms[0].OutPosY, transforms[0].OutPosZ };
         }
 
-        private void SaveFile(string filename)
+        public void SaveFile(string filename, OGF_Model OGF_C, byte[] OGF_Data)
 		{
-			file_bytes.Clear();
+            List<byte> file_bytes = new List<byte>();
 
-			if (Current_OGF == null) return;
+			if (OGF_Data == null) return;
 
-            TryRepairUserdata(OGF_V.userdata);
-            using (var fileStream = new BinaryReader(new MemoryStream(Current_OGF)))
+            TryRepairUserdata(OGF_C.userdata);
+            using (var fileStream = new BinaryReader(new MemoryStream(OGF_Data)))
 			{
 				byte[] temp;
 
-                if (OGF_V.IsDM)
-				{
-                    fileStream.ReadBytes(OGF_V.childs[0].old_size);
-					file_bytes.AddRange(Encoding.Default.GetBytes(OGF_V.childs[0].m_shader));
-					file_bytes.Add(0);
-					file_bytes.AddRange(Encoding.Default.GetBytes(OGF_V.childs[0].m_texture));
-					file_bytes.Add(0);
+                if (OGF_C.IsDetails)
+                {
+                    fileStream.ReadBytes(4);
+                    uint OldDetailsSize = fileStream.ReadUInt32();
+                    fileStream.BaseStream.Position += OldDetailsSize;
+
+                    uint DetailsChunkSize = 0;
+                    foreach (var ch in OGF_C.childs)
+                    {
+                        if (!ch.to_delete)
+                            DetailsChunkSize += (uint)ch.dm_data().Length + 8;
+                    }
+
+                    file_bytes.AddRange(BitConverter.GetBytes(1));
+                    file_bytes.AddRange(BitConverter.GetBytes(DetailsChunkSize));
+
+                    int DetailID = 0;
+                    foreach (var ch in OGF_C.childs)
+                    {
+                        if (ch.to_delete) continue;
+
+                        byte[] DetailData = ch.dm_data();
+
+                        file_bytes.AddRange(BitConverter.GetBytes(DetailID));
+                        file_bytes.AddRange(BitConverter.GetBytes(DetailData.Length));
+                        file_bytes.AddRange(DetailData);
+                        DetailID++;
+                    }
                     byte[] dm_data = fileStream.ReadBytes((int)(fileStream.BaseStream.Length - fileStream.BaseStream.Position));
+                    file_bytes.AddRange(dm_data);
+                    WriteFile(filename, file_bytes.ToArray());
+                    return;
+                }
+
+                if (OGF_C.IsDM)
+				{
+                    byte[] dm_data = OGF_C.childs[0].dm_data();
 					file_bytes.AddRange(dm_data);
 					WriteFile(filename, file_bytes.ToArray());
 					return;
 				}
 
-				if (!OGF_V.Header.IsStaticSingle())
-                    file_bytes.AddRange(OGF_V.Header.data());
+				if (!OGF_C.Header.IsStaticSingle())
+                    file_bytes.AddRange(OGF_C.Header.data());
 
-				if (OGF_V.description != null)
+				if (OGF_C.description != null)
 				{
-					byte[] DescriptionData = OGF_V.description.data();
+					byte[] DescriptionData = OGF_C.description.data();
 
                     file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_DESC));
 					file_bytes.AddRange(BitConverter.GetBytes(DescriptionData.Length));
 					file_bytes.AddRange(DescriptionData);
 				}
 
-				if (OGF_V.Header.IsStaticSingle()) // Single mesh
+				if (OGF_C.Header.IsStaticSingle()) // Single mesh
 				{
-					file_bytes.AddRange(OGF_V.childs[0].data());
-					fileStream.BaseStream.Position += OGF_V.childs[0].old_size;
+					file_bytes.AddRange(OGF_C.childs[0].data());
+					fileStream.BaseStream.Position += OGF_C.childs[0].old_size;
                 }
 				else // Hierrarhy mesh
 				{
-					fileStream.ReadBytes((int)(OGF_V.pos - fileStream.BaseStream.Position));
+					fileStream.ReadBytes((int)(OGF_C.pos - fileStream.BaseStream.Position));
 
 					fileStream.ReadBytes(4);
 					uint OldChildrenChunkSize = fileStream.ReadUInt32();
 					fileStream.BaseStream.Position += OldChildrenChunkSize;
 
 					uint ChildrenChunkSize = 0;
-                    foreach (var ch in OGF_V.childs)
+                    foreach (var ch in OGF_C.childs)
 					{
 						if (!ch.to_delete)
 							ChildrenChunkSize += (uint)ch.data().Length + 8;
 					}
 
-					int ChildrenChunk = (OGF_V.Header.format_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
+					int ChildrenChunk = (OGF_C.Header.format_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
 					file_bytes.AddRange(BitConverter.GetBytes(ChildrenChunk));
 					file_bytes.AddRange(BitConverter.GetBytes(ChildrenChunkSize));
 
 					int ChildChunk = 0;
-					foreach (var ch in OGF_V.childs)
+					foreach (var ch in OGF_C.childs)
 					{
 						if (ch.to_delete) continue;
 
@@ -656,116 +684,116 @@ namespace OGF_tool
                     }
 				}
 
-				if (OGF_V.Header.IsSkeleton())
+				if (OGF_C.Header.IsSkeleton())
                 {
-					if (OGF_V.bonedata != null)
+					if (OGF_C.bonedata != null)
 					{
-						if (OGF_V.BrokenType == 0 && OGF_V.bonedata.pos > 0 && (OGF_V.bonedata.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
+						if (OGF_C.BrokenType == 0 && OGF_C.bonedata.pos > 0 && (OGF_C.bonedata.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
 						{
-							temp = fileStream.ReadBytes((int)(OGF_V.bonedata.pos - fileStream.BaseStream.Position));
+							temp = fileStream.ReadBytes((int)(OGF_C.bonedata.pos - fileStream.BaseStream.Position));
 							file_bytes.AddRange(temp);
 						}
 
-						byte[] BonesData = OGF_V.bonedata.data(OGF_V.BrokenType == 2);
+						byte[] BonesData = OGF_C.bonedata.data(OGF_C.BrokenType == 2);
 
                         file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF_S_BONE_NAMES));
 						file_bytes.AddRange(BitConverter.GetBytes(BonesData.Length));
 						file_bytes.AddRange(BonesData);
 
-						fileStream.ReadBytes(OGF_V.bonedata.old_size + 8);
+						fileStream.ReadBytes(OGF_C.bonedata.old_size + 8);
 					}
 
-					if (OGF_V.ikdata != null)
+					if (OGF_C.ikdata != null)
 					{
-						if (OGF_V.BrokenType == 0 && OGF_V.ikdata.pos > 0 && (OGF_V.ikdata.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
+						if (OGF_C.BrokenType == 0 && OGF_C.ikdata.pos > 0 && (OGF_C.ikdata.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
 						{
-							temp = fileStream.ReadBytes((int)(OGF_V.ikdata.pos - fileStream.BaseStream.Position));
+							temp = fileStream.ReadBytes((int)(OGF_C.ikdata.pos - fileStream.BaseStream.Position));
 							file_bytes.AddRange(temp);
 						}
 
-						byte[] IKDataData = OGF_V.ikdata.data();
+						byte[] IKDataData = OGF_C.ikdata.data();
 
-                        file_bytes.AddRange(BitConverter.GetBytes(OGF_V.ikdata.ChunkID(OGF_V.Header.format_version)));
+                        file_bytes.AddRange(BitConverter.GetBytes(OGF_C.ikdata.ChunkID(OGF_C.Header.format_version)));
 						file_bytes.AddRange(BitConverter.GetBytes(IKDataData.Length));
 						file_bytes.AddRange(IKDataData);
 
-						fileStream.ReadBytes(OGF_V.ikdata.old_size + 8);
+						fileStream.ReadBytes(OGF_C.ikdata.old_size + 8);
 					}
 
-					if (OGF_V.userdata != null)
+					if (OGF_C.userdata != null)
 					{
-						if (OGF_V.userdata.pos > 0 && (OGF_V.userdata.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
+						if (OGF_C.userdata.pos > 0 && (OGF_C.userdata.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
 						{
-							temp = fileStream.ReadBytes((int)(OGF_V.userdata.pos - fileStream.BaseStream.Position));
+							temp = fileStream.ReadBytes((int)(OGF_C.userdata.pos - fileStream.BaseStream.Position));
 							file_bytes.AddRange(temp);
 						}
 
-						if (OGF_V.userdata.userdata != "") // Пишем если есть что писать
+						if (OGF_C.userdata.userdata != "") // Пишем если есть что писать
 						{
-							uint UserDataChunk = (OGF_V.Header.format_version == 4 ? (uint)OGF.OGF4_S_USERDATA : (uint)OGF.OGF3_S_USERDATA);
-							byte[] UserDataData = OGF_V.userdata.data();
+							uint UserDataChunk = (OGF_C.Header.format_version == 4 ? (uint)OGF.OGF4_S_USERDATA : (uint)OGF.OGF3_S_USERDATA);
+							byte[] UserDataData = OGF_C.userdata.data();
 
                             file_bytes.AddRange(BitConverter.GetBytes(UserDataChunk));
 							file_bytes.AddRange(BitConverter.GetBytes(UserDataData.Length));
 							file_bytes.AddRange(UserDataData);
 						}
 
-						if (OGF_V.userdata.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
-							fileStream.ReadBytes(OGF_V.userdata.old_size + 8);
+						if (OGF_C.userdata.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
+							fileStream.ReadBytes(OGF_C.userdata.old_size + 8);
 					}
 
-					if (OGF_V.lod != null && OGF_V.Header.format_version == 4) // Стринг лод только у релизных OGF
+					if (OGF_C.lod != null && OGF_C.Header.format_version == 4) // Стринг лод только у релизных OGF
 					{
-						if (OGF_V.lod.pos > 0 && (OGF_V.lod.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
+						if (OGF_C.lod.pos > 0 && (OGF_C.lod.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
 						{
-							temp = fileStream.ReadBytes((int)(OGF_V.lod.pos - fileStream.BaseStream.Position));
+							temp = fileStream.ReadBytes((int)(OGF_C.lod.pos - fileStream.BaseStream.Position));
 							file_bytes.AddRange(temp);
 						}
 
-						if (OGF_V.lod.lod_path != "") // Пишем если есть что писать
+						if (OGF_C.lod.lod_path != "") // Пишем если есть что писать
 						{
-							byte[] LodData = OGF_V.lod.data();
+							byte[] LodData = OGF_C.lod.data();
 
                             file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_LODS));
 							file_bytes.AddRange(BitConverter.GetBytes(LodData.Length));
 							file_bytes.AddRange(LodData);
 						}
 
-						if (OGF_V.lod.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
-							fileStream.ReadBytes(OGF_V.lod.old_size + 8);
+						if (OGF_C.lod.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
+							fileStream.ReadBytes(OGF_C.lod.old_size + 8);
 					}
 
 					bool refs_created = false;
-					if (OGF_V.motion_refs != null)
+					if (OGF_C.motion_refs != null)
 					{
-						if (OGF_V.motion_refs.pos > 0 && (OGF_V.motion_refs.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
+						if (OGF_C.motion_refs.pos > 0 && (OGF_C.motion_refs.pos - fileStream.BaseStream.Position) > 0) // Двигаемся до текущего чанка
 						{
-							temp = fileStream.ReadBytes((int)(OGF_V.motion_refs.pos - fileStream.BaseStream.Position));
+							temp = fileStream.ReadBytes((int)(OGF_C.motion_refs.pos - fileStream.BaseStream.Position));
 							file_bytes.AddRange(temp);
 						}
 
-						if (OGF_V.motion_refs.refs.Count > 0) // Пишем если есть что писать
+						if (OGF_C.motion_refs.refs.Count > 0) // Пишем если есть что писать
 						{
 							refs_created = true;
-							byte[] MotionRefsData = OGF_V.motion_refs.data(OGF_V.motion_refs.soc);
+							byte[] MotionRefsData = OGF_C.motion_refs.data(OGF_C.motion_refs.soc);
 
-                            if (!OGF_V.motion_refs.soc)
+                            if (!OGF_C.motion_refs.soc)
 								file_bytes.AddRange(BitConverter.GetBytes((uint)OGF.OGF4_S_MOTION_REFS2));
 							else
 							{
-								uint RefsChunk = (OGF_V.Header.format_version == 4 ? (uint)OGF.OGF4_S_MOTION_REFS : (uint)OGF.OGF3_S_MOTION_REFS);
+								uint RefsChunk = (OGF_C.Header.format_version == 4 ? (uint)OGF.OGF4_S_MOTION_REFS : (uint)OGF.OGF3_S_MOTION_REFS);
 								file_bytes.AddRange(BitConverter.GetBytes(RefsChunk));
 							}
 							file_bytes.AddRange(BitConverter.GetBytes(MotionRefsData.Length));
 							file_bytes.AddRange(MotionRefsData);
 						}
 
-						if (OGF_V.motion_refs.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
-							fileStream.ReadBytes(OGF_V.motion_refs.old_size + 8);
+						if (OGF_C.motion_refs.old_size > 0) // Сдвигаем позицию риадера если в модели был чанк
+							fileStream.ReadBytes(OGF_C.motion_refs.old_size + 8);
 					}
 
-					if (OGF_V.motions.data() != null && !refs_created)
-						file_bytes.AddRange(OGF_V.motions.data());
+					if (OGF_C.motions.data() != null && !refs_created)
+						file_bytes.AddRange(OGF_C.motions.data());
 				}
 				else
 				{
@@ -777,7 +805,7 @@ namespace OGF_tool
 			WriteFile(filename, file_bytes.ToArray());
 		}
 
-		private bool OpenFile(string filename, ref OGF_Model OGF_C, ref byte[] Cur_OGF)
+		public bool OpenFile(string filename, out OGF_Model OGF_C, out byte[] Cur_OGF, bool silent = false)
 		{
 			var xr_loader = new XRayLoader();
 
@@ -787,6 +815,11 @@ namespace OGF_tool
 
 			if (format == ".dm")
 				OGF_C.IsDM = true;
+			else if (format == ".details")
+			{
+				OGF_C.IsDetails = true;
+                OGF_C.IsDM = true;
+            }
 
 			Cur_OGF = File.ReadAllBytes(filename);
 
@@ -794,7 +827,51 @@ namespace OGF_tool
 			{
 				xr_loader.SetStream(r.BaseStream);
 
-				if (OGF_C.IsDM)
+                if (OGF_C.IsDetails)
+                {
+                    xr_loader.SetStream(r.BaseStream);
+                    xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(1, false, true));
+
+                    int det_id = 0;
+
+                    while (true)
+                    {
+                        if (!xr_loader.find_chunk(det_id)) break;
+
+                        Stream temp = xr_loader.reader.BaseStream;
+
+                        if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(det_id, false, true))) break;
+
+                        OGF_Child chld = new OGF_Child();
+                        chld.LoadDM(xr_loader);
+                        OGF_C.childs.Add(chld);
+
+                        det_id++;
+                        xr_loader.SetStream(temp);
+                    }
+
+                    float step_radius = 1.2f;
+                    float view_offsX = 0.0f;
+                    float view_offsZ = 0.0f;
+					int size = (int)Math.Round(Math.Sqrt(OGF_C.childs.Count), 0);
+
+                    for (int i = 0; i < OGF_C.childs.Count; i++)
+					{
+                        if (i % size == 0)
+                        {
+                            view_offsX = 0.0f;
+                            view_offsZ += step_radius;
+                        }
+
+                        OGF_C.childs[i].SetLocalOffset(new float[3] { view_offsX, 0.0f, view_offsZ });
+
+                        view_offsX += step_radius;
+                    }
+
+                    return true;
+                }
+
+                if (OGF_C.IsDM)
                 {
 					OGF_Child chld = new OGF_Child();
 					chld.LoadDM(xr_loader);
@@ -802,9 +879,10 @@ namespace OGF_tool
 					return true;
 				}
 
-				if (!xr_loader.find_chunk((int)OGF.OGF_HEADER, false, true))
+                if (!xr_loader.find_chunk((int)OGF.OGF_HEADER, false, true))
 				{
-					MessageBox.Show("Unsupported OGF format! Can't find header chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					if (!silent)
+						MessageBox.Show("Unsupported OGF format! Can't find header chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					return false;
 				}
 				else
@@ -813,7 +891,8 @@ namespace OGF_tool
 
 					if (OGF_C.Header.format_version < 3)
                     {
-						MessageBox.Show($"Unsupported OGF version: {OGF_C.Header.format_version}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (!silent)
+                            MessageBox.Show($"Unsupported OGF version: {OGF_C.Header.format_version}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 						return false;
 					}
 				}
@@ -865,7 +944,8 @@ namespace OGF_tool
 
 				if (OGF_C.childs.Count == 0)
 				{
-					MessageBox.Show("Unsupported OGF format! Can't find children chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (!silent)
+                        MessageBox.Show("Unsupported OGF format! Can't find children chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					return false;
 				}
 
@@ -874,7 +954,8 @@ namespace OGF_tool
 					// Bones
 					if (!xr_loader.find_chunk((int)OGF.OGF_S_BONE_NAMES, false, true))
 					{
-						MessageBox.Show("Unsupported OGF format! Can't find bones chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (!silent)
+                            MessageBox.Show("Unsupported OGF format! Can't find bones chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 						return false;
 					}
 					else
@@ -919,7 +1000,8 @@ namespace OGF_tool
                     }
                     else if (OGF_C.Header.format_version == 4) // Chunk not find, exit if Release OGF
                     {
-                        MessageBox.Show("Unsupported OGF format! Can't find ik data chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (!silent)
+                            MessageBox.Show("Unsupported OGF format! Can't find ik data chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
 
@@ -1422,7 +1504,7 @@ namespace OGF_tool
             }
 
 			CopyParams();
-			SaveFile(FILE_NAME);
+			SaveFile(FILE_NAME, OGF_V, Current_OGF);
 			AutoClosingMessageBox.Show(NeedRepair() ? "Repaired and Saved!" : "Saved!", "", NeedRepair() ? 700 : 500, MessageBoxIcon.Information);
 		}
 
@@ -1434,7 +1516,7 @@ namespace OGF_tool
 			if (res == DialogResult.OK)
 			{
 				Clear(false);
-				if (OpenFile(OpenOGF_DmDialog.FileName, ref OGF_V, ref Current_OGF))
+				if (OpenFile(OpenOGF_DmDialog.FileName, out OGF_V, out Current_OGF))
 				{
 					OpenOGF_DmDialog.InitialDirectory = "";
 					FILE_NAME = OpenOGF_DmDialog.FileName;
@@ -1485,7 +1567,9 @@ namespace OGF_tool
                 return;
             }
 
-            if (OGF_V.IsDM)
+            if (OGF_V.IsDetails)
+                SaveAsDialog.Filter = "Detail file|*.details";
+            else if (OGF_V.IsDM)
 				SaveAsDialog.Filter = "DM file|*.dm";
 			else
 				SaveAsDialog.Filter = "OGF file|*.ogf";
@@ -1517,7 +1601,7 @@ namespace OGF_tool
                         File.Copy(FILE_NAME, filename);
 
                     CopyParams();
-                    SaveFile(filename);
+                    SaveFile(filename, OGF_V, Current_OGF);
                     break;
 				case ExportFormat.Obj:
                     SaveAsObj(filename, CurrentLod);
@@ -1531,7 +1615,7 @@ namespace OGF_tool
                     File.Copy(FILE_NAME, filename + ext);
 
                     CopyParams();
-                    SaveFile(filename + ext);
+                    SaveFile(filename + ext, OGF_V, Current_OGF);
 
                     exit_code = RunConverter(filename + ext, filename, OGF_V.IsDM ? 2 : 0, 0);
 
@@ -1675,7 +1759,7 @@ namespace OGF_tool
 
 			string cur_fname = FILE_NAME;
 			Clear(false);
-			if (OpenFile(cur_fname, ref OGF_V, ref Current_OGF))
+			if (OpenFile(cur_fname, out OGF_V, out Current_OGF))
 			{
 				FILE_NAME = cur_fname;
 				AfterLoad(true);
@@ -1833,16 +1917,16 @@ namespace OGF_tool
 			UpdateModelFormat();
 		}
 
-		private void importDataFromModelToolStripMenuItem_Click(object sender, EventArgs e)
+		public void importDataFromModelToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenOGFDialog.FileName = "";
 			if (OpenOGFDialog.ShowDialog() == DialogResult.OK)
 			{
 				bool Update = false;
 
-                OGF_Model SecondOgf = null;
-				byte[] SecondOgfByte = null;
-				OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
+                OGF_Model SecondOgf;
+				byte[] SecondOgfByte;
+				OpenFile(OpenOGFDialog.FileName, out SecondOgf, out SecondOgfByte);
 
 				if (SecondOgf.Header.IsSkeleton())
 				{
@@ -1952,7 +2036,13 @@ namespace OGF_tool
             }
 		}
 
-		private void ChangeModelFormat(object sender, EventArgs e)
+        private void batchToolsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Batch batchForm = new Batch(this);
+            batchForm.ShowDialog();
+        }
+
+        private void ChangeModelFormat(object sender, EventArgs e)
 		{
 			if (OGF_V != null)
 			{
@@ -2086,7 +2176,7 @@ namespace OGF_tool
 
 			File.Copy(FILE_NAME, Filename);
 			CopyParams();
-			SaveFile(Filename);
+			SaveFile(Filename, OGF_V, Current_OGF);
 			int exit_code = RunConverter(Filename, ObjectName, 0, 0);
 
 			if (exit_code == 0)
@@ -2276,7 +2366,7 @@ namespace OGF_tool
 			}
 		}
 
-		private bool IsTextCorrect(string text)
+		static public bool IsTextCorrect(string text)
         {
 			foreach (char ch in text)
             {
@@ -2399,7 +2489,7 @@ namespace OGF_tool
 				if (Path.GetExtension(file) == ".ogf" || Path.GetExtension(file) == ".dm")
 				{
 					Clear(false);
-					if (OpenFile(file, ref OGF_V, ref Current_OGF))
+					if (OpenFile(file, out OGF_V, out Current_OGF))
 					{
 						FILE_NAME = file;
 						AfterLoad(true);
@@ -2413,10 +2503,10 @@ namespace OGF_tool
         {
 			if (OpenOGFDialog.ShowDialog() == DialogResult.OK)
 			{
-                OGF_Model SecondOgf = null;
-                byte[] SecondOgfByte = null;
+                OGF_Model SecondOgf;
+                byte[] SecondOgfByte;
 
-                OpenFile(OpenOGFDialog.FileName, ref SecondOgf, ref SecondOgfByte);
+                OpenFile(OpenOGFDialog.FileName, out SecondOgf, out SecondOgfByte);
 
 				if (SecondOgf.Header.IsSkeleton())
 				{
@@ -3000,11 +3090,13 @@ namespace OGF_tool
 			newButton.Name = "DeleteButton_" + idx;
 			newButton.Click += new System.EventHandler(this.ButtonFilter);
 			newButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+			newButton.Enabled = !OGF_V.IsDM;
 
             var newButton2 = Copy.Button(MoveMeshButton);
             newButton2.Name = "MoveButton_" + idx;
             newButton2.Click += new System.EventHandler(this.ButtonFilter);
             newButton2.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+            newButton2.Enabled = !OGF_V.IsDM;
 
             box.Controls.Add(newTextBox);
 			box.Controls.Add(newTextBox2);

@@ -9,6 +9,10 @@ namespace OGF_tool
         public string m_texture;
         public string m_shader;
 
+        public uint m_flags;
+        public float min_scale;
+        public float max_scale;
+
         public OGF_Child()
         {
             Vertices = new List<SSkelVert>();
@@ -132,9 +136,9 @@ namespace OGF_tool
         {
             m_shader = xr_loader.read_stringZ();
             m_texture = xr_loader.read_stringZ();
-            xr_loader.ReadUInt32();
-            xr_loader.ReadFloat();
-            xr_loader.ReadFloat();
+            m_flags = xr_loader.ReadUInt32();
+            min_scale = xr_loader.ReadFloat();
+            max_scale = xr_loader.ReadFloat();
 
             old_size = m_shader.Length + m_texture.Length + 2;
 
@@ -360,6 +364,45 @@ namespace OGF_tool
                 }
             }
             // SWR end
+
+            return temp.ToArray();
+        }
+
+        public byte[] dm_data()
+        {
+            List<byte> temp = new List<byte>();
+
+            // Texture start
+            temp.AddRange(Encoding.Default.GetBytes(m_shader));
+            temp.Add(0);
+            temp.AddRange(Encoding.Default.GetBytes(m_texture));
+            temp.Add(0);
+            // Texture end
+
+            // Params start
+            temp.AddRange(BitConverter.GetBytes(m_flags));
+            temp.AddRange(BitConverter.GetBytes(min_scale));
+            temp.AddRange(BitConverter.GetBytes(max_scale));
+            temp.AddRange(BitConverter.GetBytes(Vertices.Count));
+            temp.AddRange(BitConverter.GetBytes(Faces.Count * 3));
+            // Params end
+
+            // Verts start
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                temp.AddRange(FVec.GetBytes(Vertices[i].offs));
+                temp.AddRange(FVec2.GetBytes(Vertices[i].uv));
+            }
+            // Verts end
+
+            // Indices start
+            for (int i = 0; i < Faces.Count; i++)
+            {
+                temp.AddRange(BitConverter.GetBytes(Faces[i].v[0]));
+                temp.AddRange(BitConverter.GetBytes(Faces[i].v[1]));
+                temp.AddRange(BitConverter.GetBytes(Faces[i].v[2]));
+            }
+            // Indices end
 
             return temp.ToArray();
         }

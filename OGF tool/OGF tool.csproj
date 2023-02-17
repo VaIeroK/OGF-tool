@@ -88,6 +88,24 @@
     <Compile Include="Classes\AutoClosingMessageBox.cs" />
     <Compile Include="Classes\EditorSettings.cs" />
     <Compile Include="Classes\FolderSelectDialog.cs" />
+    <Compile Include="Forms\Batch\Batch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Batch\Batch.Designer.cs">
+      <DependentUpon>Batch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Batch\AddDeleteData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Batch\AddDeleteData.Designer.cs">
+      <DependentUpon>AddDeleteData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Batch\ReplaceData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Batch\ReplaceData.Designer.cs">
+      <DependentUpon>ReplaceData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ImportParams.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +169,15 @@
     <Compile Include="Classes\XRayLoader.cs" />
     <EmbeddedResource Include="Forms\AddMesh.resx">
       <DependentUpon>AddMesh.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Batch\Batch.resx">
+      <DependentUpon>Batch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Batch\AddDeleteData.resx">
+      <DependentUpon>AddDeleteData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Batch\ReplaceData.resx">
+      <DependentUpon>ReplaceData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportParams.resx">
       <DependentUpon>ImportParams.cs</DependentUpon>

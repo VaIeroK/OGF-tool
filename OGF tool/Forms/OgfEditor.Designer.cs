@@ -116,6 +116,7 @@ namespace OGF_tool
             this.converterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCCoPToSoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCSoCToCoPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.batchToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OgfInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CurrentFormat = new System.Windows.Forms.ToolStripMenuItem();
@@ -678,7 +679,8 @@ namespace OGF_tool
             this.recalcBoundingBoxToolStripMenuItem,
             this.removeProgressiveMeshesToolStripMenuItem,
             this.moveRotateModelToolStripMenuItem,
-            this.converterToolStripMenuItem});
+            this.converterToolStripMenuItem,
+            this.batchToolsToolStripMenuItem});
             this.ToolsMenuItem.Name = "ToolsMenuItem";
             resources.ApplyResources(this.ToolsMenuItem, "ToolsMenuItem");
             // 
@@ -737,6 +739,12 @@ namespace OGF_tool
             this.nPCSoCToCoPToolStripMenuItem.Name = "nPCSoCToCoPToolStripMenuItem";
             resources.ApplyResources(this.nPCSoCToCoPToolStripMenuItem, "nPCSoCToCoPToolStripMenuItem");
             this.nPCSoCToCoPToolStripMenuItem.Click += new System.EventHandler(this.NPC_ToCoP);
+            // 
+            // batchToolsToolStripMenuItem
+            // 
+            this.batchToolsToolStripMenuItem.Name = "batchToolsToolStripMenuItem";
+            resources.ApplyResources(this.batchToolsToolStripMenuItem, "batchToolsToolStripMenuItem");
+            this.batchToolsToolStripMenuItem.Click += new System.EventHandler(this.batchToolsToolStripMenuItem_Click);
             // 
             // OgfInfo
             // 
@@ -1023,6 +1031,7 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem recalcBoundingBoxToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveRotateModelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showBonesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem batchToolsToolStripMenuItem;
     }
 }
 

@@ -282,6 +282,7 @@ namespace OGF_tool
     public class OGF_Model
     {
         public bool IsDM;
+        public bool IsDetails;
         public uint BrokenType;
         public bool IsCopModel;
 
@@ -308,6 +309,7 @@ namespace OGF_tool
             BrokenType = 0;
             motions = new OMF();
             IsDM = false;
+            IsDetails = false;
             description = null;
             childs = new List<OGF_Child>();
             bonedata = null;
@@ -326,7 +328,7 @@ namespace OGF_tool
         {
             foreach (var child in childs)
             {
-                if (child.Header.IsProgressive())
+                if (child.Header != null && child.Header.IsProgressive())
                     return true;
             }
             return false;
