@@ -731,6 +731,7 @@ namespace OGF_tool
                         string[] data = line.Split(' ');
                         switch (data[0])
                         {
+                            case "o":
                             case "g":
                                 FlushChild();
                                 child = new OGF_Child();
@@ -744,19 +745,23 @@ namespace OGF_tool
                                 verts_counter++;
                                 break;
                             case "vt":
-                                Vertices[uv_counter].uv = new float[2] { Convert.ToSingle(data[1]), Math.Abs(1.0f - Convert.ToSingle(data[2])) };
+                                if (Vertices.Count > uv_counter)
+                                    Vertices[uv_counter].uv = new float[2] { Convert.ToSingle(data[1]), Math.Abs(1.0f - Convert.ToSingle(data[2])) };
                                 uv_counter++;
                                 break;
                             case "vn":
-                                Vertices[normals_counter].norm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                if (Vertices.Count > normals_counter)
+                                    Vertices[normals_counter].norm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
                                 normals_counter++;
                                 break;
                             case "vg":
-                                Vertices[tang_counter].tang = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                if (Vertices.Count > tang_counter)
+                                    Vertices[tang_counter].tang = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
                                 tang_counter++;
                                 break;
                             case "vb":
-                                Vertices[binorm_counter].binorm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                if (Vertices.Count > binorm_counter)
+                                    Vertices[binorm_counter].binorm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
                                 binorm_counter++;
                                 break;
                             case "f":
