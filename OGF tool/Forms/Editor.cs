@@ -14,9 +14,6 @@ using System.Drawing.Imaging;
 using GitHubUpdate;
 using System.Reflection;
 
-// TODO
-// Починить open in object editor
-
 namespace OGF_tool
 {
 	public partial class Editor : Form
@@ -1350,24 +1347,26 @@ namespace OGF_tool
 			if (File.Exists(Filename))
 				File.Delete(Filename);
 
-			//File.Copy(Model.FileName, Filename);
-			//         ApplyParams();
-			//         Model.SaveFile(Filename, BkpCheckBox.Checked);
-			//int exit_code = RunConverter(Filename, ObjectName, 0, 0);
+            ApplyParams();
+            XRay_Model temp_model = new XRay_Model();
+			temp_model.Copy(Model);
+			temp_model.FileName = Filename;
 
-			Msg("Implement me!");
+            File.Copy(Model.FileName, Filename);
 
-			//if (exit_code == 0)
-			//{
-			//	Process proc = new Process();
-			//	proc.StartInfo.FileName = ObjectEditor;
-			//	proc.StartInfo.Arguments += $"\"{ObjectName}\" skeleton_only \"{Model.FileName}\"";
-			//	proc.Start();
-			//	proc.WaitForExit();
-			//}
-			//else
-   //             AutoClosingMessageBox.Show("Can't convert model to object!", "Error", 1500, MessageBoxIcon.Error);
-        }
+			int exit_code = temp_model.SaveObject(ObjectName, BkpCheckBox.Checked);
+
+			if (exit_code == 0)
+			{
+				Process proc = new Process();
+				proc.StartInfo.FileName = ObjectEditor;
+				proc.StartInfo.Arguments += $"\"{ObjectName}\" skeleton_only \"{temp_model.FileName}\"";
+				proc.Start();
+				proc.WaitForExit();
+			}
+			else
+				AutoClosingMessageBox.Show("Can't convert model to object!", "Error", 1500, MessageBoxIcon.Error);
+		}
 
 		private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
