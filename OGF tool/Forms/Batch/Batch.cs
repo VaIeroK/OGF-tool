@@ -364,7 +364,11 @@ namespace OGF_tool
             FolderSelectDialog folderSelectDialog = new FolderSelectDialog();
             if (folderSelectDialog.ShowDialog())
             {
-                PathTextBox.Text = folderSelectDialog.FileName;
+                string fname = folderSelectDialog.FileName;
+                int slash_idx = fname.LastIndexOf('\\');
+                if (slash_idx == fname.Count() - 1)
+                    fname = fname.Substring(0, fname.LastIndexOf('\\'));
+                PathTextBox.Text = fname;
                 Editor.pSettings.Save("BatchFolderPath", PathTextBox.Text);
             }
         }
