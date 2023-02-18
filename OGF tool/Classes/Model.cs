@@ -364,7 +364,7 @@ namespace OGF_tool
         {
             pos = model.pos;
             chunk_size = model.chunk_size;
-            BrokenType = model.chunk_size;
+            BrokenType = model.BrokenType;
             motions = model.motions;
             description = model.description;
             childs = model.childs;
