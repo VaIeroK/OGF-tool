@@ -746,22 +746,46 @@ namespace OGF_tool
                                 break;
                             case "vt":
                                 if (Vertices.Count > uv_counter)
-                                    Vertices[uv_counter].uv = new float[2] { Convert.ToSingle(data[1]), Math.Abs(1.0f - Convert.ToSingle(data[2])) };
+                                {
+                                    try
+                                    {
+                                        Vertices[uv_counter].uv = new float[2] { Convert.ToSingle(data[1]), Math.Abs(1.0f - Convert.ToSingle(data[2])) };
+                                    }
+                                    catch { }
+                                }
                                 uv_counter++;
                                 break;
                             case "vn":
                                 if (Vertices.Count > normals_counter)
-                                    Vertices[normals_counter].norm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                {
+                                    try
+                                    {
+                                        Vertices[normals_counter].norm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                    }
+                                    catch { }
+                                }
                                 normals_counter++;
                                 break;
                             case "vg":
                                 if (Vertices.Count > tang_counter)
-                                    Vertices[tang_counter].tang = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                {
+                                    try
+                                    {
+                                        Vertices[tang_counter].tang = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                    }
+                                    catch { }
+                                }
                                 tang_counter++;
                                 break;
                             case "vb":
                                 if (Vertices.Count > binorm_counter)
-                                    Vertices[binorm_counter].binorm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                {
+                                    try
+                                    {
+                                        Vertices[binorm_counter].binorm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                    }
+                                    catch { }
+                                }
                                 binorm_counter++;
                                 break;
                             case "f":
