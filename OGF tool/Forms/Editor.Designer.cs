@@ -98,6 +98,7 @@ namespace OGF_tool
             this.SaveMenuParam = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.oGFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.objectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bonesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -145,7 +146,6 @@ namespace OGF_tool
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
             this.SaveDMDialog = new System.Windows.Forms.SaveFileDialog();
             this.OpenDMDialog = new System.Windows.Forms.OpenFileDialog();
-            this.oGFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveOGFDialog = new System.Windows.Forms.SaveFileDialog();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
@@ -632,6 +632,12 @@ namespace OGF_tool
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             resources.ApplyResources(this.exportToolStripMenuItem, "exportToolStripMenuItem");
             // 
+            // oGFToolStripMenuItem
+            // 
+            this.oGFToolStripMenuItem.Name = "oGFToolStripMenuItem";
+            resources.ApplyResources(this.oGFToolStripMenuItem, "oGFToolStripMenuItem");
+            this.oGFToolStripMenuItem.Click += new System.EventHandler(this.oGFToolStripMenuItem_Click);
+            // 
             // objectToolStripMenuItem
             // 
             this.objectToolStripMenuItem.Name = "objectToolStripMenuItem";
@@ -908,17 +914,11 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.OpenDMDialog, "OpenDMDialog");
             // 
-            // oGFToolStripMenuItem
-            // 
-            this.oGFToolStripMenuItem.Name = "oGFToolStripMenuItem";
-            resources.ApplyResources(this.oGFToolStripMenuItem, "oGFToolStripMenuItem");
-            this.oGFToolStripMenuItem.Click += new System.EventHandler(this.oGFToolStripMenuItem_Click);
-            // 
             // SaveOGFDialog
             // 
             resources.ApplyResources(this.SaveOGFDialog, "SaveOGFDialog");
             // 
-            // OGF_Editor
+            // Editor
             // 
             this.AllowDrop = true;
             resources.ApplyResources(this, "$this");
@@ -929,7 +929,7 @@ namespace OGF_tool
             this.Controls.Add(this.StatusPanel);
             this.Controls.Add(this.TabControl);
             this.MainMenuStrip = this.MenuPanel;
-            this.Name = "OGF_Editor";
+            this.Name = "Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ClosingForm);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ClosedForm);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragDropCallback);
