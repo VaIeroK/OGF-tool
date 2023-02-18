@@ -80,6 +80,8 @@ namespace OGF_tool
 
             InitializeComponent();
 
+            Model = new XRay_Model();
+
             if (!Directory.Exists(TempFolder()))
                 Directory.CreateDirectory(TempFolder());
 
@@ -156,7 +158,6 @@ namespace OGF_tool
             AddMeshesMenuItem.Enabled = false;
 
             SaveSklDialog = new FolderSelectDialog();
-			Model = new XRay_Model();
 
 			if (Environment.GetCommandLineArgs().Length > 1)
 			{
