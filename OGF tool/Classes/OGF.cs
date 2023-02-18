@@ -176,6 +176,14 @@ namespace OGF_tool
         public float[] Offset()
         {
             float[] offset = FVec.Add(offs, local_offset);
+            offset = FVec.Add(offset, local_offset2);
+            offset = FVec.RotateXYZ(offset, local_rotation2);
+            return FVec.RotateXYZ(offset, local_rotation, rotation_local ? center : new float[3]);
+        }
+
+        public float[] Offset2()
+        {
+            float[] offset = FVec.Add(offs, local_offset);
             offset = FVec.RotateXYZ(offset, local_rotation2);
             return FVec.RotateXYZ(offset, local_rotation, rotation_local ? center : new float[3]);
         }
@@ -284,6 +292,15 @@ namespace OGF_tool
 
     public class XRay_Model
     {
+        public enum ModelFormat
+        {
+            eUnknown = 0,
+            eOGF = 1,
+            eDM = 2,
+            eDetail = 4,
+            eObj = 8
+        }
+
         [DllImport("Converter.dll")]
         private static extern void CalcBones([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.Struct, SizeParamIndex = 1)] ref BoneRenderTransform[] bones, int length, string child_list);
 
@@ -293,10 +310,25 @@ namespace OGF_tool
         [DllImport("Converter.dll")]
         private static extern void FixVertexOffset([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.Struct, SizeParamIndex = 1)] ref BoneRenderTransform[] bones, int length, string child_list, int bone_0, float x, float y, float z);
 
-        delegate void WriteObj(List<SSkelVert> Verts, List<SSkelFace> Faces, string texture);
+        [DllImport("Converter.dll")]
+        private static extern int StartConvert(string path, string out_path, int mode, int convert_to_mode, string motion_list);
 
-        public bool IsDM;
-        public bool IsDetails;
+        private int RunConverter(string path, string out_path, int mode, int convert_to_mode)
+        {
+            string dll_path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\converter.dll";
+            if (File.Exists(dll_path))
+                return StartConvert(path, out_path, mode, convert_to_mode, "");
+            else
+            {
+                MessageBox.Show("Can't find Converter.dll", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return -1;
+            }
+        }
+
+        delegate void WriteObj(List<SSkelVert> Verts, List<SSkelFace> Faces, string texture);
+        delegate void AddChild();
+
+        public int Format;
         public uint BrokenType;
         public bool IsCopModel;
 
@@ -328,8 +360,6 @@ namespace OGF_tool
             chunk_size = 0;
             BrokenType = 0;
             motions = new OMF();
-            IsDM = false;
-            IsDetails = false;
             description = null;
             childs = new List<OGF_Child>();
             bonedata = null;
@@ -344,6 +374,7 @@ namespace OGF_tool
             local_offset = new float[3];
             local_rotation = new float[3];
             Opened = false;
+            Format = (int)ModelFormat.eUnknown;
         }
 
         public void Destroy()
@@ -424,87 +455,32 @@ namespace OGF_tool
             return new float[3] { transforms[0].OutPosX, transforms[0].OutPosY, transforms[0].OutPosZ };
         }
 
-        public bool OpenFile(string filename, bool silent = false)
+        public bool Is(ModelFormat fmt)
         {
-            Opened = OpenFileInternal(filename, silent);
-
-            if (Opened)
-                FileName = filename;
-
-            return Opened;
+            return BitMask.IsSet(Format, (int)fmt);
         }
 
-        private bool OpenFileInternal(string filename, bool silent = false)
+        public bool OpenFile(string filename, bool silent = false)
+        {
+            if (OpenFileInternal(filename, silent))
+            { 
+                Opened = true;
+                FileName = filename;
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool LoadOGF(string filename, bool silent = false)
         {
             var xr_loader = new XRayLoader();
-
-            string format = Path.GetExtension(filename);
-
-            if (format == ".dm")
-                IsDM = true;
-            else if (format == ".details")
-            {
-                IsDetails = true;
-                IsDM = true;
-            }
 
             source_data = File.ReadAllBytes(filename);
 
             using (var r = new BinaryReader(new MemoryStream(source_data)))
             {
                 xr_loader.SetStream(r.BaseStream);
-
-                if (IsDetails)
-                {
-                    xr_loader.SetStream(r.BaseStream);
-                    xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(1, false, true));
-
-                    int det_id = 0;
-
-                    while (true)
-                    {
-                        if (!xr_loader.find_chunk(det_id)) break;
-
-                        Stream temp = xr_loader.reader.BaseStream;
-
-                        if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(det_id, false, true))) break;
-
-                        OGF_Child chld = new OGF_Child();
-                        chld.LoadDM(xr_loader);
-                        childs.Add(chld);
-
-                        det_id++;
-                        xr_loader.SetStream(temp);
-                    }
-
-                    float step_radius = 1.2f;
-                    float view_offsX = 0.0f;
-                    float view_offsZ = 0.0f;
-                    int size = (int)Math.Round(Math.Sqrt(childs.Count), 0);
-
-                    for (int i = 0; i < childs.Count; i++)
-                    {
-                        if (i % size == 0)
-                        {
-                            view_offsX = 0.0f;
-                            view_offsZ += step_radius;
-                        }
-
-                        childs[i].SetLocalOffset(new float[3] { view_offsX, 0.0f, view_offsZ });
-
-                        view_offsX += step_radius;
-                    }
-
-                    return true;
-                }
-
-                if (IsDM)
-                {
-                    OGF_Child chld = new OGF_Child();
-                    chld.LoadDM(xr_loader);
-                    childs.Add(chld);
-                    return true;
-                }
 
                 if (!xr_loader.find_chunk((int)OGF.OGF_HEADER, false, true))
                 {
@@ -667,60 +643,302 @@ namespace OGF_tool
                     }
                 }
             }
+
+            BitMask.Null(ref Format);
+            BitMask.Set(ref Format, (int)ModelFormat.eOGF);
             return true;
         }
 
-        public void SaveFile(string filename, bool backup = false)
+        private bool LoadObj(string filename)
+        {
+            source_data = File.ReadAllBytes(filename);
+            Header = new OGF_Header();
+            description = new Description();
+            childs.Clear();
+
+            using (var r = new StreamReader(new MemoryStream(source_data)))
+            {
+                int verts_counter = 0;
+                int normals_counter = 0;
+                int tang_counter = 0;
+                int binorm_counter = 0;
+                int uv_counter = 0;
+                int face_offset = 0;
+                string texture = "";
+             
+                OGF_Child child = null;
+                List<SSkelVert> Vertices = new List<SSkelVert>();
+                List<SSkelFace> Faces = new List<SSkelFace>();
+
+                AddChild FlushChild = () =>
+                {
+                    if (child != null)
+                    {
+                        child.Vertices = Vertices;
+                        child.Faces = Faces;
+                        child.m_texture = texture;
+                        child.m_shader = "default";
+                        child.Header = new OGF_Header();
+
+                        childs.Add(child);
+
+                        texture = "";
+                        verts_counter = 0;
+                        normals_counter = 0;
+                        tang_counter = 0;
+                        binorm_counter = 0;
+                        uv_counter = 0;
+                        face_offset += child.Vertices.Count;
+                        Vertices = new List<SSkelVert>();
+                        Faces = new List<SSkelFace>();
+                    }
+                };
+
+                while (!r.EndOfStream)
+                {
+                    string line = r.ReadLine();
+                    if (!line.Contains("#"))
+                    {
+                        string[] data = line.Split(' ');
+                        switch (data[0])
+                        {
+                            case "g":
+                                FlushChild();
+                                child = new OGF_Child();
+                                break;
+                            case "usemtl":
+                                texture = data[1].Trim(new char[] { '\"' });
+                                break;
+                            case "v":
+                                Vertices.Add(new SSkelVert());
+                                Vertices[verts_counter].offs = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                verts_counter++;
+                                break;
+                            case "vt":
+                                Vertices[uv_counter].uv = new float[2] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]) };
+                                Vertices[uv_counter].uv[1] = Math.Abs(1.0f - Vertices[uv_counter].uv[1]);
+                                uv_counter++;
+                                break;
+                            case "vn":
+                                Vertices[normals_counter].norm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                normals_counter++;
+                                break;
+                            case "vg":
+                                Vertices[tang_counter].tang = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                tang_counter++;
+                                break;
+                            case "vb":
+                                Vertices[binorm_counter].binorm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
+                                binorm_counter++;
+                                break;
+                            case "f":
+                                string[] v2 = data[1].Split('/');
+                                string[] v1 = data[2].Split('/');
+                                string[] v0 = data[3].Split('/');
+
+                                SSkelFace Face = new SSkelFace();
+                                Face.v[0] = (ushort)(Convert.ToUInt16(v0[0]) - 1 - face_offset);
+                                Face.v[1] = (ushort)(Convert.ToUInt16(v1[0]) - 1 - face_offset);
+                                Face.v[2] = (ushort)(Convert.ToUInt16(v2[0]) - 1 - face_offset);
+
+                                Faces.Add(Face);
+                                break;
+                        }
+                    }
+                }
+                FlushChild();
+            }
+
+            RecalcBBox(true);
+            BitMask.Null(ref Format);
+            BitMask.Set(ref Format, (int)ModelFormat.eObj);
+            return true;
+        }
+
+        private bool LoadDM(string filename)
+        {
+            source_data = File.ReadAllBytes(filename);
+
+            var xr_loader = new XRayLoader();
+
+            using (var r = new BinaryReader(new MemoryStream(source_data)))
+            {
+                xr_loader.SetStream(r.BaseStream);
+
+                OGF_Child chld = new OGF_Child();
+                chld.LoadDM(xr_loader);
+                childs.Add(chld);
+            }
+
+            BitMask.Null(ref Format);
+            BitMask.Set(ref Format, (int)ModelFormat.eDM);
+            return true;
+        }
+
+        private bool LoadDetail(string filename)
+        {
+            source_data = File.ReadAllBytes(filename);
+
+            var xr_loader = new XRayLoader();
+
+            using (var r = new BinaryReader(new MemoryStream(source_data)))
+            {
+                xr_loader.SetStream(r.BaseStream);
+                xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(1, false, true));
+
+                int det_id = 0;
+
+                while (true)
+                {
+                    if (!xr_loader.find_chunk(det_id)) break;
+
+                    Stream temp = xr_loader.reader.BaseStream;
+
+                    if (!xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(det_id, false, true))) break;
+
+                    OGF_Child chld = new OGF_Child();
+                    chld.LoadDM(xr_loader);
+                    childs.Add(chld);
+
+                    det_id++;
+                    xr_loader.SetStream(temp);
+                }
+
+                float step_radius = 1.2f;
+                float view_offsX = 0.0f;
+                float view_offsZ = 0.0f;
+                int size = (int)Math.Round(Math.Sqrt(childs.Count), 0);
+
+                for (int i = 0; i < childs.Count; i++)
+                {
+                    if (i % size == 0)
+                    {
+                        view_offsX = 0.0f;
+                        view_offsZ += step_radius;
+                    }
+
+                    childs[i].SetLocalOffsetMain(new float[3] { view_offsX, 0.0f, view_offsZ });
+
+                    view_offsX += step_radius;
+                }
+            }
+
+            BitMask.Null(ref Format);
+            BitMask.Set(ref Format, (int)ModelFormat.eDM);
+            BitMask.Set(ref Format, (int)ModelFormat.eDetail);
+            OGF_Editor.Msg(((int)Format).ToString());
+            return true;
+        }
+
+        private bool OpenFileInternal(string filename, bool silent = false)
+        {
+            string format = Path.GetExtension(filename);
+
+            if (format == ".dm")
+                return LoadDM(filename);
+            else if (format == ".details")
+                return LoadDetail(filename);
+            else if (format == ".ogf")
+                return LoadOGF(filename, silent);
+            else if (format == ".obj")
+                return LoadObj(filename);
+
+            return false;
+        }
+
+        public void SaveFile(string filename, bool backup = false, ModelFormat override_fmt = ModelFormat.eUnknown)
+        {
+            if (source_data == null) return;
+
+            if (override_fmt != ModelFormat.eUnknown)
+                SaveFileAsFmt(filename, backup, override_fmt);
+            else if (BitMask.IsSet(Format, (int)ModelFormat.eDetail))
+                SaveDetail(filename, backup);
+            else if (BitMask.IsSet(Format, (int)ModelFormat.eDM))
+                SaveDM(filename, backup);
+            else if (BitMask.IsSet(Format, (int)ModelFormat.eOGF))
+                SaveOGF(filename, backup);
+            else if (BitMask.IsSet(Format, (int)ModelFormat.eObj))
+            {
+                SaveObj saveObj = new SaveObj();
+                saveObj.ShowDialog();
+
+                switch (saveObj.Fmt)
+                {
+                    case OGF_Editor.ExportFormat.OGF:
+                        SaveOGF(Path.ChangeExtension(filename, ".ogf"), backup);
+                        break;
+                    case OGF_Editor.ExportFormat.DM:
+                        SaveDM(Path.ChangeExtension(filename, ".dm"), backup);
+                        break;
+                    case OGF_Editor.ExportFormat.Object:
+                        SaveObject(Path.ChangeExtension(filename, ".object"), backup);
+                        break;
+                }
+            }
+        }
+
+        private void SaveFileAsFmt(string filename, bool backup, ModelFormat fmt)
+        {
+            if (BitMask.IsSet((int)fmt, (int)ModelFormat.eDetail))
+                SaveDetail(filename, backup);
+            else if (BitMask.IsSet((int)fmt, (int)ModelFormat.eDM))
+                SaveDM(filename, backup);
+            else if (BitMask.IsSet((int)fmt, (int)ModelFormat.eOGF))
+                SaveOGF(filename, backup);
+        }
+
+        public int SaveObject(string filename, bool backup = false)
+        {
+            string ext = Is(ModelFormat.eDM) && !Is(ModelFormat.eObj) ? ".dm" : ".ogf"; // Create temp ext
+
+            if (File.Exists(filename + ext)) // Remove temp file if exist
+                File.Delete(filename + ext);
+
+            SaveFile(filename + ext, backup, Is(ModelFormat.eObj) ? ModelFormat.eOGF : ModelFormat.eUnknown);
+
+            int code = RunConverter(filename + ext, filename, ext == ".dm" ? 2 : 0, 0);
+
+            if (File.Exists(filename + ext)) // Remove temp file
+                File.Delete(filename + ext);
+
+            return code;
+        }
+
+        public int SaveBones(string filename)
+        {
+            return RunConverter(FileName, filename, 0, 1);
+        }
+
+        public int SaveSkl(string filename)
+        {
+            return RunConverter(FileName, filename, 0, 2);
+        }
+
+        public int SaveSkls(string filename)
+        {
+            return RunConverter(FileName, filename, 0, 3);
+        }
+
+        public bool SaveOMF(string filename)
+        {
+            using (var fileStream = new FileStream(filename, FileMode.OpenOrCreate))
+            {
+                fileStream.Write(motions.data(), 0, motions.data().Length);
+                fileStream.Close();
+            }
+
+            return true;
+        }
+
+        public void SaveOGF(string filename, bool backup = false)
         {
             List<byte> file_bytes = new List<byte>();
-
-            if (source_data == null) return;
 
             TryRepairUserdata(userdata);
             using (var fileStream = new BinaryReader(new MemoryStream(source_data)))
             {
                 byte[] temp;
-
-                if (IsDetails)
-                {
-                    fileStream.ReadBytes(4);
-                    uint OldDetailsSize = fileStream.ReadUInt32();
-                    fileStream.BaseStream.Position += OldDetailsSize;
-
-                    uint DetailsChunkSize = 0;
-                    foreach (var ch in childs)
-                    {
-                        if (!ch.to_delete)
-                            DetailsChunkSize += (uint)ch.dm_data().Length + 8;
-                    }
-
-                    file_bytes.AddRange(BitConverter.GetBytes(1));
-                    file_bytes.AddRange(BitConverter.GetBytes(DetailsChunkSize));
-
-                    int DetailID = 0;
-                    foreach (var ch in childs)
-                    {
-                        if (ch.to_delete) continue;
-
-                        byte[] DetailData = ch.dm_data();
-
-                        file_bytes.AddRange(BitConverter.GetBytes(DetailID));
-                        file_bytes.AddRange(BitConverter.GetBytes(DetailData.Length));
-                        file_bytes.AddRange(DetailData);
-                        DetailID++;
-                    }
-                    byte[] dm_data = fileStream.ReadBytes((int)(fileStream.BaseStream.Length - fileStream.BaseStream.Position));
-                    file_bytes.AddRange(dm_data);
-                    WriteFile(filename, file_bytes.ToArray(), backup);
-                    return;
-                }
-
-                if (IsDM)
-                {
-                    SaveFileAsDM(filename, 0, backup);
-                    return;
-                }
-
                 if (!Header.IsStaticSingle())
                     file_bytes.AddRange(Header.data());
 
@@ -882,7 +1100,7 @@ namespace OGF_tool
                     if (motions.data() != null && !refs_created)
                         file_bytes.AddRange(motions.data());
                 }
-                else
+                else if (!Is(ModelFormat.eObj))
                 {
                     temp = fileStream.ReadBytes((int)(fileStream.BaseStream.Length - fileStream.BaseStream.Position));
                     file_bytes.AddRange(temp);
@@ -890,6 +1108,43 @@ namespace OGF_tool
             }
 
             WriteFile(filename, file_bytes.ToArray(), backup);
+        }
+
+        public void SaveDetail(string filename, bool backup = false)
+        {
+            List<byte> file_bytes = new List<byte>();
+            using (var fileStream = new BinaryReader(new MemoryStream(source_data)))
+            {
+                fileStream.ReadBytes(4);
+                uint OldDetailsSize = fileStream.ReadUInt32();
+                fileStream.BaseStream.Position += OldDetailsSize;
+
+                uint DetailsChunkSize = 0;
+                foreach (var ch in childs)
+                {
+                    if (!ch.to_delete)
+                        DetailsChunkSize += (uint)ch.dm_data().Length + 8;
+                }
+
+                file_bytes.AddRange(BitConverter.GetBytes(1));
+                file_bytes.AddRange(BitConverter.GetBytes(DetailsChunkSize));
+
+                int DetailID = 0;
+                foreach (var ch in childs)
+                {
+                    if (ch.to_delete) continue;
+
+                    byte[] DetailData = ch.dm_data();
+
+                    file_bytes.AddRange(BitConverter.GetBytes(DetailID));
+                    file_bytes.AddRange(BitConverter.GetBytes(DetailData.Length));
+                    file_bytes.AddRange(DetailData);
+                    DetailID++;
+                }
+                byte[] dm_data = fileStream.ReadBytes((int)(fileStream.BaseStream.Length - fileStream.BaseStream.Position));
+                file_bytes.AddRange(dm_data);
+                WriteFile(filename, file_bytes.ToArray(), backup);
+            }
         }
 
         private void WriteFile(string filename, byte[] data, bool bkp)
@@ -911,7 +1166,12 @@ namespace OGF_tool
             }
         }
 
-        public void SaveFileAsDM(string filename, int child, bool bkp = false)
+        public void SaveDM(string filename, bool backup = false)
+        {
+            SaveDM(filename, 0, backup);
+        }
+
+        public void SaveDM(string filename, int child, bool bkp = false)
         {
             List<byte> file_bytes = new List<byte>();
 
@@ -920,7 +1180,7 @@ namespace OGF_tool
             WriteFile(filename, file_bytes.ToArray(), bkp);
         }
 
-        public void SaveFileAsObj(string filename, float lod = 0.0f, bool viewport_bones = false, bool viewport_bbox = false, bool viewport_textures = false)
+        public void SaveObj(string filename, float lod = 0.0f, bool viewport_bones = false, bool viewport_bbox = false, bool viewport_textures = false)
         {
             using (ObjWriter = File.CreateText(filename))
             {
@@ -1122,25 +1382,22 @@ namespace OGF_tool
 
         public void RecalcBBox(bool recalc_childs)
         {
-            if (Opened)
+            if (Header == null)
+                Header = new OGF_Header();
+
+            Header.bb.Invalidate();
+
+            foreach (OGF_Child child in childs)
             {
-                Header.bb.Invalidate();
-
-                foreach (OGF_Child child in childs)
+                if (!child.to_delete)
                 {
-                    if (!child.to_delete)
-                    {
-                        if (recalc_childs)
-                        {
-                            child.Header.bb.CreateBox(child.Vertices);
-                            child.Header.bs.CreateSphere(child.Header.bb);
-                        }
-                        Header.bb.Merge(child.Header.bb);
-                    }
+                    if (recalc_childs)
+                        child.RecalcBBox();
+                    Header.bb.Merge(child.Header.bb);
                 }
-
-                Header.bs.CreateSphere(Header.bb);
             }
+
+            Header.bs.CreateSphere(Header.bb);
         }
 
         public void AddBone(string name, string parent_bone, int pos)

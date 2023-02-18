@@ -159,6 +159,33 @@
   <data name="&gt;&gt;TextureContextStrip.Type" xml:space="preserve">
     <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="MeshDataButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="MeshDataButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>173, 99</value>
+  </data>
+  <data name="MeshDataButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 23</value>
+  </data>
+  <data name="MeshDataButton.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="MeshDataButton.Text" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="&gt;&gt;MeshDataButton.Name" xml:space="preserve">
+    <value>MeshDataButton</value>
+  </data>
+  <data name="&gt;&gt;MeshDataButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MeshDataButton.Parent" xml:space="preserve">
+    <value>TexturesGropuBox</value>
+  </data>
+  <data name="&gt;&gt;MeshDataButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="MoveMeshButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>89, 99</value>
   </data>
@@ -181,7 +208,7 @@
     <value>TexturesGropuBox</value>
   </data>
   <data name="&gt;&gt;MoveMeshButton.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="LodLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -214,7 +241,7 @@
     <value>TexturesGropuBox</value>
   </data>
   <data name="&gt;&gt;LodLabel.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="LinksLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -247,7 +274,7 @@
     <value>TexturesGropuBox</value>
   </data>
   <data name="&gt;&gt;LinksLabel.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="DeleteMesh.Location" type="System.Drawing.Point, System.Drawing">
     <value>5, 99</value>
@@ -271,7 +298,7 @@
     <value>TexturesGropuBox</value>
   </data>
   <data name="&gt;&gt;DeleteMesh.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="VertsLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -304,7 +331,7 @@
     <value>TexturesGropuBox</value>
   </data>
   <data name="&gt;&gt;VertsLabel.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="FaceLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -337,7 +364,7 @@
     <value>TexturesGropuBox</value>
   </data>
   <data name="&gt;&gt;FaceLabel.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="ShaderNameLabelEx.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -364,7 +391,7 @@
     <value>TexturesGropuBox</value>
   </data>
   <data name="&gt;&gt;ShaderNameLabelEx.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="TexturesPathLabelEx.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -391,7 +418,7 @@
     <value>TexturesGropuBox</value>
   </data>
   <data name="&gt;&gt;TexturesPathLabelEx.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="ShaderTextBoxEx.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -415,7 +442,7 @@
     <value>TexturesGropuBox</value>
   </data>
   <data name="&gt;&gt;ShaderTextBoxEx.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="TexturesTextBoxEx.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -439,7 +466,7 @@
     <value>TexturesGropuBox</value>
   </data>
   <data name="&gt;&gt;TexturesTextBoxEx.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="TexturesGropuBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -1605,6 +1632,12 @@
   <data name="saveAsToolStripMenuItem.Text" xml:space="preserve">
     <value>Save as...</value>
   </data>
+  <data name="oGFToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="oGFToolStripMenuItem.Text" xml:space="preserve">
+    <value>OGF</value>
+  </data>
   <data name="objectToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 22</value>
   </data>
@@ -1915,7 +1948,7 @@
     <value>435, 17</value>
   </metadata>
   <data name="OpenOGF_DmDialog.Filter" xml:space="preserve">
-    <value>OGF/DM/Details file|*.ogf;*.dm;*.details</value>
+    <value>OGF/DM/Details file|*.ogf;*.dm;*.details;*.obj</value>
   </data>
   <metadata name="SaveSklsDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1147, 17</value>
@@ -1982,6 +2015,18 @@
   </metadata>
   <data name="SaveDMDialog.Filter" xml:space="preserve">
     <value>DM file|*.dm</value>
+  </data>
+  <metadata name="OpenDMDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>182, 56</value>
+  </metadata>
+  <data name="OpenDMDialog.Filter" xml:space="preserve">
+    <value>DM file|*.dm</value>
+  </data>
+  <metadata name="SaveOGFDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>319, 56</value>
+  </metadata>
+  <data name="SaveOGFDialog.Filter" xml:space="preserve">
+    <value>OGF file|*.ogf</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2289,7 +2334,7 @@
     <value>CenterScreen</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>OGF/DM Params Editor</value>
+    <value>OGF/DM/Details Editor</value>
   </data>
   <data name="&gt;&gt;OpenOGFDialog.Name" xml:space="preserve">
     <value>OpenOGFDialog</value>
@@ -2361,6 +2406,12 @@
     <value>objectToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;objectToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dMToolStripMenuItem.Name" xml:space="preserve">
+    <value>dMToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;dMToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;bonesToolStripMenuItem.Name" xml:space="preserve">
@@ -2603,16 +2654,28 @@
   <data name="&gt;&gt;SaveObjDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;dMToolStripMenuItem.Name" xml:space="preserve">
-    <value>dMToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;dMToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;SaveDMDialog.Name" xml:space="preserve">
     <value>SaveDMDialog</value>
   </data>
   <data name="&gt;&gt;SaveDMDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;OpenDMDialog.Name" xml:space="preserve">
+    <value>OpenDMDialog</value>
+  </data>
+  <data name="&gt;&gt;OpenDMDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;oGFToolStripMenuItem.Name" xml:space="preserve">
+    <value>oGFToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;oGFToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SaveOGFDialog.Name" xml:space="preserve">
+    <value>SaveOGFDialog</value>
+  </data>
+  <data name="&gt;&gt;SaveOGFDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

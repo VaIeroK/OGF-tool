@@ -304,7 +304,7 @@ void FixBind(std::vector<BonesList*> BoneArr, int idx)
 
 extern "C"
 {
-	_declspec(dllexport) int CSharpStartAgent(char* path, char* out_path, int mode, int convert_to_mode, const char* motions)
+	_declspec(dllexport) int StartConvert(char* path, char* out_path, int mode, int convert_to_mode, const char* motions)
 	{
 		static const unsigned int size = 6;
 		char *args[size];

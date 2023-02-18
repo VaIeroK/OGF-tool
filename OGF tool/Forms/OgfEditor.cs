@@ -14,6 +14,10 @@ using System.Drawing.Imaging;
 using GitHubUpdate;
 using System.Reflection;
 
+// TODO
+// Чистить старую модель при загрузке
+// Починить open in object editor
+
 namespace OGF_tool
 {
 	public partial class OGF_Editor : Form
@@ -25,7 +29,7 @@ namespace OGF_tool
 		public string[] game_materials = { };
 		public bool UseTexturesCache = false;
 
-		static public string PROGRAM_VERSION = "3.9";
+		static public string PROGRAM_VERSION = "4.0";
 
 		// Input
 		public bool bKeyIsDown = false;
@@ -58,25 +62,10 @@ namespace OGF_tool
 		[DllImport("user32")]
 		private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
 
-		[DllImport("Converter.dll")]
-		private static extern int CSharpStartAgent(string path, string out_path, int mode, int convert_to_mode, string motion_list);
-
-        private int RunConverter(string path, string out_path, int mode, int convert_to_mode)
-		{
-			string dll_path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf('\\')) + "\\converter.dll";
-			if (File.Exists(dll_path))
-			{
-                return CSharpStartAgent(path, out_path, mode, convert_to_mode, "");
-			}
-			else
-			{
-				MessageBox.Show("Can't find Converter.dll", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return -1;
-			}
-		}
 
 		public enum ExportFormat
 		{
+			Unknown,
 			OGF,
 			Object,
 			DM,
@@ -84,7 +73,8 @@ namespace OGF_tool
             Bones,
 			OMF,
 			Skl,
-			Skls
+			Skls,
+			Detail
 		}
 
 		public OGF_Editor()
@@ -266,23 +256,26 @@ namespace OGF_tool
                 SaveMenuParam.Enabled = true;
 				saveAsToolStripMenuItem.Enabled = true;
 
-                OpenInObjectEditor.Enabled = !Model.IsDM;
-                importDataFromModelToolStripMenuItem.Enabled = !Model.IsDM;
-                recalcNormalsToolStripMenuItem.Enabled = !Model.IsDM;
-                recalcBoundingBoxToolStripMenuItem.Enabled = !Model.IsDM;
-                moveRotateModelToolStripMenuItem.Enabled = !Model.IsDM;
-                converterToolStripMenuItem.Enabled = !Model.IsDM;
+                OpenInObjectEditor.Enabled = !Model.Is(XRay_Model.ModelFormat.eDM);
+                importDataFromModelToolStripMenuItem.Enabled = !Model.Is(XRay_Model.ModelFormat.eDM);
+                recalcNormalsToolStripMenuItem.Enabled = !Model.Is(XRay_Model.ModelFormat.eDM);
+                recalcBoundingBoxToolStripMenuItem.Enabled = !Model.Is(XRay_Model.ModelFormat.eDM);
+                moveRotateModelToolStripMenuItem.Enabled = !Model.Is(XRay_Model.ModelFormat.eDM);
+                converterToolStripMenuItem.Enabled = !Model.Is(XRay_Model.ModelFormat.eDM);
                 removeProgressiveMeshesToolStripMenuItem.Enabled = LodMenuItem.Enabled = Model.IsProgressive();
 
                 exportToolStripMenuItem.Enabled = true;
 				bonesToolStripMenuItem.Enabled = Model.Header.IsSkeleton();
+                oGFToolStripMenuItem.Enabled = !Model.Is(XRay_Model.ModelFormat.eOGF);
                 AddMeshesMenuItem.Enabled = Model.Header.IsSkeleton();
-                OgfInfo.Enabled = !Model.IsDM;
+                OgfInfo.Enabled = !Model.Is(XRay_Model.ModelFormat.eDM);
 				showBonesToolStripMenuItem.Enabled = Model.bonedata != null && Model.ikdata != null;
-				objectToolStripMenuItem.Enabled = !Model.IsDetails;
+				objectToolStripMenuItem.Enabled = !Model.Is(XRay_Model.ModelFormat.eDetail);
+				dMToolStripMenuItem.Enabled = !Model.Is(XRay_Model.ModelFormat.eDM);
 
                 OpenOGFDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
-				OpenOGF_DmDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
+                OpenDMDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
+                OpenOGF_DmDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
 				SaveAsDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
 				SaveAsDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.'));
 				OpenOMFDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
@@ -300,6 +293,8 @@ namespace OGF_tool
                 SaveObjDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".obj";
                 SaveDMDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
                 SaveDMDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".dm";
+                SaveOGFDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
+                SaveOGFDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".ogf";
 
                 CurrentLod = 0;
             }
@@ -400,7 +395,7 @@ namespace OGF_tool
 				CreateTextureGroupBox(i);
 
 				var TextureGroupBox = TexturesPage.Controls["TextureGrpBox_" + i.ToString()];
-                TextureGroupBox.Controls["textureBox_" + i.ToString()].Text = Model.childs[i].m_texture; ;
+                TextureGroupBox.Controls["textureBox_" + i.ToString()].Text = Model.childs[i].m_texture;
                 TextureGroupBox.Controls["shaderBox_" + i.ToString()].Text = Model.childs[i].m_shader;
 			}
 
@@ -413,7 +408,7 @@ namespace OGF_tool
 			if (Model.userdata != null)
 				UserDataBox.Text = Model.userdata.userdata;
 
-			if (main_file && !Model.IsDM)
+			if (main_file && !Model.Is(XRay_Model.ModelFormat.eDM))
 			{
 				LabelBroken.Text = "Broken type: " + Model.BrokenType.ToString();
 				LabelBroken.Visible = Model.BrokenType > 0;
@@ -494,20 +489,43 @@ namespace OGF_tool
 			switch (currentField)
 			{
 				case "DeleteButton":
-                    Model.childs[idx].to_delete = !Model.childs[idx].to_delete;
+					if (Model.Is(XRay_Model.ModelFormat.eDM))
+					{
+                        OpenDMDialog.FileName = "";
+                        if (OpenDMDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            XRay_Model DM = new XRay_Model();
+                            if (DM.OpenFile(OpenDMDialog.FileName))
+                            {
+								OGF_Child old_child = Model.childs[idx];
+                                Model.childs[idx] = DM.childs[0];
+								Model.childs[idx].SetLocalOffsetMain(old_child.GetLocalOffsetMain());
 
-					if (Model.childs[idx].to_delete)
-                    {
-						curBox.Text = "Return Mesh";
-						curBox.BackColor = Color.FromArgb(255, 255, 128, 128);
-					}
+                                var TextureGroupBox = TexturesPage.Controls["TextureGrpBox_" + idx.ToString()];
+                                TextureGroupBox.Controls["textureBox_" + idx.ToString()].Text = Model.childs[idx].m_texture;
+                                TextureGroupBox.Controls["shaderBox_" + idx.ToString()].Text = Model.childs[idx].m_shader;
+                                RecalcMeshInfo();
+                                ReloadViewPort();
+                            }
+                        }
+                    }
 					else
-                    {
-						curBox.Text = "Delete Mesh";
-						curBox.BackColor = SystemColors.Control;
+					{
+						Model.childs[idx].to_delete = !Model.childs[idx].to_delete;
+
+						if (Model.childs[idx].to_delete)
+						{
+							curBox.Text = "Return Mesh";
+							curBox.BackColor = Color.FromArgb(255, 255, 128, 128);
+						}
+						else
+						{
+							curBox.Text = "Delete Mesh";
+							curBox.BackColor = SystemColors.Control;
+						}
+						UpdateModelType();
+						Model.RecalcBBox(false);
 					}
-					UpdateModelType();
-                    Model.RecalcBBox(false);
                     break;
                 case "MoveButton":
 					float[] old_offs = Model.childs[idx].GetLocalOffset();
@@ -525,9 +543,17 @@ namespace OGF_tool
 
 					if (!FVec.Similar(old_offs, Model.childs[idx].GetLocalOffset()) || !FVec.Similar(old_rot, Model.childs[idx].GetLocalRotation()) || old_rot_flag != Model.childs[idx].GetLocalRotationFlag())
 					{
-                        Model.RecalcBBox(true);
+						if (!Model.Is(XRay_Model.ModelFormat.eDM))
+							Model.RecalcBBox(true);
                         ReloadViewPort(true, false, true);
 					}
+                    break;
+                case "DataButton":
+					DmData dmData = new DmData(Model.childs[idx].min_scale, Model.childs[idx].max_scale, Model.childs[idx].m_flags);
+					dmData.ShowDialog();
+					Model.childs[idx].min_scale = dmData.fMinScale;
+					Model.childs[idx].max_scale = dmData.fMaxScale;
+					Model.childs[idx].m_flags = dmData.iFlags;
                     break;
             }
 		}
@@ -727,16 +753,35 @@ namespace OGF_tool
                 return;
             }
 
-            if (Model.IsDetails)
-                SaveAsDialog.Filter = "Detail file|*.details";
-            else if (Model.IsDM)
+			ExportFormat fmt = ExportFormat.Unknown;
+
+			if (Model.Is(XRay_Model.ModelFormat.eDetail))
+			{
+				SaveAsDialog.Filter = "Detail file|*.details";
+				fmt = ExportFormat.Detail;
+			}
+			else if (Model.Is(XRay_Model.ModelFormat.eDM))
+			{
 				SaveAsDialog.Filter = "DM file|*.dm";
-			else
+				fmt = ExportFormat.DM;
+			}
+			else if (Model.Is(XRay_Model.ModelFormat.eOGF))
+			{
 				SaveAsDialog.Filter = "OGF file|*.ogf";
+				fmt = ExportFormat.OGF;
+			}
+			else
+			{
+				SaveAsDialog.Filter = "OGF file|*.ogf|DM file|*.dm";
+				SaveAsDialog.DefaultExt = "ogf";
+            }
 
 			if (SaveAsDialog.ShowDialog() == DialogResult.OK)
 			{
-				SaveTools(SaveAsDialog.FileName, 0);
+				if (fmt == ExportFormat.Unknown)
+                    fmt = (Path.GetExtension(SaveAsDialog.FileName) == ".ogf" ? ExportFormat.OGF : ExportFormat.DM);
+
+				SaveTools(SaveAsDialog.FileName, fmt);
 				SaveAsDialog.InitialDirectory = "";
 			}
 		}
@@ -757,11 +802,8 @@ namespace OGF_tool
             switch (format)
 			{
 				case ExportFormat.OGF:
-                    if (filename != Model.FileName)
-                        File.Copy(Model.FileName, filename);
-
                     ApplyParams();
-                    Model.SaveFile(filename, BkpCheckBox.Checked);
+                    Model.SaveOGF(filename, BkpCheckBox.Checked);
                     break;
                 case ExportFormat.DM:
 					int cnt = 0, idx = 0;
@@ -780,51 +822,40 @@ namespace OGF_tool
 						return;
                     }
 
-                    if (filename != Model.FileName)
-                        File.Copy(Model.FileName, filename);
-
                     ApplyParams();
-					DmData dmData = new DmData();
-					dmData.ShowDialog();
-					Model.childs[idx].min_scale = dmData.fMinScale;
-					Model.childs[idx].max_scale = dmData.fMaxScale;
-					Model.childs[idx].m_flags = dmData.iFlags;
-                    Model.SaveFileAsDM(filename, idx, BkpCheckBox.Checked);
+                    DmData dmData = new DmData(Model.childs[idx].min_scale, Model.childs[idx].max_scale, Model.childs[idx].m_flags);
+                    dmData.ShowDialog();
+                    Model.childs[idx].min_scale = dmData.fMinScale;
+                    Model.childs[idx].max_scale = dmData.fMaxScale;
+                    Model.childs[idx].m_flags = dmData.iFlags;
+                    Model.SaveDM(filename, idx, BkpCheckBox.Checked);
                     break;
                 case ExportFormat.Obj:
-                    Model.SaveFileAsObj(filename, CurrentLod);
+                    ApplyParams();
+                    Model.SaveObj(filename, CurrentLod);
                     break;
                 case ExportFormat.Object:
-                    string ext = Model.IsDM ? ".dm" : ".ogf";
-
-                    if (File.Exists(filename + ext))
-                        File.Delete(filename + ext);
-
-                    File.Copy(Model.FileName, filename + ext);
-
                     ApplyParams();
-                    Model.SaveFile(filename + ext, BkpCheckBox.Checked);
-
-                    exit_code = RunConverter(filename + ext, filename, Model.IsDM ? 2 : 0, 0);
-
-                    if (File.Exists(filename + ext))
-						File.Delete(filename + ext);
+                    exit_code = Model.SaveObject(filename, BkpCheckBox.Checked);
                     break;
 				case ExportFormat.OMF:
-					using (var fileStream = new FileStream(filename, FileMode.OpenOrCreate))
-					{
-						fileStream.Write(Model.motions.data(), 0, Model.motions.data().Length);
-						fileStream.Close();
-                    }
+                    ApplyParams();
+                    Model.SaveOMF(filename);
                     break;
                 case ExportFormat.Bones:
-                    exit_code = RunConverter(Model.FileName, filename, 0, 1);
+                    exit_code = Model.SaveBones(filename);
                     break;
                 case ExportFormat.Skl:
-                    exit_code = RunConverter(Model.FileName, filename, 0, 2);
+                    exit_code = Model.SaveSkl(filename);
                     break;
                 case ExportFormat.Skls:
-                    exit_code = RunConverter(Model.FileName, filename, 0, 3);
+                    exit_code = Model.SaveSkls(filename);
+                    break;
+                case ExportFormat.Detail:
+                    Model.SaveDetail(filename, BkpCheckBox.Checked);
+                    break;
+				case ExportFormat.Unknown:
+                    AutoClosingMessageBox.Show("Unknown export format! Report for developer", "Error", 1500, MessageBoxIcon.Error);
                     break;
             }
 
@@ -837,7 +868,16 @@ namespace OGF_tool
 				AutoClosingMessageBox.Show("Export aborted!", "Error", 1500, MessageBoxIcon.Error);
         }
 
-		private void objectToolStripMenuItem_Click(object sender, EventArgs e)
+        private void oGFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (SaveOGFDialog.ShowDialog() == DialogResult.OK)
+            {
+                SaveTools(SaveOGFDialog.FileName, ExportFormat.OGF);
+                SaveOGFDialog.InitialDirectory = "";
+            }
+        }
+
+        private void objectToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (SaveObjectDialog.ShowDialog() == DialogResult.OK)
 			{
@@ -1270,7 +1310,7 @@ namespace OGF_tool
 
 		private void UpdateModelFormat()
 		{
-			CurrentFormat.Enabled = (Model.Opened && !Model.IsDM && Model.Header.IsSkeleton());
+			CurrentFormat.Enabled = (Model.Opened && !Model.Is(XRay_Model.ModelFormat.eDM) && Model.Header.IsSkeleton());
 
 			if (!CurrentFormat.Enabled)
 			{
@@ -1311,21 +1351,23 @@ namespace OGF_tool
 			if (File.Exists(Filename))
 				File.Delete(Filename);
 
-			File.Copy(Model.FileName, Filename);
-            ApplyParams();
-            Model.SaveFile(Filename, BkpCheckBox.Checked);
-			int exit_code = RunConverter(Filename, ObjectName, 0, 0);
+			//File.Copy(Model.FileName, Filename);
+			//         ApplyParams();
+			//         Model.SaveFile(Filename, BkpCheckBox.Checked);
+			//int exit_code = RunConverter(Filename, ObjectName, 0, 0);
 
-			if (exit_code == 0)
-			{
-				Process proc = new Process();
-				proc.StartInfo.FileName = ObjectEditor;
-				proc.StartInfo.Arguments += $"\"{ObjectName}\" skeleton_only \"{Model.FileName}\"";
-				proc.Start();
-				proc.WaitForExit();
-			}
-			else
-                AutoClosingMessageBox.Show("Can't convert model to object!", "Error", 1500, MessageBoxIcon.Error);
+			Msg("Implement me!");
+
+			//if (exit_code == 0)
+			//{
+			//	Process proc = new Process();
+			//	proc.StartInfo.FileName = ObjectEditor;
+			//	proc.StartInfo.Arguments += $"\"{ObjectName}\" skeleton_only \"{Model.FileName}\"";
+			//	proc.Start();
+			//	proc.WaitForExit();
+			//}
+			//else
+   //             AutoClosingMessageBox.Show("Can't convert model to object!", "Error", 1500, MessageBoxIcon.Error);
         }
 
 		private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1363,20 +1405,58 @@ namespace OGF_tool
 				CurrentLod = swiLod.Lod;
 				if (old_lod != CurrentLod)
 				{
-					RecalcLod();
+                    RecalcMeshInfo();
 					ReloadViewPort(true, false, true);
 				}
 			}
         }
 
-		private void RecalcLod()
+        private void RecalcMeshInfo()
         {
-			for (int idx = 0; idx < Model.childs.Count; idx++)
+            for (int idx = 0; idx < Model.childs.Count; idx++)
             {
-				Control Mesh = TexturesPage.Controls["TextureGrpBox_" + idx.ToString()];
-				Label FaceLbl = (Label)Mesh.Controls["FacesLbl_" + idx.ToString()];
-				FaceLbl.Text = FaceLabel.Text + Model.childs[idx].Faces_SWI(CurrentLod).Count.ToString();
-			}
+                Control Mesh = TexturesPage.Controls["TextureGrpBox_" + idx.ToString()];
+
+                Label FaceLbl = (Label)Mesh.Controls["FacesLbl_" + idx.ToString()];
+				string NewFaceText = FaceLabel.Text + Model.childs[idx].Faces_SWI(CurrentLod).Count.ToString();
+				int FaceLocationDiff = NewFaceText.Length - FaceLbl.Text.Length;
+
+                FaceLbl.Text = NewFaceText;
+                FaceLbl.Size = new Size(FaceLbl.Size.Width + (FaceLocationDiff * 6), FaceLbl.Size.Height);
+                FaceLbl.Location = new Point(FaceLbl.Location.X - (FaceLocationDiff * 6), FaceLbl.Location.Y);
+
+                Label VertsLbl = (Label)Mesh.Controls["VertsLbl_" + idx.ToString()];
+                string NewVertsText = VertsLabel.Text + Model.childs[idx].Vertices.Count.ToString();
+                int VertsLocationDiff = NewVertsText.Length - VertsLbl.Text.Length;
+
+                VertsLbl.Text = NewVertsText;
+                VertsLbl.Size = new Size(VertsLbl.Size.Width + (VertsLocationDiff * 6), VertsLbl.Size.Height);
+                VertsLbl.Location = new Point(VertsLbl.Location.X - (VertsLocationDiff * 6) - (FaceLocationDiff * 6), VertsLbl.Location.Y);
+
+				int LinksLocationDiff = 0;
+
+                if (Model.Header != null && Model.Header.IsSkeleton())
+				{
+					Label LinksLbl = (Label)Mesh.Controls["LinksLbl_" + idx.ToString()];
+                    string NewLinksText = LinksLabel.Text + Model.childs[idx].LinksCount().ToString();
+                    LinksLocationDiff = NewVertsText.Length - VertsLbl.Text.Length;
+
+                    LinksLbl.Text = NewLinksText;
+					LinksLbl.Size = new Size(LinksLbl.Size.Width + (LinksLocationDiff * 6), LinksLbl.Size.Height);
+					LinksLbl.Location = new Point(LinksLbl.Location.X - (LinksLocationDiff * 6) - (VertsLocationDiff * 6) - (FaceLocationDiff * 6), LinksLbl.Location.Y);
+				}
+
+				if (Model.childs[idx].SWI.Count > 0)
+				{
+					Label LodsLbl = (Label)Mesh.Controls["LodsLbl_" + idx.ToString()];
+					string NewLodsText = LodLabel.Text + Model.childs[idx].SWI.Count.ToString();
+                    int LodsLocationDiff = NewVertsText.Length - VertsLbl.Text.Length;
+
+                    LodsLbl.Text = NewLodsText;
+					LodsLbl.Size = new Size(LodsLbl.Size.Width + (LodsLocationDiff * 6), LodsLbl.Size.Height);
+					LodsLbl.Location = new Point(LodsLbl.Location.X - (LodsLocationDiff * 6) - (LinksLocationDiff * 6) - (VertsLocationDiff * 6) - (FaceLocationDiff * 6), LodsLbl.Location.Y);
+				}
+            }
         }
 
         private void removeProgressiveMeshesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1602,7 +1682,7 @@ namespace OGF_tool
 
 			foreach (string file in fileList)
 			{
-				if (Path.GetExtension(file) == ".ogf" || Path.GetExtension(file) == ".dm")
+				if (Path.GetExtension(file) == ".ogf" || Path.GetExtension(file) == ".dm" || Path.GetExtension(file) == ".detail" || Path.GetExtension(file) == ".obj")
 				{
 					e.Effect = DragDropEffects.Copy;
 					break;
@@ -1618,7 +1698,7 @@ namespace OGF_tool
 
 			foreach (string file in fileList)
 			{
-				if (Path.GetExtension(file) == ".ogf" || Path.GetExtension(file) == ".dm")
+				if (Path.GetExtension(file) == ".ogf" || Path.GetExtension(file) == ".dm" || Path.GetExtension(file) == ".detail" || Path.GetExtension(file) == ".obj")
 				{
 					if (Model.OpenFile(file))
 					{
@@ -1633,7 +1713,8 @@ namespace OGF_tool
 
 		private void addMeshesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			if (OpenOGFDialog.ShowDialog() == DialogResult.OK)
+			OpenOGFDialog.FileName = "";
+            if (OpenOGFDialog.ShowDialog() == DialogResult.OK)
 			{
                 XRay_Model SecondModel = new XRay_Model();
                 SecondModel.OpenFile(OpenOGFDialog.FileName);
@@ -2053,7 +2134,7 @@ namespace OGF_tool
 				pSettings.Load("FirstLoad", ref first_load, true);
 
 				if (create_model)
-                    Model.SaveFileAsObj(ObjName, CurrentLod, ViewPortBones && showBonesToolStripMenuItem.Enabled, ViewPortBBox, ViewPortTextures);
+                    Model.SaveObj(ObjName, CurrentLod, ViewPortBones && showBonesToolStripMenuItem.Enabled, ViewPortBBox, ViewPortTextures);
 
 				ViewerProcess.StartInfo.FileName = exe_path;
 				ViewerProcess.StartInfo.Arguments = $"--input=\"{ObjName}\" --output=\"{image_path}\"" + (first_load ? " --filename" : "");
@@ -2223,18 +2304,25 @@ namespace OGF_tool
 			newButton.Name = "DeleteButton_" + idx;
 			newButton.Click += new System.EventHandler(this.ButtonFilter);
 			newButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-			newButton.Enabled = !Model.IsDM;
+			newButton.Text = Model.Is(XRay_Model.ModelFormat.eDM) ? "Replace" : newButton.Text;
 
             var newButton2 = Copy.Button(MoveMeshButton);
             newButton2.Name = "MoveButton_" + idx;
             newButton2.Click += new System.EventHandler(this.ButtonFilter);
             newButton2.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-            newButton2.Enabled = !Model.IsDM;
+
+            var newButton3 = Copy.Button(MeshDataButton);
+            newButton3.Name = "DataButton_" + idx;
+            newButton3.Click += new System.EventHandler(this.ButtonFilter);
+            newButton3.Anchor = AnchorStyles.Left | AnchorStyles.Top;
 
             box.Controls.Add(newTextBox);
 			box.Controls.Add(newTextBox2);
 			box.Controls.Add(newButton);
             box.Controls.Add(newButton2);
+
+			if (Model.Is(XRay_Model.ModelFormat.eDM))
+				box.Controls.Add(newButton3);
         }
 
 		private void CreateTextureLabels(int idx, GroupBox box)
@@ -2251,7 +2339,7 @@ namespace OGF_tool
 			newLbl3.Size = new Size(FaceLabel.Size.Width + (Model.childs[idx].Faces_SWI(CurrentLod).Count.ToString().Length * 6), FaceLabel.Size.Height);
 			newLbl3.Location = new Point(FaceLabel.Location.X - (Model.childs[idx].Faces_SWI(CurrentLod).Count.ToString().Length * 6), FaceLabel.Location.Y);
 
-			var newLbl4 = Copy.Label(VertsLabel);
+            var newLbl4 = Copy.Label(VertsLabel);
 			newLbl4.Name = "VertsLbl_" + idx;
 			newLbl4.Text = VertsLabel.Text + Model.childs[idx].Vertices.Count.ToString();
 			newLbl4.Size = new Size(VertsLabel.Size.Width + (Model.childs[idx].Vertices.Count.ToString().Length * 6), VertsLabel.Size.Height);

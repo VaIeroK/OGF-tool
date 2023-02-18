@@ -22,7 +22,7 @@ namespace OGF_tool
         {
             pos = 0;
             old_size = 0;
-            four_byte = false;
+            four_byte = true;
 
             m_source = "";
             m_export_tool = "";

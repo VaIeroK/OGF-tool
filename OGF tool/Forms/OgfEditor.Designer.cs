@@ -38,6 +38,7 @@ namespace OGF_tool
             this.AddMeshesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LodMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TexturesGropuBox = new System.Windows.Forms.GroupBox();
+            this.MeshDataButton = new System.Windows.Forms.Button();
             this.MoveMeshButton = new System.Windows.Forms.Button();
             this.LodLabel = new System.Windows.Forms.Label();
             this.LinksLabel = new System.Windows.Forms.Label();
@@ -98,6 +99,7 @@ namespace OGF_tool
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.objectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bonesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.objToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.omfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -141,8 +143,10 @@ namespace OGF_tool
             this.SaveObjectDialog = new System.Windows.Forms.SaveFileDialog();
             this.LabelBroken = new System.Windows.Forms.Label();
             this.SaveObjDialog = new System.Windows.Forms.SaveFileDialog();
-            this.dMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveDMDialog = new System.Windows.Forms.SaveFileDialog();
+            this.OpenDMDialog = new System.Windows.Forms.OpenFileDialog();
+            this.oGFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveOGFDialog = new System.Windows.Forms.SaveFileDialog();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -211,6 +215,7 @@ namespace OGF_tool
             // 
             // TexturesGropuBox
             // 
+            this.TexturesGropuBox.Controls.Add(this.MeshDataButton);
             this.TexturesGropuBox.Controls.Add(this.MoveMeshButton);
             this.TexturesGropuBox.Controls.Add(this.LodLabel);
             this.TexturesGropuBox.Controls.Add(this.LinksLabel);
@@ -224,6 +229,12 @@ namespace OGF_tool
             resources.ApplyResources(this.TexturesGropuBox, "TexturesGropuBox");
             this.TexturesGropuBox.Name = "TexturesGropuBox";
             this.TexturesGropuBox.TabStop = false;
+            // 
+            // MeshDataButton
+            // 
+            resources.ApplyResources(this.MeshDataButton, "MeshDataButton");
+            this.MeshDataButton.Name = "MeshDataButton";
+            this.MeshDataButton.UseVisualStyleBackColor = true;
             // 
             // MoveMeshButton
             // 
@@ -610,6 +621,7 @@ namespace OGF_tool
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.oGFToolStripMenuItem,
             this.objectToolStripMenuItem,
             this.dMToolStripMenuItem,
             this.bonesToolStripMenuItem,
@@ -625,6 +637,12 @@ namespace OGF_tool
             this.objectToolStripMenuItem.Name = "objectToolStripMenuItem";
             resources.ApplyResources(this.objectToolStripMenuItem, "objectToolStripMenuItem");
             this.objectToolStripMenuItem.Click += new System.EventHandler(this.objectToolStripMenuItem_Click);
+            // 
+            // dMToolStripMenuItem
+            // 
+            this.dMToolStripMenuItem.Name = "dMToolStripMenuItem";
+            resources.ApplyResources(this.dMToolStripMenuItem, "dMToolStripMenuItem");
+            this.dMToolStripMenuItem.Click += new System.EventHandler(this.dMToolStripMenuItem_Click);
             // 
             // bonesToolStripMenuItem
             // 
@@ -882,15 +900,23 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.SaveObjDialog, "SaveObjDialog");
             // 
-            // dMToolStripMenuItem
-            // 
-            this.dMToolStripMenuItem.Name = "dMToolStripMenuItem";
-            resources.ApplyResources(this.dMToolStripMenuItem, "dMToolStripMenuItem");
-            this.dMToolStripMenuItem.Click += new System.EventHandler(this.dMToolStripMenuItem_Click);
-            // 
             // SaveDMDialog
             // 
             resources.ApplyResources(this.SaveDMDialog, "SaveDMDialog");
+            // 
+            // OpenDMDialog
+            // 
+            resources.ApplyResources(this.OpenDMDialog, "OpenDMDialog");
+            // 
+            // oGFToolStripMenuItem
+            // 
+            this.oGFToolStripMenuItem.Name = "oGFToolStripMenuItem";
+            resources.ApplyResources(this.oGFToolStripMenuItem, "oGFToolStripMenuItem");
+            this.oGFToolStripMenuItem.Click += new System.EventHandler(this.oGFToolStripMenuItem_Click);
+            // 
+            // SaveOGFDialog
+            // 
+            resources.ApplyResources(this.SaveOGFDialog, "SaveOGFDialog");
             // 
             // OGF_Editor
             // 
@@ -1047,6 +1073,10 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem batchToolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dMToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog SaveDMDialog;
+        private System.Windows.Forms.OpenFileDialog OpenDMDialog;
+        private System.Windows.Forms.Button MeshDataButton;
+        private System.Windows.Forms.ToolStripMenuItem oGFToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog SaveOGFDialog;
     }
 }
 

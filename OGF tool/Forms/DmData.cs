@@ -18,13 +18,17 @@ namespace OGF_tool
         public float fMinScale;
         public float fMaxScale;
         public uint iFlags;
-        public DmData()
+        public DmData(float min, float max, uint flags)
         {
             InitializeComponent();
             bKeyIsDown = false;
-            fMinScale = 1.0f;
-            fMaxScale = 1.0f;
-            iFlags = 0;
+            fMinScale = min;
+            fMaxScale = max;
+            iFlags = flags;
+
+            MinScale.Text = fMinScale.ToString();
+            MaxScale.Text = fMaxScale.ToString();
+            checkBox1.Checked = flags == 1;
         }
 
         private void TextBoxKeyDown(object sender, KeyEventArgs e)

@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\BitMask.cs" />
     <Compile Include="Classes\BoundingMesh.cs" />
     <Compile Include="Classes\Copy.cs" />
     <Compile Include="Classes\FVec.cs" />
@@ -146,6 +147,12 @@
     <Compile Include="Classes\OGF Chunks\Lod.cs" />
     <Compile Include="Classes\OGF Chunks\MotionRefs.cs" />
     <Compile Include="Classes\OGF Chunks\UserData.cs" />
+    <Compile Include="Forms\SaveObj.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SaveObj.Designer.cs">
+      <DependentUpon>SaveObj.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SelectMeshes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -206,6 +213,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OgfInfo.ru.resx">
       <DependentUpon>OgfInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SaveObj.resx">
+      <DependentUpon>SaveObj.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SelectMeshes.resx">
       <DependentUpon>SelectMeshes.cs</DependentUpon>

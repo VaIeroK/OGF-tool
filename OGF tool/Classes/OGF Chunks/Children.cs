@@ -21,7 +21,7 @@ namespace OGF_tool
             old_size = 0;
             links = 0;
             to_delete = false;
-            FVF = 0;
+            FVF = 0x112;
             min_scale = 1.0f;
             max_scale = 1.0f;
             m_flags = 0;
@@ -42,6 +42,14 @@ namespace OGF_tool
         {
             if (Vertices.Count > 0)
                 return Vertices[0].local_offset;
+            else
+                return new float[3];
+        }
+
+        public float[] GetLocalOffsetMain()
+        {
+            if (Vertices.Count > 0)
+                return Vertices[0].local_offset2;
             else
                 return new float[3];
         }
@@ -135,6 +143,15 @@ namespace OGF_tool
             SSkelVert.GenerateNormals(ref Vertices, Faces, generate_normal);
         }
 
+        public void RecalcBBox()
+        {
+            if (Header == null)
+                Header = new OGF_Header();
+
+            Header.bb.CreateBox(Vertices);
+            Header.bs.CreateSphere(Header.bb);
+        }
+
         public void LoadDM(XRayLoader xr_loader)
         {
             m_shader = xr_loader.read_stringZ();
@@ -165,6 +182,7 @@ namespace OGF_tool
                 Faces.Add(Face);
             }
 
+            RecalcBBox();
             MeshNormalize();
         }
 
@@ -393,7 +411,7 @@ namespace OGF_tool
             // Verts start
             for (int i = 0; i < Vertices.Count; i++)
             {
-                temp.AddRange(FVec.GetBytes(Vertices[i].offs));
+                temp.AddRange(FVec.GetBytes(Vertices[i].Offset2()));
                 temp.AddRange(FVec2.GetBytes(Vertices[i].uv));
             }
             // Verts end
