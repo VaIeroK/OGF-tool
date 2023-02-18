@@ -698,6 +698,8 @@ namespace OGF_tool
                 OGF_Child child = null;
                 List<SSkelVert> Vertices = new List<SSkelVert>();
                 List<SSkelFace> Faces = new List<SSkelFace>();
+                bool RecalcNormals = false;
+                bool RecalcTangentBasis = false;
 
                 AddChild FlushChild = () =>
                 {
@@ -708,6 +710,9 @@ namespace OGF_tool
                         child.m_texture = texture;
                         child.m_shader = "default";
                         child.Header = new OGF_Header();
+
+                        if (RecalcNormals || RecalcTangentBasis)
+                            child.MeshNormalize(RecalcNormals);
 
                         childs.Add(child);
 
@@ -720,6 +725,8 @@ namespace OGF_tool
                         face_offset += child.Vertices.Count;
                         Vertices = new List<SSkelVert>();
                         Faces = new List<SSkelFace>();
+                        RecalcNormals = false;
+                        RecalcTangentBasis = false;
                     }
                 };
 
@@ -764,6 +771,8 @@ namespace OGF_tool
                                     }
                                     catch { }
                                 }
+                                else
+                                    RecalcNormals = true;
                                 normals_counter++;
                                 break;
                             case "vg":
@@ -775,6 +784,8 @@ namespace OGF_tool
                                     }
                                     catch { }
                                 }
+                                else
+                                    RecalcTangentBasis = true;
                                 tang_counter++;
                                 break;
                             case "vb":
@@ -786,6 +797,8 @@ namespace OGF_tool
                                     }
                                     catch { }
                                 }
+                                else
+                                    RecalcTangentBasis = true;
                                 binorm_counter++;
                                 break;
                             case "f":
