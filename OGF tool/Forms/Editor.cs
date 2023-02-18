@@ -15,12 +15,11 @@ using GitHubUpdate;
 using System.Reflection;
 
 // TODO
-// Чистить старую модель при загрузке
 // Починить open in object editor
 
 namespace OGF_tool
 {
-	public partial class OGF_Editor : Form
+	public partial class Editor : Form
 	{
 		// File sytem
 		public EditorSettings pSettings = null;
@@ -77,7 +76,7 @@ namespace OGF_tool
 			Detail
 		}
 
-		public OGF_Editor()
+		public Editor()
 		{
             Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
@@ -189,7 +188,7 @@ namespace OGF_tool
 			{
                 string user = "VaIeroK";
                 string repo = "OGF-tool";
-                string vers = OGF_Editor.PROGRAM_VERSION;
+                string vers = PROGRAM_VERSION;
                 string asset = "OGF.Editor.";
 
                 try

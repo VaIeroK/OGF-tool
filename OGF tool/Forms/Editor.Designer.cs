@@ -1,7 +1,7 @@
 
 namespace OGF_tool
 {
-    partial class OGF_Editor
+    partial class Editor
     {
         /// <summary>
         ///  Required designer variable.
@@ -30,7 +30,7 @@ namespace OGF_tool
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OGF_Editor));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor));
             this.OpenOGFDialog = new System.Windows.Forms.OpenFileDialog();
             this.TabControl = new System.Windows.Forms.TabControl();
             this.TexturesPage = new System.Windows.Forms.TabPage();

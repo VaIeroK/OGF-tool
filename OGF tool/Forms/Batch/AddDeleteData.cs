@@ -14,14 +14,12 @@ namespace OGF_tool
     public partial class AddDeleteData : Form
     {
         private string folder;
-        private OGF_Editor Editor;
         private Batch.BatchChunks Chunk;
         private bool delete;
-        public AddDeleteData(OGF_Editor editor, Batch batch, Batch.BatchChunks chunk, string ogf_folder_path, bool delete)
+        public AddDeleteData(Batch.BatchChunks chunk, string ogf_folder_path, bool delete)
         {
             InitializeComponent();
             folder = ogf_folder_path;
-            Editor = editor;
             Chunk = chunk;
             this.delete = delete;
 
@@ -41,7 +39,7 @@ namespace OGF_tool
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            if (OGF_Editor.IsTextCorrect(DataTextBox.Text))
+            if (Editor.IsTextCorrect(DataTextBox.Text))
             {
                 uint FilesCount = 0;
                 uint LinesCount = 0;
@@ -76,7 +74,7 @@ namespace OGF_tool
         {
             RichTextBox textBox = sender as RichTextBox;
 
-            if (OGF_Editor.IsTextCorrect(textBox.Text))
+            if (Editor.IsTextCorrect(textBox.Text))
                 textBox.BackColor = SystemColors.Window;
             else
                 textBox.BackColor = Color.FromArgb(255, 255, 128, 128);

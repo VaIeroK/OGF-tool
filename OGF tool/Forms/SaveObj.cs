@@ -12,29 +12,29 @@ namespace OGF_tool
 {
     public partial class SaveObj : Form
     {
-        public OGF_Editor.ExportFormat Fmt;
+        public Editor.ExportFormat Fmt;
 
         public SaveObj()
         {
             InitializeComponent();
-            Fmt = OGF_Editor.ExportFormat.Unknown;
+            Fmt = Editor.ExportFormat.Unknown;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Fmt = OGF_Editor.ExportFormat.OGF;
+            Fmt = Editor.ExportFormat.OGF;
             Close();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Fmt = OGF_Editor.ExportFormat.DM;
+            Fmt = Editor.ExportFormat.DM;
             Close();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Fmt = OGF_Editor.ExportFormat.Object;
+            Fmt = Editor.ExportFormat.Object;
             Close();
         }
     }

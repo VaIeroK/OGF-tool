@@ -292,7 +292,7 @@ namespace OGF_tool
         {
             string user = "VaIeroK";
             string repo = "OGF-tool";
-            string vers = OGF_Editor.PROGRAM_VERSION;
+            string vers = Editor.PROGRAM_VERSION;
             string asset = "OGF.Editor.";
 
             try

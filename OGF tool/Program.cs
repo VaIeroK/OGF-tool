@@ -13,7 +13,7 @@ namespace OGF_tool
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new OGF_Editor());
+            Application.Run(new Editor());
         }
     }
 }

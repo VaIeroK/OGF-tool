@@ -14,13 +14,11 @@ namespace OGF_tool
     public partial class ReplaceData : Form
     {
         private string folder;
-        private OGF_Editor Editor;
         private Batch.BatchChunks Chunk;
-        public ReplaceData(OGF_Editor editor, Batch batch, Batch.BatchChunks chunk, string ogf_folder_path)
+        public ReplaceData(Batch.BatchChunks chunk, string ogf_folder_path)
         {
             InitializeComponent();
             folder = ogf_folder_path;
-            Editor = editor;
             Chunk = chunk;
             Text = "Replace " + Batch.Capitalize(chunk.ToString());
 
@@ -29,7 +27,7 @@ namespace OGF_tool
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            if (OGF_Editor.IsTextCorrect(NewTextBox.Text))
+            if (Editor.IsTextCorrect(NewTextBox.Text))
             {
                 uint FilesCount = 0;
                 uint LinesCount = 0;
@@ -57,7 +55,7 @@ namespace OGF_tool
         {
             TextBox textBox = sender as TextBox;
 
-            if (OGF_Editor.IsTextCorrect(textBox.Text))
+            if (Editor.IsTextCorrect(textBox.Text))
                 textBox.BackColor = SystemColors.Window;
             else
                 textBox.BackColor = Color.FromArgb(255, 255, 128, 128);

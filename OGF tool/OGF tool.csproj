@@ -127,13 +127,13 @@
     <Compile Include="Forms\MoveMesh.Designer.cs">
       <DependentUpon>MoveMesh.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OgfEditor.cs">
+    <Compile Include="Forms\Editor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OgfEditor.Designer.cs">
-      <DependentUpon>OgfEditor.cs</DependentUpon>
+    <Compile Include="Forms\Editor.Designer.cs">
+      <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\OGF.cs" />
+    <Compile Include="Classes\Model.cs" />
     <Compile Include="Forms\OgfInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -201,12 +201,12 @@
     <EmbeddedResource Include="Forms\MoveMesh.resx">
       <DependentUpon>MoveMesh.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OgfEditor.resx">
-      <DependentUpon>OgfEditor.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Editor.resx">
+      <DependentUpon>Editor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OgfEditor.ru.resx">
-      <DependentUpon>OgfEditor.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Editor.ru.resx">
+      <DependentUpon>Editor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OgfInfo.resx">
       <DependentUpon>OgfInfo.cs</DependentUpon>

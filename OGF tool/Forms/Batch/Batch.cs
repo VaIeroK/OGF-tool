@@ -23,9 +23,9 @@ namespace OGF_tool
             Lod
         }
 
-        private OGF_Editor Editor;
+        private Editor Editor;
 
-        public Batch(OGF_Editor editor)
+        public Batch(Editor editor)
         {
             InitializeComponent();
             Editor = editor;
@@ -275,7 +275,7 @@ namespace OGF_tool
         {
             if (Directory.Exists(PathTextBox.Text))
             {
-                ReplaceData textBoxReplacer = new ReplaceData(Editor, this, chunk, PathTextBox.Text);
+                ReplaceData textBoxReplacer = new ReplaceData(chunk, PathTextBox.Text);
                 textBoxReplacer.Show();
             }
             else
@@ -286,7 +286,7 @@ namespace OGF_tool
         {
             if (Directory.Exists(PathTextBox.Text))
             {
-                AddDeleteData textBoxReplacer = new AddDeleteData(Editor, this, chunk, PathTextBox.Text, false);
+                AddDeleteData textBoxReplacer = new AddDeleteData(chunk, PathTextBox.Text, false);
                 textBoxReplacer.Show();
             }
             else
@@ -297,7 +297,7 @@ namespace OGF_tool
         {
             if (Directory.Exists(PathTextBox.Text))
             {
-                AddDeleteData textBoxReplacer = new AddDeleteData(Editor, this, chunk, PathTextBox.Text, true);
+                AddDeleteData textBoxReplacer = new AddDeleteData(chunk, PathTextBox.Text, true);
                 textBoxReplacer.Show();
             }
             else

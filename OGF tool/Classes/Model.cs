@@ -356,6 +356,34 @@ namespace OGF_tool
 
         public XRay_Model()
         {
+            Invalidate();
+            Opened = false;
+        }
+
+        public void Copy(XRay_Model model)
+        {
+            pos = model.pos;
+            chunk_size = model.chunk_size;
+            BrokenType = model.chunk_size;
+            motions = model.motions;
+            description = model.description;
+            childs = model.childs;
+            bonedata = model.bonedata;
+            ikdata = model.ikdata;
+            userdata = model.userdata;
+            lod = model.lod;
+            motion_refs = model.motion_refs;
+            IsCopModel = model.IsCopModel;
+            Header = model.Header;
+            source_data = model.source_data;
+
+            local_offset = model.local_offset;
+            local_rotation = model.local_rotation;
+            Format = model.Format;
+        }
+
+        public void Invalidate()
+        {
             pos = 0;
             chunk_size = 0;
             BrokenType = 0;
@@ -373,7 +401,6 @@ namespace OGF_tool
 
             local_offset = new float[3];
             local_rotation = new float[3];
-            Opened = false;
             Format = (int)ModelFormat.eUnknown;
         }
 
@@ -475,10 +502,11 @@ namespace OGF_tool
         private bool LoadOGF(string filename, bool silent = false)
         {
             var xr_loader = new XRayLoader();
+            XRay_Model model = new XRay_Model();
 
-            source_data = File.ReadAllBytes(filename);
+            model.source_data = File.ReadAllBytes(filename);
 
-            using (var r = new BinaryReader(new MemoryStream(source_data)))
+            using (var r = new BinaryReader(new MemoryStream(model.source_data)))
             {
                 xr_loader.SetStream(r.BaseStream);
 
@@ -490,28 +518,28 @@ namespace OGF_tool
                 }
                 else
                 {
-                    Header.Load(xr_loader);
+                    model.Header.Load(xr_loader);
 
-                    if (Header.format_version < 3)
+                    if (model.Header.format_version < 3)
                     {
                         if (!silent)
-                            MessageBox.Show($"Unsupported OGF version: {Header.format_version}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show($"Unsupported OGF version: {model.Header.format_version}!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
                 }
 
-                int DescChunk = (Header.format_version == 4 ? (int)OGF.OGF4_S_DESC : (int)OGF.OGF3_S_DESC);
+                int DescChunk = (model.Header.format_version == 4 ? (int)OGF.OGF4_S_DESC : (int)OGF.OGF3_S_DESC);
                 uint DescriptionSize = xr_loader.find_chunkSize(DescChunk, false, true);
                 if (DescriptionSize > 0)
                 {
-                    description = new Description();
-                    BrokenType = description.Load(xr_loader, DescriptionSize);
+                    model.description = new Description();
+                    model.BrokenType = model.description.Load(xr_loader, DescriptionSize);
                 }
 
-                int ChildChunk = (Header.format_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
+                int ChildChunk = (model.Header.format_version == 4 ? (int)OGF.OGF4_CHILDREN : (int)OGF.OGF3_CHILDREN);
                 bool bFindChunk = xr_loader.SetData(xr_loader.find_and_return_chunk_in_chunk(ChildChunk, false, true));
 
-                pos = xr_loader.chunk_pos;
+                model.pos = xr_loader.chunk_pos;
 
                 int id = 0;
 
@@ -530,7 +558,7 @@ namespace OGF_tool
                         if (!Child.Load(xr_loader))
                             break;
 
-                        childs.Add(Child);
+                        model.childs.Add(Child);
 
                         id++;
                         xr_loader.SetStream(temp);
@@ -542,17 +570,17 @@ namespace OGF_tool
                 {
                     OGF_Child Child = new OGF_Child();
                     if (Child.Load(xr_loader))
-                        childs.Add(Child);
+                        model.childs.Add(Child);
                 }
 
-                if (childs.Count == 0)
+                if (model.childs.Count == 0)
                 {
                     if (!silent)
                         MessageBox.Show("Unsupported OGF format! Can't find children chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
-                if (Header.IsSkeleton())
+                if (model.Header.IsSkeleton())
                 {
                     // Bones
                     if (!xr_loader.find_chunk((int)OGF.OGF_S_BONE_NAMES, false, true))
@@ -563,30 +591,30 @@ namespace OGF_tool
                     }
                     else
                     {
-                        if (xr_loader.chunk_pos < pos)
-                            BrokenType = 2;
+                        if (xr_loader.chunk_pos < model.pos)
+                            model.BrokenType = 2;
 
-                        bonedata = new BoneData();
-                        bonedata.Load(xr_loader);
+                        model.bonedata = new BoneData();
+                        model.bonedata.Load(xr_loader);
                     }
 
                     // Ik Data
                     byte IKDataVers = 0;
 
-                    int IKDataChunkRelease = (Header.format_version == 4 ? (int)OGF.OGF4_S_IKDATA : (int)OGF.OGF3_S_IKDATA_2);
+                    int IKDataChunkRelease = (model.Header.format_version == 4 ? (int)OGF.OGF4_S_IKDATA : (int)OGF.OGF3_S_IKDATA_2);
                     bool IKDataChunkFind = xr_loader.find_chunk(IKDataChunkRelease, false, true);
 
                     if (IKDataChunkFind) // Load Release chunk
                         IKDataVers = 4;
                     else
                     {
-                        IKDataChunkFind = Header.format_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA, false, true);
+                        IKDataChunkFind = model.Header.format_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA, false, true);
 
                         if (IKDataChunkFind) // Load Pre Release chunk
                             IKDataVers = 3;
                         else
                         {
-                            IKDataChunkFind = Header.format_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA_0, false, true);
+                            IKDataChunkFind = model.Header.format_version == 3 && xr_loader.find_chunk((int)OGF.OGF3_S_IKDATA_0, false, true);
 
                             if (IKDataChunkFind) // Load Builds chunk
                                 IKDataVers = 2;
@@ -595,13 +623,13 @@ namespace OGF_tool
 
                     if (IKDataVers != 0)
                     {
-                        ikdata = new IK_Data();
-                        ikdata.Load(xr_loader, bonedata.bones.Count, IKDataVers);
+                        model.ikdata = new IK_Data();
+                        model.ikdata.Load(xr_loader, model.bonedata.bones.Count, IKDataVers);
 
-                        FixOldBonesBind();
-                        CalcBonesTransform();
+                        model.FixOldBonesBind();
+                        model.CalcBonesTransform();
                     }
-                    else if (Header.format_version == 4) // Chunk not find, exit if Release OGF
+                    else if (model.Header.format_version == 4) // Chunk not find, exit if Release OGF
                     {
                         if (!silent)
                             MessageBox.Show("Unsupported OGF format! Can't find ik data chunk!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -609,29 +637,29 @@ namespace OGF_tool
                     }
 
                     // Userdata
-                    int UserDataChunk = (Header.format_version == 4 ? (int)OGF.OGF4_S_USERDATA : (int)OGF.OGF3_S_USERDATA);
+                    int UserDataChunk = (model.Header.format_version == 4 ? (int)OGF.OGF4_S_USERDATA : (int)OGF.OGF3_S_USERDATA);
                     uint UserDataSize = xr_loader.find_chunkSize(UserDataChunk, false, true);
                     if (UserDataSize > 0)
                     {
-                        userdata = new UserData();
-                        userdata.Load(xr_loader, UserDataSize);
+                        model.userdata = new UserData();
+                        model.userdata.Load(xr_loader, UserDataSize);
                     }
 
                     // Lod ref
-                    if (Header.format_version == 4 && xr_loader.find_chunk((int)OGF.OGF4_S_LODS, false, true))
+                    if (model.Header.format_version == 4 && xr_loader.find_chunk((int)OGF.OGF4_S_LODS, false, true))
                     {
-                        lod = new Lod();
-                        lod.Load(xr_loader);
+                        model.lod = new Lod();
+                        model.lod.Load(xr_loader);
                     }
 
                     // Motion Refs
-                    int RefsChunk = (Header.format_version == 4 ? (int)OGF.OGF4_S_MOTION_REFS : (int)OGF.OGF3_S_MOTION_REFS);
+                    int RefsChunk = (model.Header.format_version == 4 ? (int)OGF.OGF4_S_MOTION_REFS : (int)OGF.OGF3_S_MOTION_REFS);
                     bool StringRefs = xr_loader.find_chunk(RefsChunk, false, true);
 
-                    if (StringRefs || Header.format_version == 4 && xr_loader.find_chunk((int)OGF.OGF4_S_MOTION_REFS2, false, true))
+                    if (StringRefs || model.Header.format_version == 4 && xr_loader.find_chunk((int)OGF.OGF4_S_MOTION_REFS2, false, true))
                     {
-                        motion_refs = new MotionRefs();
-                        motion_refs.Load(xr_loader, StringRefs);
+                        model.motion_refs = new MotionRefs();
+                        model.motion_refs.Load(xr_loader, StringRefs);
                     }
 
                     //Motions
@@ -639,22 +667,23 @@ namespace OGF_tool
                     {
                         xr_loader.reader.BaseStream.Position -= 8;
                         byte[] OMF = xr_loader.ReadBytes((int)xr_loader.reader.BaseStream.Length - (int)xr_loader.reader.BaseStream.Position);
-                        motions.SetData(OMF);
+                        model.motions.SetData(OMF);
                     }
                 }
             }
 
-            BitMask.Null(ref Format);
-            BitMask.Set(ref Format, (int)ModelFormat.eOGF);
+            BitMask.Null(ref model.Format);
+            BitMask.Set(ref model.Format, (int)ModelFormat.eOGF);
+
+            Copy(model);
             return true;
         }
 
         private bool LoadObj(string filename)
         {
+            Invalidate();
             source_data = File.ReadAllBytes(filename);
-            Header = new OGF_Header();
             description = new Description();
-            childs.Clear();
 
             using (var r = new StreamReader(new MemoryStream(source_data)))
             {
@@ -757,6 +786,7 @@ namespace OGF_tool
 
         private bool LoadDM(string filename)
         {
+            Invalidate();
             source_data = File.ReadAllBytes(filename);
 
             var xr_loader = new XRayLoader();
@@ -777,6 +807,7 @@ namespace OGF_tool
 
         private bool LoadDetail(string filename)
         {
+            Invalidate();
             source_data = File.ReadAllBytes(filename);
 
             var xr_loader = new XRayLoader();
@@ -826,7 +857,6 @@ namespace OGF_tool
             BitMask.Null(ref Format);
             BitMask.Set(ref Format, (int)ModelFormat.eDM);
             BitMask.Set(ref Format, (int)ModelFormat.eDetail);
-            OGF_Editor.Msg(((int)Format).ToString());
             return true;
         }
 
@@ -865,13 +895,13 @@ namespace OGF_tool
 
                 switch (saveObj.Fmt)
                 {
-                    case OGF_Editor.ExportFormat.OGF:
+                    case Editor.ExportFormat.OGF:
                         SaveOGF(Path.ChangeExtension(filename, ".ogf"), backup);
                         break;
-                    case OGF_Editor.ExportFormat.DM:
+                    case Editor.ExportFormat.DM:
                         SaveDM(Path.ChangeExtension(filename, ".dm"), backup);
                         break;
-                    case OGF_Editor.ExportFormat.Object:
+                    case Editor.ExportFormat.Object:
                         SaveObject(Path.ChangeExtension(filename, ".object"), backup);
                         break;
                 }
