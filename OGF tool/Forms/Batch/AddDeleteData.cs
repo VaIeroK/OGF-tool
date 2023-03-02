@@ -16,12 +16,14 @@ namespace OGF_tool
         private string folder;
         private Batch.BatchChunks Chunk;
         private bool delete;
-        public AddDeleteData(Batch.BatchChunks chunk, string ogf_folder_path, bool delete)
+        private Editor Editor;
+        public AddDeleteData(Editor editor, Batch.BatchChunks chunk, string ogf_folder_path, bool delete)
         {
             InitializeComponent();
             folder = ogf_folder_path;
             Chunk = chunk;
             this.delete = delete;
+            Editor = editor;
 
             if (Chunk == Batch.BatchChunks.Lod)
                 DataTextBox.Multiline = false;
@@ -61,6 +63,8 @@ namespace OGF_tool
                         {
                             Model.SaveFile(files[i]);
                             FilesCount++;
+                            if (Model.FileName == Editor.Model.FileName)
+                                Editor.ReloadModel();
                         }
                     }
                 }

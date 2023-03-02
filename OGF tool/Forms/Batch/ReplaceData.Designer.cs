@@ -34,13 +34,14 @@
             this.ReplacerTextBox = new System.Windows.Forms.TextBox();
             this.Label_2 = new System.Windows.Forms.Label();
             this.Label_1 = new System.Windows.Forms.Label();
+            this.ReplaceSubstrings = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // StartButton
             // 
-            this.StartButton.Location = new System.Drawing.Point(340, 12);
+            this.StartButton.Location = new System.Drawing.Point(340, 10);
             this.StartButton.Name = "StartButton";
-            this.StartButton.Size = new System.Drawing.Size(89, 46);
+            this.StartButton.Size = new System.Drawing.Size(110, 24);
             this.StartButton.TabIndex = 9;
             this.StartButton.Text = "Start";
             this.StartButton.UseVisualStyleBackColor = true;
@@ -79,11 +80,22 @@
             this.Label_1.TabIndex = 5;
             this.Label_1.Text = "Find what:";
             // 
+            // ReplaceSubstrings
+            // 
+            this.ReplaceSubstrings.AutoSize = true;
+            this.ReplaceSubstrings.Location = new System.Drawing.Point(340, 41);
+            this.ReplaceSubstrings.Name = "ReplaceSubstrings";
+            this.ReplaceSubstrings.Size = new System.Drawing.Size(116, 17);
+            this.ReplaceSubstrings.TabIndex = 10;
+            this.ReplaceSubstrings.Text = "Replace substrings";
+            this.ReplaceSubstrings.UseVisualStyleBackColor = true;
+            // 
             // ReplaceData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(436, 67);
+            this.ClientSize = new System.Drawing.Size(455, 67);
+            this.Controls.Add(this.ReplaceSubstrings);
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.NewTextBox);
             this.Controls.Add(this.ReplacerTextBox);
@@ -106,5 +118,6 @@
         private System.Windows.Forms.TextBox ReplacerTextBox;
         private System.Windows.Forms.Label Label_2;
         private System.Windows.Forms.Label Label_1;
+        private System.Windows.Forms.CheckBox ReplaceSubstrings;
     }
 }

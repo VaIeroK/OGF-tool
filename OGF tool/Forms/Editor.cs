@@ -161,11 +161,9 @@ namespace OGF_tool
 
 			if (Environment.GetCommandLineArgs().Length > 1)
 			{
-				if (Model.OpenFile(Environment.GetCommandLineArgs()[1]))
-				{
-                    Clear();
+                Clear();
+                if (Model.OpenFile(Environment.GetCommandLineArgs()[1]))
                     AfterLoad(true);
-				}
 			}
 			else
             {
@@ -989,16 +987,19 @@ namespace OGF_tool
 
 		private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			if (Model.FileName == "") return;
+			ReloadModel();
+        }
 
-			string cur_fname = Model.FileName;
-			if (Model.OpenFile(cur_fname))
-			{
+		public void ReloadModel()
+		{
+            if (Model.FileName == "") return;
+
+            if (Model.OpenFile(Model.FileName))
+            {
                 Clear();
-                Model.FileName = cur_fname;
-				AfterLoad(true);
-			}
-		}
+                AfterLoad(true);
+            }
+        }
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {

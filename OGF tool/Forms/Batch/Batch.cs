@@ -46,7 +46,7 @@ namespace OGF_tool
             return false;
         }
 
-        static public bool ProcessReplace(XRay_Model Model, BatchChunks chunk, string replacer, string new_val, ref uint lines_counter)
+        static public bool ProcessReplace(XRay_Model Model, BatchChunks chunk, string replacer, string new_val, bool substring, ref uint lines_counter)
         {
             bool ret = false;
             switch (chunk)
@@ -54,22 +54,46 @@ namespace OGF_tool
                 case BatchChunks.Texture:
                     foreach (var ch in Model.childs)
                     {
-                        if (ch.m_texture == replacer)
+                        if (substring)
                         {
-                            ch.m_texture = new_val;
-                            ret = true;
-                            lines_counter++;
+                            if (ch.m_texture.Contains(replacer))
+                            {
+                                ch.m_texture = ch.m_texture.Replace(replacer, new_val);
+                                ret = true;
+                                lines_counter++;
+                            }
+                        }
+                        else
+                        {
+                            if (ch.m_texture == replacer)
+                            {
+                                ch.m_texture = new_val;
+                                ret = true;
+                                lines_counter++;
+                            }
                         }
                     }
                     break;
                 case BatchChunks.Shader:
                     foreach (var ch in Model.childs)
                     {
-                        if (ch.m_shader == replacer)
+                        if (substring)
                         {
-                            ch.m_shader = new_val;
-                            ret = true;
-                            lines_counter++;
+                            if (ch.m_shader.Contains(replacer))
+                            {
+                                ch.m_shader = ch.m_shader.Replace(replacer, new_val);
+                                ret = true;
+                                lines_counter++;
+                            }
+                        }
+                        else
+                        {
+                            if (ch.m_shader == replacer)
+                            {
+                                ch.m_shader = new_val;
+                                ret = true;
+                                lines_counter++;
+                            }
                         }
                     }
                     break;
@@ -80,14 +104,28 @@ namespace OGF_tool
                         string userdata = "";
                         foreach (string line in Lines)
                         {
-                            if (RemoveSpacesAndNewLines(line) == RemoveSpacesAndNewLines(replacer))
+                            if (substring)
                             {
-                                userdata += new_val + "\r\n";
-                                ret = true;
-                                lines_counter++;
+                                if (line.Contains(replacer))
+                                {
+                                    userdata += line.Replace(replacer, new_val) + "\r\n";
+                                    ret = true;
+                                    lines_counter++;
+                                }
+                                else
+                                    userdata += RemoveNewLines(line) + "\r\n";
                             }
                             else
-                                userdata += RemoveNewLines(line) + "\r\n";
+                            {
+                                if (RemoveSpacesAndNewLines(line) == RemoveSpacesAndNewLines(replacer))
+                                {
+                                    userdata += new_val + "\r\n";
+                                    ret = true;
+                                    lines_counter++;
+                                }
+                                else
+                                    userdata += RemoveNewLines(line) + "\r\n";
+                            }
                         }
                         if (ret)
                             Model.userdata.userdata = userdata.TrimEnd(new char[] { '\r', '\n' });
@@ -100,23 +138,49 @@ namespace OGF_tool
                         Model.motion_refs.refs.Clear();
                         foreach (string line in Lines)
                         {
-                            if (RemoveSpacesAndNewLines(line) == RemoveSpacesAndNewLines(replacer))
+                            if (substring)
                             {
-                                Model.motion_refs.refs.Add(new_val);
-                                ret = true;
-                                lines_counter++;
+                                if (line.Contains(replacer))
+                                {
+                                    Model.motion_refs.refs.Add(line.Replace(replacer, new_val));
+                                    ret = true;
+                                    lines_counter++;
+                                }
+                                else
+                                    Model.motion_refs.refs.Add(line);
                             }
                             else
-                                Model.motion_refs.refs.Add(line);
+                            {
+                                if (RemoveSpacesAndNewLines(line) == RemoveSpacesAndNewLines(replacer))
+                                {
+                                    Model.motion_refs.refs.Add(new_val);
+                                    ret = true;
+                                    lines_counter++;
+                                }
+                                else
+                                    Model.motion_refs.refs.Add(line);
+                            }
                         }
                     }
                     break;
                 case BatchChunks.Lod:
-                    if (Model.lod != null && RemoveSpacesAndNewLines(Model.lod.lod_path) == RemoveSpacesAndNewLines(replacer))
+                    if (substring)
                     {
-                        Model.lod.lod_path = new_val;
-                        ret = true;
-                        lines_counter++;
+                        if (Model.lod != null && Model.lod.lod_path.Contains(replacer))
+                        {
+                            Model.lod.lod_path = Model.lod.lod_path.Replace(replacer, new_val);
+                            ret = true;
+                            lines_counter++;
+                        }
+                    }
+                    else
+                    {
+                        if (Model.lod != null && RemoveSpacesAndNewLines(Model.lod.lod_path) == RemoveSpacesAndNewLines(replacer))
+                        {
+                            Model.lod.lod_path = new_val;
+                            ret = true;
+                            lines_counter++;
+                        }
                     }
                     break;
             }
@@ -275,7 +339,7 @@ namespace OGF_tool
         {
             if (Directory.Exists(PathTextBox.Text))
             {
-                ReplaceData textBoxReplacer = new ReplaceData(chunk, PathTextBox.Text);
+                ReplaceData textBoxReplacer = new ReplaceData(Editor, chunk, PathTextBox.Text);
                 textBoxReplacer.Show();
             }
             else
@@ -286,7 +350,7 @@ namespace OGF_tool
         {
             if (Directory.Exists(PathTextBox.Text))
             {
-                AddDeleteData textBoxReplacer = new AddDeleteData(chunk, PathTextBox.Text, false);
+                AddDeleteData textBoxReplacer = new AddDeleteData(Editor, chunk, PathTextBox.Text, false);
                 textBoxReplacer.Show();
             }
             else
@@ -297,7 +361,7 @@ namespace OGF_tool
         {
             if (Directory.Exists(PathTextBox.Text))
             {
-                AddDeleteData textBoxReplacer = new AddDeleteData(chunk, PathTextBox.Text, true);
+                AddDeleteData textBoxReplacer = new AddDeleteData(Editor, chunk, PathTextBox.Text, true);
                 textBoxReplacer.Show();
             }
             else

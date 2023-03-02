@@ -15,12 +15,14 @@ namespace OGF_tool
     {
         private string folder;
         private Batch.BatchChunks Chunk;
-        public ReplaceData(Batch.BatchChunks chunk, string ogf_folder_path)
+        private Editor Editor;
+        public ReplaceData(Editor editor, Batch.BatchChunks chunk, string ogf_folder_path)
         {
             InitializeComponent();
             folder = ogf_folder_path;
             Chunk = chunk;
             Text = "Replace " + Batch.Capitalize(chunk.ToString());
+            Editor = editor;
 
             BoxTextChanged(NewTextBox, null);
         }
@@ -38,10 +40,12 @@ namespace OGF_tool
                     XRay_Model Model = new XRay_Model();
                     if (Model.OpenFile(files[i]))
                     {
-                        if (Batch.ProcessReplace(Model, Chunk, ReplacerTextBox.Text, NewTextBox.Text, ref LinesCount))
+                        if (Batch.ProcessReplace(Model, Chunk, ReplacerTextBox.Text, NewTextBox.Text, ReplaceSubstrings.Checked, ref LinesCount))
                         {
                             Model.SaveFile(files[i]);
                             FilesCount++;
+                            if (Model.FileName == Editor.Model.FileName)
+                                Editor.ReloadModel();
                         }
                     }
                 }
