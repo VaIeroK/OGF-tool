@@ -284,13 +284,14 @@ namespace OGF_tool
                         }
                         else
                         {
-                            foreach (string line in Model.motion_refs.refs)
+                            for (int i = 0; i < Model.motion_refs.refs.Count; i++)
                             {
-                                if (RemoveSpacesAndNewLines(line) == clear_del_line)
+                                if (RemoveSpacesAndNewLines(Model.motion_refs.refs[i]) == clear_del_line)
                                 {
-                                    Model.motion_refs.refs.Remove(line);
+                                    Model.motion_refs.refs.Remove(Model.motion_refs.refs[i]);
                                     ret = true;
                                     lines_counter++;
+                                    i--;
                                 }
                             }
                         }
