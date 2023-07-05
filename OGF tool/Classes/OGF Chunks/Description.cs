@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace OGF_tool
 {
@@ -41,24 +42,24 @@ namespace OGF_tool
 
             // Читаем таймеры в 8 байт
             long reader_start_pos = xr_loader.reader.BaseStream.Position;
-            m_source = xr_loader.read_stringZ();
-            m_export_tool = xr_loader.read_stringZ();
+            m_source = Regex.Replace(xr_loader.read_stringZ(), @"\p{C}+", string.Empty);
+            m_export_tool = Regex.Replace(xr_loader.read_stringZ(), @"\p{C}+", string.Empty);
             m_export_time = xr_loader.ReadInt64();
-            m_owner_name = xr_loader.read_stringZ();
+            m_owner_name = Regex.Replace(xr_loader.read_stringZ(), @"\p{C}+", string.Empty);
             m_creation_time = xr_loader.ReadInt64();
-            m_export_modif_name_tool = xr_loader.read_stringZ();
+            m_export_modif_name_tool = Regex.Replace(xr_loader.read_stringZ(), @"\p{C}+", string.Empty);
             m_modified_time = xr_loader.ReadInt64();
             long description_end_pos = xr_loader.reader.BaseStream.Position;
 
             if ((description_end_pos - reader_start_pos) != chunk_size) // Размер не состыковывается, пробуем читать 4 байта
             {
                 xr_loader.reader.BaseStream.Position = reader_start_pos;
-                m_source = xr_loader.read_stringZ();
-                m_export_tool = xr_loader.read_stringZ();
+                m_source = Regex.Replace(xr_loader.read_stringZ(), @"\p{C}+", string.Empty);
+                m_export_tool = Regex.Replace(xr_loader.read_stringZ(), @"\p{C}+", string.Empty);
                 m_export_time = xr_loader.ReadUInt32();
-                m_owner_name = xr_loader.read_stringZ();
+                m_owner_name = Regex.Replace(xr_loader.read_stringZ(), @"\p{C}+", string.Empty);
                 m_creation_time = xr_loader.ReadUInt32();
-                m_export_modif_name_tool = xr_loader.read_stringZ();
+                m_export_modif_name_tool = Regex.Replace(xr_loader.read_stringZ(), @"\p{C}+", string.Empty);
                 m_modified_time = xr_loader.ReadUInt32();
                 description_end_pos = xr_loader.reader.BaseStream.Position;
 
