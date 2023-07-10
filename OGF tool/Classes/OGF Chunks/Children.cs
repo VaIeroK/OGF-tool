@@ -359,9 +359,9 @@ namespace OGF_tool
             temp.AddRange(BitConverter.GetBytes(Faces.Count * 3));
             for (int i = 0; i < Faces.Count; i++)
             {
-                temp.AddRange(BitConverter.GetBytes(Faces[i].v[0]));
-                temp.AddRange(BitConverter.GetBytes(Faces[i].v[1]));
-                temp.AddRange(BitConverter.GetBytes(Faces[i].v[2]));
+                temp.AddRange(BitConverter.GetBytes((ushort)Faces[i].v[0]));
+                temp.AddRange(BitConverter.GetBytes((ushort)Faces[i].v[1]));
+                temp.AddRange(BitConverter.GetBytes((ushort)Faces[i].v[2]));
             }
             // Indices end
 

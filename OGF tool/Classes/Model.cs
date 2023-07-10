@@ -269,10 +269,10 @@ namespace OGF_tool
 
     public class SSkelFace
     {
-        public ushort[] v;
+        public int[] v;
         public SSkelFace()
         {
-            v = new ushort[3] { 0, 0, 0 };
+            v = new int[3] { 0, 0, 0 };
         }
     };
 
@@ -758,7 +758,10 @@ namespace OGF_tool
                                     {
                                         Vertices[uv_counter].uv = new float[2] { Convert.ToSingle(data[1]), Math.Abs(1.0f - Convert.ToSingle(data[2])) };
                                     }
-                                    catch { }
+                                    catch 
+                                    {
+                                        Vertices[uv_counter].uv = new float[2] { 0.0f, 0.0f };
+                                    }
                                 }
                                 uv_counter++;
                                 break;
@@ -769,7 +772,10 @@ namespace OGF_tool
                                     {
                                         Vertices[normals_counter].norm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
                                     }
-                                    catch { }
+                                    catch 
+                                    {
+                                        Vertices[normals_counter].norm = new float[3] { 0.0f, 0.0f, 0.0f };
+                                    }
                                 }
                                 else
                                     RecalcNormals = true;
@@ -782,7 +788,10 @@ namespace OGF_tool
                                     {
                                         Vertices[tang_counter].tang = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
                                     }
-                                    catch { }
+                                    catch 
+                                    {
+                                        Vertices[tang_counter].tang = new float[3] { 0.0f, 0.0f, 0.0f };
+                                    }
                                 }
                                 else
                                     RecalcTangentBasis = true;
@@ -795,7 +804,10 @@ namespace OGF_tool
                                     {
                                         Vertices[binorm_counter].binorm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
                                     }
-                                    catch { }
+                                    catch 
+                                    {
+                                        Vertices[binorm_counter].binorm = new float[3] { 0.0f, 0.0f, 0.0f };
+                                    }
                                 }
                                 else
                                     RecalcTangentBasis = true;
@@ -807,9 +819,9 @@ namespace OGF_tool
                                 string[] v0 = data[3].Split('/');
 
                                 SSkelFace Face = new SSkelFace();
-                                Face.v[0] = (ushort)(Convert.ToUInt16(v0[0]) - 1 - face_offset);
-                                Face.v[1] = (ushort)(Convert.ToUInt16(v1[0]) - 1 - face_offset);
-                                Face.v[2] = (ushort)(Convert.ToUInt16(v2[0]) - 1 - face_offset);
+                                Face.v[0] = (ushort)(Convert.ToInt32(v0[0]) - 1 - face_offset);
+                                Face.v[1] = (ushort)(Convert.ToInt32(v1[0]) - 1 - face_offset);
+                                Face.v[2] = (ushort)(Convert.ToInt32(v2[0]) - 1 - face_offset);
 
                                 Faces.Add(Face);
                                 break;
