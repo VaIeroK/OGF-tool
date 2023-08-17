@@ -1,3 +1,7 @@
+using Aspose.ThreeD.Entities;
+using Aspose.ThreeD.Utilities;
+using Aspose.ThreeD.Formats;
+using Aspose.ThreeD;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,6 +9,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Aspose.ThreeD.Shading;
+using System.Drawing;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace OGF_tool
 {
@@ -325,7 +332,7 @@ namespace OGF_tool
             }
         }
 
-        delegate void WriteObj(List<SSkelVert> Verts, List<SSkelFace> Faces, string texture);
+        delegate void WriteSceneMesh(List<SSkelVert> Verts, List<SSkelFace> Faces, string texture, bool allow_texture);
         delegate void AddChild();
 
         public int Format;
@@ -351,8 +358,6 @@ namespace OGF_tool
         public byte[] source_data;
         public bool Opened;
         public string FileName;
-
-        StreamWriter ObjWriter = null; // for closing
 
         public XRay_Model()
         {
@@ -406,12 +411,6 @@ namespace OGF_tool
 
         public void Destroy()
         {
-            if (ObjWriter != null)
-            {
-                ObjWriter.Close();
-                ObjWriter.Dispose();
-                ObjWriter = null;
-            }
         }
 
         public bool IsProgressive()
@@ -679,162 +678,76 @@ namespace OGF_tool
             return true;
         }
 
-        private bool LoadObj(string filename)
+        private bool LoadFromScene(string filename, LoadOptions options)
         {
             Invalidate();
             source_data = File.ReadAllBytes(filename);
             description = new Description();
 
-            using (var r = new StreamReader(new MemoryStream(source_data)))
+            Scene scene = new Scene();
+            scene.Open(filename, options);
+
+            for (int i = 0; i < scene.RootNode.ChildNodes.Count; i++)
             {
-                int verts_counter = 0;
-                int normals_counter = 0;
-                int tang_counter = 0;
-                int binorm_counter = 0;
-                int uv_counter = 0;
-                int face_offset = 0;
-                string texture = "";
-             
-                OGF_Child child = null;
-                List<SSkelVert> Vertices = new List<SSkelVert>();
-                List<SSkelFace> Faces = new List<SSkelFace>();
-                bool RecalcNormals = false;
-                bool RecalcTangentBasis = false;
+                Node meshNode = scene.RootNode.ChildNodes[i];
 
-                AddChild FlushChild = () =>
+                OGF_Child child = new OGF_Child();
+                child.Header = new OGF_Header();
+
+                if (meshNode.Material != null)
+                    child.m_texture = meshNode.Material.Name;
+                else
+                    child.m_texture = "default";
+                child.m_shader = "default";
+
+                Mesh mesh = meshNode.Entity as Mesh;
+                mesh = PolygonModifier.Triangulate(mesh);
+                VertexElementNormal Normals = mesh.GetElement(VertexElementType.Normal) as VertexElementNormal;
+                VertexElementTangent Tangents = mesh.GetElement(VertexElementType.Tangent) as VertexElementTangent;
+                VertexElementBinormal Binormals = mesh.GetElement(VertexElementType.Binormal) as VertexElementBinormal;
+                VertexElementUV UVs = mesh.GetElement(VertexElementType.UV) as VertexElementUV;
+                for (int v = 0; v < mesh.ControlPoints.Count; v++)
                 {
-                    if (child != null)
-                    {
-                        child.Vertices = Vertices;
-                        child.Faces = Faces;
-                        child.m_texture = texture;
-                        child.m_shader = "default";
-                        child.Header = new OGF_Header();
+                    SSkelVert vert = new SSkelVert();
+                    vert.offs = new float[3] { (float)mesh.ControlPoints[v].x, (float)mesh.ControlPoints[v].y, (float)mesh.ControlPoints[v].z };
+                    if (Normals != null)
+                        vert.norm = new float[3] { (float)Normals.Data[v].x, (float)Normals.Data[v].y, (float)Normals.Data[v].z };
+                    if (Tangents != null)
+                        vert.tang = new float[3] { (float)Tangents.Data[v].x, (float)Tangents.Data[v].y, (float)Tangents.Data[v].z };
+                    if (Binormals != null)
+                        vert.binorm = new float[3] { (float)Binormals.Data[v].x, (float)Binormals.Data[v].y, (float)Binormals.Data[v].z };
+                    if (UVs != null)
+                        vert.uv = new float[2] { (float)UVs.Data[v].x, Math.Abs(1.0f - (float)UVs.Data[v].y) };
 
-                        if (RecalcNormals || RecalcTangentBasis)
-                            child.MeshNormalize(RecalcNormals);
+                    child.Vertices.Add(vert);
+                }    
 
-                        childs.Add(child);
-
-                        texture = "";
-                        verts_counter = 0;
-                        normals_counter = 0;
-                        tang_counter = 0;
-                        binorm_counter = 0;
-                        uv_counter = 0;
-                        face_offset += child.Vertices.Count;
-                        Vertices = new List<SSkelVert>();
-                        Faces = new List<SSkelFace>();
-                        RecalcNormals = false;
-                        RecalcTangentBasis = false;
-                    }
-                };
-
-                while (!r.EndOfStream)
+                for (int f = 0; f < mesh.PolygonCount; f++)
                 {
-                    string line = r.ReadLine();
-                    if (!line.Contains("#"))
-                    {
-                        string[] data = line.Split(' ');
-                        switch (data[0])
-                        {
-                            case "o":
-                            case "g":
-                                FlushChild();
-                                child = new OGF_Child();
-                                break;
-                            case "usemtl":
-                                texture = data[1].Trim(new char[] { '\"' });
-                                break;
-                            case "v":
-                                Vertices.Add(new SSkelVert());
-                                Vertices[verts_counter].offs = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
-                                verts_counter++;
-                                break;
-                            case "vt":
-                                if (Vertices.Count > uv_counter)
-                                {
-                                    try
-                                    {
-                                        Vertices[uv_counter].uv = new float[2] { Convert.ToSingle(data[1]), Math.Abs(1.0f - Convert.ToSingle(data[2])) };
-                                    }
-                                    catch 
-                                    {
-                                        Vertices[uv_counter].uv = new float[2] { 0.0f, 0.0f };
-                                    }
-                                }
-                                uv_counter++;
-                                break;
-                            case "vn":
-                                if (Vertices.Count > normals_counter)
-                                {
-                                    try
-                                    {
-                                        Vertices[normals_counter].norm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
-                                    }
-                                    catch 
-                                    {
-                                        Vertices[normals_counter].norm = new float[3] { 0.0f, 0.0f, 0.0f };
-                                    }
-                                }
-                                else
-                                    RecalcNormals = true;
-                                normals_counter++;
-                                break;
-                            case "vg":
-                                if (Vertices.Count > tang_counter)
-                                {
-                                    try
-                                    {
-                                        Vertices[tang_counter].tang = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
-                                    }
-                                    catch 
-                                    {
-                                        Vertices[tang_counter].tang = new float[3] { 0.0f, 0.0f, 0.0f };
-                                    }
-                                }
-                                else
-                                    RecalcTangentBasis = true;
-                                tang_counter++;
-                                break;
-                            case "vb":
-                                if (Vertices.Count > binorm_counter)
-                                {
-                                    try
-                                    {
-                                        Vertices[binorm_counter].binorm = new float[3] { Convert.ToSingle(data[1]), Convert.ToSingle(data[2]), -Convert.ToSingle(data[3]) };
-                                    }
-                                    catch 
-                                    {
-                                        Vertices[binorm_counter].binorm = new float[3] { 0.0f, 0.0f, 0.0f };
-                                    }
-                                }
-                                else
-                                    RecalcTangentBasis = true;
-                                binorm_counter++;
-                                break;
-                            case "f":
-                                string[] v2 = data[1].Split('/');
-                                string[] v1 = data[2].Split('/');
-                                string[] v0 = data[3].Split('/');
-
-                                SSkelFace Face = new SSkelFace();
-                                Face.v[0] = (ushort)(Convert.ToInt32(v0[0]) - 1 - face_offset);
-                                Face.v[1] = (ushort)(Convert.ToInt32(v1[0]) - 1 - face_offset);
-                                Face.v[2] = (ushort)(Convert.ToInt32(v2[0]) - 1 - face_offset);
-
-                                Faces.Add(Face);
-                                break;
-                        }
-                    }
+                    SSkelFace face = new SSkelFace();
+                    face.v[0] = mesh.Polygons[f][0];
+                    face.v[1] = mesh.Polygons[f][1];
+                    face.v[2] = mesh.Polygons[f][2];
+                    child.Faces.Add(face);
                 }
-                FlushChild();
+
+                childs.Add(child);
             }
 
             RecalcBBox(true);
             BitMask.Null(ref Format);
             BitMask.Set(ref Format, (int)ModelFormat.eObj);
             return true;
+        }
+
+        private bool LoadObj(string filename)
+        {
+            return LoadFromScene(filename, new ObjLoadOptions());
+        }
+
+        private bool LoadFBX(string filename)
+        {
+            return LoadFromScene(filename, new FbxLoadOptions());
         }
 
         private bool LoadDM(string filename)
@@ -925,6 +838,8 @@ namespace OGF_tool
                 return LoadOGF(filename, silent);
             else if (format == ".obj")
                 return LoadObj(filename);
+            else if (format == ".fbx")
+                return LoadFBX(filename);
 
             return false;
         }
@@ -1263,130 +1178,133 @@ namespace OGF_tool
             WriteFile(filename, file_bytes.ToArray(), bkp);
         }
 
+        public Scene GetScene(string filename, float lod = 0.0f, bool viewport_bones = false, bool viewport_bbox = false, bool viewport_textures = false)
+        {
+            Scene scene = new Scene();
+
+            int node_idx = 0;
+            WriteSceneMesh WriteMesh = (Vertices, Faces, Texture, WriteTexture) =>
+            {
+                string mesh_name = Path.GetFileName($"{Texture}#{node_idx}");
+                Node meshNode = new Node(mesh_name);
+
+                Mesh mesh = new Mesh();
+                VertexElementNormal Normals = mesh.CreateElement(VertexElementType.Normal, MappingMode.ControlPoint, ReferenceMode.Direct) as VertexElementNormal;
+                VertexElementTangent Tangents = mesh.CreateElement(VertexElementType.Tangent, MappingMode.ControlPoint, ReferenceMode.Direct) as VertexElementTangent;
+                VertexElementBinormal Binormals = mesh.CreateElement(VertexElementType.Binormal, MappingMode.ControlPoint, ReferenceMode.Direct) as VertexElementBinormal;
+                VertexElementUV UVs = mesh.CreateElement(VertexElementType.UV, MappingMode.ControlPoint, ReferenceMode.Direct) as VertexElementUV;
+
+                for (int i = 0; i < Vertices.Count; i++)
+                {
+                    float[] verts = FVec.MirrorZ(SetupObjOffset(Vertices[i]));
+                    mesh.ControlPoints.Add(new Vector4(verts[0], verts[1], verts[2], 0.0f));
+                    float[] norms = FVec.MirrorZ(Vertices[i].Norm());
+                    Normals.Data.Add(new Vector4(norms[0], norms[1], norms[2], 0.0f));
+                    float[] tang = FVec.MirrorZ(Vertices[i].Tang());
+                    Tangents.Data.Add(new Vector4(tang[0], tang[1], tang[2], 0.0f));
+                    float[] binorm = FVec.MirrorZ(Vertices[i].Binorm());
+                    Binormals.Data.Add(new Vector4(binorm[0], binorm[1], binorm[2], 0.0f));
+                    float[] uv = new float[2] { Vertices[i].uv[0], Math.Abs(1.0f - Vertices[i].uv[1]) };
+                    UVs.Data.Add(new Vector4(uv[0], uv[1], 0.0f, 0.0f));
+                }
+
+                PolygonBuilder builder = new PolygonBuilder(mesh);
+                for (int i = 0; i < Faces.Count; i++)
+                {
+                    builder.Begin();
+                    builder.AddVertex(Faces[i].v[2]);
+                    builder.AddVertex(Faces[i].v[1]);
+                    builder.AddVertex(Faces[i].v[0]);
+                    builder.End();
+                }
+
+                PhongMaterial mat = new PhongMaterial();
+                if (WriteTexture)
+                {
+                    Texture diffuse = new Texture();
+                    diffuse.Name = mesh_name;
+                    diffuse.FileName = $"{Texture}.png";
+                    mat.SetTexture("DiffuseColor", diffuse);
+                }
+                mat.Name = mesh_name;
+                mat.SpecularColor = new Vector3(0.0f, 0.0f, 0.0f);
+                mat.Shininess = 100;
+                meshNode.Material = mat;
+                meshNode.Entity = mesh;
+                scene.RootNode.AddChildNode(meshNode);
+                node_idx++;
+            };
+
+            List<SSkelVert> sSkelVerts = new List<SSkelVert>();
+            List<SSkelFace> sSkelFaces = new List<SSkelFace>();
+
+            foreach (var ch in childs)
+            {
+                if (ch.to_delete) continue;
+
+                sSkelVerts.Clear();
+                sSkelFaces.Clear();
+                sSkelVerts.AddRange(ch.Vertices);
+                sSkelFaces.AddRange(ch.Faces_SWI(lod));
+                WriteMesh(sSkelVerts, sSkelFaces, viewport_bones ? "null_texture" : Path.GetFileName(ch.m_texture), viewport_textures);
+            }
+
+            if (viewport_bbox)
+            {
+                if (!Header.IsStaticSingle())
+                {
+                    sSkelVerts.Clear();
+                    sSkelFaces.Clear();
+                    sSkelVerts.AddRange(Header.bb.GetVisualVerts());
+                    sSkelFaces.AddRange(Header.bb.GetVisualFaces(sSkelVerts));
+                    WriteMesh(sSkelVerts, sSkelFaces, "bbox_main_texture", true);
+                }
+
+                foreach (var ch in childs)
+                {
+                    if (ch.to_delete) continue;
+
+                    sSkelVerts.Clear();
+                    sSkelFaces.Clear();
+                    sSkelVerts.AddRange(ch.Header.bb.GetVisualVerts());
+                    sSkelFaces.AddRange(ch.Header.bb.GetVisualFaces(sSkelVerts));
+                    WriteMesh(sSkelVerts, sSkelFaces, "bbox_texture", true);
+                }
+            }
+
+            if (viewport_bones)
+            {
+                for (int i = 0; i < ikdata.bones.Count; i++)
+                {
+                    float bbox_size = 0.024f;
+                    BBox bone_box = new BBox();
+                    bone_box.min = new float[3] { -bbox_size / 2, -bbox_size / 2, -bbox_size / 2 };
+                    bone_box.max = new float[3] { bbox_size / 2, bbox_size / 2, bbox_size / 2 };
+
+                    bone_box.min = FVec.Add(bone_box.min, ikdata.bones[i].render_transform);
+                    bone_box.max = FVec.Add(bone_box.max, ikdata.bones[i].render_transform);
+
+                    sSkelVerts.Clear();
+                    sSkelFaces.Clear();
+                    sSkelVerts.AddRange(bone_box.GetVisualVerts());
+                    sSkelFaces.AddRange(bone_box.GetVisualFaces(sSkelVerts));
+                    WriteMesh(sSkelVerts, sSkelFaces, bonedata.bones[i].name, true);
+                }
+            }
+
+            return scene;
+        }
+
         public void SaveObj(string filename, float lod = 0.0f, bool viewport_bones = false, bool viewport_bbox = false, bool viewport_textures = false)
         {
-            using (ObjWriter = File.CreateText(filename))
-            {
-                uint v_offs = 0;
-                uint model_id = 0;
+            Scene scene = GetScene(filename, lod, viewport_bones, viewport_bbox, viewport_textures);
+            scene.Save(filename, FileFormat.WavefrontOBJ);
+        }
 
-                string mtl_name = Path.ChangeExtension(filename, ".mtl");
-                SaveMtl(mtl_name, viewport_bones, viewport_bbox, viewport_textures);
-
-                try
-                {
-                    ObjWriter.WriteLine("# This file uses meters as units for non-parametric coordinates.");
-                    ObjWriter.WriteLine("mtllib " + Path.GetFileName(mtl_name));
-
-                    WriteObj Writer = (Vertices, Faces, Texture) =>
-                    {
-                        ObjWriter.WriteLine($"g {model_id}");
-                        ObjWriter.WriteLine($"usemtl \"{Path.GetFileName(Texture)}\"");
-                        model_id++;
-
-                        for (int i = 0; i < Vertices.Count; i++)
-                        {
-                            ObjWriter.WriteLine($"v {FVec.vPUSH(FVec.MirrorZ(SetupObjOffset(Vertices[i])), "0.000000")}");
-                        }
-
-                        for (int i = 0; i < Vertices.Count; i++)
-                        {
-                            float x = Vertices[i].uv[0];
-                            float y = Math.Abs(1.0f - Vertices[i].uv[1]);
-                            ObjWriter.WriteLine($"vt {x.ToString("0.000000")} {y.ToString("0.000000")}");
-                        }
-
-                        for (int i = 0; i < Vertices.Count; i++)
-                        {
-                            ObjWriter.WriteLine($"vn {FVec.vPUSH(FVec.MirrorZ(Vertices[i].Norm()), "0.000000")}");
-                        }
-
-                        for (int i = 0; i < Vertices.Count; i++)
-                        {
-                            ObjWriter.WriteLine($"vg {FVec.vPUSH(FVec.MirrorZ(Vertices[i].Tang()), "0.000000")}");
-                        }
-
-                        for (int i = 0; i < Vertices.Count; i++)
-                        {
-                            ObjWriter.WriteLine($"vb {FVec.vPUSH(FVec.MirrorZ(Vertices[i].Binorm()), "0.000000")}");
-                        }
-
-                        foreach (var f_it in Faces)
-                        {
-                            string tmp = $"f {v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1}/{v_offs+f_it.v[2]+1} {v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1}/{v_offs+f_it.v[1]+1} {v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}/{v_offs+f_it.v[0]+1}";
-                            ObjWriter.WriteLine(tmp);
-                        }
-                        v_offs += (uint)Vertices.Count;
-                    };
-
-
-                    foreach (var ch in childs)
-                    {
-                        if (ch.to_delete) continue;
-
-                        List<SSkelVert> sSkelVerts = new List<SSkelVert>();
-                        sSkelVerts.AddRange(ch.Vertices);
-
-                        List<SSkelFace> Faces = new List<SSkelFace>();
-                        Faces.AddRange(ch.Faces_SWI(lod));
-
-                        Writer(sSkelVerts, Faces, viewport_bones ? "null_texture" : ch.m_texture);
-                    }
-
-                    if (viewport_bbox)
-                    {
-                        List<SSkelVert> sSkelVerts = new List<SSkelVert>();
-                        List<SSkelFace> Faces = new List<SSkelFace>();
-
-                        if (!Header.IsStaticSingle())
-                        {
-                            sSkelVerts.AddRange(Header.bb.GetVisualVerts());
-                            Faces.AddRange(Header.bb.GetVisualFaces(sSkelVerts));
-
-                            Writer(sSkelVerts, Faces, "bbox_main_texture");
-                        }
-
-                        foreach (var ch in childs)
-                        {
-                            if (ch.to_delete) continue;
-
-                            sSkelVerts.Clear();
-                            sSkelVerts.AddRange(ch.Header.bb.GetVisualVerts());
-
-                            Faces.Clear();
-                            Faces.AddRange(ch.Header.bb.GetVisualFaces(sSkelVerts));
-
-                            Writer(sSkelVerts, Faces, "bbox_texture");
-                        }
-                    }
-
-                    if (viewport_bones)
-                    {
-                        for (int i = 0; i < ikdata.bones.Count; i++)
-                        {
-                            List<SSkelVert> sSkelVerts = new List<SSkelVert>();
-                            List<SSkelFace> Faces = new List<SSkelFace>();
-
-                            float bbox_size = 0.024f;
-                            BBox bone_box = new BBox();
-                            bone_box.min = new float[3] { -bbox_size / 2, -bbox_size / 2, -bbox_size / 2 };
-                            bone_box.max = new float[3] { bbox_size / 2, bbox_size / 2, bbox_size / 2 };
-
-                            bone_box.min = FVec.Add(bone_box.min, ikdata.bones[i].render_transform);
-                            bone_box.max = FVec.Add(bone_box.max, ikdata.bones[i].render_transform);
-
-                            sSkelVerts.AddRange(bone_box.GetVisualVerts());
-                            Faces.AddRange(bone_box.GetVisualFaces(sSkelVerts));
-
-                            Writer(sSkelVerts, Faces, bonedata.bones[i].name);
-                        }
-                    }
-
-                    ObjWriter.Close();
-                    ObjWriter = null;
-                }
-                catch (Exception) { }
-            }
+        public void SaveFBX(string filename, float lod = 0.0f, bool viewport_bones = false, bool viewport_bbox = false, bool viewport_textures = false)
+        {
+            Scene scene = GetScene(filename, lod, viewport_bones, viewport_bbox, viewport_textures);
+            scene.Save(filename, FileFormat.FBX7700Binary);
         }
 
         private float[] SetupObjOffset(SSkelVert vert)
@@ -1395,61 +1313,6 @@ namespace OGF_tool
                 return FixOldVertexOffset(vert);
 
             return vert.Offset();
-        }
-
-        public void SaveMtl(string filename, bool viewport_bones = false, bool viewport_bbox = false, bool viewport_textures = false)
-        {
-            using (StreamWriter writer = File.CreateText(filename))
-            {
-                if (viewport_bones)
-                {
-                    writer.WriteLine("newmtl \"null_texture\"");
-                    writer.WriteLine("Ka  0 0 0");
-                    writer.WriteLine("Kd  1 1 1");
-                    writer.WriteLine("Ks  0 0 0");
-                    writer.WriteLine("map_Kd null_texture.png\n");
-
-                    for (int i = 0; i < bonedata.bones.Count; i++)
-                    {
-                        writer.WriteLine($"newmtl \"{bonedata.bones[i].name}\"");
-                        writer.WriteLine("Ka  0 0 0");
-                        writer.WriteLine("Kd  1 1 1");
-                        writer.WriteLine("Ks  0 0 0");
-                        writer.WriteLine($"map_Kd bones\\{bonedata.bones[i].GetNotNullName()}.png\n");
-                    }
-                }
-                else
-                {
-                    foreach (var ch in childs)
-                    {
-                        if (ch.to_delete) continue;
-
-                        writer.WriteLine("newmtl \"" + Path.GetFileName(ch.m_texture) + "\"");
-                        writer.WriteLine("Ka  0 0 0");
-                        writer.WriteLine("Kd  1 1 1");
-                        writer.WriteLine("Ks  0 0 0");
-                        if (viewport_textures)
-                            writer.WriteLine("map_Kd " + Path.GetFileName(ch.m_texture) + ".png\n");
-                    }
-                }
-
-                if (viewport_bbox)
-                {
-                    writer.WriteLine("newmtl \"bbox_main_texture\"");
-                    writer.WriteLine("Ka  0 0 0");
-                    writer.WriteLine("Kd  1 1 1");
-                    writer.WriteLine("Ks  0 0 0");
-                    writer.WriteLine("map_Kd bbox_main_texture.png\n");
-
-                    writer.WriteLine("newmtl bbox_texture");
-                    writer.WriteLine("Ka  0 0 0");
-                    writer.WriteLine("Kd  1 1 1");
-                    writer.WriteLine("Ks  0 0 0");
-                    writer.WriteLine("map_Kd bbox_texture.png\n");
-                }
-
-                writer.Close();
-            }
         }
 
         public bool NeedRepair()

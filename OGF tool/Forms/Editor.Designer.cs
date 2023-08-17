@@ -102,6 +102,7 @@ namespace OGF_tool
             this.objectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bonesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fBXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.objToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.omfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sklToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -120,6 +121,7 @@ namespace OGF_tool
             this.nPCCoPToSoCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nPCSoCToCoPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.syncUserdataAndMotionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OgfInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CurrentFormat = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,7 +149,7 @@ namespace OGF_tool
             this.SaveDMDialog = new System.Windows.Forms.SaveFileDialog();
             this.OpenDMDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveOGFDialog = new System.Windows.Forms.SaveFileDialog();
-            this.syncUserdataAndMotionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveFBXDialog = new System.Windows.Forms.SaveFileDialog();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -626,6 +628,7 @@ namespace OGF_tool
             this.objectToolStripMenuItem,
             this.dMToolStripMenuItem,
             this.bonesToolStripMenuItem,
+            this.fBXToolStripMenuItem,
             this.objToolStripMenuItem,
             this.omfToolStripMenuItem,
             this.sklToolStripMenuItem,
@@ -656,6 +659,12 @@ namespace OGF_tool
             this.bonesToolStripMenuItem.Name = "bonesToolStripMenuItem";
             resources.ApplyResources(this.bonesToolStripMenuItem, "bonesToolStripMenuItem");
             this.bonesToolStripMenuItem.Click += new System.EventHandler(this.bonesToolStripMenuItem_Click);
+            // 
+            // fBXToolStripMenuItem
+            // 
+            this.fBXToolStripMenuItem.Name = "fBXToolStripMenuItem";
+            resources.ApplyResources(this.fBXToolStripMenuItem, "fBXToolStripMenuItem");
+            this.fBXToolStripMenuItem.Click += new System.EventHandler(this.fBXToolStripMenuItem_Click);
             // 
             // objToolStripMenuItem
             // 
@@ -774,6 +783,12 @@ namespace OGF_tool
             this.batchToolsToolStripMenuItem.Name = "batchToolsToolStripMenuItem";
             resources.ApplyResources(this.batchToolsToolStripMenuItem, "batchToolsToolStripMenuItem");
             this.batchToolsToolStripMenuItem.Click += new System.EventHandler(this.batchToolsToolStripMenuItem_Click);
+            // 
+            // syncUserdataAndMotionsToolStripMenuItem
+            // 
+            this.syncUserdataAndMotionsToolStripMenuItem.Name = "syncUserdataAndMotionsToolStripMenuItem";
+            resources.ApplyResources(this.syncUserdataAndMotionsToolStripMenuItem, "syncUserdataAndMotionsToolStripMenuItem");
+            this.syncUserdataAndMotionsToolStripMenuItem.Click += new System.EventHandler(this.syncUserdataAndMotionsToolStripMenuItem_Click);
             // 
             // OgfInfo
             // 
@@ -920,11 +935,9 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.SaveOGFDialog, "SaveOGFDialog");
             // 
-            // syncUserdataAndMotionsToolStripMenuItem
+            // SaveFBXDialog
             // 
-            this.syncUserdataAndMotionsToolStripMenuItem.Name = "syncUserdataAndMotionsToolStripMenuItem";
-            resources.ApplyResources(this.syncUserdataAndMotionsToolStripMenuItem, "syncUserdataAndMotionsToolStripMenuItem");
-            this.syncUserdataAndMotionsToolStripMenuItem.Click += new System.EventHandler(this.syncUserdataAndMotionsToolStripMenuItem_Click);
+            resources.ApplyResources(this.SaveFBXDialog, "SaveFBXDialog");
             // 
             // Editor
             // 
@@ -1086,6 +1099,8 @@ namespace OGF_tool
         private System.Windows.Forms.ToolStripMenuItem oGFToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog SaveOGFDialog;
         private System.Windows.Forms.ToolStripMenuItem syncUserdataAndMotionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fBXToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog SaveFBXDialog;
     }
 }
 

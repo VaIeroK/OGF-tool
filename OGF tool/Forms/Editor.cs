@@ -68,6 +68,7 @@ namespace OGF_tool
 			Object,
 			DM,
             Obj,
+			FBX,
             Bones,
 			OMF,
 			Skl,
@@ -77,6 +78,8 @@ namespace OGF_tool
 
 		public Editor()
 		{
+			Aspose.ThreeD.TrialException.SuppressTrialException = true; // Осудительно так делать
+
             Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
@@ -294,6 +297,8 @@ namespace OGF_tool
                 SaveDMDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".dm";
                 SaveOGFDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
                 SaveOGFDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".ogf";
+                SaveFBXDialog.InitialDirectory = Model.FileName.Substring(0, Model.FileName.LastIndexOf('\\'));
+                SaveFBXDialog.FileName = StatusFile.Text.Substring(0, StatusFile.Text.LastIndexOf('.')) + ".fbx";
 
                 CurrentLod = 0;
             }
@@ -833,6 +838,10 @@ namespace OGF_tool
                     ApplyParams();
                     Model.SaveObj(filename, CurrentLod);
                     break;
+                case ExportFormat.FBX:
+                    ApplyParams();
+                    Model.SaveFBX(filename, CurrentLod);
+                    break;
                 case ExportFormat.Object:
                     ApplyParams();
                     exit_code = Model.SaveObject(filename, BkpCheckBox.Checked);
@@ -924,7 +933,19 @@ namespace OGF_tool
 			}
 		}
 
-		private void sklToolStripMenuItem_Click(object sender, EventArgs e)
+        private void fBXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (SaveFBXDialog.ShowDialog() == DialogResult.OK)
+            {
+                float old_lod = CurrentLod;
+                CurrentLod = 0.0f;
+                SaveTools(SaveFBXDialog.FileName, ExportFormat.FBX);
+                CurrentLod = old_lod;
+                SaveFBXDialog.InitialDirectory = "";
+            }
+        }
+
+        private void sklToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (SaveSklDialog.ShowDialog(this.Handle))
 			{
@@ -2148,17 +2169,14 @@ namespace OGF_tool
 
 				if (ViewPortBones && showBonesToolStripMenuItem.Enabled)
 				{
-					if (!Directory.Exists(TempFolder() + "\\bones"))
-						Directory.CreateDirectory(TempFolder() + "\\bones");
-
                     string ConverterArgs = "";
 					int TexturesCount = 0;
 
 					for (int i = 0; i < Model.bonedata.bones.Count; i++)
 					{
-                        if (File.Exists($"{TempFolder()}\\bones\\{Model.bonedata.bones[i].GetNotNullName()}.png"))
+                        if (File.Exists($"{TempFolder()}\\{Model.bonedata.bones[i].GetNotNullName()}.png"))
 							continue;
-						ConverterArgs += $" \"{Model.bonedata.bones[i].name}\" \"{TempFolder()}\\bones\\{Model.bonedata.bones[i].GetNotNullName()}.png\"";
+						ConverterArgs += $" \"{Model.bonedata.bones[i].name}\" \"{TempFolder()}\\{Model.bonedata.bones[i].GetNotNullName()}.png\"";
 						TexturesCount++;
                     }
 					
@@ -2173,7 +2191,6 @@ namespace OGF_tool
                     ConverterProcess[1].StartInfo = psi;
 					ConverterProcess[1].Start();
 				}
-
 
                 for (int i = 0; i < 2; i++)
 				{
@@ -2316,8 +2333,8 @@ namespace OGF_tool
 
 			if (Model.Opened)
 			{
-				string mtl_name = TempFolder() + "\\" + Path.GetFileName(Path.ChangeExtension(Model.FileName, ".mtl"));
-                Model.SaveMtl(mtl_name, ViewPortBones && showBonesToolStripMenuItem.Enabled, ViewPortBBox, ViewPortTextures);
+                string ObjName = TempFolder() + "\\" + Path.GetFileName(Path.ChangeExtension(Model.FileName, ".obj"));
+                Model.SaveObj(ObjName, CurrentLod, ViewPortBones, ViewPortBBox, ViewPortTextures);
 			}
 
             if (!ViewPortTextures)
