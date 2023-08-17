@@ -22,6 +22,8 @@ namespace OGF_tool
 		public EditorSettings pSettings = null;
 		public XRay_Model Model = null;
 		FolderSelectDialog SaveSklDialog = null;
+		FolderSelectDialog SyncFirstDialog = null;
+		FolderSelectDialog SyncSecondDialog = null;
 		public string[] game_materials = { };
 		public bool UseTexturesCache = false;
 
@@ -158,8 +160,10 @@ namespace OGF_tool
             AddMeshesMenuItem.Enabled = false;
 
             SaveSklDialog = new FolderSelectDialog();
+            SyncFirstDialog = new FolderSelectDialog();
+            SyncSecondDialog = new FolderSelectDialog();
 
-			if (Environment.GetCommandLineArgs().Length > 1)
+            if (Environment.GetCommandLineArgs().Length > 1)
 			{
                 Clear();
                 if (Model.OpenFile(Environment.GetCommandLineArgs()[1]))
@@ -1923,6 +1927,98 @@ namespace OGF_tool
             return false;
         }
 
+        private void syncUserdataAndMotionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			string FirstFolder, SecondFolder;
+
+			if (SyncFirstDialog.ShowDialog() && SyncSecondDialog.ShowDialog())
+			{
+                FirstFolder = SyncFirstDialog.FileName;
+				SecondFolder = SyncSecondDialog.FileName;
+
+				string FirstSubFolder = Path.GetDirectoryName(FirstFolder);
+				string SecondSubFolder = Path.GetDirectoryName(SecondFolder);
+
+				string[] FirstFilesList = Directory.GetFiles(FirstFolder, "*.ogf", SearchOption.AllDirectories);
+				string[] SecondFilesList = Directory.GetFiles(SecondFolder, "*.ogf", SearchOption.AllDirectories);
+
+				int FilesChanged = 0;
+                for (int i = 0; i < FirstFilesList.Length; i++)
+				{
+					for (int j = 0; j < SecondFilesList.Length; j++)
+					{
+						string FirstFile = FirstFilesList[i].Replace(FirstSubFolder, "");
+						string SecondFile = SecondFilesList[j].Replace(SecondSubFolder, "");
+						if (FirstFile == SecondFile)
+						{
+                            XRay_Model SourceModel = new XRay_Model();
+                            XRay_Model DestModel = new XRay_Model();
+							if (SourceModel.OpenFile(FirstFilesList[i]) && DestModel.OpenFile(SecondFilesList[j]))
+							{
+								bool Changed = false;
+								if (DestModel.motion_refs != null)
+								{
+									if (SourceModel.motion_refs == null)
+										SourceModel.motion_refs = new MotionRefs();
+
+									if (SourceModel.motion_refs.refs != DestModel.motion_refs.refs)
+									{
+										bool tolstyak_exists = SourceModel.motion_refs.refs.Contains("actors\\tolstyak_animation");
+										SourceModel.motion_refs.refs = DestModel.motion_refs.refs;
+										if (tolstyak_exists)
+											SourceModel.motion_refs.refs.Add("actors\\tolstyak_animation");
+										Changed = true;
+									}
+								}
+								else if (SourceModel.motion_refs != null)
+								{
+									SourceModel.motion_refs.refs.Clear();
+                                    Changed = true;
+                                }
+
+								if (DestModel.userdata != null)
+								{
+									if (SourceModel.userdata == null)
+										SourceModel.userdata = new UserData();
+
+									if (SourceModel.userdata.userdata != DestModel.userdata.userdata)
+									{
+										SourceModel.userdata.userdata = DestModel.userdata.userdata;
+										Changed = true;
+									}
+								}
+								else if (SourceModel.userdata != null)
+								{
+									SourceModel.userdata.userdata = "";
+                                    Changed = true;
+                                }
+
+								//if (DestModel.motions != null)
+								//{
+								//	if (SourceModel.motions != DestModel.motions)
+								//	{
+								//		SourceModel.motions = DestModel.motions;
+
+								//		if (SourceModel.motion_refs != null && SourceModel.motion_refs.refs.Count > 0)
+								//			SourceModel.motion_refs.refs.Clear();
+        //                                Changed = true;
+        //                            }
+        //                        }
+
+								if (Changed)
+								{
+									SourceModel.SaveFile(FirstFilesList[i]);
+									FilesChanged++;
+                                }
+                            }
+						}
+					}
+				}
+
+                MessageBox.Show(FilesChanged.ToString() + " files changed!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         public static void Msg(string text)
         {
 			MessageBox.Show(text);
@@ -2305,6 +2401,17 @@ namespace OGF_tool
 			newButton.Click += new System.EventHandler(this.ButtonFilter);
 			newButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
 			newButton.Text = Model.Is(XRay_Model.ModelFormat.eDM) ? "Replace" : newButton.Text;
+
+            if (Model.childs[idx].to_delete)
+            {
+                newButton.Text = "Return Mesh";
+                newButton.BackColor = Color.FromArgb(255, 255, 128, 128);
+            }
+            else
+            {
+                newButton.Text = "Delete Mesh";
+                newButton.BackColor = SystemColors.Control;
+            }
 
             var newButton2 = Copy.Button(MoveMeshButton);
             newButton2.Name = "MoveButton_" + idx;

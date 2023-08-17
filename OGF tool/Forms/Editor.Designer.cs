@@ -147,6 +147,7 @@ namespace OGF_tool
             this.SaveDMDialog = new System.Windows.Forms.SaveFileDialog();
             this.OpenDMDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveOGFDialog = new System.Windows.Forms.SaveFileDialog();
+            this.syncUserdataAndMotionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.TexturesPage.SuspendLayout();
             this.TextureContextStrip.SuspendLayout();
@@ -707,7 +708,8 @@ namespace OGF_tool
             this.removeProgressiveMeshesToolStripMenuItem,
             this.moveRotateModelToolStripMenuItem,
             this.converterToolStripMenuItem,
-            this.batchToolsToolStripMenuItem});
+            this.batchToolsToolStripMenuItem,
+            this.syncUserdataAndMotionsToolStripMenuItem});
             this.ToolsMenuItem.Name = "ToolsMenuItem";
             resources.ApplyResources(this.ToolsMenuItem, "ToolsMenuItem");
             // 
@@ -918,6 +920,12 @@ namespace OGF_tool
             // 
             resources.ApplyResources(this.SaveOGFDialog, "SaveOGFDialog");
             // 
+            // syncUserdataAndMotionsToolStripMenuItem
+            // 
+            this.syncUserdataAndMotionsToolStripMenuItem.Name = "syncUserdataAndMotionsToolStripMenuItem";
+            resources.ApplyResources(this.syncUserdataAndMotionsToolStripMenuItem, "syncUserdataAndMotionsToolStripMenuItem");
+            this.syncUserdataAndMotionsToolStripMenuItem.Click += new System.EventHandler(this.syncUserdataAndMotionsToolStripMenuItem_Click);
+            // 
             // Editor
             // 
             this.AllowDrop = true;
@@ -1077,6 +1085,7 @@ namespace OGF_tool
         private System.Windows.Forms.Button MeshDataButton;
         private System.Windows.Forms.ToolStripMenuItem oGFToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog SaveOGFDialog;
+        private System.Windows.Forms.ToolStripMenuItem syncUserdataAndMotionsToolStripMenuItem;
     }
 }
 
